@@ -10,7 +10,7 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
 1. [ ] Skeleton and tooling: version catalog dependencies (incl. KSP, kotlinx-serialization plugin, JitPack repository), Hilt wiring, `ui/domain/data/playback` packages, Spotless with ktlint, a smoke test. Add `spotlessCheck` to the Stop hook and CI. Done when build, test and lint are green, and the Stop hook and CI have run.
 2. [ ] Manifest fixtures: `docs/fixtures/` with a valid manifest (including a `local` source with `loop`) and one invalid manifest per validation error, plus a README. Review gate: the user reviews the fixtures before step 3.
 3. [ ] Parse and validate (Kotlin): models, validator, parser, test-first against the fixtures. Wire `docs/fixtures/` into Gradle as unit-test resources.
-4. [ ] Pipeline validator (Python): same fixtures, pytest.
+4. [ ] Pipeline validator (Python): same fixtures, pytest. Set up `pipeline/pyproject.toml` with uv (ruff, mypy, pytest as dev dependencies; mypy in strict mode). Add `uv run ruff format --check`, `uv run ruff check` and `uv run mypy .` to `scripts/check.sh` alongside pytest.
 5. [ ] Room and catalog import: entities, DAOs, upsert, retire and un-retire, `replaces` rules (including favorite merge), stored game positions, import on app start when `generatedAt` changes, failed import keeps the old catalog. DAO tests use Robolectric.
 6. [ ] Seed catalog and repository: hand-written `catalog/manifest.json` (about 10 tracks, 3 families, including game-exclusive tracks) bundled in assets (wire `catalog/` into Gradle as an assets dir), plus repository queries for game, family, generation and category filters. The user supplies a handful of real video IDs.
 
