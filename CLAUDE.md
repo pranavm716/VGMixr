@@ -14,8 +14,8 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - Build: `./gradlew assembleDebug`
 - Unit tests: `./gradlew testDebugUnitTest` (single: `--tests "*ClassName*"`)
 - Lint/format: `./gradlew lint`, `./gradlew spotlessCheck` / `spotlessApply` (Spotless with ktlint, added in roadmap step 1)
-- Pipeline tests: `cd pipeline && pytest` (the Stop hook and CI run this only if `pipeline/` exists)
-- CI (`.github/workflows/ci.yml`) runs the same checks as the Stop hook. Keep the commands in sync.
+- Pipeline tests: `cd pipeline && uv run pytest` (the Stop hook and CI run this only if `pipeline/` exists)
+- All checks live in `scripts/check.sh`, run by both the Stop hook (`.claude/settings.json`, with `--hook`) and CI (`.github/workflows/ci.yml`). Add new checks there only.
 
 ## Architecture
 - Single module `app`. Packages: `ui/` (Compose screens + ViewModels), `domain/` (models, use cases, interfaces; plain Kotlin, no Android imports), `data/` (Room, catalog import, repositories, stream resolution), `playback/` (Media3).
@@ -56,7 +56,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - Concise, idiomatic Kotlin. Immutable data classes, sealed types for events/errors, no `!!`.
 - Pre-approved dependencies: Hilt, hilt-navigation-compose, Room, Media3, kotlinx-serialization (with its Gradle plugin), Navigation Compose, NewPipe Extractor (via the JitPack repository), KSP, Spotless with ktlint, MockK, Turbine, kotlinx-coroutines-test, Robolectric. Ask before adding anything else; prefer stdlib and AndroidX.
 - Never put API keys or secrets in code.
-- Pipeline: Python 3, type hints, pytest. Intermediate output goes to `pipeline/out/` (gitignored). Never commit ROMs or extracted audio.
+- Pipeline: Python 3, type hints, pytest, uv for dependencies and running tools. Intermediate output goes to `pipeline/out/` (gitignored). Never commit ROMs or extracted audio.
 
 ## Workflow
 - Phase 0 setup commits go directly to `main`. From roadmap step 1 on, each step gets its own branch, merged into `main` when green.

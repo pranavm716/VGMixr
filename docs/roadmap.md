@@ -4,7 +4,7 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
 
 ## Phase 0: manual setup (not a Claude Code session)
 - [x] Create the Android project (Empty Activity, Compose, Kotlin), run it once, commit.
-- [ ] Add `.claude/` files, CI workflow, `.gitattributes`, `scripts/check-forbidden-files.sh`. The Stop hook and CI start with the checks that exist today (`assembleDebug`, `testDebugUnitTest`, `lint`); `pytest` runs only if `pipeline/` exists. Confirm those Gradle commands work.
+- [x] Add `.claude/` files, CI workflow, `.gitattributes`, `scripts/check-forbidden-files.sh`. The Stop hook and CI start with the checks that exist today (`assembleDebug`, `testDebugUnitTest`, `lint`); `pytest` runs only if `pipeline/` exists. Confirm those Gradle commands work.
 
 ## Phase 1: foundation
 1. [ ] Skeleton and tooling: version catalog dependencies (incl. KSP, kotlinx-serialization plugin, JitPack repository), Hilt wiring, `ui/domain/data/playback` packages, Spotless with ktlint, a smoke test. Add `spotlessCheck` to the Stop hook and CI. Done when build, test and lint are green, and the Stop hook and CI have run.
