@@ -19,6 +19,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // JitPack serves only NewPipe Extractor, and NewPipe artifacts come only from JitPack.
+        exclusiveContent {
+            forRepository { maven("https://jitpack.io") }
+            filter { includeGroup("com.github.TeamNewPipe") }
+        }
     }
 }
 
