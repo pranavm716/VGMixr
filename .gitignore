@@ -1,0 +1,99 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Gradle files
+.gradle/
+build/
+.kotlin/
+
+# Log/OS Files
+*.log
+
+# Android Studio generated files and folders
+captures/
+.externalNativeBuild/
+.cxx/
+*.aab
+*.apk
+output-metadata.json
+
+# IntelliJ
+.idea/
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Android Profiling
+*.hprof
+
+# ---- VGMixr additions ----
+
+# OS files
+Thumbs.db
+desktop.ini
+
+# Secrets
+.env
+.env.*
+secrets.properties
+
+# ROMs and save files (never commit)
+roms/
+*.gb
+*.gbc
+*.gba
+*.nds
+*.3ds
+*.cia
+*.cci
+*.cxi
+*.nsp
+*.xci
+*.sav
+
+# Extracted/ripped audio (never commit)
+*.wav
+*.flac
+*.ogg
+*.opus
+*.mp3
+*.m4a
+# ...except tiny synthetic test audio
+!app/src/test/resources/**
+!pipeline/tests/data/**
+
+# Pipeline (Python)
+pipeline/out/
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Claude Code (personal/local only)
+.claude/settings.local.json
+.claude/worktrees/
+CLAUDE.local.md
