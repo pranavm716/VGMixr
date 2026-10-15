@@ -10,13 +10,12 @@ plugins {
 
 spotless {
     kotlin {
-        target("**/*.kt")
-        targetExclude("**/build/**")
+        // Explicit source roots: a "**" glob also walks build/, where KSP output can vanish mid-scan.
+        target("app/src/**/*.kt")
         ktlint(libs.versions.ktlint.get())
     }
     kotlinGradle {
-        target("**/*.kts")
-        targetExclude("**/build/**")
+        target("*.kts", "app/*.kts")
         ktlint(libs.versions.ktlint.get())
     }
 }
