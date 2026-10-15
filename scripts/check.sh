@@ -7,7 +7,7 @@ cd "$(git rev-parse --show-toplevel)"
 # Explicit `|| return`: set -e is ignored when the caller is an `if`.
 run_checks() {
   bash scripts/check-forbidden-files.sh || return
-  ./gradlew --console=plain assembleDebug testDebugUnitTest lint || return
+  ./gradlew --console=plain assembleDebug testDebugUnitTest lint spotlessCheck || return
   if [[ -d pipeline ]]; then
     (cd pipeline && uv run pytest) || return
   fi
