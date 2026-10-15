@@ -60,6 +60,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 
 ## Workflow
 - Phase 0 setup commits go directly to `main`. From roadmap step 1 on, each step gets its own branch, merged into `main` when green.
+- Each step ends with a PR whose description details the changes, grouped by area (dependencies, wiring, tests, checks, roadmap edits) with the reasons behind non-obvious decisions. Describe only what changed, not how the work was done.
 - Small commits on green with descriptive messages. One feature per session; plan first for changes spanning layers.
 - When compacting, preserve the list of modified files and the test commands.
 
