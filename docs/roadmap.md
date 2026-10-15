@@ -32,3 +32,6 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
 ## After the MVP
 18. [ ] ROM extraction: 3DS first, then DS, then GBA. Local files (with loop points where known) become the first source on each track; copied by hand into the app's `files/music/` folder.
 19. [ ] v2 looping: seamless playback using `local` source loop points, global loop-cycle setting.
+
+## Candidates (not scheduled)
+- Seamless looping for `stream` sources, after v2 proves local looping. Loop points are per video, keyed by `(videoId, startMs, endMs)`, because uploads differ from ROM rips in offset, sample rate and encoding; the pipeline could derive them by aligning a video's audio against the local rip. Loops play only from the cached download (a live stream would rebuffer on every seek back to `introEnd`); verify that lossy Opus/AAC seams are gapless first. Allowing `loop` on `stream` sources removes the `stream-loop-present` error, so it bumps `schemaVersion`.
