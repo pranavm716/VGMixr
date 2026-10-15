@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1",
+  "generatedAt": "2026-10-14T08:00:00Z",
+  "games": [
+    {
+      "id": "ruby",
+      "name": "Ruby",
+      "shortName": "R",
+      "color": "#C8372D",
+      "generation": 3,
+      "platform": "GBA",
+      "family": "rse"
+    },
+    {
+      "id": "sapphire",
+      "name": "Sapphire",
+      "shortName": "S",
+      "color": "#2D5BC8",
+      "generation": 3,
+      "platform": "GBA",
+      "family": "rse"
+    },
+    {
+      "id": "pla",
+      "name": "Legends: Arceus",
+      "shortName": "PLA",
+      "color": "#7A8FB5",
+      "generation": 8,
+      "platform": "Switch"
+    }
+  ],
+  "tracks": [
+    {
+      "id": "rse-route-101",
+      "family": "rse",
+      "title": "Route 101",
+      "category": "route",
+      "order": 12,
+      "sources": [
+        { "type": "stream", "videoId": "XXXXXXXXXXX", "startMs": 0, "endMs": null }
+      ]
+    }
+  ]
+}

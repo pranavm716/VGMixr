@@ -48,11 +48,11 @@
       "title": "Weather Institute",
       "category": "cutscene",
       "order": 40,
-      "replaces": ["rse-weather-lab"],
       "sources": [
         { "type": "stream", "videoId": "Ab-cd_EF012", "startMs": 120000, "endMs": 245500, "confidence": 0.5 },
         { "type": "stream", "videoId": "Ab-cd_EF012", "startMs": 245500, "endMs": null }
-      ]
+      ],
+      "replaces": ["rse-weather-lab"]
     },
     {
       "id": "pla-example-theme",
