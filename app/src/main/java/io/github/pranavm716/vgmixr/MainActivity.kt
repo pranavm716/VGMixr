@@ -16,7 +16,6 @@ import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
