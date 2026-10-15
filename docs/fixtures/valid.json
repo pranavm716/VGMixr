@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-14T08:00:00Z",
+  "games": [
+    { "id": "ruby", "name": "Ruby", "shortName": "R", "color": "#C8372D",
+      "generation": 3, "platform": "GBA", "family": "rse" },
+    { "id": "sapphire", "name": "Sapphire", "shortName": "S", "color": "#2d5bc8",
+      "generation": 3, "platform": "GBA", "family": "rse" },
+    { "id": "emerald", "name": "Emerald", "shortName": "E", "color": "#2DA84F",
+      "generation": 3, "platform": "GBA", "family": "rse" },
+    { "id": "pla", "name": "Legends: Arceus", "shortName": "PLA", "color": "#7A8FB5",
+      "generation": 8, "platform": "Switch" },
+    { "id": "botw", "name": "Breath of the Wild", "shortName": "BreathOfWild", "color": "#3A7D44",
+      "platform": "Switch" },
+    { "id": "red", "name": "Red", "shortName": "Rd", "color": "#E3350D",
+      "generation": 1, "platform": "GB", "family": "rb" },
+    { "id": "blue", "name": "Blue", "shortName": "B", "color": "#30A7D7",
+      "generation": 1, "platform": "GB", "family": "rb" }
+  ],
+  "tracks": [
+    {
+      "id": "rse-route-101",
+      "family": "rse",
+      "title": "Route 101",
+      "category": "route",
+      "order": 12,
+      "sources": [
+        { "type": "local", "path": "rse/012.flac",
+          "loop": { "sampleRate": 32000, "introEnd": 96000, "loopEnd": 1824000 } },
+        { "type": "stream", "videoId": "XXXXXXXXXXX", "startMs": 0, "endMs": null, "confidence": 1 }
+      ]
+    },
+    {
+      "id": "rse-drought",
+      "family": "rse",
+      "games": ["ruby"],
+      "title": "Drought",
+      "category": "event",
+      "order": 90,
+      "sources": [
+        { "type": "stream", "videoId": "YYYYYYYYYYY", "startMs": 0, "endMs": null, "confidence": 0 }
+      ]
+    },
+    {
+      "id": "rse-weather-institute",
+      "family": "rse",
+      "games": ["ruby", "emerald"],
+      "title": "Weather Institute",
+      "category": "cutscene",
+      "order": 40,
+      "sources": [
+        { "type": "stream", "videoId": "Ab-cd_EF012", "startMs": 120000, "endMs": 245500, "confidence": 0.5 },
+        { "type": "stream", "videoId": "Ab-cd_EF012", "startMs": 245500, "endMs": null }
+      ],
+      "replaces": ["rse-weather-lab"]
+    },
+    {
+      "id": "pla-example-theme",
+      "family": "pla",
+      "title": "Example Theme",
+      "category": "town",
+      "order": 0,
+      "sources": [
+        { "type": "stream", "videoId": "WWWWWWWWWWW" }
+      ]
+    },
+    {
+      "id": "botw-hyrule-field",
+      "family": "botw",
+      "title": "Hyrule Field",
+      "category": "other",
+      "order": 3,
+      "sources": [
+        { "type": "local", "path": "botw/field/hyrule-field.ogg" },
+        { "type": "local", "path": "botw/field/hyrule-field-loop.flac",
+          "loop": { "sampleRate": 48000, "introEnd": 0, "loopEnd": 1 } }
+      ]
+    },
+    {
+      "id": "rb-pallet-town",
+      "family": "rb",
+      "title": "Pallet Town",
+      "category": "town",
+      "order": 1,
+      "sources": [
+        { "type": "local", "path": "rb/pallet.flac" },
+        { "type": "stream", "videoId": "VVVVVVVVVVV", "startMs": 0, "endMs": 1 }
+      ]
+    }
+  ]
+}
