@@ -20,7 +20,7 @@ Besides the ordinary cases, it covers values a validator must accept:
 | `games` omitted, single game, and multi-game subset | `rse-route-101`, `rse-drought`, `rse-weather-institute` |
 | Valid `replaces` | `rse-weather-institute` |
 | Same `videoId` in two sources with different slices | `rse-weather-institute` |
-| `startMs` omitted (defaults to 0) | `pla-example-theme` |
+| `startMs` and `endMs` omitted (default to 0 and null) | `pla-example-theme` |
 | `endMs: null` and `endMs` set | most streams; `rse-weather-institute`, `rb-pallet-town` |
 | `confidence` omitted, and as a JSON integer | `pla-example-theme`; `rse-route-101` (`1`), `rse-drought` (`0`) |
 | `videoId` containing `-` and `_` | `rse-weather-institute` |

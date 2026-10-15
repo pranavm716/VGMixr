@@ -162,7 +162,7 @@ The pipeline only writes a `local` source for a file it actually extracted.
 **`stream`**
 - `videoId`: YouTube video ID, 11 chars `[A-Za-z0-9_-]`. Never a URL, since URLs expire.
 - `startMs`: int >= 0, default 0.
-- `endMs`: int or null. If set, `> startMs`. Use `startMs`/`endMs` for tracks inside whole-album videos.
+- `endMs`: int or null, default null (play to the end of the video). If set, `> startMs`. Omitted and `null` are the same value, also for identity. Use `startMs`/`endMs` for tracks inside whole-album videos.
 - `confidence`: optional float, 0-1 inclusive. Pipeline match score; the app ignores it.
 - Identity: `(videoId, startMs, endMs)`. A `stream` source must not have `loop`.
 

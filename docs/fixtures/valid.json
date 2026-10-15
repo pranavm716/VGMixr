@@ -61,7 +61,7 @@
       "category": "town",
       "order": 0,
       "sources": [
-        { "type": "stream", "videoId": "WWWWWWWWWWW", "endMs": null }
+        { "type": "stream", "videoId": "WWWWWWWWWWW" }
       ]
     },
     {
