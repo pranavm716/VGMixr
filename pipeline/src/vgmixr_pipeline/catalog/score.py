@@ -125,7 +125,12 @@ _FLAGS = {
     "jazz", "lofi", "mashup", "extended", "hour", "hours", "loop", "looped", "slowed", "reverb",
     "nightcore", "remake", "remaster", "remastered", "soundfont", "fanmade", "fan", "beta",
     "unused", "acapella", "acoustic", "synthesia", "medley", "symphony", "concert", "live",
+    # Videos about the game rather than its music.
+    "how", "tutorial", "guide", "walkthrough", "playthrough", "gameplay", "speedrun", "nuzlocke",
+    "reaction", "review", "glitch",
 }  # fmt: skip
+# Channels whose uploads aren't what their titles say (SiIvaGunner's "rips" are jokes).
+_BAD_CHANNELS = {"siivagunner", "tsimfd"}
 _EIGHT_BIT = ("8", "bit")
 # Words that tell versions of one track apart.
 _VARIANTS = {
@@ -351,6 +356,8 @@ def score(track: TrackFacts, candidate: Candidate, names: Names) -> Score:
         value *= w.wrong_game
         reasons[1] = "wrong game"
     flags = red_flags(track, candidate.title, noise=candidate.noise)
+    if candidate.channel and "".join(words(candidate.channel)) in _BAD_CHANNELS:
+        flags.append(f"channel {candidate.channel}")
     if candidate.kind != "album" and (candidate.duration_ms or 0) > LONG_MS:
         flags.append("long video")
     for flag in flags:

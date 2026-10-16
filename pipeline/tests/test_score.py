@@ -358,3 +358,14 @@ def test_a_variant_the_track_lacks_is_another_track(title: str, video: str) -> N
 def test_a_variant_missing_from_the_video_is_only_close() -> None:
     track = facts(title="Route 209 (Night)")
     assert 0.8 <= title_similarity(track, "Route 209", NAMES) < 1.0
+
+
+def test_joke_rip_channels_are_red_flags() -> None:
+    joke = candidate("Battle! (Steven) - Pokémon Ruby & Sapphire", channel="SiIvaGunner")
+    result = score(facts(title="Battle! (Steven)"), joke, NAMES)
+    assert "red flag: channel SiIvaGunner" in result.reasons
+    assert classify(result.value) is Verdict.REJECT
+
+
+def test_guides_are_red_flags() -> None:
+    assert red_flags(facts(title="Dive"), "How To Get HM08 Dive in Pokemon Ruby/Sapphire/Emerald")
