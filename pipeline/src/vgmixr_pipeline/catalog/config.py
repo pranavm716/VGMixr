@@ -6,6 +6,7 @@ durations.json: track lengths for album pages that list none. All are reapplied 
 the generated draft is never edited by hand.
 """
 
+import re
 from pathlib import Path
 from typing import Literal
 
@@ -13,6 +14,7 @@ from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 from vgmixr_pipeline.catalog.tracklist import parse_duration
 from vgmixr_pipeline.manifest.models import Game, Source
+from vgmixr_pipeline.manifest.validate import VIDEO_ID
 
 DATA_DIR = Path(__file__).resolve().parents[3] / "data"
 
@@ -60,14 +62,123 @@ class Tracklist(_Model):
         return self.page if self.page is not None else str(self.file)
 
 
+# Playlist ids are longer than video ids and vary in length by kind (PL…, OLAK5uy_…).
+_PLAYLIST_ID = re.compile(r"[A-Za-z0-9_-]{10,}")
+
+
+def _check_video_id(video_id: str) -> str:
+    if not VIDEO_ID.fullmatch(video_id):
+        raise ValueError(f"{video_id!r} is not a YouTube video id")
+    return video_id
+
+
+class Playlist(_Model):
+    """A YouTube playlist holding tracks of `games`, optionally limited to positions first..last."""
+
+    games: list[str]
+    playlist: str
+    first: int | None = None
+    last: int | None = None
+    note: str | None = None
+
+    @field_validator("playlist")
+    @classmethod
+    def _check_id(cls, playlist: str) -> str:
+        if not _PLAYLIST_ID.fullmatch(playlist):
+            raise ValueError(f"{playlist!r} is not a YouTube playlist id")
+        return playlist
+
+    @model_validator(mode="after")
+    def _check_range(self) -> "Playlist":
+        if self.first is not None and self.first < 1:
+            raise ValueError("first must be 1 or more")
+        if self.first is not None and self.last is not None and self.first > self.last:
+            raise ValueError("first must not be after last")
+        return self
+
+
+class Album(_Model):
+    """One long video of `games`' tracks whose chapters (description timestamps) are tracks."""
+
+    games: list[str]
+    video: str
+    note: str | None = None
+
+    @field_validator("video")
+    @classmethod
+    def _check_id(cls, video: str) -> str:
+        return _check_video_id(video)
+
+
+class YouTube(_Model):
+    playlists: list[Playlist] = []
+    albums: list[Album] = []
+    # Game or family id -> extra names that identify it in video titles. Each game's name and
+    # each family's label are names already.
+    aliases: dict[str, list[str]] = {}
+
+
 class GamesFile(_Model):
     games: list[Game]
     tracklists: list[Tracklist]
+    youtube: YouTube = YouTube()
+
+    @model_validator(mode="after")
+    def _check_youtube_games(self) -> "GamesFile":
+        game_ids = {g.id for g in self.games}
+        entries: list[Playlist | Album] = [*self.youtube.playlists, *self.youtube.albums]
+        for entry in entries:
+            if not entry.games or not set(entry.games) <= game_ids:
+                raise ValueError(f"{entry}: games must be known game ids")
+        families = {g.family_id for g in self.games}
+        for key in self.youtube.aliases:
+            if key not in game_ids | families:
+                raise ValueError(f"aliases: {key!r} is not a game or family id")
+        return self
 
 
 class Split(_Model):
     games: list[str]
     title: str | None = None
+
+
+class Slice(_Model):
+    """A stream source's identity: a video, or a part of one."""
+
+    videoId: str
+    startMs: int = 0
+    endMs: int | None = None
+
+    @field_validator("videoId")
+    @classmethod
+    def _check_id(cls, video_id: str) -> str:
+        return _check_video_id(video_id)
+
+    @model_validator(mode="after")
+    def _check_bounds(self) -> "Slice":
+        if self.startMs < 0 or (self.endMs is not None and self.endMs <= self.startMs):
+            raise ValueError("startMs must be 0 or more and endMs after it")
+        return self
+
+
+class Streams(_Model):
+    """Review decisions: accepted slices go first, in order; rejected videos are never used."""
+
+    accept: list[Slice] = []
+    reject: list[str] = []
+
+    @field_validator("reject")
+    @classmethod
+    def _check_ids(cls, reject: list[str]) -> list[str]:
+        return [_check_video_id(v) for v in reject]
+
+    @model_validator(mode="after")
+    def _check_disjoint(self) -> "Streams":
+        if len(set(self.accept)) != len(self.accept):
+            raise ValueError("accept lists a slice twice")
+        if {s.videoId for s in self.accept} & set(self.reject):
+            raise ValueError("a video is both accepted and rejected")
+        return self
 
 
 class TrackOverride(_Model):
@@ -81,6 +192,7 @@ class TrackOverride(_Model):
     split: dict[str, Split] | None = None
     # "m:ss"; replaces the computed length (e.g. for a track merged from parts played back to back).
     duration: str | None = None
+    streams: Streams | None = None
     note: str | None = None
 
     @field_validator("duration")

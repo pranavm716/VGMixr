@@ -1,6 +1,7 @@
 """The committed games and overrides files (pipeline/data/)."""
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 from pydantic import ValidationError
@@ -126,3 +127,117 @@ def test_file_tracklists_exist_and_have_their_disc(games: GamesFile) -> None:
 def test_extra_duration_must_be_minutes_and_seconds() -> None:
     with pytest.raises(ValidationError):
         Overrides.model_validate({"extras": [{"family": "f", "title": "T", "duration": "1:2"}]})
+
+
+GAME = {"name": "N", "shortName": "N", "color": "#000000", "generation": 3, "platform": "GBA"}
+
+
+def games_file(youtube: dict[str, Any]) -> GamesFile:
+    return GamesFile.model_validate(
+        {
+            "games": [
+                {**GAME, "id": "ruby", "family": "rse"},
+                {**GAME, "id": "sapphire", "family": "rse"},
+            ],
+            "tracklists": [],
+            "youtube": youtube,
+        }
+    )
+
+
+def test_youtube_block_is_optional() -> None:
+    games = GamesFile.model_validate({"games": [], "tracklists": []})
+    assert games.youtube.playlists == [] and games.youtube.albums == []
+
+
+def test_youtube_playlists_albums_and_aliases_parse() -> None:
+    games = games_file(
+        {
+            "playlists": [
+                {"games": ["ruby"], "playlist": "OLAK5uy_abcdefghij", "first": 2, "last": 9},
+                {"games": ["ruby", "sapphire"], "playlist": "PLabcdefghij", "note": "rip"},
+            ],
+            "albums": [{"games": ["sapphire"], "video": "abcdefghijk"}],
+            "aliases": {"rse": ["Hoenn"], "ruby": ["Rubí"]},
+        }
+    )
+    first, second = games.youtube.playlists
+    assert (first.games, first.playlist, first.first, first.last) == (
+        ["ruby"],
+        "OLAK5uy_abcdefghij",
+        2,
+        9,
+    )
+    assert second.first is None and second.note == "rip"
+    assert games.youtube.albums[0].video == "abcdefghijk"
+    assert games.youtube.aliases == {"rse": ["Hoenn"], "ruby": ["Rubí"]}
+
+
+@pytest.mark.parametrize(
+    "youtube",
+    [
+        {"playlists": [{"games": ["emerald"], "playlist": "PLabcdefghij"}]},
+        {"playlists": [{"games": [], "playlist": "PLabcdefghij"}]},
+        {"playlists": [{"games": ["ruby"], "playlist": "PL abc"}]},
+        {"playlists": [{"games": ["ruby"], "playlist": "PLabcdefghij", "first": 5, "last": 4}]},
+        {"playlists": [{"games": ["ruby"], "playlist": "PLabcdefghij", "first": 0}]},
+        {"albums": [{"games": ["ruby"], "video": "short"}]},
+        {"albums": [{"games": ["emerald"], "video": "abcdefghijk"}]},
+        {"aliases": {"hoenn": ["Hoenn"]}},
+    ],
+    ids=[
+        "unknown-game",
+        "no-games",
+        "bad-playlist-id",
+        "first-after-last",
+        "first-below-1",
+        "bad-video-id",
+        "unknown-album-game",
+        "unknown-alias-key",
+    ],
+)
+def test_youtube_block_errors(youtube: dict[str, Any]) -> None:
+    with pytest.raises(ValidationError):
+        games_file(youtube)
+
+
+def test_streams_override_parses() -> None:
+    overrides = Overrides.model_validate(
+        {
+            "tracks": {
+                "rse-route-101": {
+                    "streams": {
+                        "accept": [
+                            {"videoId": "abcdefghijk"},
+                            {"videoId": "bcdefghijkl", "startMs": 1000, "endMs": 5000},
+                        ],
+                        "reject": ["cdefghijklm"],
+                    }
+                }
+            }
+        }
+    )
+    streams = overrides.tracks["rse-route-101"].streams
+    assert streams is not None
+    assert [(s.videoId, s.startMs, s.endMs) for s in streams.accept] == [
+        ("abcdefghijk", 0, None),
+        ("bcdefghijkl", 1000, 5000),
+    ]
+    assert streams.reject == ["cdefghijklm"]
+
+
+@pytest.mark.parametrize(
+    "streams",
+    [
+        {"accept": [{"videoId": "short"}]},
+        {"accept": [{"videoId": "abcdefghijk", "startMs": -1}]},
+        {"accept": [{"videoId": "abcdefghijk", "startMs": 5, "endMs": 5}]},
+        {"accept": [{"videoId": "abcdefghijk"}, {"videoId": "abcdefghijk"}]},
+        {"reject": ["short"]},
+        {"accept": [{"videoId": "abcdefghijk"}], "reject": ["abcdefghijk"]},
+    ],
+    ids=["bad-id", "negative-start", "end-not-after-start", "duplicate", "bad-reject", "both"],
+)
+def test_streams_override_errors(streams: dict[str, Any]) -> None:
+    with pytest.raises(ValidationError):
+        Overrides.model_validate({"tracks": {"rse-x": {"streams": streams}}})
