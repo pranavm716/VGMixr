@@ -60,6 +60,8 @@ class Match:
     streams: list[StreamSource]
     # The best-scoring candidates not rejected by override, best first.
     candidates: list[Scored]
+    # What the candidates were scored against.
+    facts: TrackFacts | None = None
 
 
 def match_tracks(
@@ -126,7 +128,8 @@ class _Matcher:
             status = "review"
         else:
             status = "unmatched"
-        return Match(track.id, track.family, track.title, status, sources, ranked[:KEPT_CANDIDATES])
+        best = ranked[:KEPT_CANDIDATES]
+        return Match(track.id, track.family, track.title, status, sources, best, facts)
 
     def _facts(self, track: DraftTrack) -> TrackFacts:
         games = track.games or self._family_games[track.family]
@@ -201,6 +204,7 @@ def candidates_json(matches: list[Match]) -> list[dict[str, Any]]:
             "family": m.family,
             "title": m.title,
             "status": m.status,
+            "track": _facts_json(m.facts),
             "candidates": [
                 {
                     "videoId": s.candidate.video_id,
@@ -214,12 +218,24 @@ def candidates_json(matches: list[Match]) -> list[dict[str, Any]]:
                     "position": s.candidate.position,
                     "score": round(s.score.value, 3),
                     "reasons": s.score.reasons,
+                    "noise": sorted(s.candidate.noise),
                 }
                 for s in m.candidates
             ],
         }
         for m in matches
     ]
+
+
+def _facts_json(facts: TrackFacts | None) -> dict[str, Any] | None:
+    if facts is None:
+        return None
+    return {
+        "games": sorted(facts.games),
+        "durationMs": facts.duration_ms,
+        "position": facts.position,
+        "gameBoy": facts.game_boy,
+    }
 
 
 def _stream(video_id: str, start_ms: int, end_ms: int | None, confidence: float) -> StreamSource:

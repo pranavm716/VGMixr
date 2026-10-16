@@ -249,6 +249,13 @@ def test_candidates_serialize_for_the_review_tool() -> None:
     assert (candidate["startMs"], candidate["endMs"], candidate["durationMs"]) == (0, None, 60_000)
     assert 0.5 <= candidate["score"] < 0.8
     assert "title" in candidate["reasons"][0]
+    assert candidate["noise"] == []
+    assert data["track"] == {
+        "games": ["emerald", "ruby", "sapphire"],
+        "durationMs": 60_000,
+        "position": None,
+        "gameBoy": False,
+    }
 
 
 def test_words_common_to_a_playlist_do_not_count_against_titles() -> None:
