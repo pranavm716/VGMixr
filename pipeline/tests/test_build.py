@@ -215,3 +215,17 @@ def test_reports_every_error_at_once() -> None:
     with pytest.raises(BuildError) as error:
         build([], overrides)
     assert len(error.value.errors) == 2
+
+
+def test_extra_duration_sets_length_and_can_make_a_jingle() -> None:
+    overrides = Overrides(
+        extras=[
+            Extra(family="rby", title="Beach", duration="2:01"),
+            Extra(family="rby", title="Banner Intro", duration="0:03"),
+        ]
+    )
+    result = build([], overrides)
+    assert track(result, "rby-beach").durationMs == 121_000
+    assert [(e.id, e.duration_ms, e.reason) for e in result.excluded] == [
+        ("rby-banner-intro", 3_000, "jingle")
+    ]

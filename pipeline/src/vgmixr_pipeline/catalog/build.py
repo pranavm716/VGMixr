@@ -21,7 +21,7 @@ from vgmixr_pipeline.catalog.config import (
 )
 from vgmixr_pipeline.catalog.jingles import is_jingle
 from vgmixr_pipeline.catalog.slug import track_id
-from vgmixr_pipeline.catalog.tracklist import parse_disc, parse_tsv_disc
+from vgmixr_pipeline.catalog.tracklist import parse_disc, parse_duration, parse_tsv_disc
 from vgmixr_pipeline.manifest.models import Game, Source
 
 
@@ -140,6 +140,8 @@ class _Track:
     category: str | None = None
     sources: list[Source] = field(default_factory=list)
     is_extra: bool = False
+    # An extra's own length; generated tracks take theirs from their occurrences.
+    duration_ms: int | None = None
 
 
 def build_tracks(
@@ -167,7 +169,7 @@ def build_tracks(
     excluded: list[Excluded] = []
     for track in tracks.values():
         override = overrides.tracks.get(track.id, TrackOverride())
-        duration = _duration(track.occurrences)
+        duration = _duration(track)
         if override.exclude:
             excluded.append(Excluded(track.family, track.id, track.title, duration, "override"))
         elif override.exclude is None and is_jingle(track.title, duration):
@@ -254,6 +256,7 @@ def _extras(
         track.explicit_order = extra.order
         track.category = extra.category
         track.sources = list(extra.sources)
+        track.duration_ms = parse_duration(extra.duration) if extra.duration else None
         if extra.games is not None:
             _check_games(id_, extra.games, family_games[extra.family], errors)
         tracks.append(track)
@@ -306,7 +309,7 @@ def _draft(tracks: list[_Track], family_games: dict[str, list[str]]) -> list[Dra
                     category=track.category or guess_category(track.title),
                     order=track.explicit_order if track.explicit_order is not None else order,
                     sources=track.sources,
-                    durationMs=_duration(track.occurrences),
+                    durationMs=_duration(track),
                     origins=[o.origin for o in track.occurrences],
                 )
             )
@@ -317,5 +320,7 @@ def _games(occurrence: Occurrence, family_games: dict[str, list[str]]) -> set[st
     return set(occurrence.games or family_games[occurrence.family])
 
 
-def _duration(occurrences: list[Occurrence]) -> int | None:
-    return max((o.duration_ms for o in occurrences if o.duration_ms is not None), default=None)
+def _duration(track: _Track) -> int | None:
+    """The longest known length among the track's rows, or an extra's own length."""
+    known = [o.duration_ms for o in track.occurrences if o.duration_ms is not None]
+    return max(known) if known else track.duration_ms

@@ -86,7 +86,16 @@ class Extra(_Model):
     category: Category | None = None
     order: int | None = None
     sources: list[Source] = []
+    # "m:ss"; lets the jingle length rule apply to the extra.
+    duration: str | None = None
     note: str | None = None
+
+    @field_validator("duration")
+    @classmethod
+    def _check_duration(cls, duration: str | None) -> str | None:
+        if duration is not None and parse_duration(duration) is None:
+            raise ValueError(f"{duration!r} is not m:ss")
+        return duration
 
 
 class Overrides(_Model):

@@ -121,3 +121,8 @@ def test_file_tracklists_exist_and_have_their_disc(games: GamesFile) -> None:
         if tracklist.file is not None:
             text = (DATA_DIR / tracklist.file).read_text(encoding="utf-8")
             assert parse_tsv_disc(text, tracklist.disc), tracklist
+
+
+def test_extra_duration_must_be_minutes_and_seconds() -> None:
+    with pytest.raises(ValidationError):
+        Overrides.model_validate({"extras": [{"family": "f", "title": "T", "duration": "1:2"}]})
