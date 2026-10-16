@@ -12,7 +12,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict
 
 from vgmixr_pipeline.catalog.category import guess_category
-from vgmixr_pipeline.catalog.config import GamesFile, Overrides, TrackOverride
+from vgmixr_pipeline.catalog.config import Durations, GamesFile, Overrides, TrackOverride
 from vgmixr_pipeline.catalog.jingles import is_jingle
 from vgmixr_pipeline.catalog.slug import track_id
 from vgmixr_pipeline.catalog.tracklist import parse_disc
@@ -82,8 +82,13 @@ def build_draft(
     overrides: Overrides,
     wikitext: Callable[[str], str],
     generated_at: str,
+    durations: Durations | None = None,
 ) -> tuple[Draft, BuildResult]:
-    """Reads every tracklist's disc from `wikitext(page)` and builds the draft."""
+    """Reads every tracklist's disc from `wikitext(page)` and builds the draft.
+
+    `durations` fills in track lengths that the page leaves blank.
+    """
+    durations = durations or Durations()
     occurrences = []
     errors = []
     for tracklist in games_file.tracklists:
@@ -98,7 +103,10 @@ def build_draft(
         for row in rows:
             origin = f"{tracklist.page} / {tracklist.disc} #{row.number}"
             title = row.title + tracklist.titleSuffix
-            occurrences.append(Occurrence(tracklist.family, games, title, row.duration_ms, origin))
+            duration = row.duration_ms
+            if duration is None:
+                duration = durations.lookup(tracklist.page, tracklist.disc, row.number)
+            occurrences.append(Occurrence(tracklist.family, games, title, duration, origin))
     if errors:
         raise BuildError(errors)
     result = build_tracks(games_file.games, occurrences, overrides)

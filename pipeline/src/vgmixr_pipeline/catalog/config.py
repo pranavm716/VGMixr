@@ -1,15 +1,17 @@
 """The catalog builder's hand-written inputs in pipeline/data/.
 
 games.json: the games (in manifest form) and, per family, which Bulbapedia album discs list its
-tracks. overrides.json: hand corrections keyed by generated track id, plus extra tracks. Both are
-reapplied on every build; the generated draft is never edited by hand.
+tracks. overrides.json: hand corrections keyed by generated track id, plus extra tracks.
+durations.json: track lengths for album pages that list none. All are reapplied on every build;
+the generated draft is never edited by hand.
 """
 
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
 
+from vgmixr_pipeline.catalog.tracklist import parse_duration
 from vgmixr_pipeline.manifest.models import Game, Source
 
 DATA_DIR = Path(__file__).resolve().parents[3] / "data"
@@ -76,9 +78,42 @@ class Overrides(_Model):
     extras: list[Extra] = []
 
 
+class PageDurations(_Model):
+    """Track lengths for an album page that lacks them, from another listing of the same album."""
+
+    source: str
+    # Disc heading -> "m:ss" per track in CD number order (index 0 is #1); null where unknown.
+    discs: dict[str, list[str | None]]
+
+    @field_validator("discs")
+    @classmethod
+    def _check_times(cls, discs: dict[str, list[str | None]]) -> dict[str, list[str | None]]:
+        for disc, times in discs.items():
+            for number, time in enumerate(times, start=1):
+                if time is not None and parse_duration(time) is None:
+                    raise ValueError(f"{disc} #{number}: {time!r} is not m:ss")
+        return discs
+
+
+class Durations(_Model):
+    """Fills in durations Bulbapedia leaves blank; Bulbapedia's own values always win."""
+
+    pages: dict[str, PageDurations] = {}
+
+    def lookup(self, page: str, disc: str, number: int) -> int | None:
+        entry = self.pages.get(page)
+        times = entry.discs.get(disc, []) if entry else []
+        time = times[number - 1] if 0 < number <= len(times) else None
+        return parse_duration(time) if time is not None else None
+
+
 def load_games(path: Path = DATA_DIR / "games.json") -> GamesFile:
     return GamesFile.model_validate_json(path.read_text(encoding="utf-8"))
 
 
 def load_overrides(path: Path = DATA_DIR / "overrides.json") -> Overrides:
     return Overrides.model_validate_json(path.read_text(encoding="utf-8"))
+
+
+def load_durations(path: Path = DATA_DIR / "durations.json") -> Durations:
+    return Durations.model_validate_json(path.read_text(encoding="utf-8"))

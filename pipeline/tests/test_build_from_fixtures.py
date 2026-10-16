@@ -6,13 +6,14 @@ from pathlib import Path
 import pytest
 
 from vgmixr_pipeline.catalog.build import BuildError, Draft, build_draft
-from vgmixr_pipeline.catalog.config import GamesFile, Overrides
+from vgmixr_pipeline.catalog.config import Durations, GamesFile, Overrides
 from vgmixr_pipeline.manifest.parse import Valid, parse
 
 PAGES = Path(__file__).parent / "data" / "bulbapedia"
 RS = "Pokémon Ruby & Pokémon Sapphire: Super Music Collection"
 B2W2 = "Pokémon Black 2 & Pokémon White 2: Super Music Collection"
-FILES = {RS: "rs", B2W2: "b2w2"}
+ZA = "Pokémon Legends: Z-A + Mega Dimension Super Music Collection"
+FILES = {RS: "rs", B2W2: "b2w2", ZA: "za"}
 
 GAMES = GamesFile.model_validate(
     {
@@ -99,3 +100,42 @@ def test_missing_disc_names_the_tracklist() -> None:
     )
     with pytest.raises(BuildError, match="Disc 7"):
         build_draft(games, Overrides(), wikitext, "2026-10-15T12:00:00Z")
+
+
+ZA_GAMES = GamesFile.model_validate(
+    {
+        "games": [
+            {"id": "plza", "name": "Legends: Z-A", "shortName": "Z-A", "color": "#31CA56",
+             "generation": 9, "platform": "Switch"},
+        ],
+        "tracklists": [{"family": "plza", "page": ZA, "disc": "Disc 2"}],
+    }
+)  # fmt: skip
+
+
+def durations(page: str, disc: str, times: list[str | None]) -> Durations:
+    return Durations.model_validate(
+        {"pages": {page: {"source": "https://vgmdb.net/album/1", "discs": {disc: times}}}}
+    )
+
+
+def test_fills_missing_durations_by_track_number() -> None:
+    """The Z-A fixture has rows 3-6 and no durations; the list is in track order from #1."""
+    filled = durations(ZA, "Disc 2", ["6:56", "1:52", "1:23", "4:32", "0:10", None])
+    draft, result = build_draft(ZA_GAMES, Overrides(), wikitext, "2026-10-15T12:00:00Z", filled)
+    tracks = {t.id: t for t in draft.tracks}
+    assert tracks["plza-warning"].durationMs == 83_000
+    assert tracks["plza-battle-rogue-mega-evolved-pokemon"].durationMs == 272_000
+    # Mega Stone is now known to be a 10 s jingle; #6 has no duration and a jingle title.
+    assert [(e.title, e.duration_ms) for e in result.excluded] == [
+        ("Mega Stone", 10_000),
+        ("Obtained a Mega Stone!", None),
+    ]
+
+
+def test_bulbapedia_durations_win() -> None:
+    times: list[str | None] = ["9:59"] * 11
+    filled = durations(RS, "Disc 1", times)
+    draft = build_draft(GAMES, Overrides(), wikitext, "2026-10-15T12:00:00Z", filled)[0]
+    route = next(t for t in draft.tracks if t.id == "rse-route-101")
+    assert route.durationMs == 60_000

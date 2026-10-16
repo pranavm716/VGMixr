@@ -11,7 +11,7 @@ from pathlib import Path
 
 from vgmixr_pipeline.catalog.build import BuildError, build_draft
 from vgmixr_pipeline.catalog.bulbapedia import Bulbapedia
-from vgmixr_pipeline.catalog.config import DATA_DIR, load_games, load_overrides
+from vgmixr_pipeline.catalog.config import DATA_DIR, load_durations, load_games, load_overrides
 from vgmixr_pipeline.catalog.report import family_report, summary
 
 OUT_DIR = DATA_DIR.parent / "out"
@@ -27,7 +27,9 @@ def main(argv: list[str] | None = None) -> int:
     bulbapedia = Bulbapedia(args.out / "bulbapedia", refresh=args.refresh)
     generated_at = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     try:
-        draft, result = build_draft(games, load_overrides(), bulbapedia.wikitext, generated_at)
+        draft, result = build_draft(
+            games, load_overrides(), bulbapedia.wikitext, generated_at, load_durations()
+        )
     except BuildError as e:
         print("Build failed:", *e.errors, sep="\n  ", file=sys.stderr)
         return 1

@@ -45,7 +45,7 @@ def parse_disc(
         number = int(_text(cells[0]))
         if (first is not None and number < first) or (last is not None and number > last):
             continue
-        duration = _duration(_text(cells[duration_col])) if duration_col is not None else None
+        duration = parse_duration(_text(cells[duration_col])) if duration_col is not None else None
         rows.append(Row(number, _text(cells[title_col]), duration))
     return rows
 
@@ -138,7 +138,8 @@ def _text(code: Wikicode) -> str:
     return " ".join(text.split())
 
 
-def _duration(text: str) -> int | None:
+def parse_duration(text: str) -> int | None:
+    """Milliseconds from "m:ss" or "h:mm:ss"; None for anything else (e.g. a blank cell)."""
     match = _DURATION.fullmatch(text)
     if match is None:
         return None

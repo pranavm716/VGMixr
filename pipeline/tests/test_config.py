@@ -5,7 +5,14 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from vgmixr_pipeline.catalog.config import GamesFile, Overrides, load_games, load_overrides
+from vgmixr_pipeline.catalog.config import (
+    Durations,
+    GamesFile,
+    Overrides,
+    load_durations,
+    load_games,
+    load_overrides,
+)
 from vgmixr_pipeline.manifest.models import Manifest
 from vgmixr_pipeline.manifest.parse import Valid, parse
 from vgmixr_pipeline.manifest.validate import validate
@@ -86,3 +93,15 @@ def test_override_fields_are_strict() -> None:
         Overrides.model_validate_json('{"tracks": {"rse-x": {"categry": "town"}}}')
     with pytest.raises(ValidationError):
         Overrides.model_validate_json('{"tracks": {"rse-x": {"category": "boss"}}}')
+
+
+def test_durations_are_for_listed_tracklists(games: GamesFile) -> None:
+    listed = {(t.page, t.disc) for t in games.tracklists}
+    for page, durations in load_durations().pages.items():
+        assert {(page, disc) for disc in durations.discs} & listed, page
+
+
+def test_durations_must_be_minutes_and_seconds() -> None:
+    page = {"source": "https://vgmdb.net/album/1", "discs": {"Disc 1": ["1:2"]}}
+    with pytest.raises(ValidationError):
+        Durations.model_validate({"pages": {"P": page}})

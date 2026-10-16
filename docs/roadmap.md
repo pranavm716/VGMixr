@@ -33,7 +33,7 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
     - Track ids are `<family>-<title-slug>`, frozen once published: a corrected title changes `title`, never `id`.
     - Families: BW and B2W2 are separate. SM and USUM start as one family; Part A reports shared vs. exclusive track counts per family, and the user confirms or splits SM/USUM (and any other edge case) before the catalog ships.
     - Same title within a family merges into one shared track; rearranged versions are split via override.
-    - Jingles and fanfares are excluded (a title list, plus 15 s or shorter, since the album pages list durations); an override can bring one back.
+    - Jingles and fanfares are excluded (a title list, plus 15 s or shorter, since the album pages list durations); an override can bring one back. Where a page lists no durations (Z-A), `pipeline/data/durations.json` supplies them from another listing of the same album (VGMdb, copied by hand).
     - Hand corrections (title, category, games, merge, split, exclude, extra tracks) live in a committed overrides file (`pipeline/data/overrides.json`) keyed by track id, reapplied on every build. An override for a track that doesn't exist fails the build. Never hand-edit the generated manifest.
     - The builder's output replaces the seed manifest. The local test-tone track survives as an override extra track (step 8 needs it). Seed ids that change only affect the dev install: clear app data once, no `replaces`.
     - Bulbapedia wikitext comes from the MediaWiki API, cached in `pipeline/out/` (gitignored), parsed with mwparserfromhell. A few trimmed pages are committed under `pipeline/tests/` so pytest runs offline.
