@@ -1,11 +1,13 @@
-"""The family report: per family, shared vs. exclusive tracks, categories and exclusions.
-
-Used to confirm family groupings (e.g. SM/USUM) and to find tracks that need an override.
+"""The reports. The family report: per family, shared vs. exclusive tracks, categories and
+exclusions, used to confirm family groupings (e.g. SM/USUM) and to find tracks that need an
+override. The match report: per family, how many tracks got stream sources, which need review and
+which found nothing (and so are left out of the manifest).
 """
 
 from collections import Counter
 
 from vgmixr_pipeline.catalog.build import BuildResult, DraftTrack, Excluded
+from vgmixr_pipeline.catalog.match import Match
 from vgmixr_pipeline.manifest.models import Game
 
 CATEGORIES = ["battle", "route", "town", "dungeon", "event", "other"]
@@ -46,6 +48,49 @@ def summary(games: list[Game], result: BuildResult) -> str:
             f"exclusive{other:>4} other{excluded:>4} excluded"
         )
     return "\n".join(lines)
+
+
+def match_report(games: list[Game], matches: list[Match]) -> str:
+    sections = ["# Match report", ""]
+    for family, members in _families(games).items():
+        names = " / ".join(g.name for g in members)
+        sections += [f"## {family}: {names}", ""]
+        group = [m for m in matches if m.family == family]
+        if not group:
+            sections += ["- **No tracks.**", ""]
+            continue
+        matched, review, unmatched = _by_status(group)
+        sections.append(
+            f"- Matched: {len(matched)}, needs review: {len(review)}, unmatched: {len(unmatched)}"
+        )
+        if review:
+            best = [f"{m.title} (best {m.candidates[0].score.value:.2f})" for m in review]
+            titles = ", ".join(best)
+            sections.append(f"- Needs review: {titles}")
+        if unmatched:
+            sections.append(f"- Unmatched: {', '.join(m.title for m in unmatched)}")
+        sections.append("")
+    return "\n".join(sections)
+
+
+def match_summary(games: list[Game], matches: list[Match]) -> str:
+    lines = ["family  matched  review  unmatched"]
+    for family in _families(games):
+        matched, review, unmatched = _by_status([m for m in matches if m.family == family])
+        lines.append(
+            f"{family:<6}{len(matched):>5} matched{len(review):>5} review"
+            f"{len(unmatched):>5} unmatched"
+        )
+    return "\n".join(lines)
+
+
+def _by_status(matches: list[Match]) -> tuple[list[Match], list[Match], list[Match]]:
+    """Matched (tracks with hand-written sources count as matched), needs review, unmatched."""
+    return (
+        [m for m in matches if m.status in ("matched", "hand")],
+        [m for m in matches if m.status == "review"],
+        [m for m in matches if m.status == "unmatched"],
+    )
 
 
 def _families(games: list[Game]) -> dict[str, list[Game]]:
