@@ -28,15 +28,16 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
 ## Phase 3: real catalog (independent of the app; can run in a separate worktree alongside Phase 2)
 16. [ ] Catalog builder, part A: Bulbapedia track lists into a draft manifest. Decisions:
     - Scope: mainline Gen 1-9, including remakes and both Legends games; no spin-offs.
-    - Games come from a hand-written, committed games file (name, shortName, color, generation, platform, family, and later the YouTube playlists per game). Claude drafts colors and short names; the user reviews them. Bulbapedia supplies only tracks.
+    - Games come from a hand-written, committed games file (`pipeline/data/games.json`: name, shortName, color, generation, platform, family, and later the YouTube playlists per game). Claude drafts colors (Bulbapedia's version colors) and short names; the user reviews them. Bulbapedia supplies only tracks.
+    - Track lists come from Bulbapedia's soundtrack album pages, selected per family as page + disc + optional CD number range in the games file. Games without an album of their own: Emerald and Platinum come from B2W2 Disc 4, Yellow from LGPE Disc 3, GSC from HGSS Disc 3 (GB Sounds, minus the HGSS-only additions), BDSP reuses the DP album's titles. USUM-only tracks come from a hand-supplied list as override extras. Gen 1 is Red, Blue and Yellow (no Japanese Green).
     - Track ids are `<family>-<title-slug>`, frozen once published: a corrected title changes `title`, never `id`.
     - Families: BW and B2W2 are separate. SM and USUM start as one family; Part A reports shared vs. exclusive track counts per family, and the user confirms or splits SM/USUM (and any other edge case) before the catalog ships.
     - Same title within a family merges into one shared track; rearranged versions are split via override.
-    - Jingles and fanfares are excluded (a title list, plus a length threshold once lengths are known); an override can bring one back.
-    - Hand corrections (category, merge, split, exclude, extra tracks) live in a committed overrides file keyed by track id, reapplied on every build. Never hand-edit the generated manifest.
+    - Jingles and fanfares are excluded (a title list, plus 15 s or shorter, since the album pages list durations); an override can bring one back.
+    - Hand corrections (title, category, games, merge, split, exclude, extra tracks) live in a committed overrides file (`pipeline/data/overrides.json`) keyed by track id, reapplied on every build. An override for a track that doesn't exist fails the build. Never hand-edit the generated manifest.
     - The builder's output replaces the seed manifest. The local test-tone track survives as an override extra track (step 8 needs it). Seed ids that change only affect the dev install: clear app data once, no `replaces`.
     - Bulbapedia wikitext comes from the MediaWiki API, cached in `pipeline/out/` (gitignored), parsed with mwparserfromhell. A few trimmed pages are committed under `pipeline/tests/` so pytest runs offline.
-    - Until Part B, tracks have no stream sources, so the draft is not yet a valid manifest; don't overwrite `catalog/manifest.json` in this step.
+    - Until Part B, tracks have no stream sources, so the draft (`pipeline/out/draft.json`, with each track's duration and Bulbapedia origins) is not yet a valid manifest; don't overwrite `catalog/manifest.json` in this step.
 17. [ ] Catalog builder, part B: YouTube candidate matching and a review tool for low-confidence matches. Decisions:
     - Every track gets stream sources, including tracks that will later get local files (local sources go in front of them).
     - YouTube access via yt-dlp (no API key or quota). Playlists first: per-game playlists from the games file, matched by title within the right game. Search (top ~10 results) only for leftovers. Album videos with description timestamps become `startMs`/`endMs` as a last resort.
