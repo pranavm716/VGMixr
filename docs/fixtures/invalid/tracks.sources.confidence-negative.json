@@ -37,7 +37,13 @@
       "category": "route",
       "order": 12,
       "sources": [
-        { "type": "stream", "videoId": "XXXXXXXXXXX", "startMs": 0, "endMs": null, "confidence": -0.1 }
+        {
+          "type": "stream",
+          "videoId": "XXXXXXXXXXX",
+          "startMs": 0,
+          "endMs": null,
+          "confidence": -0.1
+        }
       ]
     }
   ]

@@ -37,7 +37,14 @@
       "category": "route",
       "order": 12,
       "sources": [
-        { "type": "local", "path": "rse/012.flac", "loop": {"sampleRate": 32000, "introEnd": 96000} }
+        {
+          "type": "local",
+          "path": "rse/012.flac",
+          "loop": {
+            "sampleRate": 32000,
+            "introEnd": 96000
+          }
+        }
       ]
     }
   ]

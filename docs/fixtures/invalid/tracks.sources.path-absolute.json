@@ -37,7 +37,10 @@
       "category": "route",
       "order": 12,
       "sources": [
-        { "type": "local", "path": "/rse/012.flac" }
+        {
+          "type": "local",
+          "path": "/rse/012.flac"
+        }
       ]
     }
   ]

@@ -2,7 +2,14 @@
   "schemaVersion": 1,
   "generatedAt": "2026-10-14T08:00:00Z",
   "games": [
-    { "id": "ruby", "name": "Ruby", "shortName": "R", "generation": 3, "platform": "GBA", "family": "rse" },
+    {
+      "id": "ruby",
+      "name": "Ruby",
+      "shortName": "R",
+      "generation": 3,
+      "platform": "GBA",
+      "family": "rse"
+    },
     {
       "id": "sapphire",
       "name": "Sapphire",
@@ -29,7 +36,12 @@
       "category": "route",
       "order": 12,
       "sources": [
-        { "type": "stream", "videoId": "XXXXXXXXXXX", "startMs": 0, "endMs": null }
+        {
+          "type": "stream",
+          "videoId": "XXXXXXXXXXX",
+          "startMs": 0,
+          "endMs": null
+        }
       ]
     }
   ]

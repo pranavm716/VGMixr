@@ -33,12 +33,20 @@
     {
       "id": "rse-route-101",
       "family": "rse",
-      "games": ["ruby", "ruby"],
       "title": "Route 101",
       "category": "route",
       "order": 12,
       "sources": [
-        { "type": "stream", "videoId": "XXXXXXXXXXX", "startMs": 0, "endMs": null }
+        {
+          "type": "stream",
+          "videoId": "XXXXXXXXXXX",
+          "startMs": 0,
+          "endMs": null
+        }
+      ],
+      "games": [
+        "ruby",
+        "ruby"
       ]
     }
   ]

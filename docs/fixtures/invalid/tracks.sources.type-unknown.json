@@ -37,7 +37,10 @@
       "category": "route",
       "order": 12,
       "sources": [
-        { "type": "midi", "path": "rse/012.mid" }
+        {
+          "type": "midi",
+          "path": "rse/012.mid"
+        }
       ]
     }
   ]

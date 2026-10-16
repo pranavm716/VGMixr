@@ -9,8 +9,12 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Each step runs one named check from scripts/check.sh, the same checks as the Stop hook in
+# .claude/settings.json. `!cancelled()` runs the remaining checks after one fails, so a run
+# reports every failure, not just the first.
 jobs:
-  check:
+  android:
+    name: Android
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -23,11 +27,24 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - uses: astral-sh/setup-uv@v6
-        if: hashFiles('pipeline/**') != ''
+      - name: Forbidden files
+        run: bash scripts/check.sh forbidden-files
 
-      # Same checks as the Stop hook in .claude/settings.json.
-      - run: bash scripts/check.sh
+      - name: Build
+        if: ${{ !cancelled() }}
+        run: bash scripts/check.sh build
+
+      - name: Unit tests
+        if: ${{ !cancelled() }}
+        run: bash scripts/check.sh unit-tests
+
+      - name: Lint
+        if: ${{ !cancelled() }}
+        run: bash scripts/check.sh lint
+
+      - name: Format (Spotless)
+        if: ${{ !cancelled() }}
+        run: bash scripts/check.sh format
 
       - uses: actions/upload-artifact@v4
         if: failure()
@@ -35,3 +52,31 @@ jobs:
           name: reports
           path: app/build/reports/
           if-no-files-found: ignore
+
+  pipeline:
+    name: Pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Format (ruff)
+        run: bash scripts/check.sh py-format
+
+      - name: Lint (ruff)
+        if: ${{ !cancelled() }}
+        run: bash scripts/check.sh py-lint
+
+      - name: Types (mypy)
+        if: ${{ !cancelled() }}
+        run: bash scripts/check.sh py-types
+
+      - name: Tests (pytest)
+        if: ${{ !cancelled() }}
+        run: bash scripts/check.sh py-tests
+
+      - name: Fixtures up to date
+        if: ${{ !cancelled() }}
+        run: bash scripts/check.sh fixtures
