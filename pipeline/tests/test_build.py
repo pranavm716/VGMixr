@@ -229,3 +229,20 @@ def test_extra_duration_sets_length_and_can_make_a_jingle() -> None:
     assert [(e.id, e.duration_ms, e.reason) for e in result.excluded] == [
         ("rby-banner-intro", 3_000, "jingle")
     ]
+
+
+def test_duration_override_replaces_the_computed_length() -> None:
+    overrides = Overrides(
+        tracks={
+            "rby-intro-part-2": TrackOverride(mergeInto="rby-intro-part-1"),
+            "rby-intro-part-1": TrackOverride(title="Intro", duration="0:45"),
+        }
+    )
+    result = build([occ("Intro Part 1", seconds=33), occ("Intro Part 2", seconds=12)], overrides)
+    intro = track(result, "rby-intro-part-1")
+    assert (intro.title, intro.durationMs, len(intro.origins)) == ("Intro", 45_000, 2)
+
+
+def test_duration_override_is_what_the_jingle_rule_sees() -> None:
+    overrides = Overrides(tracks={"rby-short-theme": TrackOverride(duration="0:30")})
+    assert ids(build([occ("Short Theme", seconds=10)], overrides)) == ["rby-short-theme"]

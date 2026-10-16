@@ -19,6 +19,12 @@ DATA_DIR = Path(__file__).resolve().parents[3] / "data"
 type Category = Literal["battle", "route", "town", "dungeon", "event", "other"]
 
 
+def _check_time(time: str | None) -> str | None:
+    if time is not None and parse_duration(time) is None:
+        raise ValueError(f"{time!r} is not m:ss")
+    return time
+
+
 class _Model(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
 
@@ -73,7 +79,14 @@ class TrackOverride(_Model):
     mergeInto: str | None = None
     # New track id -> the games whose occurrences move to it.
     split: dict[str, Split] | None = None
+    # "m:ss"; replaces the computed length (e.g. for a track merged from parts played back to back).
+    duration: str | None = None
     note: str | None = None
+
+    @field_validator("duration")
+    @classmethod
+    def _check_duration(cls, duration: str | None) -> str | None:
+        return _check_time(duration)
 
 
 class Extra(_Model):
@@ -93,9 +106,7 @@ class Extra(_Model):
     @field_validator("duration")
     @classmethod
     def _check_duration(cls, duration: str | None) -> str | None:
-        if duration is not None and parse_duration(duration) is None:
-            raise ValueError(f"{duration!r} is not m:ss")
-        return duration
+        return _check_time(duration)
 
 
 class Overrides(_Model):

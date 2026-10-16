@@ -142,6 +142,8 @@ class _Track:
     is_extra: bool = False
     # An extra's own length; generated tracks take theirs from their occurrences.
     duration_ms: int | None = None
+    # A length set by override, which wins over everything else.
+    duration_override: int | None = None
 
 
 def build_tracks(
@@ -169,6 +171,8 @@ def build_tracks(
     excluded: list[Excluded] = []
     for track in tracks.values():
         override = overrides.tracks.get(track.id, TrackOverride())
+        if override.duration is not None:
+            track.duration_override = parse_duration(override.duration)
         duration = _duration(track)
         if override.exclude:
             excluded.append(Excluded(track.family, track.id, track.title, duration, "override"))
@@ -321,6 +325,9 @@ def _games(occurrence: Occurrence, family_games: dict[str, list[str]]) -> set[st
 
 
 def _duration(track: _Track) -> int | None:
-    """The longest known length among the track's rows, or an extra's own length."""
+    """A length set by override, else the longest known length among the track's rows, else an
+    extra's own length."""
+    if track.duration_override is not None:
+        return track.duration_override
     known = [o.duration_ms for o in track.occurrences if o.duration_ms is not None]
     return max(known) if known else track.duration_ms

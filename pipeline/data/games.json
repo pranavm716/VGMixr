@@ -43,7 +43,7 @@
     { "family": "rby", "games": ["red", "blue"], "page": "Game Boy: Entire Pokémon Sounds Collection CD", "disc": "Disc 1", "last": 45 },
     { "family": "rby", "games": ["yellow"], "page": "Pokémon: Let's Go, Pikachu! & Pokémon: Let's Go, Eevee! Super Music Collection", "disc": "Disc 3" },
 
-    { "family": "gsc", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3" },
+    { "family": "gsc", "file": "tracklists/gsc.tsv", "disc": "Disc 1" },
 
     { "family": "rse", "page": "Pokémon Ruby & Pokémon Sapphire: Super Music Collection", "disc": "Disc 1" },
     { "family": "rse", "page": "Pokémon Ruby & Pokémon Sapphire: Super Music Collection", "disc": "Disc 2" },
