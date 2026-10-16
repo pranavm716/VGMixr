@@ -306,8 +306,9 @@ def score(track: TrackFacts, candidate: Candidate, names: Names) -> Score:
     evidence = names.evidence(track, candidate)
     trust = w.trust_by_kind[candidate.kind]
     position = _position_fit(track, candidate)
-    value = (
-        w.title * title
+    # The title gates the rest: a right-game playlist entry with the wrong title is still wrong.
+    value = title * (
+        w.title
         + w.evidence * {"right": 1.0, "neutral": 0.5, "wrong": 0.0}[evidence]
         + w.trust * trust
         + w.position * position
