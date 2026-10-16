@@ -9,6 +9,7 @@ import io.github.pranavm716.vgmixr.domain.model.Manifest
 import io.github.pranavm716.vgmixr.domain.model.Source
 import io.github.pranavm716.vgmixr.domain.model.Track
 import java.time.Instant
+import javax.inject.Inject
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -16,7 +17,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.intOrNull
 
 /** Parses manifest JSON (docs/manifest.md) into a valid [Manifest] or its validation errors. */
-class ManifestParser {
+class ManifestParser @Inject constructor() {
     // Unknown keys are allowed: adding an optional field doesn't bump schemaVersion.
     private val json = Json { ignoreUnknownKeys = true }
 
