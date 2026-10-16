@@ -6,13 +6,16 @@ import pytest
 from pydantic import ValidationError
 
 from vgmixr_pipeline.catalog.config import (
+    DATA_DIR,
     Durations,
     GamesFile,
     Overrides,
+    Tracklist,
     load_durations,
     load_games,
     load_overrides,
 )
+from vgmixr_pipeline.catalog.tracklist import parse_tsv_disc
 from vgmixr_pipeline.manifest.models import Manifest
 from vgmixr_pipeline.manifest.parse import Valid, parse
 from vgmixr_pipeline.manifest.validate import validate
@@ -105,3 +108,16 @@ def test_durations_must_be_minutes_and_seconds() -> None:
     page = {"source": "https://vgmdb.net/album/1", "discs": {"Disc 1": ["1:2"]}}
     with pytest.raises(ValidationError):
         Durations.model_validate({"pages": {"P": page}})
+
+
+@pytest.mark.parametrize("source", [{}, {"page": "P", "file": "tracklists/x.tsv"}])
+def test_tracklist_has_a_page_or_a_file(source: dict[str, str]) -> None:
+    with pytest.raises(ValidationError):
+        Tracklist.model_validate({"family": "f", "disc": "Disc 1", **source})
+
+
+def test_file_tracklists_exist_and_have_their_disc(games: GamesFile) -> None:
+    for tracklist in games.tracklists:
+        if tracklist.file is not None:
+            text = (DATA_DIR / tracklist.file).read_text(encoding="utf-8")
+            assert parse_tsv_disc(text, tracklist.disc), tracklist

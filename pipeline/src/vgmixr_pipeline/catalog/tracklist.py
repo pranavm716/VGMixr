@@ -145,3 +145,33 @@ def parse_duration(text: str) -> int | None:
         return None
     hours, minutes, seconds = (int(g) if g else 0 for g in match.groups())
     return ((hours * 60 + minutes) * 60 + seconds) * 1000
+
+
+def parse_tsv_disc(
+    text: str, disc: str, first: int | None = None, last: int | None = None
+) -> list[Row]:
+    """Rows of `disc` from a hand-written tracklist, for games without a usable album page.
+
+    One track per line: disc heading, CD number, title, duration ("m:ss" or empty), separated by
+    tabs. Blank lines and lines starting with # are skipped.
+    """
+    rows = []
+    found = False
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        if not line.strip() or line.startswith("#"):
+            continue
+        cells = line.split("\t")
+        if len(cells) != 4 or not cells[1].isdigit() or not cells[2]:
+            raise ValueError(f"line {line_number}: expected disc, number, title, duration")
+        line_disc, number, title, time = cells
+        duration = parse_duration(time) if time else None
+        if time and duration is None:
+            raise ValueError(f"line {line_number}: duration {time!r} is not m:ss")
+        if line_disc != disc:
+            continue
+        found = True
+        if (first is None or int(number) >= first) and (last is None or int(number) <= last):
+            rows.append(Row(int(number), title, duration))
+    if not found:
+        raise ValueError(f"no tracks for {disc!r}")
+    return rows

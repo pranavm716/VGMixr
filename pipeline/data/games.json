@@ -96,8 +96,11 @@
     { "family": "swsh", "page": "Pokémon Sword - Shield + Expansion Pass Super Music Collection", "disc": "Disc 3" },
     { "family": "swsh", "page": "Pokémon Sword - Shield + Expansion Pass Super Music Collection", "disc": "Disc 4" },
 
-    { "family": "bdsp", "page": "Pokémon Diamond & Pokémon Pearl: Super Music Collection", "disc": "Disc 1" },
-    { "family": "bdsp", "page": "Pokémon Diamond & Pokémon Pearl: Super Music Collection", "disc": "Disc 2" },
+    { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 1" },
+    { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 2" },
+    { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 3" },
+    { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 4" },
+    { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 5", "last": 7 },
 
     { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 1" },
     { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 2" },

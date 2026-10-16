@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from vgmixr_pipeline.catalog.tracklist import Row, parse_disc
+from vgmixr_pipeline.catalog.tracklist import Row, parse_disc, parse_tsv_disc
 
 PAGES = Path(__file__).parent / "data" / "bulbapedia"
 
@@ -92,3 +92,29 @@ def test_finds_headings_after_an_unclosed_italic() -> None:
 def test_missing_disc_raises() -> None:
     with pytest.raises(ValueError, match="Disc 9"):
         parse_disc(page("rs"), "Disc 9")
+
+
+TSV = """# A hand-written tracklist: disc, number, title, duration.
+Disc 1\t1\tOpening Movie\t1:48
+Disc 1\t2\tIntroduction\t2:26
+Disc 1\t3\tLake\t
+Disc 2\t1\tPokémon Gym\t2:00
+"""
+
+
+def test_reads_a_disc_from_a_tsv_tracklist() -> None:
+    assert parse_tsv_disc(TSV, "Disc 1") == [
+        Row(1, "Opening Movie", 108_000),
+        Row(2, "Introduction", 146_000),
+        Row(3, "Lake", None),
+    ]
+    assert parse_tsv_disc(TSV, "Disc 1", first=2, last=2) == [Row(2, "Introduction", 146_000)]
+
+
+def test_tsv_rejects_bad_lines_and_missing_discs() -> None:
+    with pytest.raises(ValueError, match="line 2"):
+        parse_tsv_disc("Disc 1\t1\tA\t1:00\nDisc 1\tx\tB\t1:00\n", "Disc 1")
+    with pytest.raises(ValueError, match="line 1"):
+        parse_tsv_disc("Disc 1\t1\tA\t1:0\n", "Disc 1")
+    with pytest.raises(ValueError, match="Disc 3"):
+        parse_tsv_disc(TSV, "Disc 3")

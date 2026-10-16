@@ -9,7 +9,7 @@ the generated draft is never edited by hand.
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 from vgmixr_pipeline.catalog.tracklist import parse_duration
 from vgmixr_pipeline.manifest.models import Game, Source
@@ -24,9 +24,14 @@ class _Model(BaseModel):
 
 
 class Tracklist(_Model):
-    """One disc of a Bulbapedia album page, optionally limited to CD numbers first..last."""
+    """One disc of a track list, optionally limited to CD numbers first..last.
 
-    page: str
+    The list is a Bulbapedia album `page`, or a hand-written TSV `file` under pipeline/data/ for
+    games without a usable album page.
+    """
+
+    page: str | None = None
+    file: str | None = None
     disc: str
     first: int | None = None
     last: int | None = None
@@ -36,6 +41,17 @@ class Tracklist(_Model):
     # Appended to every title, so another version of a family's tracks (e.g. HGSS's GB Sounds)
     # gets its own ids instead of merging with the originals.
     titleSuffix: str = ""
+
+    @model_validator(mode="after")
+    def _one_source(self) -> "Tracklist":
+        if (self.page is None) == (self.file is None):
+            raise ValueError("a tracklist needs exactly one of page and file")
+        return self
+
+    @property
+    def source(self) -> str:
+        """The page or file, for messages and track origins."""
+        return self.page if self.page is not None else str(self.file)
 
 
 class GamesFile(_Model):

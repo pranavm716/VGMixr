@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from vgmixr_pipeline.catalog.build import BuildError, Draft, build_draft
-from vgmixr_pipeline.catalog.config import Durations, GamesFile, Overrides
+from vgmixr_pipeline.catalog.config import Durations, GamesFile, Overrides, Tracklist
 from vgmixr_pipeline.manifest.parse import Valid, parse
 
 PAGES = Path(__file__).parent / "data" / "bulbapedia"
@@ -139,3 +139,22 @@ def test_bulbapedia_durations_win() -> None:
     draft = build_draft(GAMES, Overrides(), wikitext, "2026-10-15T12:00:00Z", filled)[0]
     route = next(t for t in draft.tracks if t.id == "rse-route-101")
     assert route.durationMs == 60_000
+
+
+def test_reads_tracklists_from_files() -> None:
+    games = GAMES.model_copy(
+        update={
+            "tracklists": [
+                Tracklist(family="rse", file="tracklists/rse.tsv", disc="Disc 1", last=2)
+            ]
+        }
+    )
+    files = {"tracklists/rse.tsv": "Disc 1\t1\tRoute 101\t1:00\nDisc 1\t2\tDrought\t0:50\n"
+             "Disc 1\t3\tLater\t1:00\n"}  # fmt: skip
+    draft = build_draft(
+        games, Overrides(), wikitext, "2026-10-15T12:00:00Z", read_file=files.__getitem__
+    )[0]
+    assert [(t.id, t.durationMs, t.origins) for t in draft.tracks] == [
+        ("rse-route-101", 60_000, ["tracklists/rse.tsv / Disc 1 #1"]),
+        ("rse-drought", 50_000, ["tracklists/rse.tsv / Disc 1 #2"]),
+    ]

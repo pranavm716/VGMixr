@@ -12,10 +12,16 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict
 
 from vgmixr_pipeline.catalog.category import guess_category
-from vgmixr_pipeline.catalog.config import Durations, GamesFile, Overrides, TrackOverride
+from vgmixr_pipeline.catalog.config import (
+    DATA_DIR,
+    Durations,
+    GamesFile,
+    Overrides,
+    TrackOverride,
+)
 from vgmixr_pipeline.catalog.jingles import is_jingle
 from vgmixr_pipeline.catalog.slug import track_id
-from vgmixr_pipeline.catalog.tracklist import parse_disc
+from vgmixr_pipeline.catalog.tracklist import parse_disc, parse_tsv_disc
 from vgmixr_pipeline.manifest.models import Game, Source
 
 
@@ -71,6 +77,10 @@ class Draft(BaseModel):
     tracks: list[DraftTrack]
 
 
+def _read_data_file(path: str) -> str:
+    return (DATA_DIR / path).read_text(encoding="utf-8")
+
+
 class BuildError(Exception):
     def __init__(self, errors: list[str]) -> None:
         super().__init__("\n".join(errors))
@@ -83,29 +93,33 @@ def build_draft(
     wikitext: Callable[[str], str],
     generated_at: str,
     durations: Durations | None = None,
+    read_file: Callable[[str], str] = _read_data_file,
 ) -> tuple[Draft, BuildResult]:
-    """Reads every tracklist's disc from `wikitext(page)` and builds the draft.
+    """Reads each tracklist's disc from `wikitext(page)` or `read_file(file)`; builds the draft.
 
-    `durations` fills in track lengths that the page leaves blank.
+    `durations` fills in track lengths that a page leaves blank.
     """
     durations = durations or Durations()
     occurrences = []
     errors = []
     for tracklist in games_file.tracklists:
         try:
-            rows = parse_disc(
-                wikitext(tracklist.page), tracklist.disc, tracklist.first, tracklist.last
-            )
+            if tracklist.page is not None:
+                text = wikitext(tracklist.page)
+                rows = parse_disc(text, tracklist.disc, tracklist.first, tracklist.last)
+            else:
+                text = read_file(str(tracklist.file))
+                rows = parse_tsv_disc(text, tracklist.disc, tracklist.first, tracklist.last)
         except ValueError as e:
-            errors.append(f"{tracklist.page} / {tracklist.disc}: {e}")
+            errors.append(f"{tracklist.source} / {tracklist.disc}: {e}")
             continue
         games = tuple(tracklist.games) if tracklist.games else None
         for row in rows:
-            origin = f"{tracklist.page} / {tracklist.disc} #{row.number}"
+            origin = f"{tracklist.source} / {tracklist.disc} #{row.number}"
             title = row.title + tracklist.titleSuffix
             duration = row.duration_ms
             if duration is None:
-                duration = durations.lookup(tracklist.page, tracklist.disc, row.number)
+                duration = durations.lookup(tracklist.source, tracklist.disc, row.number)
             occurrences.append(Occurrence(tracklist.family, games, title, duration, origin))
     if errors:
         raise BuildError(errors)
