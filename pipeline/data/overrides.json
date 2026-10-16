@@ -34,6 +34,9 @@
     "pla-arcanine-lord-of-the-isles": { "exclude": false, "note": "Short, but music, not a jingle" },
     "sv-trainers-eyes-meet-academy-trainer": { "exclude": false, "note": "Short, but music, not a jingle" },
     "sv-the-hidden-treasure-of-area-zero-epilogue": { "exclude": false, "note": "Short, but music, not a jingle" },
+    "plza-rayquaza-appears": { "exclude": false, "note": "Short, but music, not a jingle" },
+    "plza-hyperspace-distortion": { "exclude": false, "note": "Short, but music, not a jingle" },
+    "plza-anshas-donut-shop": { "exclude": false, "note": "Short, but music, not a jingle" },
 
     "sm-alola-region-theme": { "games": ["sun", "moon"], "note": "USUM has its own version, sm-alola-region-theme-usum" },
     "sm-escape": { "games": ["sun", "moon"], "note": "USUM has its own version, sm-escape-usum" },
