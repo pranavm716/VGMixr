@@ -16,6 +16,8 @@
     "gsc-pokeathlon-results-announcement": { "exclude": true, "note": "HGSS-only addition (iTunes 262); under hgss as GB Sounds" },
     "gsc-pokeathlon-medal-ceremony": { "exclude": true, "note": "HGSS-only addition (iTunes 263); under hgss as GB Sounds" },
 
+    "rby-title-screen": { "split": { "rby-title-screen-yellow": { "games": ["yellow"], "title": "Title Screen (Yellow)" } },
+                          "note": "Yellow's title screen theme is its own version" },
     "rby-jigglypuffs-song": { "exclude": false, "note": "Short, but music, not a jingle" },
     "rby-the-poke-flute": { "exclude": false, "note": "Short, but music, not a jingle" },
     "rse-cable-car": { "exclude": false, "note": "Short, but music, not a jingle" },
