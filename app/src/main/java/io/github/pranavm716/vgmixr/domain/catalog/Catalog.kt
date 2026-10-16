@@ -14,7 +14,7 @@ data class Catalog(
     val tracks: List<CatalogTrack>
 )
 
-/** A derived family. [name] and [label] include retired member games (docs/manifest.md). */
+/** A derived family. [name] and [label] come from its non-retired games, in manifest order. */
 data class Family(val id: String, val name: String, val label: String)
 
 /** A track as the UI shows it. [games] are its chip games, in manifest order. */

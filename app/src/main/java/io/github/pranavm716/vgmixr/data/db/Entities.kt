@@ -9,7 +9,7 @@ import java.time.Instant
 
 /**
  * A game as of the last manifest that contained it. [position] is its index in that manifest,
- * so families containing retired games still derive a stable name and label.
+ * which orders games, chips and families.
  */
 @Entity(tableName = "games", indices = [Index("familyId")])
 data class GameEntity(
