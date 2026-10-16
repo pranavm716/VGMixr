@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.androidx.room)
 }
 
 android {
@@ -38,10 +39,18 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
     sourceSets {
         // Shared manifest fixtures, also loaded by the pipeline's tests.
         getByName("test").resources.srcDir("../docs/fixtures")
     }
+}
+
+room {
+    // Committed, so later migrations have a baseline.
+    schemaDirectory("$projectDir/schemas")
 }
 
 dependencies {
@@ -54,10 +63,16 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.hilt.android)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
     implementation(libs.kotlinx.serialization.json)
+    ksp(libs.androidx.room.compiler)
     ksp(libs.hilt.compiler)
+    testImplementation(libs.androidx.junit)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.robolectric)
     testImplementation(libs.turbine)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
