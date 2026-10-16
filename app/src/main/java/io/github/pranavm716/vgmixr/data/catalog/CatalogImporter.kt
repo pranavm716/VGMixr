@@ -33,6 +33,12 @@ class CatalogImporter @Inject constructor(
     }
 
     private suspend fun write(manifest: Manifest) {
+        // Retire everything, then upsert the manifest's games and tracks as not retired: anything
+        // missing stays retired and anything reappearing is un-retired. This avoids
+        // `NOT IN (:ids)`, which hits SQLite's 999-variable limit on API 26 for a large catalog.
+        // Retired tracks keep their last games subset and sources.
+        catalogDao.retireAllGames()
+        catalogDao.retireAllTracks()
         catalogDao.upsertGames(manifest.games.mapIndexed { index, game -> game.toEntity(index) })
         catalogDao.upsertTracks(manifest.tracks.map { it.toEntity() })
         for (track in manifest.tracks) {

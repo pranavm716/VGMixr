@@ -174,4 +174,114 @@ class CatalogImporterTest {
         assertEquals("OTHER", catalogDao.track("rse-weather-institute")?.category)
         assertEquals(2, catalogDao.sources("botw-hyrule-field").size)
     }
+
+    // Retire, un-retire and positions
+
+    @Test
+    fun `games and tracks missing from a new manifest are retired, not deleted`() =
+        runTest(dispatcher) {
+            importer.import(
+                manifest(tracks = listOf(track("rse-route-101"), track("rse-drought")))
+            )
+
+            importer.import(
+                manifest(
+                    generatedAt = "2026-10-14T08:00:00Z",
+                    games = listOf(game("ruby"), game("sapphire")),
+                    tracks = listOf(track("rse-route-101"))
+                )
+            )
+
+            assertEquals(true, catalogDao.game("emerald")?.retired)
+            assertEquals(false, catalogDao.game("ruby")?.retired)
+            assertEquals(true, catalogDao.track("rse-drought")?.retired)
+            assertEquals(false, catalogDao.track("rse-route-101")?.retired)
+        }
+
+    @Test
+    fun `retired track keeps its last sources and games subset`() = runTest(dispatcher) {
+        importer.import(
+            manifest(
+                tracks = listOf(
+                    track("rse-route-101"),
+                    track(
+                        "rse-drought",
+                        games = listOf("ruby"),
+                        sources = listOf(Source.Stream("DDDDDDDDDDD", 0, null))
+                    )
+                )
+            )
+        )
+
+        importer.import(
+            manifest(generatedAt = "2026-10-14T08:00:00Z", tracks = listOf(track("rse-route-101")))
+        )
+
+        assertEquals(listOf("DDDDDDDDDDD"), catalogDao.sources("rse-drought").map { it.videoId })
+        assertEquals(listOf("ruby"), catalogDao.trackGames("rse-drought"))
+    }
+
+    @Test
+    fun `retired game and track that reappear are un-retired and updated`() = runTest(dispatcher) {
+        importer.import(manifest(tracks = listOf(track("rse-route-101"), track("rse-drought"))))
+        importer.import(
+            manifest(
+                generatedAt = "2026-10-14T08:00:00Z",
+                games = listOf(game("ruby"), game("sapphire")),
+                tracks = listOf(track("rse-route-101"))
+            )
+        )
+
+        importer.import(
+            manifest(
+                generatedAt = "2026-10-15T08:00:00Z",
+                games = listOf(
+                    game("ruby"),
+                    game("sapphire"),
+                    game("emerald", name = "Emerald")
+                ),
+                tracks = listOf(track("rse-route-101"), track("rse-drought", title = "Drought"))
+            )
+        )
+
+        assertEquals(false, catalogDao.game("emerald")?.retired)
+        assertEquals("Emerald", catalogDao.game("emerald")?.name)
+        assertEquals(false, catalogDao.track("rse-drought")?.retired)
+        assertEquals("Drought", catalogDao.track("rse-drought")?.title)
+    }
+
+    @Test
+    fun `game positions follow the newest manifest`() = runTest(dispatcher) {
+        importer.import(manifest())
+
+        importer.import(
+            manifest(
+                generatedAt = "2026-10-14T08:00:00Z",
+                games = listOf(game("emerald"), game("ruby"), game("sapphire"))
+            )
+        )
+
+        assertEquals(
+            listOf("emerald" to 0, "ruby" to 1, "sapphire" to 2),
+            catalogDao.gamesInFamily("rse").map { it.id to it.position }
+        )
+    }
+
+    @Test
+    fun `retired game keeps its last position`() = runTest(dispatcher) {
+        importer.import(manifest())
+
+        importer.import(
+            manifest(
+                generatedAt = "2026-10-14T08:00:00Z",
+                games = listOf(game("ruby"), game("emerald"))
+            )
+        )
+
+        assertEquals(1, catalogDao.game("sapphire")?.position)
+        assertEquals(
+            listOf("ruby", "emerald", "sapphire"),
+            catalogDao.gamesInFamily("rse").map { it.id }
+        )
+    }
 }
