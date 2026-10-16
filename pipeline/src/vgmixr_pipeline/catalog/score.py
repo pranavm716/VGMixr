@@ -1,0 +1,336 @@
+"""The confidence that a YouTube video is a track's audio: a hand-tuned 0-1 score.
+
+The score combines title similarity (after stripping noise such as "Pokémon", game names and
+"OST"), evidence that the video is from the right game (a remake or another game is heavily
+penalized), red flags (remix, cover, hour-long...), whether the length is plausible, how much the
+source is trusted (a hand-picked playlist over a search) and the entry's position in its playlist.
+The weights are tuned against the hand-labeled set in tests/data/youtube/labeled.json.
+"""
+
+import re
+import unicodedata
+from collections.abc import Iterable
+from dataclasses import dataclass, field
+from difflib import SequenceMatcher
+from enum import Enum
+from typing import Literal
+
+from vgmixr_pipeline.manifest.models import Game
+
+type Kind = Literal["playlist", "search", "album"]
+type Evidence = Literal["right", "neutral", "wrong"]
+
+
+@dataclass(frozen=True)
+class Weights:
+    title: float = 0.65
+    evidence: float = 0.15
+    trust: float = 0.10
+    position: float = 0.10
+    # Title similarity's share from characters; the rest is from shared words.
+    characters: float = 0.7
+    # Multipliers.
+    wrong_game: float = 0.15
+    red_flag: float = 0.5
+    bad_duration: float = 0.4
+    # A different set of digits ("Route 1" vs "Route 10") is a different track.
+    other_numbers: float = 0.5
+    trust_by_kind: dict[str, float] = field(
+        default_factory=lambda: {"playlist": 1.0, "album": 0.9, "search": 0.8}
+    )
+    # Position fit falls from 1 to 0 as relative positions differ by 0 to 1/position_falloff.
+    position_falloff: float = 4.0
+
+
+WEIGHTS = Weights()
+ACCEPT = 0.80
+REVIEW = 0.50
+# Longer than this, a whole video (not an album chapter) is a compilation or a loop.
+LONG_MS = 20 * 60 * 1000
+# A video can be shorter than the track's listed length by a little, or loop it a few times.
+MIN_RATIO = 0.75
+MAX_RATIO = 3.5
+
+
+class Verdict(Enum):
+    ACCEPT = "accept"
+    REVIEW = "review"
+    REJECT = "reject"
+
+
+@dataclass(frozen=True)
+class TrackFacts:
+    """What scoring needs to know about a track."""
+
+    family: str
+    # The track's games, resolved (all of the family's when the track has no `games`).
+    games: frozenset[str]
+    title: str
+    duration_ms: int | None
+    # The track's relative position in its family, 0-1.
+    position: float | None = None
+    # Game Boy music is 8-bit, so "8-bit" is no red flag there.
+    game_boy: bool = False
+
+
+@dataclass(frozen=True)
+class Candidate:
+    """A video, or a slice of one (an album chapter), that might be a track."""
+
+    video_id: str
+    title: str
+    duration_ms: int | None
+    channel: str | None
+    kind: Kind
+    # The games of the playlist or album the candidate came from; empty for a search result.
+    games: frozenset[str] = frozenset()
+    # Relative position in its playlist, 0-1.
+    position: float | None = None
+    start_ms: int = 0
+    end_ms: int | None = None
+
+
+@dataclass(frozen=True)
+class Score:
+    value: float
+    reasons: list[str]
+
+
+# Text
+
+
+_REPLACEMENTS = {"&": " and ", "♀": " female ", "♂": " male "}
+_APOSTROPHES = re.compile(r"['’‘]")
+_NON_WORD = re.compile(r"[^a-z0-9]+")
+# "#12" anywhere, or "12." / "12 -" / "12)" at the start.
+_TRACK_NUMBER = re.compile(r"#\d+|^\s*\d{1,3}\s*[.):-]\s+")
+_NOISE = {
+    "pokemon", "ost", "soundtrack", "music", "bgm", "hq", "hd", "gba", "nds", "ds", "3ds", "gb",
+    "gbc", "switch", "official", "audio", "game", "theme", "version", "versions", "ver", "vs",
+    "and", "the", "of", "a", "1080p", "720p", "4k", "rip",
+}  # fmt: skip
+# Single words that change what a video is. Matched as whole words.
+_FLAGS = {
+    "remix", "remixed", "cover", "covers", "orchestra", "orchestral", "orchestrated",
+    "reorchestrated", "arrange", "arranged", "arrangement", "piano", "guitar", "metal", "rock",
+    "jazz", "lofi", "mashup", "extended", "hour", "hours", "loop", "looped", "slowed", "reverb",
+    "nightcore", "remake", "remaster", "remastered", "soundfont", "fanmade", "fan", "beta",
+    "unused", "acapella", "acoustic", "synthesia", "medley", "symphony", "concert", "live",
+}  # fmt: skip
+_EIGHT_BIT = ("8", "bit")
+# Spin-offs, other media: never a mainline game's audio.
+_OTHER_GAMES = [
+    "mystery dungeon", "pokemon ranger", "colosseum", "pokemon xd", "pokemon stadium",
+    "pokemon snap", "pokemon unite", "pokemon masters", "pokemon go", "puzzle league", "pinball",
+    "trading card game", "tcg", "pokemon conquest", "pokemon rumble", "battle revolution",
+    "anime", "super smash", "pokken", "cafe mix", "pokemon sleep", "pokemon shuffle",
+    "pokemon channel", "pokemon dash",
+]  # fmt: skip
+
+
+def words(text: str) -> list[str]:
+    """Lower-case words without accents or punctuation; `&` becomes "and", "Let's" "lets"."""
+    for old, new in _REPLACEMENTS.items():
+        text = text.replace(old, new)
+    decomposed = unicodedata.normalize("NFKD", text)
+    plain = "".join(c for c in decomposed if not unicodedata.combining(c))
+    return _NON_WORD.sub(" ", _APOSTROPHES.sub("", plain.lower())).split()
+
+
+def _video_words(title: str) -> list[str]:
+    return words(_TRACK_NUMBER.sub(" ", title))
+
+
+# Game names
+
+
+@dataclass(frozen=True)
+class _Name:
+    words: tuple[str, ...]
+    family: str
+    # Distinctive names count anywhere; plain words ("Gold", "Moon") only right after "Pokémon".
+    anywhere: bool
+
+
+@dataclass(frozen=True)
+class _Found:
+    families: frozenset[str]
+    # Words with names, "Pokémon" and noise taken out.
+    rest: list[str]
+    # Spans of the words that were names, by first index.
+    spans: tuple[tuple[str, ...], ...]
+
+
+class Names:
+    """Finds game names in video titles: game names, family labels and hand-written aliases."""
+
+    def __init__(self, names: Iterable[_Name], family_games: dict[str, frozenset[str]]) -> None:
+        # Longest first, so "Omega Ruby" is found before "Ruby".
+        self._names = sorted(names, key=lambda n: -len(n.words))
+        self._other = [tuple(words(o)) for o in _OTHER_GAMES]
+        self.family_games = family_games
+
+    @classmethod
+    def build(cls, games: list[Game], aliases: dict[str, list[str]]) -> "Names":
+        family_games: dict[str, list[Game]] = {}
+        for game in games:
+            family_games.setdefault(game.family_id, []).append(game)
+        names = []
+        for game in games:
+            name = tuple(words(game.name))
+            compound = bool(re.search(r"[a-z][A-Z]", game.name))
+            names.append(_Name(name, game.family_id, len(name) > 1 or compound))
+        for family, members in family_games.items():
+            if len(members) > 1:
+                label = tuple(words("".join(g.shortName for g in members)))
+                names.append(_Name(label, family, len(label[0]) >= 3))
+        game_family = {g.id: g.family_id for g in games}
+        for key, values in aliases.items():
+            family = game_family.get(key, key)
+            names += [_Name(tuple(words(v)), family, True) for v in values]
+        return cls(names, {f: frozenset(g.id for g in m) for f, m in family_games.items()})
+
+    def find(self, title: str, ignore: tuple[tuple[str, ...], ...] = ()) -> _Found:
+        """Names in `title`, except those in `ignore` (names that are part of a track's title)."""
+        tokens = _video_words(title)
+        families: set[str] = set()
+        spans: list[tuple[str, ...]] = []
+        rest: list[str] = []
+        i = 0
+        while i < len(tokens):
+            other = self._match_other(tokens, i)
+            if other and other not in ignore:
+                families.add("")  # another game entirely
+                spans.append(other)
+                rest += other
+                i += len(other)
+                continue
+            if tokens[i] == "pokemon":
+                i += 1
+                while i < len(tokens):
+                    name = self._match(tokens, i, chained=True)
+                    if name is not None and name.words not in ignore:
+                        families.add(name.family)
+                        spans.append(name.words)
+                        i += len(name.words)
+                    elif tokens[i] in {"and", "version", "versions"}:
+                        i += 1
+                    else:
+                        break
+                continue
+            name = self._match(tokens, i, chained=False)
+            if name is not None and name.words not in ignore:
+                families.add(name.family)
+                spans.append(name.words)
+                i += len(name.words)
+                continue
+            rest.append(tokens[i])
+            i += 1
+        return _Found(frozenset(families), [w for w in rest if w not in _NOISE], tuple(spans))
+
+    def _match(self, tokens: list[str], i: int, chained: bool) -> _Name | None:
+        for name in self._names:
+            if (chained or name.anywhere) and tuple(tokens[i : i + len(name.words)]) == name.words:
+                return name
+        return None
+
+    def _match_other(self, tokens: list[str], i: int) -> tuple[str, ...] | None:
+        for other in self._other:
+            if tuple(tokens[i : i + len(other)]) == other:
+                return other
+        return None
+
+    def evidence(self, track: TrackFacts, candidate: Candidate) -> Evidence:
+        if candidate.games & track.games:
+            return "right"
+        in_title = self.find(track.title).spans
+        named = self.find(candidate.title, ignore=in_title).families
+        if candidate.channel:
+            channel = self.find(candidate.channel, ignore=in_title).families
+            if track.family in channel:
+                return "right"
+        if track.family in named:
+            return "right"
+        return "wrong" if named else "neutral"
+
+
+# Components
+
+
+def title_similarity(track: TrackFacts, video_title: str, names: Names) -> float:
+    """0-1. Names that are part of the track's title stay on both sides."""
+    own = names.find(track.title)
+    a = own.rest + [w for span in own.spans for w in span]
+    # Ignored names stay in `rest`, so they're compared like any other word.
+    b = names.find(video_title, ignore=own.spans).rest
+    if not a or not b:
+        return 0.0
+    # Characters forgive small spelling differences; shared words keep unrelated titles apart.
+    characters = max(
+        SequenceMatcher(None, " ".join(a), " ".join(b)).ratio(),
+        SequenceMatcher(None, " ".join(sorted(a)), " ".join(sorted(b))).ratio(),
+    )
+    shared = 2 * len(set(a) & set(b)) / (len(set(a)) + len(set(b)))
+    ratio = WEIGHTS.characters * characters + (1 - WEIGHTS.characters) * shared
+    if sorted(w for w in a if w.isdigit()) != sorted(w for w in b if w.isdigit()):
+        ratio *= WEIGHTS.other_numbers
+    return ratio
+
+
+def red_flags(track: TrackFacts, video_title: str, game_boy: bool = False) -> list[str]:
+    own = set(words(track.title))
+    tokens = _video_words(video_title)
+    flags = [w for w in dict.fromkeys(tokens) if w in _FLAGS and w not in own]
+    eight_bit = any(tuple(tokens[i : i + 2]) == _EIGHT_BIT for i in range(len(tokens)))
+    if eight_bit and not (game_boy or track.game_boy) and "8" not in own:
+        flags.append("8-bit")
+    return flags
+
+
+def duration_fits(expected_ms: int | None, actual_ms: int | None) -> bool:
+    if expected_ms is None or actual_ms is None or expected_ms <= 0:
+        return True
+    return MIN_RATIO <= actual_ms / expected_ms <= MAX_RATIO
+
+
+def _position_fit(track: TrackFacts, candidate: Candidate) -> float:
+    if track.position is None or candidate.position is None:
+        return 0.5
+    distance = abs(track.position - candidate.position)
+    return max(0.0, 1 - distance * WEIGHTS.position_falloff)
+
+
+def score(track: TrackFacts, candidate: Candidate, names: Names) -> Score:
+    w = WEIGHTS
+    title = title_similarity(track, candidate.title, names)
+    evidence = names.evidence(track, candidate)
+    trust = w.trust_by_kind[candidate.kind]
+    position = _position_fit(track, candidate)
+    value = (
+        w.title * title
+        + w.evidence * {"right": 1.0, "neutral": 0.5, "wrong": 0.0}[evidence]
+        + w.trust * trust
+        + w.position * position
+    )
+    reasons = [f"title {title:.2f}", f"{evidence} game", candidate.kind]
+    if evidence == "wrong":
+        value *= w.wrong_game
+        reasons[1] = "wrong game"
+    flags = red_flags(track, candidate.title)
+    if candidate.kind != "album" and (candidate.duration_ms or 0) > LONG_MS:
+        flags.append("long video")
+    for flag in flags:
+        value *= w.red_flag
+        reasons.append(f"red flag: {flag}")
+    if not duration_fits(track.duration_ms, candidate.duration_ms):
+        value *= w.bad_duration
+        reasons.append(f"length {candidate.duration_ms or 0} ms vs {track.duration_ms} ms")
+    return Score(min(1.0, max(0.0, value)), reasons)
+
+
+def classify(value: float) -> Verdict:
+    if value >= ACCEPT:
+        return Verdict.ACCEPT
+    if value >= REVIEW:
+        return Verdict.REVIEW
+    return Verdict.REJECT
