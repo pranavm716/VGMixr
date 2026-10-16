@@ -280,6 +280,7 @@ def _apply(
     if override.games is not None:
         _check_games(track.id, override.games, family_games[track.family], errors)
         track.games = set(override.games)
+    track.sources = [*override.local, *track.sources]
 
 
 def _check_games(id_: str, games: list[str], family: list[str], errors: list[str]) -> None:

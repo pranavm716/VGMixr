@@ -3,7 +3,8 @@
 Per track: entries of the playlists tagged with the track's games first, then a search when
 nothing was accepted, then chapters of album videos. Every candidate is scored; the best accepted
 ones (at most three) become sources. Review decisions in the overrides come first: accepted slices
-lead, rejected videos are dropped. Tracks with hand-written sources (extras) are left as they are.
+lead, rejected videos are dropped. Every track is matched, also one with local files, which stay in
+front of its streams.
 """
 
 from collections import Counter
@@ -35,7 +36,7 @@ _GAME_BOY = {"GB", "GBC"}
 NOISE_SHARE = 0.6
 NOISE_MIN_ENTRIES = 4
 
-type Status = Literal["matched", "review", "unmatched", "hand"]
+type Status = Literal["matched", "review", "unmatched"]
 
 
 class Videos(Protocol):
@@ -55,7 +56,6 @@ class Match:
     track_id: str
     family: str
     title: str
-    # "hand": the track has hand-written sources and isn't matched.
     status: Status
     streams: list[StreamSource]
     # The best-scoring candidates not rejected by override, best first.
@@ -97,8 +97,6 @@ class _Matcher:
         self._playlist_noise: dict[str, frozenset[str]] = {}
 
     def match(self, track: DraftTrack, streams: Streams) -> Match:
-        if track.sources:
-            return Match(track.id, track.family, track.title, "hand", [], [])
         facts = self._facts(track)
         rejected = set(streams.reject)
         pool: dict[tuple[str, int, int | None], Scored] = {}

@@ -13,7 +13,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 from vgmixr_pipeline.catalog.tracklist import parse_duration
-from vgmixr_pipeline.manifest.models import Game, Source
+from vgmixr_pipeline.manifest.models import Game, LocalSource, Source
 from vgmixr_pipeline.manifest.validate import VIDEO_ID
 
 DATA_DIR = Path(__file__).resolve().parents[3] / "data"
@@ -193,6 +193,8 @@ class TrackOverride(_Model):
     # "m:ss"; replaces the computed length (e.g. for a track merged from parts played back to back).
     duration: str | None = None
     streams: Streams | None = None
+    # Local files (copied by hand into the app's music folder), played before any stream.
+    local: list[LocalSource] = []
     note: str | None = None
 
     @field_validator("duration")

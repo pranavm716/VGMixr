@@ -17,7 +17,7 @@ from vgmixr_pipeline.catalog.config import (
     load_overrides,
 )
 from vgmixr_pipeline.catalog.tracklist import parse_tsv_disc
-from vgmixr_pipeline.manifest.models import Manifest
+from vgmixr_pipeline.manifest.models import LocalSource, Manifest
 from vgmixr_pipeline.manifest.parse import Valid, parse
 from vgmixr_pipeline.manifest.validate import validate
 
@@ -73,16 +73,9 @@ def test_seed_games_are_unchanged(games: GamesFile, seed: Manifest) -> None:
         assert built.model_dump(exclude={"color"}) == game.model_dump(exclude={"color"})
 
 
-def test_test_tone_extra_matches_the_seed(overrides: Overrides, seed: Manifest) -> None:
-    seed_track = next(t for t in seed.tracks if t.id == "pla-test-tone")
-    extra = next(e for e in overrides.extras if e.id == "pla-test-tone")
-    assert (extra.family, extra.title, extra.category, extra.order) == (
-        seed_track.family,
-        seed_track.title,
-        seed_track.category,
-        seed_track.order,
-    )
-    assert extra.sources == seed_track.sources
+def test_one_track_has_a_local_file_for_playback_development(overrides: Overrides) -> None:
+    with_local = {id_: o.local for id_, o in overrides.tracks.items() if o.local}
+    assert with_local == {"rse-route-101": [LocalSource(type="local", path="rse/route-101.m4a")]}
 
 
 def test_usum_extras_are_ultra_only(overrides: Overrides) -> None:
@@ -241,3 +234,12 @@ def test_streams_override_parses() -> None:
 def test_streams_override_errors(streams: dict[str, Any]) -> None:
     with pytest.raises(ValidationError):
         Overrides.model_validate({"tracks": {"rse-x": {"streams": streams}}})
+
+
+def test_local_override_takes_only_local_sources() -> None:
+    local = {"type": "local", "path": "rse/route-101.m4a"}
+    parsed = Overrides.model_validate({"tracks": {"rse-x": {"local": [local]}}})
+    assert parsed.tracks["rse-x"].local[0].path == "rse/route-101.m4a"
+    stream = {"type": "stream", "videoId": "abcdefghijk"}
+    with pytest.raises(ValidationError):
+        Overrides.model_validate({"tracks": {"rse-x": {"local": [stream]}}})

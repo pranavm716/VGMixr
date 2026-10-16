@@ -73,7 +73,7 @@ def match(id_: str, status: str, best: float | None = None) -> Match:
 
 MATCHES = [
     match("rse-a", "matched"),
-    match("rse-b", "hand"),
+    match("rse-b", "matched"),
     match("rse-c", "review", 0.62),
     match("rse-d", "unmatched"),
     match("rse-e", "unmatched"),

@@ -31,7 +31,7 @@ def stream(video_id: str, confidence: float = 0.9, **kw: Any) -> StreamSource:
 
 
 def match(t: DraftTrack, *streams: StreamSource) -> Match:
-    status = "hand" if t.sources else "matched" if streams else "unmatched"
+    status = "matched" if streams else "unmatched"
     return Match(t.id, t.family, t.title, status, list(streams), [])  # type: ignore[arg-type]
 
 
@@ -73,7 +73,7 @@ def test_unmatched_tracks_are_left_out_and_hand_sources_kept() -> None:
 def test_local_sources_stay_in_front_of_streams() -> None:
     local = LocalSource(type="local", path="rse/001.flac")
     t = track("rse-route-101", sources=[local])
-    m = Match(t.id, t.family, t.title, "hand", [stream("aaaaaaaaaaa")], [])
+    m = Match(t.id, t.family, t.title, "matched", [stream("aaaaaaaaaaa")], [])
     assert build_manifest(DRAFT.model_copy(update={"tracks": [t]}), [m], "2026-10-16T10:00:00Z")\
         .tracks[0].sources == [local, stream("aaaaaaaaaaa")]  # fmt: skip
 

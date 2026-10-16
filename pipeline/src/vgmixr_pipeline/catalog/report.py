@@ -85,9 +85,8 @@ def match_summary(games: list[Game], matches: list[Match]) -> str:
 
 
 def _by_status(matches: list[Match]) -> tuple[list[Match], list[Match], list[Match]]:
-    """Matched (tracks with hand-written sources count as matched), needs review, unmatched."""
     return (
-        [m for m in matches if m.status in ("matched", "hand")],
+        [m for m in matches if m.status == "matched"],
         [m for m in matches if m.status == "review"],
         [m for m in matches if m.status == "unmatched"],
     )

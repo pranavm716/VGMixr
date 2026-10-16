@@ -196,12 +196,11 @@ def test_at_most_three_accepted_sources_best_first() -> None:
     assert vid(2) not in ids(match)
 
 
-def test_tracks_with_hand_written_sources_are_not_matched() -> None:
-    local = LocalSource(type="local", path="dev/test-tone.wav")
-    videos = FakeVideos({RS_LIST: entries("Test Tone")})
-    match = run(draft(track("Test Tone", sources=[local])), videos)["rse-test-tone"]
-    assert (match.status, match.streams) == ("hand", [])
-    assert videos.calls == []
+def test_tracks_with_local_files_still_get_streams() -> None:
+    local = LocalSource(type="local", path="rse/route-101.m4a")
+    videos = FakeVideos({RS_LIST: entries("Route 101")})
+    match = run(draft(track("Route 101", sources=[local])), videos)["rse-route-101"]
+    assert (match.status, ids(match)) == ("matched", [vid(1)])
 
 
 def test_accepted_overrides_go_first_and_auto_matches_fill_up() -> None:
