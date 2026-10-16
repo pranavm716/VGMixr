@@ -9,7 +9,14 @@ run_checks() {
   bash scripts/check-forbidden-files.sh || return
   ./gradlew --console=plain assembleDebug testDebugUnitTest lint spotlessCheck || return
   if [[ -d pipeline ]]; then
-    (cd pipeline && uv run pytest) || return
+    # Chained with && for the same reason: set -e is off inside this subshell too.
+    # The generator --check fails if docs/fixtures/ differs from what its spec generates.
+    (cd pipeline &&
+      uv run ruff format --check . &&
+      uv run ruff check . &&
+      uv run mypy . &&
+      uv run pytest &&
+      uv run python -m vgmixr_pipeline.fixtures.generate --check) || return
   fi
 }
 
