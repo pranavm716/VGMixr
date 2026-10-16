@@ -5,16 +5,17 @@ Each Bulbapedia row is an occurrence of a title in a family. Occurrences with th
 tracks. Every rule problem is collected and reported at once as a BuildError.
 """
 
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
 from vgmixr_pipeline.catalog.category import guess_category
-from vgmixr_pipeline.catalog.config import Overrides, TrackOverride
+from vgmixr_pipeline.catalog.config import GamesFile, Overrides, TrackOverride
 from vgmixr_pipeline.catalog.jingles import is_jingle
 from vgmixr_pipeline.catalog.slug import track_id
+from vgmixr_pipeline.catalog.tracklist import parse_disc
 from vgmixr_pipeline.manifest.models import Game, Source
 
 
@@ -60,10 +61,49 @@ class BuildResult:
     excluded: list[Excluded]
 
 
+class Draft(BaseModel):
+    """The build's output: a manifest without `schemaVersion` whose tracks lack stream sources."""
+
+    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+
+    generatedAt: str
+    games: list[Game]
+    tracks: list[DraftTrack]
+
+
 class BuildError(Exception):
     def __init__(self, errors: list[str]) -> None:
         super().__init__("\n".join(errors))
         self.errors = errors
+
+
+def build_draft(
+    games_file: GamesFile,
+    overrides: Overrides,
+    wikitext: Callable[[str], str],
+    generated_at: str,
+) -> tuple[Draft, BuildResult]:
+    """Reads every tracklist's disc from `wikitext(page)` and builds the draft."""
+    occurrences = []
+    errors = []
+    for tracklist in games_file.tracklists:
+        try:
+            rows = parse_disc(
+                wikitext(tracklist.page), tracklist.disc, tracklist.first, tracklist.last
+            )
+        except ValueError as e:
+            errors.append(f"{tracklist.page} / {tracklist.disc}: {e}")
+            continue
+        games = tuple(tracklist.games) if tracklist.games else None
+        for row in rows:
+            origin = f"{tracklist.page} / {tracklist.disc} #{row.number}"
+            occurrences.append(
+                Occurrence(tracklist.family, games, row.title, row.duration_ms, origin)
+            )
+    if errors:
+        raise BuildError(errors)
+    result = build_tracks(games_file.games, occurrences, overrides)
+    return Draft(generatedAt=generated_at, games=games_file.games, tracks=result.tracks), result
 
 
 @dataclass
