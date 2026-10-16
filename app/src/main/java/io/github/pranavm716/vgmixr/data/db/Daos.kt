@@ -60,6 +60,9 @@ interface UserDataDao {
     @Insert
     suspend fun insertFavorite(favorite: FavoriteEntity)
 
+    @Upsert
+    suspend fun upsertFavorite(favorite: FavoriteEntity)
+
     @Delete
     suspend fun deleteFavorite(favorite: FavoriteEntity)
 

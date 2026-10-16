@@ -2,6 +2,7 @@ package io.github.pranavm716.vgmixr.data.catalog
 
 import androidx.room.withTransaction
 import io.github.pranavm716.vgmixr.data.db.CatalogDao
+import io.github.pranavm716.vgmixr.data.db.FavoriteEntity
 import io.github.pranavm716.vgmixr.data.db.GameEntity
 import io.github.pranavm716.vgmixr.data.db.ImportStateDao
 import io.github.pranavm716.vgmixr.data.db.SourceEntity
@@ -49,6 +50,24 @@ class CatalogImporter @Inject constructor(
                 track.sources.mapIndexed { index, source -> source.toEntity(track.id, index) }
             )
         }
+        for (track in manifest.tracks) {
+            track.replaces.forEach { oldId -> migrateUserData(oldId, track.id) }
+        }
+    }
+
+    /**
+     * Re-points history and favorites from [oldId] to [newId]. If both are favorited they merge
+     * into one favorite with the earlier addedAt. Done in Kotlin rather than SQL because SQLite on
+     * API 26 (3.18) has no `ON CONFLICT DO UPDATE`.
+     */
+    private suspend fun migrateUserData(oldId: String, newId: String) {
+        userDataDao.repointHistory(oldId, newId)
+        val old = userDataDao.favorite(oldId) ?: return
+        val new = userDataDao.favorite(newId)
+        userDataDao.deleteFavorite(old)
+        userDataDao.upsertFavorite(
+            FavoriteEntity(newId, minOf(old.addedAt, new?.addedAt ?: old.addedAt))
+        )
     }
 }
 

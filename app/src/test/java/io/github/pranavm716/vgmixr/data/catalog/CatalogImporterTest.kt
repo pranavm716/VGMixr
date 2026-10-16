@@ -4,7 +4,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.manifest
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.track
+import io.github.pranavm716.vgmixr.data.db.FavoriteEntity
 import io.github.pranavm716.vgmixr.data.db.GameEntity
+import io.github.pranavm716.vgmixr.data.db.PlayHistoryEntity
 import io.github.pranavm716.vgmixr.data.db.SourceEntity
 import io.github.pranavm716.vgmixr.data.db.TrackEntity
 import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
@@ -26,6 +28,7 @@ class CatalogImporterTest {
     private val dispatcher = StandardTestDispatcher()
     private val db = inMemoryDatabase(dispatcher)
     private val catalogDao = db.catalogDao()
+    private val userDataDao = db.userDataDao()
     private val importer = TestCatalog.importer(db)
 
     @After
@@ -284,4 +287,134 @@ class CatalogImporterTest {
             catalogDao.gamesInFamily("rse").map { it.id }
         )
     }
+
+    // Replaces
+
+    @Test
+    fun `replaces re-points every history row to the new id`() = runTest(dispatcher) {
+        importer.import(manifest(tracks = listOf(track("rse-weather-lab"), track("rse-route-101"))))
+        history("rse-weather-lab", 1_000)
+        history("rse-route-101", 2_000)
+        history("rse-weather-lab", 3_000)
+
+        importer.import(
+            manifest(
+                generatedAt = "2026-10-14T08:00:00Z",
+                tracks = listOf(
+                    track("rse-weather-institute", replaces = listOf("rse-weather-lab")),
+                    track("rse-route-101")
+                )
+            )
+        )
+
+        assertEquals(
+            listOf(
+                "rse-weather-institute" to 1_000L,
+                "rse-route-101" to 2_000L,
+                "rse-weather-institute" to 3_000L
+            ),
+            userDataDao.history().map { it.trackId to it.playedAt.toEpochMilli() }
+        )
+        assertEquals(true, catalogDao.track("rse-weather-lab")?.retired)
+    }
+
+    @Test
+    fun `replaces moves a favorite on the old id to the new id`() = runTest(dispatcher) {
+        importer.import(manifest(tracks = listOf(track("rse-weather-lab"))))
+        favorite("rse-weather-lab", 1_000)
+
+        importer.import(
+            manifest(
+                generatedAt = "2026-10-14T08:00:00Z",
+                tracks = listOf(
+                    track("rse-weather-institute", replaces = listOf("rse-weather-lab"))
+                )
+            )
+        )
+
+        assertEquals(
+            listOf(FavoriteEntity("rse-weather-institute", Instant.ofEpochMilli(1_000))),
+            userDataDao.favorites()
+        )
+    }
+
+    @Test
+    fun `replaces merges favorites on both ids keeping the earlier addedAt`() =
+        runTest(dispatcher) {
+            importer.import(
+                manifest(tracks = listOf(track("rse-a"), track("rse-b"), track("rse-c")))
+            )
+            favorite("rse-a", 1_000) // old favorited first
+            favorite("rse-new-a", 2_000)
+            favorite("rse-new-b", 3_000) // new favorited first
+            favorite("rse-b", 4_000)
+
+            importer.import(
+                manifest(
+                    generatedAt = "2026-10-14T08:00:00Z",
+                    tracks = listOf(
+                        track("rse-new-a", replaces = listOf("rse-a")),
+                        track("rse-new-b", replaces = listOf("rse-b")),
+                        track("rse-c")
+                    )
+                )
+            )
+
+            assertEquals(
+                listOf(
+                    FavoriteEntity("rse-new-a", Instant.ofEpochMilli(1_000)),
+                    FavoriteEntity("rse-new-b", Instant.ofEpochMilli(3_000))
+                ),
+                userDataDao.favorites()
+            )
+        }
+
+    @Test
+    fun `replaces leaves unrelated favorites and history untouched`() = runTest(dispatcher) {
+        importer.import(manifest(tracks = listOf(track("rse-weather-lab"), track("rse-route-101"))))
+        favorite("rse-route-101", 1_000)
+        favorite("rse-retired-elsewhere", 2_000)
+        history("rse-route-101", 3_000)
+
+        importer.import(
+            manifest(
+                generatedAt = "2026-10-14T08:00:00Z",
+                tracks = listOf(
+                    track("rse-weather-institute", replaces = listOf("rse-weather-lab"))
+                )
+            )
+        )
+
+        assertEquals(
+            listOf("rse-retired-elsewhere", "rse-route-101"),
+            userDataDao.favorites().map { it.trackId }
+        )
+        assertEquals(listOf("rse-route-101"), userDataDao.history().map { it.trackId })
+    }
+
+    @Test
+    fun `replaces of an id with no favorites or history changes nothing`() = runTest(dispatcher) {
+        importer.import(manifest(tracks = listOf(track("rse-route-101"))))
+        favorite("rse-route-101", 1_000)
+
+        importer.import(
+            manifest(
+                generatedAt = "2026-10-14T08:00:00Z",
+                tracks = listOf(track("rse-route-101", replaces = listOf("rse-never-existed")))
+            )
+        )
+
+        assertEquals(
+            listOf(FavoriteEntity("rse-route-101", Instant.ofEpochMilli(1_000))),
+            userDataDao.favorites()
+        )
+        assertEquals(null, catalogDao.track("rse-never-existed"))
+    }
+
+    private suspend fun favorite(trackId: String, addedAtMillis: Long) =
+        userDataDao.insertFavorite(FavoriteEntity(trackId, Instant.ofEpochMilli(addedAtMillis)))
+
+    private suspend fun history(trackId: String, playedAtMillis: Long) = userDataDao.insertHistory(
+        PlayHistoryEntity(trackId = trackId, playedAt = Instant.ofEpochMilli(playedAtMillis))
+    )
 }
