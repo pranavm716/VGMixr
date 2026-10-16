@@ -22,7 +22,7 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
 11. [ ] Favorites: table, toggle, favorites view.
 12. [ ] Recently played: history writes with an injected clock, recents section.
 13. [ ] Downloads and cache: offline playback, auto-cache favorites and recents, prefetch the next track. Cache keyed by `(videoId, startMs, endMs)`. Don't auto-cache or prefetch a stream for a track whose local file is present and playable.
-14. [ ] Robustness pass: error and offline states, retired tracks and games shown as unavailable, `/code-review`, CLAUDE.md update.
+14. [ ] Robustness pass: error and offline states, retired tracks and games shown as unavailable, `/code-review`, CLAUDE.md update. Read stored categories leniently (an unknown name becomes `other`, as the manifest parser does): `RoomCatalogRepository` uses `Category.valueOf`, which would crash on a retired track whose category was later renamed or removed.
 15. [ ] Visual polish: theme, navigation, icon, using the screenshot loop.
 
 ## Phase 3: real catalog (independent of the app; can run in a separate worktree alongside Phase 2)
@@ -50,5 +50,5 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
 19. [ ] v2 looping: seamless playback using `local` source loop points, global loop-cycle setting.
 
 ## Candidates (not scheduled)
-- In-app editing of a track's category, and of loop points on `local` sources. Edits are user data in Room, like favorites: a category edit is keyed by track id, a loop edit by local `path`. They override the manifest values and survive re-imports. Their relationship to the pipeline's overrides file (for example, exporting them back as overrides) is still to be decided.
+- In-app editing of a track's category, and of loop points on `local` sources. Edits are user data in Room, like favorites: a category edit is keyed by track id, a loop edit by local `path`. They override the manifest values and survive re-imports. Their relationship to the pipeline's overrides file (for example, exporting them back as overrides) is still to be decided. Finalize the category list before making category edits, so stored edits never need migrating to new names.
 - Seamless looping for `stream` sources, after v2 proves local looping. Loop points are per video, keyed by `(videoId, startMs, endMs)`, because uploads differ from ROM rips in offset, sample rate and encoding; the pipeline could derive them by aligning a video's audio against the local rip. Loops play only from the cached download (a live stream would rebuffer on every seek back to `introEnd`); verify that lossy Opus/AAC seams are gapless first. Allowing `loop` on `stream` sources removes the `stream-loop-present` error, so it bumps `schemaVersion`.
