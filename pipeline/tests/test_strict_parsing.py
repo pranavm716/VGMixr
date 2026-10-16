@@ -8,6 +8,7 @@ import pytest
 
 from vgmixr_pipeline.fixtures.spec import BASE, JsonObject, game, source, track
 from vgmixr_pipeline.manifest.errors import ErrorCode
+from vgmixr_pipeline.manifest.models import LocalSource, StreamSource, Track
 from vgmixr_pipeline.manifest.parse import Invalid, Valid, parse
 
 type Patch = Callable[[JsonObject], object]
@@ -150,3 +151,11 @@ def test_category_is_kept_as_written() -> None:
     result = parse_patched(lambda m: track(m).update(category="Route"))
     assert isinstance(result, Valid)
     assert result.manifest.tracks[0].category == "Route"
+
+
+def test_tracks_accept_already_parsed_sources() -> None:
+    """The catalog builder copies parsed sources into new models."""
+    local = LocalSource(type="local", path="pla/test-tone.wav")
+    stream = StreamSource(type="stream", videoId="XXXXXXXXXXX")
+    built = Track(id="t", family="f", title="T", category="other", order=0, sources=[local, stream])
+    assert built.sources == [local, stream]

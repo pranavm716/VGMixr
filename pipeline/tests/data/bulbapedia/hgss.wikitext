@@ -1,0 +1,49 @@
+==Tracklist==
+===Disc 3===
+Tracks 190, 205, 236-237, 252-255, and 257-263 are additions in {{game|HeartGold and SoulSilver|s}} and not old-style rearrangements of tracks present in the original {{game|Gold and Silver|s}} and {{game|Crystal}}.
+
+Tracks 172 and 173 cannot be heard during the game's opening or title screen since the [[GB Sounds]] does not work until it is activated during gameplay. The only way to play these and other old-style tracks in-game is by listening to the ''Pokémon Past Archive'' of the [[Pokémon Music Channel]] on {{DL|Days of the week|Sunday}}s.
+{| class="roundtable" style="background:#{{colorschemelight|HGSS}}; border:3px solid #{{colorschemedark|HGSS}}"
+! CD No.
+! iTunes No.
+! Track Title (Japanese)
+! Track Title (English)
+! Composer
+! Arranger
+! Duration
+|-
+| rowspan="3" | 1
+| rowspan="3" | 172
+| {{tt|オープニング|Ōpuningu}}
+| Opening Movie (Pokémon Gold & Pokémon Silver)
+| 
+| 
+| rowspan="3" | 0:44
+|-
+| {{tt|～オープニングデモ|~Ōpuningu Demo}}
+| ~Opening Demo
+| Junichi Masuda<br/>Go Ichinose
+| Junichi Masuda<br/>Go Ichinose
+|-
+| {{tt|～オープニングデモ2|~Ōpuningu Demo 2}}
+| ~Opening Demo 2
+| Junichi Masuda
+| Junichi Masuda
+|-
+| 2
+| 173
+| {{tt|タイトル|Taitoru}}
+| Title Screen (Pokémon Gold & Pokémon Silver)
+| Junichi Masuda
+| Junichi Masuda
+| 1:26
+|-
+| 3
+| 174
+| {{tt|ワカバタウン|Wakaba Taun}}
+| New Bark Town
+| Junichi Masuda<br/>Go Ichinose
+| Junichi Masuda<br/>Go Ichinose
+| 0:44
+|}
+

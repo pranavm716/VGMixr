@@ -1,0 +1,44 @@
+==Tracklist==
+===Disc 3===
+{| class="roundy" style="background:#{{colorschemelight|LGPE}}; border: 3px solid #{{colorschemedark|LGPE}}"
+! CD No.
+! iTunes No.
+! Track Title (Japanese)
+! Track Title (English)
+! Composer
+! Arranger
+! Duration
+|- style="background:#fff"
+| 1
+| 67
+| {{tt|タイ卜ルデモ|Taitoru Demo}}
+| Opening Movie
+| Junichi Masuda
+| Junichi Masuda
+| 0:23
+|- style="background:#fff"
+| 2
+| 68
+| {{tt|～オープニング～|~Ōpuningu~}}
+| Title Screen <small>(Pokémon Yellow)</small>
+| Junichi Masuda
+| Junichi Masuda
+| 1:44
+|- style="background:#fff"
+| 3
+| 69
+| {{tt|マサラタウンのテーマ|Masara Taun no Tēma}}
+| Pallet Town Theme <small>(Pokémon Yellow)</small>
+| Junichi Masuda
+| Junichi Masuda
+| 1:16
+|- style="background:#fff"
+| 45
+| 111
+| {{tt|海|Umi}}
+| The Sea <small>(Pokémon Yellow)</small>
+| Junichi Masuda
+| Junichi Masuda
+| 1:04
+|}
+

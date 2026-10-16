@@ -1,0 +1,123 @@
+{
+  "games": [
+    { "id": "red", "name": "Red", "shortName": "R", "color": "#DA3914", "generation": 1, "platform": "GB", "family": "rby" },
+    { "id": "blue", "name": "Blue", "shortName": "B", "color": "#2E50D8", "generation": 1, "platform": "GB", "family": "rby" },
+    { "id": "yellow", "name": "Yellow", "shortName": "Y", "color": "#FFD733", "generation": 1, "platform": "GB", "family": "rby" },
+    { "id": "gold", "name": "Gold", "shortName": "G", "color": "#DAA520", "generation": 2, "platform": "GBC", "family": "gsc" },
+    { "id": "silver", "name": "Silver", "shortName": "S", "color": "#C0C0C0", "generation": 2, "platform": "GBC", "family": "gsc" },
+    { "id": "crystal", "name": "Crystal", "shortName": "C", "color": "#4FD9FF", "generation": 2, "platform": "GBC", "family": "gsc" },
+    { "id": "ruby", "name": "Ruby", "shortName": "R", "color": "#CD2236", "generation": 3, "platform": "GBA", "family": "rse" },
+    { "id": "sapphire", "name": "Sapphire", "shortName": "S", "color": "#3D51A7", "generation": 3, "platform": "GBA", "family": "rse" },
+    { "id": "emerald", "name": "Emerald", "shortName": "E", "color": "#009652", "generation": 3, "platform": "GBA", "family": "rse" },
+    { "id": "firered", "name": "FireRed", "shortName": "FR", "color": "#F15C01", "generation": 3, "platform": "GBA", "family": "frlg" },
+    { "id": "leafgreen", "name": "LeafGreen", "shortName": "LG", "color": "#9FDC00", "generation": 3, "platform": "GBA", "family": "frlg" },
+    { "id": "diamond", "name": "Diamond", "shortName": "D", "color": "#90BEED", "generation": 4, "platform": "DS", "family": "dppt" },
+    { "id": "pearl", "name": "Pearl", "shortName": "P", "color": "#DD7CB1", "generation": 4, "platform": "DS", "family": "dppt" },
+    { "id": "platinum", "name": "Platinum", "shortName": "Pt", "color": "#A0A08D", "generation": 4, "platform": "DS", "family": "dppt" },
+    { "id": "heartgold", "name": "HeartGold", "shortName": "HG", "color": "#E8B502", "generation": 4, "platform": "DS", "family": "hgss" },
+    { "id": "soulsilver", "name": "SoulSilver", "shortName": "SS", "color": "#AAB9CF", "generation": 4, "platform": "DS", "family": "hgss" },
+    { "id": "black", "name": "Black", "shortName": "B", "color": "#444444", "generation": 5, "platform": "DS", "family": "bw" },
+    { "id": "white", "name": "White", "shortName": "W", "color": "#E1E1E1", "generation": 5, "platform": "DS", "family": "bw" },
+    { "id": "black-2", "name": "Black 2", "shortName": "B2", "color": "#303E51", "generation": 5, "platform": "DS", "family": "b2w2" },
+    { "id": "white-2", "name": "White 2", "shortName": "W2", "color": "#EBC5C3", "generation": 5, "platform": "DS", "family": "b2w2" },
+    { "id": "x", "name": "X", "shortName": "X", "color": "#025DA6", "generation": 6, "platform": "3DS", "family": "xy" },
+    { "id": "y", "name": "Y", "shortName": "Y", "color": "#EA1A3E", "generation": 6, "platform": "3DS", "family": "xy" },
+    { "id": "omega-ruby", "name": "Omega Ruby", "shortName": "OR", "color": "#AB2813", "generation": 6, "platform": "3DS", "family": "oras" },
+    { "id": "alpha-sapphire", "name": "Alpha Sapphire", "shortName": "AS", "color": "#26649C", "generation": 6, "platform": "3DS", "family": "oras" },
+    { "id": "sun", "name": "Sun", "shortName": "S", "color": "#F1912B", "generation": 7, "platform": "3DS", "family": "sm" },
+    { "id": "moon", "name": "Moon", "shortName": "M", "color": "#5599CA", "generation": 7, "platform": "3DS", "family": "sm" },
+    { "id": "ultra-sun", "name": "Ultra Sun", "shortName": "US", "color": "#E95B2B", "generation": 7, "platform": "3DS", "family": "sm" },
+    { "id": "ultra-moon", "name": "Ultra Moon", "shortName": "UM", "color": "#226DB5", "generation": 7, "platform": "3DS", "family": "sm" },
+    { "id": "lets-go-pikachu", "name": "Let's Go, Pikachu!", "shortName": "LGP", "color": "#F5DA26", "generation": 7, "platform": "Switch", "family": "lgpe" },
+    { "id": "lets-go-eevee", "name": "Let's Go, Eevee!", "shortName": "LGE", "color": "#D4924B", "generation": 7, "platform": "Switch", "family": "lgpe" },
+    { "id": "sword", "name": "Sword", "shortName": "Sw", "color": "#00A1E9", "generation": 8, "platform": "Switch", "family": "swsh" },
+    { "id": "shield", "name": "Shield", "shortName": "Sh", "color": "#BF004F", "generation": 8, "platform": "Switch", "family": "swsh" },
+    { "id": "brilliant-diamond", "name": "Brilliant Diamond", "shortName": "BD", "color": "#44BAE5", "generation": 8, "platform": "Switch", "family": "bdsp" },
+    { "id": "shining-pearl", "name": "Shining Pearl", "shortName": "SP", "color": "#DA7D99", "generation": 8, "platform": "Switch", "family": "bdsp" },
+    { "id": "pla", "name": "Legends: Arceus", "shortName": "PLA", "color": "#36597B", "generation": 8, "platform": "Switch" },
+    { "id": "scarlet", "name": "Scarlet", "shortName": "S", "color": "#F34134", "generation": 9, "platform": "Switch", "family": "sv" },
+    { "id": "violet", "name": "Violet", "shortName": "V", "color": "#8334B7", "generation": 9, "platform": "Switch", "family": "sv" },
+    { "id": "plza", "name": "Legends: Z-A", "shortName": "Z-A", "color": "#31CA56", "generation": 9, "platform": "Switch" }
+  ],
+  "tracklists": [
+    { "family": "rby", "games": ["red", "blue"], "page": "Game Boy: Entire Pokémon Sounds Collection CD", "disc": "Disc 1", "last": 45 },
+    { "family": "rby", "games": ["yellow"], "page": "Pokémon: Let's Go, Pikachu! & Pokémon: Let's Go, Eevee! Super Music Collection", "disc": "Disc 3" },
+
+    { "family": "gsc", "file": "tracklists/gsc.tsv", "disc": "Disc 1" },
+
+    { "family": "rse", "page": "Pokémon Ruby & Pokémon Sapphire: Super Music Collection", "disc": "Disc 1" },
+    { "family": "rse", "page": "Pokémon Ruby & Pokémon Sapphire: Super Music Collection", "disc": "Disc 2" },
+    { "family": "rse", "games": ["emerald"], "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 4", "last": 17 },
+
+    { "family": "frlg", "page": "Pokémon FireRed & Pokémon LeafGreen: Super Music Collection", "disc": "Disc 1" },
+    { "family": "frlg", "page": "Pokémon FireRed & Pokémon LeafGreen: Super Music Collection", "disc": "Disc 2", "last": 2 },
+
+    { "family": "dppt", "page": "Pokémon Diamond & Pokémon Pearl: Super Music Collection", "disc": "Disc 1" },
+    { "family": "dppt", "page": "Pokémon Diamond & Pokémon Pearl: Super Music Collection", "disc": "Disc 2" },
+    { "family": "dppt", "games": ["platinum"], "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 4", "first": 18 },
+
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 1" },
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 2" },
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 19, "last": 19, "titleSuffix": " (GB Sounds)" },
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 34, "last": 34, "titleSuffix": " (GB Sounds)" },
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 65, "last": 66, "titleSuffix": " (GB Sounds)" },
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 81, "last": 84, "titleSuffix": " (GB Sounds)" },
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 86, "last": 92, "titleSuffix": " (GB Sounds)" },
+
+    { "family": "bw", "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 1" },
+    { "family": "bw", "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 2" },
+    { "family": "bw", "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 3" },
+    { "family": "bw", "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 4" },
+
+    { "family": "b2w2", "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 1" },
+    { "family": "b2w2", "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 2" },
+    { "family": "b2w2", "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 3" },
+
+    { "family": "xy", "page": "Pokémon X & Pokémon Y: Super Music Collection", "disc": "Disc 1" },
+    { "family": "xy", "page": "Pokémon X & Pokémon Y: Super Music Collection", "disc": "Disc 2" },
+    { "family": "xy", "page": "Pokémon X & Pokémon Y: Super Music Collection", "disc": "Disc 3" },
+    { "family": "xy", "page": "Pokémon X & Pokémon Y: Super Music Collection", "disc": "Disc 4" },
+
+    { "family": "oras", "page": "Pokémon Omega Ruby & Pokémon Alpha Sapphire: Super Music Collection", "disc": "Disc 1" },
+    { "family": "oras", "page": "Pokémon Omega Ruby & Pokémon Alpha Sapphire: Super Music Collection", "disc": "Disc 2" },
+    { "family": "oras", "page": "Pokémon Omega Ruby & Pokémon Alpha Sapphire: Super Music Collection", "disc": "Disc 3" },
+    { "family": "oras", "page": "Pokémon Omega Ruby & Pokémon Alpha Sapphire: Super Music Collection", "disc": "Disc 4" },
+
+    { "family": "sm", "page": "Pokémon Sun & Pokémon Moon: Super Music Collection", "disc": "Disc 1" },
+    { "family": "sm", "page": "Pokémon Sun & Pokémon Moon: Super Music Collection", "disc": "Disc 2" },
+    { "family": "sm", "page": "Pokémon Sun & Pokémon Moon: Super Music Collection", "disc": "Disc 3" },
+    { "family": "sm", "page": "Pokémon Sun & Pokémon Moon: Super Music Collection", "disc": "Disc 4" },
+
+    { "family": "lgpe", "page": "Pokémon: Let's Go, Pikachu! & Pokémon: Let's Go, Eevee! Super Music Collection", "disc": "Disc 1" },
+    { "family": "lgpe", "page": "Pokémon: Let's Go, Pikachu! & Pokémon: Let's Go, Eevee! Super Music Collection", "disc": "Disc 2" },
+
+    { "family": "swsh", "page": "Pokémon Sword - Shield + Expansion Pass Super Music Collection", "disc": "Disc 1" },
+    { "family": "swsh", "page": "Pokémon Sword - Shield + Expansion Pass Super Music Collection", "disc": "Disc 2" },
+    { "family": "swsh", "page": "Pokémon Sword - Shield + Expansion Pass Super Music Collection", "disc": "Disc 3" },
+    { "family": "swsh", "page": "Pokémon Sword - Shield + Expansion Pass Super Music Collection", "disc": "Disc 4" },
+
+    { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 1" },
+    { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 2" },
+    { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 3" },
+    { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 4" },
+    { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 5", "last": 7 },
+
+    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 1" },
+    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 2" },
+    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 3" },
+    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 4" },
+
+    { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 1" },
+    { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 2" },
+    { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 3" },
+    { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 4" },
+    { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 5" },
+    { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 6", "last": 32 },
+    { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 6", "first": 33, "last": 33, "titleSuffix": " (The Hidden Treasure of Area Zero)" },
+
+    { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 1" },
+    { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 2" },
+    { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 3" },
+    { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 4" }
+  ]
+}

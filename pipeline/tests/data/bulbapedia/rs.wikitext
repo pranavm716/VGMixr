@@ -1,0 +1,115 @@
+==Tracklist==
+===Disc 1===
+{| class="roundy" style="background:#{{colorschemelight|Hoenn}}; border: 3px solid #{{colorschemedark|Hoenn}}"
+! CD No.
+! iTunes No.
+! Track Title (Japanese)
+! Track Title (English)
+! Composer
+! Arranger
+! Duration
+|- style="background:#fff"
+| 1
+| 1
+| {{tt|タイトルデモ ～ホウエン地方の旅立ち～|Taitoru Demo ~Hōen Chihō no Tabidachi~}}
+| Opening Movie:<br/>Setting out on a Journey in the Hoenn Region
+| Go Ichinose
+| Go Ichinose
+| 0:35
+|- style="background:#fff"
+| 2
+| 2
+| {{tt|タイトルデモ2 ～ダブルバトル～|Taitoru Demo 2 ~Daburu Batoru~}}
+| Opening Movie: Double Battles
+| Junichi Masuda
+| Go Ichinose
+| 0:16
+|- style="background:#fff"
+| 5
+| 5
+| {{tt|ミシロタウン|Mishiro Taun}}
+| Littleroot Town
+| Go Ichinose
+| Go Ichinose
+| 1:28
+|- style="background:#fff"
+| 11
+| 11
+| {{tt|101番道路|Hyakuichi-ban Dōro}}
+| Route 101
+| Morikazu Aoki
+| Morikazu Aoki
+| 1:00
+|- style="background:#fff"
+| 14
+| 14
+| {{tt|回復|Kaifuku}}
+| Pokémon Healed
+| Junichi Masuda
+| Morikazu Aoki
+| 0:05
+|- style="background:#fff"
+| 53
+| 53
+| {{tt|わざマシンゲット|Waza Mashin Getto}}
+| Obtained a TM!
+| Junichi Masuda
+| Morikazu Aoki
+| 0:05
+|-
+| style="background:#fff; {{roundybl|5px}}" | 54
+| style="background:#fff" | 54
+| style="background:#fff" | {{tt|なみのり|Naminori}}
+| style="background:#fff" | Surf
+| style="background:#fff" | Morikazu Aoki
+| style="background:#fff" | Morikazu Aoki
+| style="background:#fff; {{roundybr|5px}}" | 2:13
+|}
+
+===Disc 2===
+{| class="roundy" style="background:#{{colorschemelight|Hoenn}}; border: 3px solid #{{colorschemedark|Hoenn}}"
+! CD No.
+! iTunes No.
+! Track Title (Japanese)
+! Track Title (English)
+! Composer
+! Arranger
+! Duration
+|- style="background:#fff"
+| 1
+| 55
+| {{tt|119番道路|Hyakujūkyū-ban Dōro}}
+| Route 119
+| Go Ichinose
+| Go Ichinose
+| 1:49
+|- style="background:#fff"
+| 2
+| 56
+| {{tt|ヒワマキシティ|Hiwamaki Shiti}}
+| Fortree City
+| Morikazu Aoki
+| Morikazu Aoki
+| 0:56
+|}
+
+====Bonus Tracks====
+Tracks 107-108 are lyrical adaptations of in-game music. Track 107 is voiced by [[Trick Master|Karakuri King]] (Kenji Tominaga) and Karakuri Chorus, while Track 108 is voiced by Hiroko Takano. Track 109 is a remix of ''Battle! (Steven)''.
+{| class="roundy" style="background:#{{colorschemelight|Hoenn}}; border: 3px solid #{{colorschemedark|Hoenn}}"
+! CD No.
+! iTunes No.
+! Track Title (Japanese)
+! Track Title (English)
+! Composer
+! Arranger
+! Duration
+|- style="background:#fff"
+| 53
+| 107
+| TRICK MASTER
+| {{so|Trick Master}} (feat. Karakuri King & Karakuri Chorus)
+| Go Ichinose
+| Go Ichinose
+| 2:23
+|}
+

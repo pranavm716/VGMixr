@@ -61,8 +61,11 @@ class UnknownSource(_Model):
 
 
 def _source_tag(value: Any) -> str | None:
-    """Picks a source's model by its `type`; None (not an object with a string type) fails."""
-    source_type = value.get("type") if isinstance(value, dict) else None
+    """Picks a source's model by its `type`; None (not an object with a string type) fails.
+
+    `value` is parsed JSON, or an already-built source model when one is copied into a new model.
+    """
+    source_type = value.get("type") if isinstance(value, dict) else getattr(value, "type", None)
     if not isinstance(source_type, str):
         return None
     return source_type if source_type in ("local", "stream") else "unknown"
