@@ -1,8 +1,15 @@
+@file:UseSerializers(
+    StrictIntSerializer::class,
+    StrictLongSerializer::class,
+    StrictDoubleSerializer::class
+)
+
 package io.github.pranavm716.vgmixr.data.manifest
 
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.UseSerializers
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
