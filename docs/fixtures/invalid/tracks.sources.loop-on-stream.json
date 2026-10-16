@@ -42,7 +42,11 @@
           "videoId": "XXXXXXXXXXX",
           "startMs": 0,
           "endMs": null,
-          "loop": { "sampleRate": 32000, "introEnd": 96000, "loopEnd": 1824000 }
+          "loop": {
+            "sampleRate": 32000,
+            "introEnd": 96000,
+            "loopEnd": 1824000
+          }
         }
       ]
     }

@@ -5,7 +5,8 @@ Shared test data for the manifest validator, loaded by both the app's unit tests
 - `valid.json` must pass validation with no errors.
 - Each file in `invalid/` must fail with exactly one error, whose code is listed in the table below. A fixture that breaks two rules lets a validator pass for the wrong reason.
 - Invalid fixtures are minimal: a small base manifest plus one defect, not copies of `valid.json`. The base is a two-game family (`ruby`, `sapphire`, family `rse`), a standalone game (`pla`), and one track (`rse-route-101`) with one `stream` source. A fixture adds a second track or source only when its rule needs one.
-- `invalid/syntax-error.json` is deliberately not valid JSON. Don't let an editor reformat it.
+- `invalid/` and the invalid-fixture table below are generated from one spec, [`pipeline/src/vgmixr_pipeline/fixtures/spec.py`](../../pipeline/src/vgmixr_pipeline/fixtures/spec.py): the base manifest plus, per fixture, its file name, error code, defect and a patch to the base. Edit the spec, then run `uv run python -m vgmixr_pipeline.fixtures.generate` in `pipeline/`. `scripts/check.sh` fails if the committed files differ from what the spec generates. `valid.json` is hand-written.
+- `invalid/syntax-error.json` is deliberately not valid JSON, so the spec holds it as raw text.
 
 ## `valid.json`
 
@@ -67,6 +68,7 @@ One code per validation error in [`../manifest.md`](../manifest.md#validation-er
 
 One file per condition, named `<field>-<variant>.json`, where `<field>` is the path of the offending field in dot notation (`games.color`, `tracks.sources.videoId`). Rules that span several objects are filed under the field they compare, and the table is ordered by field as it appears in a manifest, so it can be read top to bottom alongside `valid.json`.
 
+<!-- Generated from pipeline/src/vgmixr_pipeline/fixtures/spec.py. Do not edit. -->
 | File | Code | Defect |
 |---|---|---|
 | `syntax-error.json` | `malformed` | Not valid JSON (unclosed brace) |
@@ -119,3 +121,4 @@ One file per condition, named `<field>-<variant>.json`, where `<field>` is the p
 | `tracks.replaces-self.json` | `track-replaces-invalid` | Track replaces its own id |
 | `tracks.replaces-live.json` | `track-replaces-invalid` | Track replaces another track in the manifest |
 | `tracks.replaces-twice.json` | `track-replaces-invalid` | Two tracks replace `rse-old-route` |
+<!-- End of generated table. -->

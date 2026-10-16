@@ -40,7 +40,11 @@
         {
           "type": "local",
           "path": "rse/012.flac",
-          "loop": { "sampleRate": 0, "introEnd": 96000, "loopEnd": 1824000 }
+          "loop": {
+            "sampleRate": 0,
+            "introEnd": 96000,
+            "loopEnd": 1824000
+          }
         }
       ]
     }
