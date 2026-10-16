@@ -56,7 +56,7 @@
       "family": "rse",
       "games": ["emerald"],
       "title": "Battle Frontier",
-      "category": "other",
+      "category": "town",
       "order": 121,
       "sources": [{ "type": "stream", "videoId": "i6y2Nvy6GXU" }]
     },
