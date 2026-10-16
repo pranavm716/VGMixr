@@ -6,7 +6,7 @@ import pytest
 
 from vgmixr_pipeline.catalog.build import Draft, DraftTrack
 from vgmixr_pipeline.catalog.config import Overrides, YouTube
-from vgmixr_pipeline.catalog.match import Match, match_tracks
+from vgmixr_pipeline.catalog.match import Match, candidates_json, match_tracks
 from vgmixr_pipeline.catalog.score import Names
 from vgmixr_pipeline.catalog.youtube import Chapter, Entry, Video
 from vgmixr_pipeline.manifest.models import Game, LocalSource, StreamSource
@@ -228,3 +228,34 @@ def test_rejecting_every_review_candidate_leaves_the_track_unmatched() -> None:
     match = run(draft(track("Route 101")), videos, overrides=overrides, search=False)
     assert match["rse-route-101"].status == "unmatched"
     assert match["rse-route-101"].candidates == []
+
+
+def test_low_scoring_candidates_are_kept_for_review_and_labeling() -> None:
+    videos = FakeVideos({RS_LIST: entries("Littleroot Town")})
+    match = run(draft(track("Route 101")), videos, search=False)["rse-route-101"]
+    assert match.status == "unmatched"
+    assert [c.candidate.title for c in match.candidates] == ["Littleroot Town"]
+
+
+def test_candidates_serialize_for_the_review_tool() -> None:
+    videos = FakeVideos({RS_LIST: entries("Rte 101")})
+    match = run(draft(track("Route 101")), videos, search=False)["rse-route-101"]
+    (data,) = candidates_json([match])
+    assert data["id"] == "rse-route-101"
+    assert data["status"] == "review"
+    (candidate,) = data["candidates"]
+    assert candidate["videoId"] == vid(1)
+    assert candidate["title"] == "Rte 101"
+    assert candidate["kind"] == "playlist"
+    assert (candidate["startMs"], candidate["endMs"], candidate["durationMs"]) == (0, None, 60_000)
+    assert 0.5 <= candidate["score"] < 0.8
+    assert "title" in candidate["reasons"][0]
+
+
+def test_words_common_to_a_playlist_do_not_count_against_titles() -> None:
+    suffix = " - Johto Sounds Remastered Collection"
+    titles = [t + suffix for t in ("Route 1", "Route 2", "Pallet Town", "Viridian City")]
+    videos = FakeVideos({RS_LIST: entries(*titles)})
+    match = run(draft(track("Pallet Town", 2), track("Route 1", 0)), videos, search=False)
+    assert match["rse-pallet-town"].status == "matched"
+    assert match["rse-route-1"].status == "matched"

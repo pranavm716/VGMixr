@@ -6,9 +6,10 @@ ones (at most three) become sources. Review decisions in the overrides come firs
 lead, rejected videos are dropped. Tracks with hand-written sources (extras) are left as they are.
 """
 
+from collections import Counter
 from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Literal, Protocol
+from typing import Any, Literal, Protocol
 
 from vgmixr_pipeline.catalog.build import Draft, DraftTrack
 from vgmixr_pipeline.catalog.config import Overrides, Streams, TrackOverride, YouTube
@@ -20,15 +21,19 @@ from vgmixr_pipeline.catalog.score import (
     Verdict,
     classify,
     score,
+    video_words,
 )
 from vgmixr_pipeline.catalog.youtube import Entry, Video
 from vgmixr_pipeline.manifest.models import StreamSource
 
 MAX_SOURCES = 3
-# Candidates kept per track for the report and the review tool.
+# Candidates kept per track (whatever their verdict) for the report, the review tool and labeling.
 KEPT_CANDIDATES = 5
 SEARCH_RESULTS = 10
 _GAME_BOY = {"GB", "GBC"}
+# A word in at least this share of a playlist's titles is noise (needs a few entries to tell).
+NOISE_SHARE = 0.6
+NOISE_MIN_ENTRIES = 4
 
 type Status = Literal["matched", "review", "unmatched", "hand"]
 
@@ -53,7 +58,7 @@ class Match:
     # "hand": the track has hand-written sources and isn't matched.
     status: Status
     streams: list[StreamSource]
-    # The best candidates that weren't rejected by override, best first.
+    # The best-scoring candidates not rejected by override, best first.
     candidates: list[Scored]
 
 
@@ -89,6 +94,7 @@ class _Matcher:
             self._last_order[track.family] = max(self._last_order.get(track.family, 0), track.order)
         self._playlists: dict[str, list[Entry]] = {}
         self._albums: dict[str, Video] = {}
+        self._playlist_noise: dict[str, frozenset[str]] = {}
 
     def match(self, track: DraftTrack, streams: Streams) -> Match:
         if track.sources:
@@ -122,8 +128,7 @@ class _Matcher:
             status = "review"
         else:
             status = "unmatched"
-        kept = [s for s in ranked if classify(s.score.value) is not Verdict.REJECT]
-        return Match(track.id, track.family, track.title, status, sources, kept[:KEPT_CANDIDATES])
+        return Match(track.id, track.family, track.title, status, sources, ranked[:KEPT_CANDIDATES])
 
     def _facts(self, track: DraftTrack) -> TrackFacts:
         games = track.games or self._family_games[track.family]
@@ -144,13 +149,25 @@ class _Matcher:
             if playlist.playlist not in self._playlists:
                 self._playlists[playlist.playlist] = self._videos.playlist(playlist.playlist)
             all_entries = self._playlists[playlist.playlist]
+            noise = self._noise(playlist.playlist, all_entries)
             first = playlist.first or 1
             last = playlist.last or max((e.position for e in all_entries), default=first)
             for entry in all_entries:
                 if first <= entry.position <= last:
                     position = (entry.position - first) / (last - first) if last > first else None
                     yield Candidate(entry.id, entry.title, entry.duration_ms, entry.channel,
-                                    "playlist", frozenset(playlist.games), position)  # fmt: skip
+                                    "playlist", frozenset(playlist.games), position,
+                                    noise=noise)  # fmt: skip
+
+    def _noise(self, playlist_id: str, entries: list[Entry]) -> frozenset[str]:
+        """Words in most of a playlist's titles, such as " - Pokémon Red/Blue Soundtrack"."""
+        if playlist_id not in self._playlist_noise:
+            counts = Counter(w for e in entries for w in set(video_words(e.title)))
+            common = {w for w, n in counts.items() if n >= NOISE_SHARE * len(entries)}
+            self._playlist_noise[playlist_id] = frozenset(
+                common if len(entries) >= NOISE_MIN_ENTRIES else ()
+            )
+        return self._playlist_noise[playlist_id]
 
     def _search_candidates(self, track: DraftTrack, facts: TrackFacts) -> Iterable[Candidate]:
         if not self._search:
@@ -176,6 +193,35 @@ class _Matcher:
                     video.id, chapter.title, length, None, "album", frozenset(album.games),
                     index / (count - 1) if count > 1 else None, chapter.start_ms, chapter.end_ms,
                 )  # fmt: skip
+
+
+def candidates_json(matches: list[Match]) -> list[dict[str, Any]]:
+    """Each track's status and best candidates, for the review tool and the labeled set."""
+    return [
+        {
+            "id": m.track_id,
+            "family": m.family,
+            "title": m.title,
+            "status": m.status,
+            "candidates": [
+                {
+                    "videoId": s.candidate.video_id,
+                    "startMs": s.candidate.start_ms,
+                    "endMs": s.candidate.end_ms,
+                    "title": s.candidate.title,
+                    "channel": s.candidate.channel,
+                    "durationMs": s.candidate.duration_ms,
+                    "kind": s.candidate.kind,
+                    "games": sorted(s.candidate.games),
+                    "position": s.candidate.position,
+                    "score": round(s.score.value, 3),
+                    "reasons": s.score.reasons,
+                }
+                for s in m.candidates
+            ],
+        }
+        for m in matches
+    ]
 
 
 def _stream(video_id: str, start_ms: int, end_ms: int | None, confidence: float) -> StreamSource:

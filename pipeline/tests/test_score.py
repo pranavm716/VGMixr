@@ -231,7 +231,7 @@ def test_8_bit_is_a_red_flag_except_on_game_boy_families() -> None:
     [
         (60_000, 60_000, True),
         (60_000, 46_000, True),
-        (60_000, 44_000, False),
+        (60_000, 23_000, False),
         (60_000, 200_000, True),
         (60_000, 215_000, False),
         (None, 3_000_000, True),
@@ -296,3 +296,65 @@ def test_position_breaks_ties_between_identical_titles() -> None:
 )  # fmt: skip
 def test_classify(value: float, verdict: Verdict) -> None:
     assert classify(value) is verdict
+
+
+# Fixes from the first real run
+
+
+def test_compound_names_also_match_as_two_words() -> None:
+    track = facts(family="gsc", games=("gold",), title="Route 29")
+    assert evidence(track, "Pokemon Heart Gold/Soul Silver OST - Route 29") == "wrong"
+    hgss = facts(family="hgss", games=("heartgold",), title="Route 29")
+    assert title_similarity(hgss, "Pokemon Heart Gold/Soul Silver - Route 29", NAMES) == 1.0
+
+
+def test_disc_and_track_markers_are_noise() -> None:
+    track = facts(title="New Bark Town")
+    assert title_similarity(track, "OST (D1;T4) New Bark Town (HD)", NAMES) == 1.0
+    assert title_similarity(track, "Disc 1 Track 4 - New Bark Town", NAMES) == 1.0
+
+
+def test_words_common_to_a_playlist_are_noise() -> None:
+    entry = Candidate("abcdefghijk", "New Bark Town ~ Johto Sounds Remastered Collection", None,
+                      None, "playlist", noise=frozenset({"johto", "sounds", "remastered",
+                      "collection"}))  # fmt: skip
+    assert title_similarity(facts(title="New Bark Town"), entry.title, NAMES, entry.noise) == 1.0
+    assert red_flags(facts(), entry.title, noise=entry.noise) == []
+
+
+def test_a_title_inside_the_other_is_close() -> None:
+    crystal = facts(title="Title Screen (Crystal)")
+    assert 0.8 <= title_similarity(crystal, "Title (Crystal)", NAMES) < 1.0
+    oak = facts(title="Professor Oak's Laboratory")
+    assert 0.8 <= title_similarity(oak, "Oak's Laboratory", NAMES) < 1.0
+    single = facts(title="Battle! (Gym Leader)")
+    assert title_similarity(single, "Battle", NAMES) < 0.8
+
+
+def test_a_one_loop_rip_of_a_two_loop_album_track_fits() -> None:
+    assert duration_fits(215_000, 98_000)
+    assert not duration_fits(215_000, 80_000)
+
+
+def test_a_short_title_inside_a_long_one_is_not_close() -> None:
+    road = facts(title="Road to Fuchsia City: Leaving Lavender Town")
+    assert title_similarity(road, "Fuchsia City", NAMES) < 0.7
+    sevii = facts(title="Sevii Islands: Four & Five Islands")
+    assert title_similarity(sevii, "Sevii Islands", NAMES) < 0.8
+
+
+@pytest.mark.parametrize(
+    ("title", "video"),
+    [
+        ("Battle! (Gym Leader—Kanto Version)", "Battle! Gym Leader (Johto)"),
+        ("Route 209 (Night)", "Route 209 (Day)"),
+        ("Battle! (Wild Pokémon)", "Wild Pokémon Battle (Johto)"),
+    ],
+)
+def test_a_variant_the_track_lacks_is_another_track(title: str, video: str) -> None:
+    assert title_similarity(facts(title=title), video, NAMES) < 0.6
+
+
+def test_a_variant_missing_from_the_video_is_only_close() -> None:
+    track = facts(title="Route 209 (Night)")
+    assert 0.8 <= title_similarity(track, "Route 209", NAMES) < 1.0

@@ -29,6 +29,8 @@ class Weights:
     position: float = 0.10
     # Title similarity's share from characters; the rest is from shared words.
     characters: float = 0.7
+    # The least title similarity of a title whose words (two or more) are all in the other's.
+    contained: float = 0.82
     # Multipliers.
     wrong_game: float = 0.15
     red_flag: float = 0.5
@@ -48,7 +50,8 @@ REVIEW = 0.50
 # Longer than this, a whole video (not an album chapter) is a compilation or a loop.
 LONG_MS = 20 * 60 * 1000
 # A video can be shorter than the track's listed length by a little, or loop it a few times.
-MIN_RATIO = 0.75
+# The lower bound allows a one-loop rip of a track the album plays twice.
+MIN_RATIO = 0.4
 MAX_RATIO = 3.5
 
 
@@ -88,6 +91,8 @@ class Candidate:
     position: float | None = None
     start_ms: int = 0
     end_ms: int | None = None
+    # Words that say nothing about this candidate, such as those its whole playlist shares.
+    noise: frozenset[str] = frozenset()
 
 
 @dataclass(frozen=True)
@@ -102,8 +107,12 @@ class Score:
 _REPLACEMENTS = {"&": " and ", "♀": " female ", "♂": " male "}
 _APOSTROPHES = re.compile(r"['’‘]")
 _NON_WORD = re.compile(r"[^a-z0-9]+")
-# "#12" anywhere, or "12." / "12 -" / "12)" at the start.
-_TRACK_NUMBER = re.compile(r"#\d+|^\s*\d{1,3}\s*[.):-]\s+")
+# "#12" anywhere; "12." / "12 -" / "12)" at the start; disc and track markers ("(D1;T4)",
+# "Disc 1 Track 4").
+_TRACK_NUMBER = re.compile(
+    r"#\d+|^\s*\d{1,3}\s*[.):-]\s+|\(?\bD\d+\s*[;,.]?\s*T\d+\b\)?|\bdisc\s*\d+\s*track\s*\d+\b",
+    re.IGNORECASE,
+)
 _NOISE = {
     "pokemon", "ost", "soundtrack", "music", "bgm", "hq", "hd", "gba", "nds", "ds", "3ds", "gb",
     "gbc", "switch", "official", "audio", "game", "theme", "version", "versions", "ver", "vs",
@@ -118,6 +127,11 @@ _FLAGS = {
     "unused", "acapella", "acoustic", "synthesia", "medley", "symphony", "concert", "live",
 }  # fmt: skip
 _EIGHT_BIT = ("8", "bit")
+# Words that tell versions of one track apart.
+_VARIANTS = {
+    "kanto", "johto", "hoenn", "sinnoh", "unova", "kalos", "alola", "galar", "hisui", "paldea",
+    "kitakami", "blueberry", "day", "night", "morning", "evening",
+}  # fmt: skip
 # Spin-offs, other media: never a mainline game's audio.
 _OTHER_GAMES = [
     "mystery dungeon", "pokemon ranger", "colosseum", "pokemon xd", "pokemon stadium",
@@ -137,11 +151,14 @@ def words(text: str) -> list[str]:
     return _NON_WORD.sub(" ", _APOSTROPHES.sub("", plain.lower())).split()
 
 
-def _video_words(title: str) -> list[str]:
+def video_words(title: str) -> list[str]:
     return words(_TRACK_NUMBER.sub(" ", title))
 
 
 # Game names
+
+
+_COMPOUND = re.compile(r"([a-z])([A-Z])")
 
 
 @dataclass(frozen=True)
@@ -178,8 +195,11 @@ class Names:
         names = []
         for game in games:
             name = tuple(words(game.name))
-            compound = bool(re.search(r"[a-z][A-Z]", game.name))
+            compound = bool(_COMPOUND.search(game.name))
             names.append(_Name(name, game.family_id, len(name) > 1 or compound))
+            if compound:  # "HeartGold" is also written "Heart Gold"
+                split = tuple(words(_COMPOUND.sub(r"\1 \2", game.name)))
+                names.append(_Name(split, game.family_id, True))
         for family, members in family_games.items():
             if len(members) > 1:
                 label = tuple(words("".join(g.shortName for g in members)))
@@ -192,7 +212,7 @@ class Names:
 
     def find(self, title: str, ignore: tuple[tuple[str, ...], ...] = ()) -> _Found:
         """Names in `title`, except those in `ignore` (names that are part of a track's title)."""
-        tokens = _video_words(title)
+        tokens = video_words(title)
         families: set[str] = set()
         spans: list[tuple[str, ...]] = []
         rest: list[str] = []
@@ -257,12 +277,14 @@ class Names:
 # Components
 
 
-def title_similarity(track: TrackFacts, video_title: str, names: Names) -> float:
+def title_similarity(
+    track: TrackFacts, video_title: str, names: Names, noise: frozenset[str] = frozenset()
+) -> float:
     """0-1. Names that are part of the track's title stay on both sides."""
     own = names.find(track.title)
     a = own.rest + [w for span in own.spans for w in span]
     # Ignored names stay in `rest`, so they're compared like any other word.
-    b = names.find(video_title, ignore=own.spans).rest
+    b = [w for w in names.find(video_title, ignore=own.spans).rest if w not in noise]
     if not a or not b:
         return 0.0
     # Characters forgive small spelling differences; shared words keep unrelated titles apart.
@@ -272,14 +294,25 @@ def title_similarity(track: TrackFacts, video_title: str, names: Names) -> float
     )
     shared = 2 * len(set(a) & set(b)) / (len(set(a)) + len(set(b)))
     ratio = WEIGHTS.characters * characters + (1 - WEIGHTS.characters) * shared
+    shorter, longer = sorted([set(a), set(b)], key=len)
+    if len(shorter) >= 2 and shorter < longer and len(shorter) > len(longer) / 2:
+        # One title inside the other ("Title (Crystal)" in "Title Screen (Crystal)") is close,
+        # but not enough on its own to accept a search result.
+        ratio = max(ratio, WEIGHTS.contained)
     if sorted(w for w in a if w.isdigit()) != sorted(w for w in b if w.isdigit()):
+        ratio *= WEIGHTS.other_numbers
+    # A variant only the video names (Johto for a Kanto track, Day for Night) is another track;
+    # one only the track names may just be left out of the video's title.
+    if (set(b) & _VARIANTS) - set(a):
         ratio *= WEIGHTS.other_numbers
     return ratio
 
 
-def red_flags(track: TrackFacts, video_title: str, game_boy: bool = False) -> list[str]:
+def red_flags(
+    track: TrackFacts, video_title: str, game_boy: bool = False, noise: frozenset[str] = frozenset()
+) -> list[str]:
     own = set(words(track.title))
-    tokens = _video_words(video_title)
+    tokens = [w for w in video_words(video_title) if w not in noise]
     flags = [w for w in dict.fromkeys(tokens) if w in _FLAGS and w not in own]
     eight_bit = any(tuple(tokens[i : i + 2]) == _EIGHT_BIT for i in range(len(tokens)))
     if eight_bit and not (game_boy or track.game_boy) and "8" not in own:
@@ -302,7 +335,7 @@ def _position_fit(track: TrackFacts, candidate: Candidate) -> float:
 
 def score(track: TrackFacts, candidate: Candidate, names: Names) -> Score:
     w = WEIGHTS
-    title = title_similarity(track, candidate.title, names)
+    title = title_similarity(track, candidate.title, names, candidate.noise)
     evidence = names.evidence(track, candidate)
     trust = w.trust_by_kind[candidate.kind]
     position = _position_fit(track, candidate)
@@ -317,7 +350,7 @@ def score(track: TrackFacts, candidate: Candidate, names: Names) -> Score:
     if evidence == "wrong":
         value *= w.wrong_game
         reasons[1] = "wrong game"
-    flags = red_flags(track, candidate.title)
+    flags = red_flags(track, candidate.title, noise=candidate.noise)
     if candidate.kind != "album" and (candidate.duration_ms or 0) > LONG_MS:
         flags.append("long video")
     for flag in flags:
