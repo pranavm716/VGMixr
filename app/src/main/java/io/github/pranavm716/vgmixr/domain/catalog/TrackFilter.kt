@@ -1,0 +1,47 @@
+package io.github.pranavm716.vgmixr.domain.catalog
+
+import io.github.pranavm716.vgmixr.domain.model.Category
+import io.github.pranavm716.vgmixr.domain.model.Game
+
+/** Filters ANDed together; null means "any". */
+data class TrackFilter(
+    val game: String? = null,
+    val family: String? = null,
+    val generation: Int? = null,
+    val category: Category? = null
+)
+
+data class FilterOptions(
+    val games: List<Game>,
+    val families: List<Family>,
+    val generations: List<Int>,
+    val categories: List<Category>
+)
+
+/** Tracks matching [filter], sorted by family position, then order, then title. */
+fun Catalog.filter(filter: TrackFilter): List<CatalogTrack> {
+    val familyPosition = families.withIndex().associate { (index, family) -> family.id to index }
+    return tracks
+        .filter { it.matches(filter) }
+        .sortedWith(
+            compareBy<CatalogTrack>(
+                { familyPosition[it.familyId] ?: Int.MAX_VALUE },
+                { it.order },
+                { it.title }
+            )
+        )
+}
+
+private fun CatalogTrack.matches(filter: TrackFilter): Boolean =
+    (filter.game == null || games.any { it.id == filter.game }) &&
+        (filter.family == null || familyId == filter.family) &&
+        (filter.generation == null || games.any { it.generation == filter.generation }) &&
+        (filter.category == null || category == filter.category)
+
+/** Filter-sheet choices. An empty [FilterOptions.generations] means the UI hides that filter. */
+fun Catalog.filterOptions(): FilterOptions = FilterOptions(
+    games = games,
+    families = families,
+    generations = games.mapNotNull { it.generation }.distinct().sorted(),
+    categories = Category.entries
+)

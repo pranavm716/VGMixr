@@ -32,7 +32,7 @@ interface CatalogDao {
     @Query("DELETE FROM sources WHERE trackId = :trackId")
     suspend fun deleteSources(trackId: String)
 
-    /** A family's games, retired included, in the order family name and label derive from. */
+    /** A family's games, retired included, in manifest position order. */
     @Query("SELECT * FROM games WHERE familyId = :familyId ORDER BY position, id")
     suspend fun gamesInFamily(familyId: String): List<GameEntity>
 
@@ -53,6 +53,20 @@ interface CatalogDao {
 
     @Query("SELECT * FROM sources WHERE trackId = :trackId ORDER BY position")
     suspend fun sources(trackId: String): List<SourceEntity>
+
+    // Bulk reads for building the whole catalog in one transaction.
+
+    @Query("SELECT * FROM games WHERE retired = 0 ORDER BY position, id")
+    suspend fun activeGames(): List<GameEntity>
+
+    @Query("SELECT * FROM tracks WHERE retired = 0 ORDER BY id")
+    suspend fun activeTracks(): List<TrackEntity>
+
+    @Query("SELECT * FROM track_games")
+    suspend fun allTrackGames(): List<TrackGameEntity>
+
+    @Query("SELECT * FROM sources ORDER BY trackId, position")
+    suspend fun allSources(): List<SourceEntity>
 }
 
 @Dao

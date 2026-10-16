@@ -16,12 +16,18 @@ import java.time.ZoneOffset
 object TestCatalog {
     val clock: Clock = Clock.fixed(Instant.parse("2026-10-15T12:00:00Z"), ZoneOffset.UTC)
 
-    fun game(id: String, familyId: String = "rse", name: String = id) = Game(
+    fun game(
+        id: String,
+        familyId: String = "rse",
+        name: String = id,
+        shortName: String = id.take(1).uppercase(),
+        generation: Int? = 3
+    ) = Game(
         id = id,
         name = name,
-        shortName = id.take(1).uppercase(),
+        shortName = shortName,
         color = "#336699",
-        generation = 3,
+        generation = generation,
         platform = "GBA",
         familyId = familyId
     )
@@ -31,6 +37,8 @@ object TestCatalog {
         familyId: String = "rse",
         games: List<String>? = null,
         title: String = id,
+        category: Category = Category.ROUTE,
+        order: Int = 0,
         sources: List<Source> = listOf(Source.Stream("AAAAAAAAAAA", 0, null)),
         replaces: List<String> = emptyList()
     ) = Track(
@@ -38,8 +46,8 @@ object TestCatalog {
         familyId = familyId,
         games = games,
         title = title,
-        category = Category.ROUTE,
-        order = 0,
+        category = category,
+        order = order,
         sources = sources,
         replaces = replaces
     )

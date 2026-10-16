@@ -45,6 +45,8 @@ android {
     sourceSets {
         // Shared manifest fixtures, also loaded by the pipeline's tests.
         getByName("test").resources.srcDir("../docs/fixtures")
+        // The catalog the pipeline writes, bundled as assets/manifest.json.
+        getByName("main").assets.srcDir("../catalog")
     }
 }
 

@@ -106,7 +106,7 @@ The app derives chip text color from `color` for contrast, so the manifest doesn
 - All games in a family must share the same `generation` (all set to the same value, or all omitted).
 - A `family` slug must not equal the id of a game outside that family, since ids would collide.
 - Display name is derived: member game names joined with " / " in manifest order (e.g. "Ruby / Sapphire / Emerald"). Label is derived: member short names concatenated (e.g. "RSE"). Neither is stored.
-- The app stores each game's last manifest position in Room, so families containing retired games still derive a stable name and label.
+- Retired games (missing from the current manifest) are left out of the family's name and label, as they are from track chips. The app stores each game's last manifest position in Room; positions of retired games are stale and order nothing.
 - Family ids are immutable once published, because tracks reference them.
 
 ### Grouping guidance
@@ -143,11 +143,12 @@ The app derives chip text color from `color` for contrast, so the manifest doesn
 ### Display
 
 - A track's chip is the short names of its games in manifest order, each drawn in its own game's `color`. A shared track shows all of the family's games (e.g. "RSE"); a Ruby-only track shows "R".
-- Filters:
-  - **Game**: matches tracks whose family contains the game and whose `games` is omitted or includes it (selecting Ruby shows RSE shared tracks plus Ruby exclusives, not Heavy Rain).
+- Filters (at most one value each, ANDed together; applied in memory, not in SQL):
+  - **Game**: matches tracks whose chip games include the game, i.e. whose family contains the game and whose `games` is omitted or includes it (selecting Ruby shows RSE shared tracks plus Ruby exclusives, not Heavy Rain).
   - **Family**: uses the derived family.
-  - **Generation**: uses the game's `generation`. Games without a `generation` never match, and the UI shows this filter only when at least one game has a generation.
+  - **Generation**: matches tracks with a chip game of that `generation`. Games without a `generation` never match, and the UI shows this filter only when at least one game has a generation.
   - **Category**: uses `category`.
+- Track lists sort by family (in the manifest order of its first game), then `order`, then `title`.
 
 ## Source
 
