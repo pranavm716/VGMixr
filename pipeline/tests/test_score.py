@@ -369,3 +369,54 @@ def test_joke_rip_channels_are_red_flags() -> None:
 
 def test_guides_are_red_flags() -> None:
     assert red_flags(facts(title="Dive"), "How To Get HM08 Dive in Pokemon Ruby/Sapphire/Emerald")
+
+
+# Fixes from the labeled set
+
+
+@pytest.mark.parametrize(
+    "video",
+    [
+        "[GBC] Opening Movie - Pokémon Ruby & Sapphire Music",
+        'Opening Movie (From "Pokemon Ruby & Sapphire")',
+        "Opening Movie - Pokémon Ruby & Sapphire (Spanish Version)",
+        "Opening Movie / Pokémon Ruby & Sapphire [Music Box]",
+        "Pokémon RSE | Opening Movie [DS] Transcription",
+        "Pokémon Ruby - Opening Movie (MIDI version)",
+        "Pokémon Ruby, Sapphire, and Emerald - Opening Movie - Without Melody",
+    ],
+)
+def test_versions_that_are_not_the_game_audio_are_red_flags(video: str) -> None:
+    assert red_flags(facts(title="Opening Movie"), video)
+
+
+def test_game_boy_words_are_no_red_flag_on_game_boy_games() -> None:
+    gb = facts(family="gsc", games=("gold",), title="Route 29")
+    assert red_flags(gb, "Pokémon Gold (GBC) - Route 29", game_boy=True) == []
+
+
+def test_separated_family_labels_are_names() -> None:
+    oras = facts(family="oras", games=("omega-ruby",), title="Trainers' School")
+    assert evidence(oras, "Pokemon R/S/E Soundtrack: Trainer's School") == "wrong"
+    hgss = facts(family="hgss", games=("heartgold",), title="Safari Zone")
+    assert evidence(hgss, "Pokémon HG/SS - Safari Zone") == "right"
+
+
+def test_gb_sounds_must_match_on_later_games() -> None:
+    gb = facts(family="hgss", games=("heartgold",), title="Route 24 (GB Sounds)")
+    assert title_similarity(gb, "Pokémon HGSS OST - Route 24", NAMES) < 0.6
+    assert title_similarity(gb, "Pokémon HGSS OST - Route 24 (GB Sound)", NAMES) > 0.8
+    plain = facts(family="hgss", games=("heartgold",), title="Poké Mart")
+    assert title_similarity(plain, "PokéMart (GB Sound)", NAMES) < 0.6
+
+
+def test_a_video_title_missing_a_descriptive_word_is_closer_than_one_with_an_extra_word() -> None:
+    moon = facts(title="Caves of Mt. Moon")
+    assert title_similarity(moon, "Mt. Moon", NAMES) >= 0.87
+    safari = facts(title="Safari Zone")
+    assert title_similarity(safari, "Safari Zone Gate", NAMES) < 0.87
+
+
+def test_a_video_title_missing_a_role_is_only_close() -> None:
+    leaders = facts(title="Battle! (Team Aqua / Team Magma Leaders)")
+    assert title_similarity(leaders, "Battle! Team Magma/Aqua", NAMES) < 0.87

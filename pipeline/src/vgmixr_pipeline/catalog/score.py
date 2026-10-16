@@ -29,8 +29,11 @@ class Weights:
     position: float = 0.10
     # Title similarity's share from characters; the rest is from shared words.
     characters: float = 0.7
-    # The least title similarity of a title whose words (two or more) are all in the other's.
+    # The least title similarity of a title whose words (two or more) are all in the other's:
+    # enough to accept when the video's title only leaves out descriptive words ("Mt. Moon" for
+    # "Caves of Mt. Moon"), only close when it adds words ("Safari Zone Gate" for "Safari Zone").
     contained: float = 0.82
+    contained_video: float = 0.87
     # Multipliers.
     wrong_game: float = 0.15
     red_flag: float = 0.5
@@ -128,10 +131,23 @@ _FLAGS = {
     # Videos about the game rather than its music.
     "how", "tutorial", "guide", "walkthrough", "playthrough", "gameplay", "speedrun", "nuzlocke",
     "reaction", "review", "glitch",
+    # Other versions: fan transcriptions and MIDIs, edits, dubs.
+    "transcription", "transcribed", "midi", "without", "dub", "dubbed", "spanish", "french",
+    "german", "italian", "latino",
 }  # fmt: skip
+# Phrases that change what a video is.
+_FLAG_PHRASES = [("music", "box"), ("8", "bit"), ("16", "bit")]
+# Other consoles' sound: a demake, unless the track is from that console.
+_DEMAKE = {"gbc", "nes", "snes", "n64", "genesis", "megadrive"}
+# A cover names the original game: 'Song (From "Pokémon Ruby")'.
+_FROM = re.compile(r"\(\s*from\s*[\"“]", re.IGNORECASE)
 # Channels whose uploads aren't what their titles say (SiIvaGunner's "rips" are jokes).
 _BAD_CHANNELS = {"siivagunner", "tsimfd"}
-_EIGHT_BIT = ("8", "bit")
+# Who a battle or encounter is against; a video title can't leave these out.
+_ROLES = {
+    "leader", "leaders", "gym", "elite", "champion", "rival", "wild", "trainer", "trainers",
+    "legendary", "boss", "admin", "admins", "grunt", "grunts", "final", "frontier", "brain",
+}  # fmt: skip
 # Words that tell versions of one track apart.
 _VARIANTS = {
     "kanto", "johto", "hoenn", "sinnoh", "unova", "kalos", "alola", "galar", "hisui", "paldea",
@@ -164,6 +180,7 @@ def video_words(title: str) -> list[str]:
 
 
 _COMPOUND = re.compile(r"([a-z])([A-Z])")
+_ENGLISH = {"or", "as", "go"}
 
 
 @dataclass(frozen=True)
@@ -209,6 +226,11 @@ class Names:
             if len(members) > 1:
                 label = tuple(words("".join(g.shortName for g in members)))
                 names.append(_Name(label, family, len(label[0]) >= 3))
+                # "R/S/E", "HG/SS". Two one-letter or English-word parts ("B/W", "OR/AS") count
+                # only after "Pokémon".
+                split = tuple(w for g in members for w in words(g.shortName))
+                distinct = len(split) >= 3 or all(len(w) >= 2 and w not in _ENGLISH for w in split)
+                names.append(_Name(split, family, distinct))
         game_family = {g.id: g.family_id for g in games}
         for key, values in aliases.items():
             family = game_family.get(key, key)
@@ -301,14 +323,18 @@ def title_similarity(
     ratio = WEIGHTS.characters * characters + (1 - WEIGHTS.characters) * shared
     shorter, longer = sorted([set(a), set(b)], key=len)
     if len(shorter) >= 2 and shorter < longer and len(shorter) > len(longer) / 2:
-        # One title inside the other ("Title (Crystal)" in "Title Screen (Crystal)") is close,
-        # but not enough on its own to accept a search result.
-        ratio = max(ratio, WEIGHTS.contained)
+        left_out = set(a) - set(b)
+        video_inside = shorter == set(b) and not left_out & _ROLES
+        ratio = max(ratio, WEIGHTS.contained_video if video_inside else WEIGHTS.contained)
     if sorted(w for w in a if w.isdigit()) != sorted(w for w in b if w.isdigit()):
         ratio *= WEIGHTS.other_numbers
     # A variant only the video names (Johto for a Kanto track, Day for Night) is another track;
     # one only the track names may just be left out of the video's title.
     if (set(b) & _VARIANTS) - set(a):
+        ratio *= WEIGHTS.other_numbers
+    # Later games have Game Boy versions of some tracks ("Route 24 (GB Sounds)"), so "GB" on one
+    # side only is another track.
+    if not track.game_boy and ("gb" in words(track.title)) != ("gb" in video_words(video_title)):
         ratio *= WEIGHTS.other_numbers
     return ratio
 
@@ -319,9 +345,15 @@ def red_flags(
     own = set(words(track.title))
     tokens = [w for w in video_words(video_title) if w not in noise]
     flags = [w for w in dict.fromkeys(tokens) if w in _FLAGS and w not in own]
-    eight_bit = any(tuple(tokens[i : i + 2]) == _EIGHT_BIT for i in range(len(tokens)))
-    if eight_bit and not (game_boy or track.game_boy) and "8" not in own:
-        flags.append("8-bit")
+    game_boy = game_boy or track.game_boy
+    for phrase in _FLAG_PHRASES:
+        found = any(tuple(tokens[i : i + len(phrase)]) == phrase for i in range(len(tokens)))
+        if found and not set(phrase) <= own and not (game_boy and phrase == ("8", "bit")):
+            flags.append(" ".join(phrase))
+    if not game_boy:
+        flags += [w for w in dict.fromkeys(tokens) if w in _DEMAKE and w not in own]
+    if _FROM.search(video_title):
+        flags.append("from (a cover)")
     return flags
 
 
