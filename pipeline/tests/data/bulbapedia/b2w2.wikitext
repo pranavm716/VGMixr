@@ -1,0 +1,45 @@
+==Tracklist==
+===Disc 4===
+Tracks 1-17 are from {{game|Emerald}}. Tracks 18-49 are from {{game|Platinum}}.
+{| class="roundy" style="background:#{{colorschemelight|Unova2}}; border: 3px solid #{{colorschemedark|Unova2}}"
+! CD No.
+! iTunes No.
+! Track Title (Japanese)
+! Track Title (English)
+! Composer
+! Arranger
+! Duration
+|- style="background:#fff"
+|16
+|140
+|{{tt|バトルシンボルゲット！|Batoru Shinboru Getto!}}
+|Battle Symbol Received!
+|Go Ichinose
+|Go Ichinose
+|00:08
+|- style="background:#fff"
+|17
+|141
+|{{tt|戦闘！ミュウ|Sentō! Myū}}
+|Battle! (Mew)
+|Junichi Masuda
+|Go Ichinose
+|01:28
+|- style="background:#fff"
+|18
+|142
+|{{tt|タイトル (プラチナ)|Taitoru (Purachina)}}
+|Title Screen (Pokémon Platinum)
+|Junichi Masuda
+|Go Ichinose, Hitomi Sato
+|01:46
+|- style="background:#fff"
+|19
+|143
+|press start
+|Press Start
+|Hitomi Sato
+|Hitomi Sato
+|00:27
+|}
+

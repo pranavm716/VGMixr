@@ -14,7 +14,7 @@ from vgmixr_pipeline.catalog.slug import slugify, track_id
         ("Black & White", "black-and-white"),
         ("Giovanni’s Theme", "giovannis-theme"),
         ("Battle! (Frontier Brain—Hoenn Version)", "battle-frontier-brain-hoenn-version"),
-        ("Special Program: \"Let's Ask Prof. Rowan!\"", "special-program-lets-ask-prof-rowan"),
+        ('Special Program: "Let\'s Ask Prof. Rowan!"', "special-program-lets-ask-prof-rowan"),
         ("Poké Mart", "poke-mart"),
         ("  Opening Movie: Double Battles  ", "opening-movie-double-battles"),
     ],

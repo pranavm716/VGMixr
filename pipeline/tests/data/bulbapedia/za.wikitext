@@ -1,0 +1,39 @@
+==Tracklist==
+===Disc 2===
+{| class="roundy" style="background:#{{colorschemelight|Legends Z-A}}; border: 3px solid #{{colorschemedark|Legends Z-A}}; clear: both"
+! CD No.
+! Track Title (Japanese)
+! Track Title (English Translation / Localisation)
+! Composer
+! Arranger
+! Duration
+|- style="background:#fff"
+| 3
+| 警告
+| Warning
+| Ayako Saso
+| Hiromitsu Maeba
+| 
+|- style="background:#fff"
+| 4
+| 戦闘! 暴走メガシンカ{{#tag:ref|Due to production constraints, the fourth track of Disc 2, ''Battle! (Rogue Mega Pokémon)'', is at a faster tempo than how it is originally played in {{g|Legends: Z-A}}. [[OVERLAP]] released the track with the original tempo up for download on their website.<ref name="Disc2-4">[https://over-lap.co.jp/cd/z-a/2-4.aspx Official download for Disc 2, Track 4 from OVERLAP's website] ([https://web.archive.org/web/20260516173705/https://over-lap.co.jp/cd/z-a/2-4.aspx archived copy])</ref>|group=Note|name=roguemega}}
+| Battle! (Rogue Mega-Evolved Pokémon)<ref group=Note name=roguemega/>
+| Ayako Saso<br>Junichi Masuda
+| Ayako Saso
+| 
+|- style="background:#fff"
+| 5
+|  メガストーン
+| Mega Stone
+| Shota Kageyama
+| Go Ichinose
+| 
+|- style="background:#fff"
+| 6
+| メガストーンを手に入れた!
+| Obtained a Mega Stone!
+| Shota Kageyama
+| Teruo Taniguchi
+| 
+|}
+
