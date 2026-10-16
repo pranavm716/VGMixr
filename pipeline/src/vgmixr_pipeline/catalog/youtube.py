@@ -2,7 +2,9 @@
 
 Only the fields matching needs are cached (trimmed), under playlists/, search/ and videos/. A cached
 response is never refetched unless `refresh` is set, so builds after the first run offline and see
-the same results. Network calls are spaced out, like Bulbapedia's.
+the same results. Network calls are spaced out, like Bulbapedia's. With `cached_only`, nothing is
+fetched: an uncached playlist or search is empty and an uncached video has no chapters (YouTube
+answers bursts of requests with a sign-in check, so a big run can be finished from the cache).
 """
 
 import json
@@ -73,10 +75,12 @@ class YouTube:
         extract: Extract = ytdlp_extract,
         refresh: bool = False,
         sleep: Callable[[float], Any] = time.sleep,
+        cached_only: bool = False,
     ) -> None:
         self._cache_dir = cache_dir
         self._extract = extract
         self._refresh = refresh
+        self._cached_only = cached_only
         self._sleep = sleep
         self._fetched: set[Path] = set()  # cache files written in this run
         self._called = False
@@ -118,6 +122,8 @@ class YouTube:
         if path.exists() and (not self._refresh or path in self._fetched):
             cached: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
             return cached
+        if self._cached_only:
+            return trim({"title": "", "entries": []})
         if self._called:
             self._sleep(DELAY_SECONDS)
         self._called = True

@@ -7,6 +7,7 @@ uv run python -m vgmixr_pipeline.catalog                    # uses cached respon
 uv run python -m vgmixr_pipeline.catalog --refresh          # refetches every Bulbapedia page
 uv run python -m vgmixr_pipeline.catalog --refresh-youtube  # refetches every YouTube response
 uv run python -m vgmixr_pipeline.catalog --no-search        # playlists and albums only
+uv run python -m vgmixr_pipeline.catalog --cached-only      # no YouTube requests at all
 """
 
 import argparse
@@ -37,6 +38,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--no-search", action="store_true", help="match from playlists and albums only"
     )
+    parser.add_argument(
+        "--cached-only", action="store_true", help="use cached YouTube responses only"
+    )
     parser.add_argument("--out", type=Path, default=OUT_DIR, help="output directory")
     parser.add_argument("--manifest", type=Path, default=MANIFEST, help="manifest to write")
     args = parser.parse_args(argv)
@@ -59,7 +63,9 @@ def main(argv: list[str] | None = None) -> int:
     print(summary(games.games, result))
     print(f"\n{len(draft.tracks)} tracks. Wrote {draft_path} and {report_path}.\n")
 
-    youtube = YouTube(args.out / "youtube", refresh=args.refresh_youtube)
+    youtube = YouTube(
+        args.out / "youtube", refresh=args.refresh_youtube, cached_only=args.cached_only
+    )
     names = Names.build(games.games, games.youtube.aliases)
     matches = match_tracks(
         draft, games.youtube, load_overrides(), youtube, names, search=not args.no_search

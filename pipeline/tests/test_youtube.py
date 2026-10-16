@@ -111,3 +111,14 @@ def test_video_reads_chapters_and_the_last_one_plays_to_the_end(tmp_path: Path) 
 def test_video_without_chapters(tmp_path: Path) -> None:
     fake = FakeYtDlp({"id": "aaaaaaaaaaa", "title": "Song", "duration": 90, "chapters": None})
     assert client(tmp_path, fake)[0].video("aaaaaaaaaaa").chapters == []
+
+
+def test_cached_only_reads_the_cache_and_treats_the_rest_as_empty(tmp_path: Path) -> None:
+    client(tmp_path, FakeYtDlp(listing(entry("aaaaaaaaaaa", "Opening"))))[0].playlist(PLAYLIST)
+    fake = FakeYtDlp(listing(entry("bbbbbbbbbbb", "New")))
+    youtube = YouTube(tmp_path, extract=fake.extract, cached_only=True)
+    assert youtube.playlist(PLAYLIST)[0].title == "Opening"
+    assert youtube.playlist("PLbcdefghijk") == []
+    assert youtube.search("Pokémon Ruby Route 101") == []
+    assert youtube.video("aaaaaaaaaaa") == Video("aaaaaaaaaaa", "", None, [])
+    assert fake.calls == []
