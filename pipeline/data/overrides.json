@@ -1,5 +1,13 @@
 {
   "tracks": {
+    "gsc-opening-movie-pokemon-gold-and-pokemon-silver": { "games": ["gold", "silver"], "title": "Opening Movie (Gold & Silver)", "note": "Crystal has its own, added as an extra" },
+    "gsc-title-screen-pokemon-gold-and-pokemon-silver": { "games": ["gold", "silver"], "title": "Title Screen (Gold & Silver)", "note": "Crystal has its own, added as an extra" },
+    "gsc-battle-tower-reception-desk": { "games": ["crystal"], "note": "The Battle Tower is new in Crystal" },
+    "gsc-battle-tower-johto": { "games": ["crystal"], "note": "The Battle Tower is new in Crystal" },
+    "gsc-battle-suicune": { "games": ["crystal"], "note": "Gold/Silver use the wild battle theme for Suicune" },
+    "gsc-eusine": { "games": ["crystal"], "note": "Eusine only appears in Crystal" },
+    "gsc-clair": { "games": ["crystal"] },
+
     "gsc-poke-mart": { "exclude": true, "note": "HGSS-only addition on HGSS Disc 3 (iTunes 190), not a GSC track; listed under hgss as a GB Sounds version" },
     "gsc-global-terminal": { "exclude": true, "note": "HGSS-only addition (iTunes 205); under hgss as GB Sounds" },
     "gsc-cerulean-city": { "exclude": true, "note": "HGSS-only addition (iTunes 236); under hgss as GB Sounds" },
@@ -51,6 +59,10 @@
       "note": "Local test file for playback development (roadmap step 8)",
       "sources": [ { "type": "local", "path": "pla/test-tone.wav",
                      "loop": { "sampleRate": 22050, "introEnd": 22050, "loopEnd": 88200 } } ] },
+
+    { "family": "gsc", "games": ["crystal"], "title": "Opening Movie (Crystal)", "order": 0,
+      "note": "Not on HGSS Disc 3; order 0 sorts it next to the Gold & Silver opening" },
+    { "family": "gsc", "games": ["crystal"], "title": "Title Screen (Crystal)", "order": 1 },
 
     { "family": "sm", "games": ["ultra-moon"], "title": "Banner Intro (Ultra Moon)" },
     { "family": "sm", "games": ["ultra-sun"], "title": "Banner Intro (Ultra Sun)" },
