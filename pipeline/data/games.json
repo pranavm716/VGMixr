@@ -112,7 +112,8 @@
     { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 3" },
     { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 4" },
     { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 5" },
-    { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 6" },
+    { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 6", "last": 32 },
+    { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 6", "first": 33, "last": 33, "titleSuffix": " (The Hidden Treasure of Area Zero)" },
 
     { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 1" },
     { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 2" },
