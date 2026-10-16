@@ -6,13 +6,18 @@ import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.manifest
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.track
 import io.github.pranavm716.vgmixr.data.db.FavoriteEntity
 import io.github.pranavm716.vgmixr.data.db.GameEntity
+import io.github.pranavm716.vgmixr.data.db.ImportStateEntity
 import io.github.pranavm716.vgmixr.data.db.PlayHistoryEntity
 import io.github.pranavm716.vgmixr.data.db.SourceEntity
 import io.github.pranavm716.vgmixr.data.db.TrackEntity
+import io.github.pranavm716.vgmixr.data.db.UserDataDao
 import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
 import io.github.pranavm716.vgmixr.data.manifest.ManifestFixtures
 import io.github.pranavm716.vgmixr.data.manifest.ManifestParser
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogImportResult
+import io.github.pranavm716.vgmixr.domain.catalog.ImportError
+import io.github.pranavm716.vgmixr.domain.manifest.ManifestError
+import io.github.pranavm716.vgmixr.domain.manifest.ManifestParseResult
 import io.github.pranavm716.vgmixr.domain.model.Loop
 import io.github.pranavm716.vgmixr.domain.model.Source
 import java.time.Instant
@@ -30,6 +35,7 @@ class CatalogImporterTest {
     private val catalogDao = db.catalogDao()
     private val userDataDao = db.userDataDao()
     private val importer = TestCatalog.importer(db)
+    private val importStateDao = db.importStateDao()
 
     @After
     fun closeDb() = db.close()
@@ -410,6 +416,105 @@ class CatalogImporterTest {
         )
         assertEquals(null, catalogDao.track("rse-never-existed"))
     }
+
+    // Import state and failures
+
+    @Test
+    fun `records the imported generatedAt and the import time`() = runTest(dispatcher) {
+        importer.import(manifest(generatedAt = "2026-10-13T08:00:00.123456Z"))
+
+        assertEquals(
+            ImportStateEntity(
+                generatedAt = "2026-10-13T08:00:00.123456Z",
+                importedAt = TestCatalog.clock.instant()
+            ),
+            importStateDao.get()
+        )
+    }
+
+    @Test
+    fun `re-import of the same generatedAt is a no-op`() = runTest(dispatcher) {
+        importer.import(manifest())
+
+        val result = importer.import(
+            manifest(tracks = listOf(track("rse-route-101", title = "Changed"), track("rse-new")))
+        )
+
+        assertEquals(CatalogImportResult.Unchanged, result)
+        assertEquals("rse-route-101", catalogDao.track("rse-route-101")?.title)
+        assertEquals(null, catalogDao.track("rse-new"))
+    }
+
+    @Test
+    fun `an invalid manifest fails and writes nothing`() = runTest(dispatcher) {
+        val error = ManifestError.TrackTitleEmpty("rse-route-101")
+
+        val result = importer.import(ManifestParseResult.Invalid(listOf(error)))
+
+        assertEquals(CatalogImportResult.Failed(listOf(ImportError.Invalid(error))), result)
+        assertEquals(emptyList<TrackEntity>(), catalogDao.tracks())
+        assertEquals(null, importStateDao.get())
+    }
+
+    @Test
+    fun `an invalid manifest leaves the previous catalog intact`() = runTest(dispatcher) {
+        importer.import(manifest())
+        val games = catalogDao.games()
+        val tracks = catalogDao.tracks()
+        val state = importStateDao.get()
+
+        importer.import(ManifestParseResult.Invalid(listOf(ManifestError.Malformed("bad"))))
+
+        assertEquals(games, catalogDao.games())
+        assertEquals(tracks, catalogDao.tracks())
+        assertEquals(state, importStateDao.get())
+    }
+
+    @Test
+    fun `a write failure rolls back and keeps the previous catalog and user data`() =
+        runTest(dispatcher) {
+            importer.import(
+                manifest(tracks = listOf(track("rse-weather-lab"), track("rse-route-101")))
+            )
+            favorite("rse-weather-lab", 1_000)
+            history("rse-weather-lab", 2_000)
+            val games = catalogDao.games()
+            val tracks = catalogDao.tracks()
+            val sources = catalogDao.sources("rse-route-101")
+            val state = importStateDao.get()
+            // Throws after the catalog writes and the history re-point, while moving the favorite.
+            val failingDao = object : UserDataDao by userDataDao {
+                override suspend fun upsertFavorite(favorite: FavoriteEntity) =
+                    throw IllegalStateException("disk full")
+            }
+
+            val result = TestCatalog.importer(db, failingDao).import(
+                manifest(
+                    generatedAt = "2026-10-14T08:00:00Z",
+                    games = listOf(game("ruby")),
+                    tracks = listOf(
+                        track("rse-weather-institute", replaces = listOf("rse-weather-lab")),
+                        track(
+                            "rse-route-101",
+                            title = "Changed",
+                            sources = listOf(Source.Stream("ZZZZZZZZZZZ", 0, null))
+                        )
+                    )
+                )
+            )
+
+            assertEquals(
+                CatalogImportResult.Failed(listOf(ImportError.WriteFailed("disk full"))),
+                result
+            )
+            assertEquals(games, catalogDao.games())
+            assertEquals(tracks, catalogDao.tracks())
+            assertEquals(sources, catalogDao.sources("rse-route-101"))
+            assertEquals(null, catalogDao.track("rse-weather-institute"))
+            assertEquals(listOf("rse-weather-lab"), userDataDao.favorites().map { it.trackId })
+            assertEquals(listOf("rse-weather-lab"), userDataDao.history().map { it.trackId })
+            assertEquals(state, importStateDao.get())
+        }
 
     private suspend fun favorite(trackId: String, addedAtMillis: Long) =
         userDataDao.insertFavorite(FavoriteEntity(trackId, Instant.ofEpochMilli(addedAtMillis)))

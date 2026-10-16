@@ -5,12 +5,14 @@ import io.github.pranavm716.vgmixr.data.db.CatalogDao
 import io.github.pranavm716.vgmixr.data.db.FavoriteEntity
 import io.github.pranavm716.vgmixr.data.db.GameEntity
 import io.github.pranavm716.vgmixr.data.db.ImportStateDao
+import io.github.pranavm716.vgmixr.data.db.ImportStateEntity
 import io.github.pranavm716.vgmixr.data.db.SourceEntity
 import io.github.pranavm716.vgmixr.data.db.TrackEntity
 import io.github.pranavm716.vgmixr.data.db.TrackGameEntity
 import io.github.pranavm716.vgmixr.data.db.UserDataDao
 import io.github.pranavm716.vgmixr.data.db.VGMixrDatabase
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogImportResult
+import io.github.pranavm716.vgmixr.domain.catalog.ImportError
 import io.github.pranavm716.vgmixr.domain.manifest.ManifestParseResult
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.model.Manifest
@@ -18,6 +20,7 @@ import io.github.pranavm716.vgmixr.domain.model.Source
 import io.github.pranavm716.vgmixr.domain.model.Track
 import java.time.Clock
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
 
 /** Applies a parsed manifest to Room following the import rules in docs/manifest.md. */
 class CatalogImporter @Inject constructor(
@@ -27,10 +30,35 @@ class CatalogImporter @Inject constructor(
     private val importStateDao: ImportStateDao,
     private val clock: Clock
 ) {
+    /**
+     * Imports [result] unless its generatedAt was already imported. All writes happen in one
+     * transaction: an invalid manifest writes nothing, and a failed write rolls back, keeping the
+     * previous catalog.
+     */
     suspend fun import(result: ManifestParseResult): CatalogImportResult {
-        val manifest = (result as ManifestParseResult.Valid).manifest
-        db.withTransaction { write(manifest) }
-        return CatalogImportResult.Imported(manifest.generatedAt)
+        val manifest = when (result) {
+            is ManifestParseResult.Invalid ->
+                return CatalogImportResult.Failed(result.errors.map(ImportError::Invalid))
+
+            is ManifestParseResult.Valid -> result.manifest
+        }
+        val generatedAt = manifest.generatedAt.toString()
+        if (importStateDao.get()?.generatedAt == generatedAt) return CatalogImportResult.Unchanged
+        return try {
+            db.withTransaction {
+                write(manifest)
+                importStateDao.upsert(
+                    ImportStateEntity(generatedAt = generatedAt, importedAt = clock.instant())
+                )
+            }
+            CatalogImportResult.Imported(manifest.generatedAt)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            CatalogImportResult.Failed(
+                listOf(ImportError.WriteFailed(e.message ?: e.javaClass.name))
+            )
+        }
     }
 
     private suspend fun write(manifest: Manifest) {
