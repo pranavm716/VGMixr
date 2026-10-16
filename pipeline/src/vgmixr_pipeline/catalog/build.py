@@ -47,6 +47,7 @@ class DraftTrack(BaseModel):
 
 @dataclass(frozen=True)
 class Excluded:
+    family: str
     id: str
     title: str
     duration_ms: int | None
@@ -107,9 +108,9 @@ def build_tracks(
         override = overrides.tracks.get(track.id, TrackOverride())
         duration = _duration(track.occurrences)
         if override.exclude:
-            excluded.append(Excluded(track.id, track.title, duration, "override"))
+            excluded.append(Excluded(track.family, track.id, track.title, duration, "override"))
         elif override.exclude is None and is_jingle(track.title, duration):
-            excluded.append(Excluded(track.id, track.title, duration, "jingle"))
+            excluded.append(Excluded(track.family, track.id, track.title, duration, "jingle"))
         else:
             _apply(track, override, family_games, errors)
             kept.append(track)
