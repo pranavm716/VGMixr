@@ -21,16 +21,31 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
 10. [ ] Stream resolution: `StreamResolver` with a NewPipe implementation and a fake for tests; first-usable-source logic (skip missing local files, then cache, then streams); broken marking; `startMs`/`endMs` slicing. Now-playing shows which source is playing and why earlier ones were skipped. Remote tracks play end to end. Highest-risk step.
 11. [ ] Favorites: table, toggle, favorites view.
 12. [ ] Recently played: history writes with an injected clock, recents section.
-13. [ ] Downloads and cache: offline playback, auto-cache favorites and recents, prefetch the next track. Cache keyed by `(videoId, startMs, endMs)`.
+13. [ ] Downloads and cache: offline playback, auto-cache favorites and recents, prefetch the next track. Cache keyed by `(videoId, startMs, endMs)`. Don't auto-cache or prefetch a stream for a track whose local file is present and playable.
 14. [ ] Robustness pass: error and offline states, retired tracks and games shown as unavailable, `/code-review`, CLAUDE.md update.
 15. [ ] Visual polish: theme, navigation, icon, using the screenshot loop.
 
 ## Phase 3: real catalog (independent of the app; can run in a separate worktree alongside Phase 2)
-16. [ ] Catalog builder, part A: Bulbapedia track lists into a draft manifest.
-17. [ ] Catalog builder, part B: YouTube candidate matching and a review tool for low-confidence matches.
+16. [ ] Catalog builder, part A: Bulbapedia track lists into a draft manifest. Decisions:
+    - Scope: mainline Gen 1-9, including remakes and both Legends games; no spin-offs.
+    - Games come from a hand-written, committed games file (name, shortName, color, generation, platform, family, and later the YouTube playlists per game). Claude drafts colors and short names; the user reviews them. Bulbapedia supplies only tracks.
+    - Track ids are `<family>-<title-slug>`, frozen once published: a corrected title changes `title`, never `id`.
+    - Families: BW and B2W2 are separate. SM and USUM start as one family; Part A reports shared vs. exclusive track counts per family, and the user confirms or splits SM/USUM (and any other edge case) before the catalog ships.
+    - Same title within a family merges into one shared track; rearranged versions are split via override.
+    - Jingles and fanfares are excluded (a title list, plus a length threshold once lengths are known); an override can bring one back.
+    - Hand corrections (category, merge, split, exclude, extra tracks) live in a committed overrides file keyed by track id, reapplied on every build. Never hand-edit the generated manifest.
+    - The builder's output replaces the seed manifest. The local test-tone track survives as an override extra track (step 8 needs it). Seed ids that change only affect the dev install: clear app data once, no `replaces`.
+    - Bulbapedia wikitext comes from the MediaWiki API, cached in `pipeline/out/` (gitignored), parsed with mwparserfromhell. A few trimmed pages are committed under `pipeline/tests/` so pytest runs offline.
+    - Until Part B, tracks have no stream sources, so the draft is not yet a valid manifest; don't overwrite `catalog/manifest.json` in this step.
+17. [ ] Catalog builder, part B: YouTube candidate matching and a review tool for low-confidence matches. Decisions:
+    - Every track gets stream sources, including tracks that will later get local files (local sources go in front of them).
+    - YouTube access via yt-dlp (no API key or quota). Playlists first: per-game playlists from the games file, matched by title within the right game. Search (top ~10 results) only for leftovers. Album videos with description timestamps become `startMs`/`endMs` as a last resort.
+    - Confidence is a hand-tuned 0-1 score from title similarity (after stripping noise), right-game evidence (a wrong-game hit such as a remake is heavily penalized), red flags (remix, cover, orchestra, extended, hour-long, implausible duration), source trust and playlist position. Weights are tuned against a committed hand-labeled set as a pytest fixture.
+    - High score: auto-accept the top 2-3 as sources, best first. Middle: review tool, with decisions saved to the overrides file so reruns don't ask again. No acceptable match: the track is left out of the manifest (at least one source is required) and listed in a report.
+    - The app keeps ignoring `confidence`; wrong-but-playable matches are fixed by override and rebuild.
 
 ## After the MVP
-18. [ ] ROM extraction: 3DS first, then DS, then GBA. Local files (with loop points where known) become the first source on each track; copied by hand into the app's `files/music/` folder.
+18. [ ] ROM extraction: 3DS first, then DS, then GBA. Local files (with loop points where known) become the first source on each track; copied by hand into the app's `files/music/` folder. Matching ripped files to track ids: internal names (pret decomps for GB/GBC/GBA, SDAT symbols for DS, sound archive labels for 3DS) propose a committed per-game mapping, audio fingerprints against each track's stream source confirm it (the correlation offset also aligns rip and upload), and the review tool handles the rest. Sequenced formats give loop points from their loop markers.
 19. [ ] v2 looping: seamless playback using `local` source loop points, global loop-cycle setting.
 
 ## Candidates (not scheduled)

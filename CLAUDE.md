@@ -55,7 +55,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 
 ## Conventions
 - Concise, idiomatic Kotlin. Immutable data classes, sealed types for events/errors, no `!!`.
-- Pre-approved dependencies: Hilt, hilt-navigation-compose, Room, Media3, kotlinx-serialization (with its Gradle plugin), Navigation Compose, NewPipe Extractor (via the JitPack repository), KSP, Spotless with ktlint, MockK, Turbine, kotlinx-coroutines-test, Robolectric; pipeline: pydantic, with pytest, ruff and mypy as dev dependencies. Ask before adding anything else; prefer stdlib and AndroidX.
+- Pre-approved dependencies: Hilt, hilt-navigation-compose, Room, Media3, kotlinx-serialization (with its Gradle plugin), Navigation Compose, NewPipe Extractor (via the JitPack repository), KSP, Spotless with ktlint, MockK, Turbine, kotlinx-coroutines-test, Robolectric; pipeline: pydantic, mwparserfromhell (Bulbapedia wikitext), yt-dlp (YouTube search and playlist metadata, no API key), with pytest, ruff and mypy as dev dependencies. Ask before adding anything else; prefer stdlib and AndroidX.
 - Never put API keys or secrets in code.
 - Pipeline: Python 3, type hints, pytest, uv for dependencies and running tools. Intermediate output goes to `pipeline/out/` (gitignored). Never commit ROMs or extracted audio.
 
