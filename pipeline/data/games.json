@@ -58,6 +58,11 @@
 
     { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 1" },
     { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 2" },
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 19, "last": 19, "titleSuffix": " (GB Sounds)" },
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 34, "last": 34, "titleSuffix": " (GB Sounds)" },
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 65, "last": 66, "titleSuffix": " (GB Sounds)" },
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 81, "last": 84, "titleSuffix": " (GB Sounds)" },
+    { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 86, "last": 92, "titleSuffix": " (GB Sounds)" },
 
     { "family": "bw", "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 1" },
     { "family": "bw", "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 2" },

@@ -77,6 +77,22 @@ def test_draft_with_sources_is_a_valid_manifest() -> None:
     assert isinstance(result, Valid), result
 
 
+def test_title_suffix_keeps_another_version_apart() -> None:
+    """The same disc listed twice, once as a variant (like HGSS's GB Sounds versions)."""
+    variant = GAMES.tracklists[1].model_copy(update={"titleSuffix": " (GB Sounds)"})
+    games = GAMES.model_copy(update={"tracklists": [GAMES.tracklists[1], variant]})
+    tracks = {
+        t.id: t for t in build_draft(games, Overrides(), wikitext, "2026-10-15T12:00:00Z")[0].tracks
+    }
+    assert list(tracks) == [
+        "rse-route-119",
+        "rse-fortree-city",
+        "rse-route-119-gb-sounds",
+        "rse-fortree-city-gb-sounds",
+    ]
+    assert tracks["rse-route-119-gb-sounds"].title == "Route 119 (GB Sounds)"
+
+
 def test_missing_disc_names_the_tracklist() -> None:
     games = GAMES.model_copy(
         update={"tracklists": [GAMES.tracklists[0].model_copy(update={"disc": "Disc 7"})]}

@@ -97,9 +97,8 @@ def build_draft(
         games = tuple(tracklist.games) if tracklist.games else None
         for row in rows:
             origin = f"{tracklist.page} / {tracklist.disc} #{row.number}"
-            occurrences.append(
-                Occurrence(tracklist.family, games, row.title, row.duration_ms, origin)
-            )
+            title = row.title + tracklist.titleSuffix
+            occurrences.append(Occurrence(tracklist.family, games, title, row.duration_ms, origin))
     if errors:
         raise BuildError(errors)
     result = build_tracks(games_file.games, occurrences, overrides)

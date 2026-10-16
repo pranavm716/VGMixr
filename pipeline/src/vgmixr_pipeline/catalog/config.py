@@ -31,6 +31,9 @@ class Tracklist(_Model):
     family: str
     # None means the tracks exist in every game of the family.
     games: list[str] | None = None
+    # Appended to every title, so another version of a family's tracks (e.g. HGSS's GB Sounds)
+    # gets its own ids instead of merging with the originals.
+    titleSuffix: str = ""
 
 
 class GamesFile(_Model):
