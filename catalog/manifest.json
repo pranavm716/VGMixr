@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-16T02:10:00Z",
+  "games": [
+    { "id": "ruby", "name": "Ruby", "shortName": "R", "color": "#CD2236",
+      "generation": 3, "platform": "GBA", "family": "rse" },
+    { "id": "sapphire", "name": "Sapphire", "shortName": "S", "color": "#3D51A7",
+      "generation": 3, "platform": "GBA", "family": "rse" },
+    { "id": "emerald", "name": "Emerald", "shortName": "E", "color": "#009652",
+      "generation": 3, "platform": "GBA", "family": "rse" },
+    { "id": "diamond", "name": "Diamond", "shortName": "D", "color": "#90beed",
+      "generation": 4, "platform": "DS", "family": "dppt" },
+    { "id": "pearl", "name": "Pearl", "shortName": "P", "color": "#dd7cb1",
+      "generation": 4, "platform": "DS", "family": "dppt" },
+    { "id": "platinum", "name": "Platinum", "shortName": "Pt", "color": "#a0a08d",
+      "generation": 4, "platform": "DS", "family": "dppt" },
+    { "id": "pla", "name": "Legends: Arceus", "shortName": "PLA", "color": "#36597b",
+      "generation": 8, "platform": "Switch" }
+  ],
+  "tracks": [
+    {
+      "id": "rse-littleroot-town",
+      "family": "rse",
+      "title": "Littleroot Town",
+      "category": "town",
+      "order": 3,
+      "sources": [{ "type": "stream", "videoId": "im6tbN9SZXs" }]
+    },
+    {
+      "id": "rse-route-101",
+      "family": "rse",
+      "title": "Route 101",
+      "category": "route",
+      "order": 6,
+      "sources": [{ "type": "stream", "videoId": "mqXqXqq867A" }]
+    },
+    {
+      "id": "rse-battle-team-aqua-magma",
+      "family": "rse",
+      "title": "Battle! (Team Aqua/Team Magma)",
+      "category": "battle",
+      "order": 60,
+      "sources": [{ "type": "stream", "videoId": "jG1P3BLXH0E" }]
+    },
+    {
+      "id": "rse-battle-frontier-brain",
+      "family": "rse",
+      "games": ["emerald"],
+      "title": "Battle! (Frontier Brain)",
+      "category": "battle",
+      "order": 120,
+      "sources": [{ "type": "stream", "videoId": "U730ft9yESk" }]
+    },
+    {
+      "id": "rse-battle-frontier",
+      "family": "rse",
+      "games": ["emerald"],
+      "title": "Battle Frontier",
+      "category": "other",
+      "order": 121,
+      "sources": [{ "type": "stream", "videoId": "i6y2Nvy6GXU" }]
+    },
+    {
+      "id": "dppt-route-201-day",
+      "family": "dppt",
+      "title": "Route 201 (Day)",
+      "category": "route",
+      "order": 8,
+      "sources": [{ "type": "stream", "videoId": "wr5vbFgvhVE" }]
+    },
+    {
+      "id": "dppt-eterna-forest",
+      "family": "dppt",
+      "title": "Eterna Forest",
+      "category": "dungeon",
+      "order": 30,
+      "sources": [{ "type": "stream", "videoId": "bw7-jr1trNQ" }]
+    },
+    {
+      "id": "dppt-distortion-world",
+      "family": "dppt",
+      "games": ["platinum"],
+      "title": "Distortion World",
+      "category": "dungeon",
+      "order": 150,
+      "sources": [{ "type": "stream", "videoId": "VfMgKT_op9k" }]
+    },
+    {
+      "id": "pla-jubilife-village-early-game",
+      "family": "pla",
+      "title": "Jubilife Village (Early Game)",
+      "category": "town",
+      "order": 5,
+      "sources": [{ "type": "stream", "videoId": "x1y_0DwRoc4" }]
+    },
+    {
+      "id": "pla-obsidian-fieldlands-theme-1",
+      "family": "pla",
+      "title": "Obsidian Fieldlands (Theme 1)",
+      "category": "route",
+      "order": 10,
+      "sources": [{ "type": "stream", "videoId": "nQEfd-vzdwo" }]
+    },
+    {
+      "id": "pla-test-tone",
+      "family": "pla",
+      "title": "Test Tone (Local)",
+      "category": "other",
+      "order": 999,
+      "sources": [
+        { "type": "local", "path": "pla/test-tone.wav",
+          "loop": { "sampleRate": 22050, "introEnd": 22050, "loopEnd": 88200 } }
+      ]
+    }
+  ]
+}
