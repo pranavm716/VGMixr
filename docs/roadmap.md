@@ -48,6 +48,7 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
 
 ## After the MVP
 18. [ ] ROM extraction: 3DS first, then DS, then GBA. Local files (with loop points where known) become the first source on each track; copied by hand into the app's `files/music/` folder. Matching ripped files to track ids: internal names (pret decomps for GB/GBC/GBA, SDAT symbols for DS, sound archive labels for 3DS) propose a committed per-game mapping, audio fingerprints against each track's stream source confirm it (the correlation offset also aligns rip and upload), and the review tool handles the rest. Sequenced formats give loop points from their loop markers.
+    - Rips also check the catalog: a ROM holds every piece of music its game plays, including music reused from an earlier game, so fingerprinting B2W2's files against BW's finds the BW tracks B2W2 reuses (see step 16), and comparing a rip with its family's track list finds missing tracks. A rip does not settle where a track plays: ROMs contain unused tracks, and paired versions often carry each other's music, so version exclusivity stays a judgement call. Internal names don't replace display titles. For Gen 1-2, pret's decompilations (pokered, pokecrystal) list every music track by name without a rip. Switch games (LGPE, SwSh, BDSP, PLA, SV, Z-A) use other sound formats and aren't planned yet.
 19. [ ] v2 looping: seamless playback using `local` source loop points, global loop-cycle setting.
 
 ## Candidates (not scheduled)
