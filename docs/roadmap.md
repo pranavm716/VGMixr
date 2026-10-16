@@ -49,4 +49,5 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
 19. [ ] v2 looping: seamless playback using `local` source loop points, global loop-cycle setting.
 
 ## Candidates (not scheduled)
+- In-app editing of a track's category, and of loop points on `local` sources. Edits are user data in Room, like favorites: a category edit is keyed by track id, a loop edit by local `path`. They override the manifest values and survive re-imports. Their relationship to the pipeline's overrides file (for example, exporting them back as overrides) is still to be decided.
 - Seamless looping for `stream` sources, after v2 proves local looping. Loop points are per video, keyed by `(videoId, startMs, endMs)`, because uploads differ from ROM rips in offset, sample rate and encoding; the pipeline could derive them by aligning a video's audio against the local rip. Loops play only from the cached download (a live stream would rebuffer on every seek back to `introEnd`); verify that lossy Opus/AAC seams are gapless first. Allowing `loop` on `stream` sources removes the `stream-loop-present` error, so it bumps `schemaVersion`.
