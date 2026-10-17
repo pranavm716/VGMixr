@@ -119,5 +119,17 @@
     { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 2" },
     { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 3" },
     { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 4" }
-  ]
+  ],
+  "youtube": {
+    "playlists": [
+      { "games": ["red", "blue", "yellow"], "playlist": "PL2uxd6YWj7PLbKlHSlTO7Lv4E6csDZhRc", "note": "Daintii Music, game rip" },
+      { "games": ["gold", "silver", "crystal"], "playlist": "PL2uxd6YWj7PKk4LnkWZEyqpcvnXmv8Iuf", "note": "Daintii Music, game rip" },
+      { "games": ["ruby", "sapphire", "emerald"], "playlist": "PL2uxd6YWj7PIOlswxbt16G63Klr_3lsbR", "note": "Daintii Music, game rip" },
+      { "games": ["firered", "leafgreen"], "playlist": "PL2uxd6YWj7PIOaewo5Z39hSJMdUmo3taO", "note": "Daintii Music, game rip" },
+      { "games": ["heartgold", "soulsilver"], "playlist": "PL7657467B11931136", "note": "Luis Rivera, Music Super Complete (80 of the album's tracks)" },
+      { "games": ["omega-ruby", "alpha-sapphire"], "playlist": "PL9pPGq16Rk7pkD4Rjn35Fmq05tuE2zdVm", "note": "Pokémon Original Soundtrack channel, 37 tracks" }
+    ],
+    "albums": [],
+    "aliases": {}
+  }
 }

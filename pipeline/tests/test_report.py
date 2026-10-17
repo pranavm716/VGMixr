@@ -1,5 +1,7 @@
 from vgmixr_pipeline.catalog.build import BuildResult, DraftTrack, Excluded
-from vgmixr_pipeline.catalog.report import family_report, summary
+from vgmixr_pipeline.catalog.match import Match, Scored
+from vgmixr_pipeline.catalog.report import family_report, match_report, match_summary, summary
+from vgmixr_pipeline.catalog.score import Candidate, Score
 from vgmixr_pipeline.manifest.models import Game
 
 
@@ -59,3 +61,35 @@ def test_summary_has_one_line_per_family() -> None:
         "rse      5 tracks   2 shared   3 exclusive   1 other   2 excluded",
         "solo     0 tracks   0 shared   0 exclusive   0 other   0 excluded",
     ]
+
+
+def match(id_: str, status: str, best: float | None = None) -> Match:
+    candidates = []
+    if best is not None:
+        candidate = Candidate("abcdefghijk", "Video", None, None, "search")
+        candidates = [Scored(candidate, Score(best, []))]
+    return Match(id_, "rse", id_.title(), status, [], candidates)  # type: ignore[arg-type]
+
+
+MATCHES = [
+    match("rse-a", "matched"),
+    match("rse-b", "matched"),
+    match("rse-c", "review", 0.62),
+    match("rse-d", "unmatched"),
+    match("rse-e", "unmatched"),
+]
+
+
+def test_match_report_counts_and_lists_titles_per_family() -> None:
+    report = match_report(GAMES, MATCHES)
+    assert "## rse: Ruby / Sapphire / Emerald" in report
+    assert "- Matched: 2, needs review: 1, unmatched: 2" in report
+    assert "- Needs review: Rse-C (best 0.62)" in report
+    assert "- Unmatched: Rse-D, Rse-E" in report
+    assert "## solo: Solo\n\n- **No tracks.**" in report
+
+
+def test_match_summary_has_a_line_per_family() -> None:
+    lines = match_summary(GAMES, MATCHES).splitlines()
+    assert lines[1].split() == ["rse", "2", "matched", "1", "review", "2", "unmatched"]
+    assert lines[2].split() == ["solo", "0", "matched", "0", "review", "0", "unmatched"]

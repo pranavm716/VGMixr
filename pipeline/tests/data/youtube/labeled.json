@@ -1,0 +1,4811 @@
+{
+ "rows": [
+  {
+   "track": {
+    "id": "oras-h-help-me",
+    "family": "oras",
+    "title": "H-Help Me!",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 20000,
+    "position": 0.056,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "9WcL9ky_byg",
+    "title": "Pokemon Omega Ruby   Alpha Sapphire   H Help me! Music HQ",
+    "channel": "Susmita Dutta",
+    "durationMs": 61000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-h-help-me",
+    "family": "oras",
+    "title": "H-Help Me!",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 20000,
+    "position": 0.056,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "NybfN2QlNHs",
+    "title": "Pokémon Omega Ruby & Alpha Sapphire H-Help Me!",
+    "channel": "Ashen Wolf",
+    "durationMs": 26000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-h-help-me",
+    "family": "oras",
+    "title": "H-Help Me!",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 20000,
+    "position": 0.056,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "1V9EfmPgVAo",
+    "title": "Pokemon RSE OST - H-help me!",
+    "channel": "Pokemon Citadel",
+    "durationMs": 24000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another game"
+  },
+  {
+   "track": {
+    "id": "hgss-trainers-eyes-meet-suspicious-figure-1",
+    "family": "hgss",
+    "title": "Trainers' Eyes Meet (Suspicious Figure 1)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 29000,
+    "position": 0.3741935483870968,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "fihX7FgwBm4",
+    "title": "Pokémon HGSS OST - Trainers' Eyes Meet (Suspicious Figure 1)",
+    "channel": "Altering Cave",
+    "durationMs": 30000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-trainers-eyes-meet-suspicious-figure-1",
+    "family": "hgss",
+    "title": "Trainers' Eyes Meet (Suspicious Figure 1)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 29000,
+    "position": 0.3741935483870968,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "avHYUnTSwhQ",
+    "title": "Pokémon HeartGold & SoulSilver Trainers' Eyes Meet (Suspicious Person Version 1)",
+    "channel": "Ashen Wolf",
+    "durationMs": 29000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-trainers-eyes-meet-suspicious-figure-1",
+    "family": "hgss",
+    "title": "Trainers' Eyes Meet (Suspicious Figure 1)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 29000,
+    "position": 0.3741935483870968,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "_1a4sYj72Q0",
+    "title": "Pokémon HeartGold & SoulSilver Trainers' Eyes Meet (Suspicious Person Version 1) (Game Boy Sounds)",
+    "channel": "Ashen Wolf",
+    "durationMs": 17000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-trainers-eyes-meet-suspicious-figure-1",
+    "family": "hgss",
+    "title": "Trainers' Eyes Meet (Suspicious Figure 1)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 29000,
+    "position": 0.3741935483870968,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "fgx3YB1rLSE",
+    "title": "Trainers' Eyes Meet (Suspicious Figure 1) - Pokémon HeartGold & SoulSilver",
+    "channel": "SiIvaGunner",
+    "durationMs": 55000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "joke rip (SiIvaGunner)"
+  },
+  {
+   "track": {
+    "id": "rby-caves-of-mt-moon",
+    "family": "rby",
+    "title": "Caves of Mt. Moon",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 179000,
+    "position": 0.32653061224489793,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "NftGyPWXMhs",
+    "title": "Pokemon Red Blue Yellow OST - Mt Moon",
+    "channel": "OfficialPkmnOST",
+    "durationMs": 100000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rby-caves-of-mt-moon",
+    "family": "rby",
+    "title": "Caves of Mt. Moon",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 179000,
+    "position": 0.32653061224489793,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "3rj2Tsp_DVM",
+    "title": "Pokemon Blue/Red - Mt. Moon",
+    "channel": "pokemonmusicmaster",
+    "durationMs": 95000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rby-caves-of-mt-moon",
+    "family": "rby",
+    "title": "Caves of Mt. Moon",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 179000,
+    "position": 0.32653061224489793,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "3tjHIczAQE4",
+    "title": "Mt. Moon - Pokémon Red/Blue/Yellow Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 85000,
+    "kind": "playlist",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "position": 0.5121951219512195,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "blue",
+     "pokemon",
+     "red",
+     "soundtrack",
+     "yellow"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rby-caves-of-mt-moon",
+    "family": "rby",
+    "title": "Caves of Mt. Moon",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 179000,
+    "position": 0.32653061224489793,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "U18HY2wxdOA",
+    "title": "Caves of Mt. Moon - Pokemon Red/Blue/Yellow on Piano",
+    "channel": "KristyGreenEyes PokePiano",
+    "durationMs": 107000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "cover, arrangement or remaster"
+  },
+  {
+   "track": {
+    "id": "hgss-youre-a-winner",
+    "family": "hgss",
+    "title": "You're a Winner!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 24000,
+    "position": 0.24516129032258063,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "2YfeYtX9LxA",
+    "title": "Pokémon HGSS OST - You're A Winner!",
+    "channel": "Altering Cave",
+    "durationMs": 25000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-youre-a-winner",
+    "family": "hgss",
+    "title": "You're a Winner!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 24000,
+    "position": 0.24516129032258063,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "B2doQLnHxfk",
+    "title": "Pokémon HeartGold & SoulSilver Game Corner (You're a Winner!)",
+    "channel": "Ashen Wolf",
+    "durationMs": 24000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-youre-a-winner",
+    "family": "hgss",
+    "title": "You're a Winner!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 24000,
+    "position": 0.24516129032258063,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "va4W821D-m4",
+    "title": "Pokémon HeartGold and SoulSilver - You're a Winner! - Without Melody",
+    "channel": "marusawesome",
+    "durationMs": 61000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "edit without the melody"
+  },
+  {
+   "track": {
+    "id": "hgss-youre-a-winner",
+    "family": "hgss",
+    "title": "You're a Winner!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 24000,
+    "position": 0.24516129032258063,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "rMvemMmhUEA",
+    "title": "You're a Winner! - Pokémon HeartGold & SoulSilver",
+    "channel": "SiIvaGunner",
+    "durationMs": 53000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "joke rip (SiIvaGunner)"
+  },
+  {
+   "track": {
+    "id": "hgss-trainers-eyes-meet-boy-2",
+    "family": "hgss",
+    "title": "Trainers' Eyes Meet (Boy 2)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 22000,
+    "position": 0.5483870967741935,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "hhiPM3IiSd8",
+    "title": "Pokémon HGSS OST - Trainers' Eyes (Meet Boy 2)",
+    "channel": "Altering Cave",
+    "durationMs": 23000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-trainers-eyes-meet-boy-2",
+    "family": "hgss",
+    "title": "Trainers' Eyes Meet (Boy 2)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 22000,
+    "position": 0.5483870967741935,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "ehD3jGtJ6YI",
+    "title": "Pokémon HeartGold & SoulSilver Trainers' Eyes Meet (Boy Version 2)",
+    "channel": "Ashen Wolf",
+    "durationMs": 20000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-trainers-eyes-meet-boy-2",
+    "family": "hgss",
+    "title": "Trainers' Eyes Meet (Boy 2)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 22000,
+    "position": 0.5483870967741935,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "kH9ARX7mENk",
+    "title": "Pokémon HeartGold & SoulSilver Trainers' Eyes Meet (Boy Version 2) (Game Boy Sounds)",
+    "channel": "Ashen Wolf",
+    "durationMs": 15000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-trainers-eyes-meet-boy-2",
+    "family": "hgss",
+    "title": "Trainers' Eyes Meet (Boy 2)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 22000,
+    "position": 0.5483870967741935,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "rH1BvN_Nmqw",
+    "title": "Pokémon HGSS--Trainers' Eyes Meet (Boy 2) (Arrange)",
+    "channel": "Shelmet - Olive Expert",
+    "durationMs": 32000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "cover, arrangement or remaster"
+  },
+  {
+   "track": {
+    "id": "hgss-pokeathlon-an-event-begins-gb-sounds",
+    "family": "hgss",
+    "title": "Pokéathlon: An Event Begins! (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 25000,
+    "position": 0.9741935483870968,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "AVF0kmJMy9A",
+    "title": "Pokémon HeartGold and SoulSilver - Pokéathlon: An Event Begins! (GB) - Without Melody",
+    "channel": "marusawesome",
+    "durationMs": 61000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "edit without the melody"
+  },
+  {
+   "track": {
+    "id": "hgss-pokeathlon-an-event-begins-gb-sounds",
+    "family": "hgss",
+    "title": "Pokéathlon: An Event Begins! (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 25000,
+    "position": 0.9741935483870968,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "v3rcO9HZGi8",
+    "title": "Pokémon HeartGold & SoulSilver OST - Pokéathlon The Deciding Match!",
+    "channel": "Ruby Blaze",
+    "durationMs": 78000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-pokeathlon-an-event-begins-gb-sounds",
+    "family": "hgss",
+    "title": "Pokéathlon: An Event Begins! (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 25000,
+    "position": 0.9741935483870968,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "D9rb42FQlbI",
+    "title": "Pokémon HGSS | Pokéathlon: An Event Begins! (GB Sounds) [DS] Synthesia",
+    "channel": "IronInvoker47",
+    "durationMs": 46000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "fan transcription, soundfont, MIDI or Synthesia"
+  },
+  {
+   "track": {
+    "id": "rse-opening-movie-setting-out-on-a-journey-in-the-hoenn-region",
+    "family": "rse",
+    "title": "Opening Movie: Setting out on a Journey in the Hoenn Region",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "durationMs": 35000,
+    "position": 0.0,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "ldHbvd93mmM",
+    "title": "[GBC] Opening Movie: Setting out on a Journey in the Hoenn Region - Pokémon Ruby & Sapphire Music",
+    "channel": "Pokémusic",
+    "durationMs": 35000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "demake on another console"
+  },
+  {
+   "track": {
+    "id": "rse-opening-movie-setting-out-on-a-journey-in-the-hoenn-region",
+    "family": "rse",
+    "title": "Opening Movie: Setting out on a Journey in the Hoenn Region",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "durationMs": 35000,
+    "position": 0.0,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "3q5U0VBWCmo",
+    "title": "Opening Movie: Setting out on a Journey in the Hoenn Region (From \"Pokemon Ruby & Sapphire\")",
+    "channel": "Kevin Remisch",
+    "durationMs": 42000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "cover, arrangement or remaster"
+  },
+  {
+   "track": {
+    "id": "rse-opening-movie-setting-out-on-a-journey-in-the-hoenn-region",
+    "family": "rse",
+    "title": "Opening Movie: Setting out on a Journey in the Hoenn Region",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "durationMs": 35000,
+    "position": 0.0,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "cCwsw6O-TOs",
+    "title": "Pokémon Ruby, Sapphire, and Emerald - Opening Movie: Setting Out on a Journey - Without Melody",
+    "channel": "marusawesome",
+    "durationMs": 37000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "edit without the melody"
+  },
+  {
+   "track": {
+    "id": "rse-opening-movie-setting-out-on-a-journey-in-the-hoenn-region",
+    "family": "rse",
+    "title": "Opening Movie: Setting out on a Journey in the Hoenn Region",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "durationMs": 35000,
+    "position": 0.0,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "mT1LF4oK_cw",
+    "title": "Pokémon RSE--Opening Movie: Setting out on a Journey in the Hoenn Region (Arrange)",
+    "channel": "Shelmet - Olive Expert",
+    "durationMs": 36000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "cover, arrangement or remaster"
+  },
+  {
+   "track": {
+    "id": "hgss-pokeathlon-winner",
+    "family": "hgss",
+    "title": "Pokéathlon Winner!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 33000,
+    "position": 0.7032258064516129,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "oRUqocb4F9M",
+    "title": "Pokémon HGSS OST - Pokéathlon: Winner!",
+    "channel": "Altering Cave",
+    "durationMs": 34000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-pokeathlon-winner",
+    "family": "hgss",
+    "title": "Pokéathlon Winner!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 33000,
+    "position": 0.7032258064516129,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "bXQfGFKCAkw",
+    "title": "Pokéathlon: Winner (HQ) - Pokémon HeartGold and SoulSilver",
+    "channel": "WispySkies02",
+    "durationMs": 29000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-pokeathlon-winner",
+    "family": "hgss",
+    "title": "Pokéathlon Winner!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 33000,
+    "position": 0.7032258064516129,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "6wYlZ_GGiZc",
+    "title": "Pokémon HeartGold and SoulSilver - Pokéathlon Winner! - Without Melody",
+    "channel": "marusawesome",
+    "durationMs": 61000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "edit without the melody"
+  },
+  {
+   "track": {
+    "id": "hgss-pokeathlon-winner",
+    "family": "hgss",
+    "title": "Pokéathlon Winner!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 33000,
+    "position": 0.7032258064516129,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "fkCoKgvGlS0",
+    "title": "Pokémon HGSS--Pokéathlon Winner! (Arrange)",
+    "channel": "Shelmet - Olive Expert",
+    "durationMs": 27000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "cover, arrangement or remaster"
+  },
+  {
+   "track": {
+    "id": "gsc-route-6",
+    "family": "gsc",
+    "title": "Route 6",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 71000,
+    "position": 0.8556701030927835,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "qxFmQLTiIr8",
+    "title": "Pokémon B/W - Route 6 (Spring/Summer)",
+    "channel": "Patrick Gaunt",
+    "durationMs": 83000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another game"
+  },
+  {
+   "track": {
+    "id": "gsc-route-6",
+    "family": "gsc",
+    "title": "Route 6",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 71000,
+    "position": 0.8556701030927835,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "9LsLrHTvImk",
+    "title": "Pokemon Crystal (GBC) walkthrough - Route 6",
+    "channel": "Callum Dread (TheGamerWalkthroughs)",
+    "durationMs": 116000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "guide or walkthrough"
+  },
+  {
+   "track": {
+    "id": "gsc-route-6",
+    "family": "gsc",
+    "title": "Route 6",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 71000,
+    "position": 0.8556701030927835,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "lfxtX-2BgOM",
+    "title": "\"Pokémon Gold & Silver\" Music : 75 - Route 6",
+    "channel": "All Nintendo Music",
+    "durationMs": 59000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "Gold & Silver rip, numbered by its album position"
+  },
+  {
+   "track": {
+    "id": "hgss-spiky-eared-pichu-appears",
+    "family": "hgss",
+    "title": "Spiky-Eared Pichu Appears!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 36000,
+    "position": 0.8258064516129032,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "aK8E_hShg_4",
+    "title": "Pokémon HeartGold & SoulSilver OST - Spiky Eared Pichu Appears!",
+    "channel": "Ruby Blaze",
+    "durationMs": 37000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-spiky-eared-pichu-appears",
+    "family": "hgss",
+    "title": "Spiky-Eared Pichu Appears!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 36000,
+    "position": 0.8258064516129032,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "TFPXpPbKSiM",
+    "title": "Pokémon HGSS OST - Spiky Eared Pichu Appears!",
+    "channel": "Altering Cave",
+    "durationMs": 37000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-spiky-eared-pichu-appears",
+    "family": "hgss",
+    "title": "Spiky-Eared Pichu Appears!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 36000,
+    "position": 0.8258064516129032,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "-jqrWGONIAw",
+    "title": "Pokémon HeartGold / SoulSilver - Spiky-eared Pichu Event",
+    "channel": "Nintendo Database",
+    "durationMs": 103000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-spiky-eared-pichu-appears",
+    "family": "hgss",
+    "title": "Spiky-Eared Pichu Appears!",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 36000,
+    "position": 0.8258064516129032,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "8H2sGWkVl1c",
+    "title": "Spiky-Eared Pichu Appears! Remaster ► Pokémon Heart Gold & Soul Silver",
+    "channel": "Zame",
+    "durationMs": 103000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "cover, arrangement or remaster"
+  },
+  {
+   "track": {
+    "id": "oras-victory-wild-pokemon",
+    "family": "oras",
+    "title": "Victory! (Wild Pokémon)",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 36000,
+    "position": 0.072,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "SZwIQhIOCEI",
+    "title": "Victory! (Wild Pokémon) - Pokémon Omega Ruby and Alpha Sapphire (OST)",
+    "channel": "VvvvvaVvvvvvr",
+    "durationMs": 43000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-victory-wild-pokemon",
+    "family": "oras",
+    "title": "Victory! (Wild Pokémon)",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 36000,
+    "position": 0.072,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "FN1EU7ib9NU",
+    "title": "Pokémon Omega Ruby & Alpha Sapphire Victory (Wild Pokémon)",
+    "channel": "Ashen Wolf",
+    "durationMs": 28000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-victory-wild-pokemon",
+    "family": "oras",
+    "title": "Victory! (Wild Pokémon)",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 36000,
+    "position": 0.072,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "utrIl27OkaA",
+    "title": "Pokémon Omega Ruby & Alpha Sapphire OST - Victory! (VS Wild Pokémon)",
+    "channel": "Ruby Blaze",
+    "durationMs": 37000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-victory-wild-pokemon",
+    "family": "oras",
+    "title": "Victory! (Wild Pokémon)",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 36000,
+    "position": 0.072,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "nLWUGgsrT4Y",
+    "title": "Victory! (Wild Pokémon) - Pokémon Omega Ruby & Alpha Sapphire",
+    "channel": "SiIvaGunner",
+    "durationMs": 42000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "joke rip (SiIvaGunner)"
+  },
+  {
+   "track": {
+    "id": "hgss-viridian-forest",
+    "family": "hgss",
+    "title": "Viridian Forest",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 75000,
+    "position": 0.5419354838709678,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "RjuAMW_XsZQ",
+    "title": "Pokemon HeartGold & SoulSilver OST - Viridian Forest",
+    "channel": "VideoGameOST1",
+    "durationMs": 123000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-viridian-forest",
+    "family": "hgss",
+    "title": "Viridian Forest",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 75000,
+    "position": 0.5419354838709678,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "rv1u1dmR8p8",
+    "title": "Viridian Forest (NTSC Version) - Pokémon HeartGold & SoulSilver",
+    "channel": "SiIvaGunner",
+    "durationMs": 118000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "joke rip (SiIvaGunner)"
+  },
+  {
+   "track": {
+    "id": "hgss-viridian-forest",
+    "family": "hgss",
+    "title": "Viridian Forest",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 75000,
+    "position": 0.5419354838709678,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "JG6mbvtQhWs",
+    "title": "Viridian Forest: Remastered ► Pokémon Heart Gold & Soul Silver",
+    "channel": "Zame",
+    "durationMs": 213000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "cover, arrangement or remaster"
+  },
+  {
+   "track": {
+    "id": "hgss-viridian-forest",
+    "family": "hgss",
+    "title": "Viridian Forest",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 75000,
+    "position": 0.5419354838709678,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "1GGiynsMU-A",
+    "title": "Pokemon HG/SS: Viridian Forest Guide",
+    "channel": "ViridianPikachu",
+    "durationMs": 72000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "guide or walkthrough"
+  },
+  {
+   "track": {
+    "id": "frlg-road-to-viridian-city-leaving-pallet-town",
+    "family": "frlg",
+    "title": "Road to Viridian City: Leaving Pallet Town",
+    "games": [
+     "firered",
+     "leafgreen"
+    ],
+    "durationMs": 55000,
+    "position": 0.18032786885245902,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "kwjpf95zmc8",
+    "title": "Pokemon FRLG OST - Road To Viridian City (Leaving Pallet Town)",
+    "channel": "Mt. Chimney",
+    "durationMs": 56000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "frlg-road-to-viridian-city-leaving-pallet-town",
+    "family": "frlg",
+    "title": "Road to Viridian City: Leaving Pallet Town",
+    "games": [
+     "firered",
+     "leafgreen"
+    ],
+    "durationMs": 55000,
+    "position": 0.18032786885245902,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "7zVseic30vc",
+    "title": "Pokémon FireRed & LeafGreen SoundTrack - Road to Viridian City꞉ Leaving Pallet Town",
+    "channel": "SugaBoxSong",
+    "durationMs": 61000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "frlg-road-to-viridian-city-leaving-pallet-town",
+    "family": "frlg",
+    "title": "Road to Viridian City: Leaving Pallet Town",
+    "games": [
+     "firered",
+     "leafgreen"
+    ],
+    "durationMs": 55000,
+    "position": 0.18032786885245902,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "ZQm-xocK2yw",
+    "title": "Road to Viridian City: Leaving Pallet Town - Pokémon FireRed & LeafGreen (Spanish Version)",
+    "channel": "Deep Weeb",
+    "durationMs": 56000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "dubbed version"
+  },
+  {
+   "track": {
+    "id": "frlg-road-to-viridian-city-leaving-pallet-town",
+    "family": "frlg",
+    "title": "Road to Viridian City: Leaving Pallet Town",
+    "games": [
+     "firered",
+     "leafgreen"
+    ],
+    "durationMs": 55000,
+    "position": 0.18032786885245902,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "Y4gNzVT63Fg",
+    "title": "Road to Viridian City: Leaving Pallet Town - Pokémon FireRed & LeafGreen",
+    "channel": "SiIvaGunner",
+    "durationMs": 58000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "joke rip (SiIvaGunner)"
+  },
+  {
+   "track": {
+    "id": "oras-trainers-school",
+    "family": "oras",
+    "title": "Trainers' School",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 85000,
+    "position": 0.208,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "9CZzxrD8hLo",
+    "title": "Pokemon Omega Ruby   Alpha Sapphire   Trainers School Music HQ",
+    "channel": "Susmita Dutta",
+    "durationMs": 80000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-trainers-school",
+    "family": "oras",
+    "title": "Trainers' School",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 85000,
+    "position": 0.208,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "X51kc19x4_Q",
+    "title": "Pokémon Omega Ruby & Alpha Sapphire OST - Trainer's School",
+    "channel": "Ruby Blaze",
+    "durationMs": 122000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-trainers-school",
+    "family": "oras",
+    "title": "Trainers' School",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 85000,
+    "position": 0.208,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "BYkAbXWxcmE",
+    "title": "Pokemon R/S/E Soundtrack: Trainer's School",
+    "channel": "ArchWarden",
+    "durationMs": 70000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another game"
+  },
+  {
+   "track": {
+    "id": "oras-trainers-school",
+    "family": "oras",
+    "title": "Trainers' School",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 85000,
+    "position": 0.208,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "X4cK5z59R7A",
+    "title": "Trainers' School - Pokémon Omega Ruby & Alpha Sapphire",
+    "channel": "SiIvaGunner",
+    "durationMs": 85000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "joke rip (SiIvaGunner)"
+  },
+  {
+   "track": {
+    "id": "gsc-route-30",
+    "family": "gsc",
+    "title": "Route 30",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 78000,
+    "position": 0.17525773195876287,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "5vS-jeUl-Ks",
+    "title": "Route 30 - Pokémon Gold & Silver [Pokémon Black 2 & White 2 SoundFont]",
+    "channel": "MetaKaiserZen",
+    "durationMs": 78000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "fan transcription, soundfont, MIDI or Synthesia"
+  },
+  {
+   "track": {
+    "id": "gsc-route-30",
+    "family": "gsc",
+    "title": "Route 30",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 78000,
+    "position": 0.17525773195876287,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "eQdQ3ngu0n8",
+    "title": "Pokemon Silver/Gold/Crystal - Route 33",
+    "channel": "pokemonmusicmaster",
+    "durationMs": 71000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-route-30",
+    "family": "gsc",
+    "title": "Route 30",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 78000,
+    "position": 0.17525773195876287,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "kXZGNMEuO9Q",
+    "title": "Routes 30-33 - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 69000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.1782178217821782,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "Daintii's Routes 30-33 is the Route 30 theme"
+  },
+  {
+   "track": {
+    "id": "hgss-pokeathlon-in-the-pokeathlon-dome-gb-sounds",
+    "family": "hgss",
+    "title": "Pokéathlon: In the Pokéathlon Dome (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 26000,
+    "position": 0.9612903225806452,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "ZDky2WIGxGo",
+    "title": "Pokémon HeartGold & SoulSilver OST - Pokéathlon Dome (GB Sound)",
+    "channel": "Ruby Blaze",
+    "durationMs": 27000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-pokeathlon-in-the-pokeathlon-dome-gb-sounds",
+    "family": "hgss",
+    "title": "Pokéathlon: In the Pokéathlon Dome (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 26000,
+    "position": 0.9612903225806452,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "T4E0Rda1MGU",
+    "title": "Pokémon HeartGold & SoulSilver OST - Pokéathlon Dome",
+    "channel": "Ruby Blaze",
+    "durationMs": 32000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-pokeathlon-in-the-pokeathlon-dome-gb-sounds",
+    "family": "hgss",
+    "title": "Pokéathlon: In the Pokéathlon Dome (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 26000,
+    "position": 0.9612903225806452,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "zQH6MDQzPM8",
+    "title": "Pokémon HeartGold & SoulSilver OST - Pokéathlon Game Start! (GB Sound)",
+    "channel": "Ruby Blaze",
+    "durationMs": 26000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-pokeathlon-in-the-pokeathlon-dome-gb-sounds",
+    "family": "hgss",
+    "title": "Pokéathlon: In the Pokéathlon Dome (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 26000,
+    "position": 0.9612903225806452,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "LFbrI1-Mb60",
+    "title": "Pokémon HGSS | Pokéathlon: In the Pokéathlon Dome (GB Sounds) [DS] Synthesia",
+    "channel": "IronInvoker47",
+    "durationMs": 48000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "fan transcription, soundfont, MIDI or Synthesia"
+  },
+  {
+   "track": {
+    "id": "rby-rocket-hideout",
+    "family": "rby",
+    "title": "Rocket Hideout",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 149000,
+    "position": 0.7142857142857143,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "YyDzZAy3ZSA",
+    "title": "Team Rocket Hideout - Pokémon Red/Blue/Yellow Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 135000,
+    "kind": "playlist",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "position": 0.7804878048780488,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "blue",
+     "pokemon",
+     "red",
+     "soundtrack",
+     "yellow"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rby-rocket-hideout",
+    "family": "rby",
+    "title": "Rocket Hideout",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 149000,
+    "position": 0.7142857142857143,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "D3pDxLa9ElA",
+    "title": "Rocket Game Corner (Casino) - Pokémon Red/Blue/Yellow Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 76000,
+    "kind": "playlist",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "position": 0.7317073170731707,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "blue",
+     "pokemon",
+     "red",
+     "soundtrack",
+     "yellow"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "rby-rocket-hideout",
+    "family": "rby",
+    "title": "Rocket Hideout",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 149000,
+    "position": 0.7142857142857143,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "kJNuL_ebJMA",
+    "title": "Opening/Title - Pokémon Red/Blue/Yellow Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 111000,
+    "kind": "playlist",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "position": 0.0,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "blue",
+     "pokemon",
+     "red",
+     "soundtrack",
+     "yellow"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "rse-trainers-eyes-meet-swimmer-female",
+    "family": "rse",
+    "title": "Trainers' Eyes Meet (Swimmer♀)",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "durationMs": 31000,
+    "position": 0.6759259259259259,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "JIdbZ4micFM",
+    "title": "Trainers' Eyes Meet (Swimmer) - Pokémon Ruby/Sapphire/Emerald Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 32000,
+    "kind": "playlist",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "position": 0.6759259259259259,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "emerald",
+     "pokemon",
+     "ruby",
+     "sapphire",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rse-trainers-eyes-meet-swimmer-female",
+    "family": "rse",
+    "title": "Trainers' Eyes Meet (Swimmer♀)",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "durationMs": 31000,
+    "position": 0.6759259259259259,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "0mxer86JdLM",
+    "title": "Trainers' Eyes Meet (Gentleman) - Pokémon Ruby/Sapphire/Emerald Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 43000,
+    "kind": "playlist",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "position": 0.5,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "emerald",
+     "pokemon",
+     "ruby",
+     "sapphire",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "rse-trainers-eyes-meet-swimmer-female",
+    "family": "rse",
+    "title": "Trainers' Eyes Meet (Swimmer♀)",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "durationMs": 31000,
+    "position": 0.6759259259259259,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "It_upQDoN7g",
+    "title": "Trainers' Eyes Meet (Hex Maniac) - Pokémon Ruby/Sapphire/Emerald Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 51000,
+    "kind": "playlist",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "position": 0.5740740740740741,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "emerald",
+     "pokemon",
+     "ruby",
+     "sapphire",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-safari-zone-gb-sounds",
+    "family": "hgss",
+    "title": "Safari Zone (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 72000,
+    "position": 0.9548387096774194,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "yO6ULXVGmIQ",
+    "title": "Pokémon HeartGold & SoulSilver OST - Safari Zone (GB Sound)",
+    "channel": "Ruby Blaze",
+    "durationMs": 73000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-safari-zone-gb-sounds",
+    "family": "hgss",
+    "title": "Safari Zone (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 72000,
+    "position": 0.9548387096774194,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "HJXV_72OrwA",
+    "title": "Pokémon HGSS | Safari Zone (GB Sounds) [DS] Transcription",
+    "channel": "IronInvoker47",
+    "durationMs": 133000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "fan transcription, soundfont, MIDI or Synthesia"
+  },
+  {
+   "track": {
+    "id": "hgss-safari-zone-gb-sounds",
+    "family": "hgss",
+    "title": "Safari Zone (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 72000,
+    "position": 0.9548387096774194,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "PNCq-7kj3VQ",
+    "title": "Pokémon HGSS | Safari Zone Gate (GB Sounds) [DS] Transcription",
+    "channel": "IronInvoker47",
+    "durationMs": 98000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-safari-zone",
+    "family": "hgss",
+    "title": "Safari Zone",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 76000,
+    "position": 0.632258064516129,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "B15Iqd3QHUI",
+    "title": "Safari Zone Gate (HQ) - Pokémon HeartGold and SoulSilver",
+    "channel": "WispySkies02",
+    "durationMs": 144000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-safari-zone",
+    "family": "hgss",
+    "title": "Safari Zone",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 76000,
+    "position": 0.632258064516129,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "vpuUDWWp7bQ",
+    "title": "Pokémon HG/SS - Safari Zone",
+    "channel": "Patrick Gaunt",
+    "durationMs": 77000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-safari-zone",
+    "family": "hgss",
+    "title": "Safari Zone",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 76000,
+    "position": 0.632258064516129,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "CuuYKqIjyys",
+    "title": "Pokemon Heart Gold/Soul Silver OST (D1;T63) Eusine (HD)",
+    "channel": "Luis Rivera",
+    "durationMs": 39000,
+    "kind": "playlist",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "position": 0.7848101265822784,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "gold",
+     "hd",
+     "heart",
+     "ost",
+     "pokemon",
+     "silver",
+     "soul"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-pokegear-radio-pokemon-lullaby",
+    "family": "gsc",
+    "title": "Pokégear Radio (Pokémon Lullaby)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 69000,
+    "position": 0.5051546391752577,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "CEHOV2T-cOk",
+    "title": "Pokégear Radio: Pokémon Lullaby/Pokémon Gold & Silver [Music Box]",
+    "channel": "R3 Music Box",
+    "durationMs": 74000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "cover, arrangement or remaster"
+  },
+  {
+   "track": {
+    "id": "gsc-pokegear-radio-pokemon-lullaby",
+    "family": "gsc",
+    "title": "Pokégear Radio (Pokémon Lullaby)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 69000,
+    "position": 0.5051546391752577,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "OEsKYW4TNF4",
+    "title": "Pokémon GSC | Pokégear Radio: Pokémon Lullaby [GBC] Transcription",
+    "channel": "IronInvoker47",
+    "durationMs": 67000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "fan transcription, soundfont, MIDI or Synthesia"
+  },
+  {
+   "track": {
+    "id": "gsc-pokegear-radio-pokemon-lullaby",
+    "family": "gsc",
+    "title": "Pokégear Radio (Pokémon Lullaby)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 69000,
+    "position": 0.5051546391752577,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "_cki5sj3OjE",
+    "title": "Pokémon Lullaby - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 64000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.8613861386138614,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the radio show's lullaby"
+  },
+  {
+   "track": {
+    "id": "rse-battle-frontier-hoenn-version",
+    "family": "rse",
+    "title": "Battle Frontier (Hoenn Version)",
+    "games": [
+     "emerald"
+    ],
+    "durationMs": 89000,
+    "position": 0.9074074074074074,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "lxs8ixPCixc",
+    "title": "Battle Frontier - Pokémon Ruby/Sapphire/Emerald Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 94000,
+    "kind": "playlist",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "position": 0.7870370370370371,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "emerald",
+     "pokemon",
+     "ruby",
+     "sapphire",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rse-battle-frontier-hoenn-version",
+    "family": "rse",
+    "title": "Battle Frontier (Hoenn Version)",
+    "games": [
+     "emerald"
+    ],
+    "durationMs": 89000,
+    "position": 0.9074074074074074,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "U35gDoG7P-I",
+    "title": "Frontier Brain Battle - Pokémon Ruby/Sapphire/Emerald Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 195000,
+    "kind": "playlist",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "position": 0.8796296296296297,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "emerald",
+     "pokemon",
+     "ruby",
+     "sapphire",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "rse-battle-frontier-hoenn-version",
+    "family": "rse",
+    "title": "Battle Frontier (Hoenn Version)",
+    "games": [
+     "emerald"
+    ],
+    "durationMs": 89000,
+    "position": 0.9074074074074074,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "U730ft9yESk",
+    "title": "Pokémon Emerald - Frontier Brain Battle Music (HQ)",
+    "channel": "Pokeli",
+    "durationMs": 180000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "oras-battle-maison",
+    "family": "oras",
+    "title": "Battle Maison",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 84000,
+    "position": 0.992,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "ptgs_93eBic",
+    "title": "Battle! Trainer - Pokémon Omega Ruby & Alpha Sapphire",
+    "channel": "Pokémon Original Soundtrack",
+    "durationMs": 177000,
+    "kind": "playlist",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "position": 0.75,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "alpha",
+     "and",
+     "omega",
+     "pokemon",
+     "ruby",
+     "sapphire"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "oras-battle-maison",
+    "family": "oras",
+    "title": "Battle Maison",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 84000,
+    "position": 0.992,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "I8vqp7Edjqs",
+    "title": "Battle! Deoxys - Pokémon Omega Ruby & Alpha Sapphire",
+    "channel": "Pokémon Original Soundtrack",
+    "durationMs": 163000,
+    "kind": "playlist",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "position": 0.9444444444444444,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "alpha",
+     "and",
+     "omega",
+     "pokemon",
+     "ruby",
+     "sapphire"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "oras-battle-maison",
+    "family": "oras",
+    "title": "Battle Maison",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 84000,
+    "position": 0.992,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "yffGYzZoJ-s",
+    "title": "Battle! Champion Steven - Pokémon Omega Ruby & Alpha Sapphire",
+    "channel": "Pokémon Original Soundtrack",
+    "durationMs": 134000,
+    "kind": "playlist",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "position": 0.9722222222222222,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "alpha",
+     "and",
+     "omega",
+     "pokemon",
+     "ruby",
+     "sapphire"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "oras-battle-team-aqua-team-magma-leaders",
+    "family": "oras",
+    "title": "Battle! (Team Aqua / Team Magma Leaders)",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 146000,
+    "position": 0.6,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "dA3mccI1DjY",
+    "title": "Pokémon Omega Ruby & Alpha Sapphire - Team Aqua & Magma Leader Battle Music (HQ)",
+    "channel": "Pokeli",
+    "durationMs": 301000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-battle-team-aqua-team-magma-leaders",
+    "family": "oras",
+    "title": "Battle! (Team Aqua / Team Magma Leaders)",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 146000,
+    "position": 0.6,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "Oc44myRhNRM",
+    "title": "Pokémon Omega Ruby & Alpha Sapphire - Battle! Team Magma/Aqua Music (HD)",
+    "channel": "Pokeli",
+    "durationMs": 301000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "oras-battle-team-aqua-team-magma-leaders",
+    "family": "oras",
+    "title": "Battle! (Team Aqua / Team Magma Leaders)",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 146000,
+    "position": 0.6,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "HjzE4CTxccg",
+    "title": "Battle! Magma Leader Maxie/Aqua Leader Archie - Pokémon Omega Ruby & Alpha Sapphire",
+    "channel": "Pokémon Original Soundtrack",
+    "durationMs": 147000,
+    "kind": "playlist",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "position": 0.8333333333333334,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "alpha",
+     "and",
+     "omega",
+     "pokemon",
+     "ruby",
+     "sapphire"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-route-24-gb-sounds",
+    "family": "hgss",
+    "title": "Route 24 (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 37000,
+    "position": 0.9290322580645162,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "KvFCnT0wg08",
+    "title": "Pokémon HeartGold & SoulSilver OST - Route 24 (GB Sound)",
+    "channel": "Ruby Blaze",
+    "durationMs": 38000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-route-24-gb-sounds",
+    "family": "hgss",
+    "title": "Route 24 (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 37000,
+    "position": 0.9290322580645162,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "EFCqsqrD4vw",
+    "title": "Pokemon- Heart Gold and Soul Silver- Route 24- Music",
+    "channel": "dialga328",
+    "durationMs": 43000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-route-24-gb-sounds",
+    "family": "hgss",
+    "title": "Route 24 (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 37000,
+    "position": 0.9290322580645162,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "oJi7gFCDLbs",
+    "title": "Pokémon HGSS OST - Route 24",
+    "channel": "Altering Cave",
+    "durationMs": 43000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-a-trainer-appears-boy-2",
+    "family": "gsc",
+    "title": "A Trainer Appears (Boy 2)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 34000,
+    "position": 0.44329896907216493,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "D91gIBpTmyg",
+    "title": "Rival Appears (Version 2) - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 48000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.5742574257425742,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "oras-title-screen-main-theme",
+    "family": "oras",
+    "title": "Title Screen: Main Theme",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 104000,
+    "position": 0.016,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "vInFcBjTR5c",
+    "title": "Title Screen - Pokémon Omega Ruby & Alpha Sapphire",
+    "channel": "Pokémon Original Soundtrack",
+    "durationMs": 103000,
+    "kind": "playlist",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "position": 0.1111111111111111,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "alpha",
+     "and",
+     "omega",
+     "pokemon",
+     "ruby",
+     "sapphire"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-title-screen-main-theme",
+    "family": "oras",
+    "title": "Title Screen: Main Theme",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 104000,
+    "position": 0.016,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "OKaeA81-Ap0",
+    "title": "Pokémon Omega Ruby & Alpha Sapphire - Title Screen (HQ)",
+    "channel": "Volipok",
+    "durationMs": 188000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-title-screen-main-theme",
+    "family": "oras",
+    "title": "Title Screen: Main Theme",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 104000,
+    "position": 0.016,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "hkoXy3jRpww",
+    "title": "Pokémon Omega Ruby & Alpha Sapphire - Title Screen Music (HQ)",
+    "channel": "Pokeli",
+    "durationMs": 102000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "frlg-battle-trainer-battle",
+    "family": "frlg",
+    "title": "Battle! (Trainer Battle)",
+    "games": [
+     "firered",
+     "leafgreen"
+    ],
+    "durationMs": 192000,
+    "position": 0.14754098360655737,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "PfDhKzpUieA",
+    "title": "Trainer Battle - Pokémon FireRed/LeafGreen Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 196000,
+    "kind": "playlist",
+    "games": [
+     "firered",
+     "leafgreen"
+    ],
+    "position": 0.12698412698412698,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "firered",
+     "leafgreen",
+     "pokemon",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "frlg-battle-trainer-battle",
+    "family": "frlg",
+    "title": "Battle! (Trainer Battle)",
+    "games": [
+     "firered",
+     "leafgreen"
+    ],
+    "durationMs": 192000,
+    "position": 0.14754098360655737,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "jFnpbZ23AFg",
+    "title": "Gym Leader Battle - Pokémon FireRed/LeafGreen Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 122000,
+    "kind": "playlist",
+    "games": [
+     "firered",
+     "leafgreen"
+    ],
+    "position": 0.3968253968253968,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "firered",
+     "leafgreen",
+     "pokemon",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "frlg-battle-trainer-battle",
+    "family": "frlg",
+    "title": "Battle! (Trainer Battle)",
+    "games": [
+     "firered",
+     "leafgreen"
+    ],
+    "durationMs": 192000,
+    "position": 0.14754098360655737,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "Qr1YG2if7JQ",
+    "title": "Wild Pokémon Battle - Pokémon FireRed/LeafGreen Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 87000,
+    "kind": "playlist",
+    "games": [
+     "firered",
+     "leafgreen"
+    ],
+    "position": 0.1746031746031746,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "firered",
+     "leafgreen",
+     "pokemon",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "rby-a-trainer-appears-bad-guy-version",
+    "family": "rby",
+    "title": "A Trainer Appears (Bad Guy Version)",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 28000,
+    "position": 0.6938775510204082,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "99vbNB9iF2Q",
+    "title": "Trainer Appears (Boy) - Pokémon Red/Blue/Yellow Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 16000,
+    "kind": "playlist",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "position": 0.36585365853658536,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "blue",
+     "pokemon",
+     "red",
+     "soundtrack",
+     "yellow"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "rby-a-trainer-appears-bad-guy-version",
+    "family": "rby",
+    "title": "A Trainer Appears (Bad Guy Version)",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 28000,
+    "position": 0.6938775510204082,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "XEmPC6s-VEA",
+    "title": "Team Rocket Trainer Appears - Pokémon Red/Blue/Yellow Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 14000,
+    "kind": "playlist",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "position": 0.7560975609756098,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "blue",
+     "pokemon",
+     "red",
+     "soundtrack",
+     "yellow"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rby-a-trainer-appears-bad-guy-version",
+    "family": "rby",
+    "title": "A Trainer Appears (Bad Guy Version)",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 28000,
+    "position": 0.6938775510204082,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "XibSIEytjOo",
+    "title": "Rival Appears - Pokémon Red/Blue/Yellow Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 36000,
+    "kind": "playlist",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "position": 0.0975609756097561,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "blue",
+     "pokemon",
+     "red",
+     "soundtrack",
+     "yellow"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-battle-trainer-battle-kanto",
+    "family": "gsc",
+    "title": "Battle! (Trainer Battle - Kanto)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 113000,
+    "position": 0.8350515463917526,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "eLfLgFNMcC0",
+    "title": "Trainer Battle (Kanto) - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 106000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.8316831683168316,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "gsc-battle-trainer-battle-kanto",
+    "family": "gsc",
+    "title": "Battle! (Trainer Battle - Kanto)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 113000,
+    "position": 0.8350515463917526,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "hxkWDt8XSZ4",
+    "title": "Gym Leader Battle (Kanto) - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 84000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.6732673267326733,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-battle-trainer-battle-kanto",
+    "family": "gsc",
+    "title": "Battle! (Trainer Battle - Kanto)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 113000,
+    "position": 0.8350515463917526,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "4rj9EQVwauI",
+    "title": "Wild Pokémon Battle (Kanto) - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 134000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.7029702970297029,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-poke-mart-gb-sounds",
+    "family": "hgss",
+    "title": "Poké Mart (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 59000,
+    "position": 0.9096774193548387,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "XdX7n_fRCWg",
+    "title": "Pokémon HGSS | Poké Mart (GB Sounds) [DS] Transcription",
+    "channel": "IronInvoker47",
+    "durationMs": 112000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "fan transcription, soundfont, MIDI or Synthesia"
+  },
+  {
+   "track": {
+    "id": "hgss-poke-mart-gb-sounds",
+    "family": "hgss",
+    "title": "Poké Mart (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 59000,
+    "position": 0.9096774193548387,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "m_j4SeCVZCg",
+    "title": "Pokémon HeartGold & SoulSilver OST - PokéMart (GB Sound)",
+    "channel": "Ruby Blaze",
+    "durationMs": 60000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-poke-mart-gb-sounds",
+    "family": "hgss",
+    "title": "Poké Mart (GB Sounds)",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 59000,
+    "position": 0.9096774193548387,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "N7IquoZAuj0",
+    "title": "Pokémon HeartGold/SoulSilver - PokéMart [GB Player] (MIDI version)",
+    "channel": "Cat333Pokémon",
+    "durationMs": 55000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "fan transcription, soundfont, MIDI or Synthesia"
+  },
+  {
+   "track": {
+    "id": "gsc-victory-trainer-battle",
+    "family": "gsc",
+    "title": "Victory! (Trainer Battle)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 39000,
+    "position": 0.21649484536082475,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "ETxAL5zXUR0",
+    "title": "Victory! (Trainer) - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 33000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.16831683168316833,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "gsc-victory-trainer-battle",
+    "family": "gsc",
+    "title": "Victory! (Trainer Battle)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 39000,
+    "position": 0.21649484536082475,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "F-fiywPbU0k",
+    "title": "Victory! (Gym Leader) - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 80000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.3465346534653465,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-victory-trainer-battle",
+    "family": "gsc",
+    "title": "Victory! (Trainer Battle)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 39000,
+    "position": 0.21649484536082475,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "oHcuVWF9B4g",
+    "title": "Victory! (Wild Pokémon) - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 35000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.09900990099009901,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "rby-title-screen-yellow",
+    "family": "rby",
+    "title": "Title Screen (Yellow)",
+    "games": [
+     "yellow"
+    ],
+    "durationMs": 104000,
+    "position": 0.02040816326530612,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "SwfYT1Llm0Y",
+    "title": "Pokémon Yellow - Title Screen (HQ)",
+    "channel": "Volipok",
+    "durationMs": 106000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rby-title-screen-yellow",
+    "family": "rby",
+    "title": "Title Screen (Yellow)",
+    "games": [
+     "yellow"
+    ],
+    "durationMs": 104000,
+    "position": 0.02040816326530612,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "q1F60ua9Dc8",
+    "title": "Pokémon Yellow: Intro and Title Screen",
+    "channel": "Sanqui ​",
+    "durationMs": 88000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "rby-victory-gym-leader-battle",
+    "family": "rby",
+    "title": "Victory! (Gym Leader Battle)",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 83000,
+    "position": 0.5714285714285714,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "Z2NRU83AxNg",
+    "title": "Victory (Vs. Gym Leader) - Pokémon Red/Blue/Yellow Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 44000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rby-victory-gym-leader-battle",
+    "family": "rby",
+    "title": "Victory! (Gym Leader Battle)",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 83000,
+    "position": 0.5714285714285714,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "5b0YYbZLaQc",
+    "title": "Pokemon Red Blue Yellow OST - Gym Leader Victory",
+    "channel": "OfficialPkmnOST",
+    "durationMs": 58000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rby-victory-gym-leader-battle",
+    "family": "rby",
+    "title": "Victory! (Gym Leader Battle)",
+    "games": [
+     "blue",
+     "red",
+     "yellow"
+    ],
+    "durationMs": 83000,
+    "position": 0.5714285714285714,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "E89kAL8gJJo",
+    "title": "Pokemon Red-Blue-Yellow OST - Victory (VS Gym Leader)",
+    "channel": "VideoGameOST1",
+    "durationMs": 54000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-brendan",
+    "family": "oras",
+    "title": "Brendan",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 73000,
+    "position": 0.48,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "acnhLNhSBVI",
+    "title": "Pokémon Omega Ruby & Alpha Sapphire OST - Brendan's Theme",
+    "channel": "Ruby Blaze",
+    "durationMs": 92000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-brendan",
+    "family": "oras",
+    "title": "Brendan",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 73000,
+    "position": 0.48,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "BruW7Fh_zSg",
+    "title": "Pokémon Omega Ruby & Alpha Sapphire - Brendan & May Emotion (HQ)",
+    "channel": "Pokeli",
+    "durationMs": 110000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-battle-trainer-battle-johto",
+    "family": "gsc",
+    "title": "Battle! (Trainer Battle - Johto)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 130000,
+    "position": 0.25773195876288657,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "Yl05vRMfQ4k",
+    "title": "Trainer Battle (Johto) - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 219000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.15841584158415842,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "gsc-battle-trainer-battle-johto",
+    "family": "gsc",
+    "title": "Battle! (Trainer Battle - Johto)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 130000,
+    "position": 0.25773195876288657,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "Td22KYUKqZo",
+    "title": "Gym Leader Battle (Johto) - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 140000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.33663366336633666,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-battle-trainer-battle-johto",
+    "family": "gsc",
+    "title": "Battle! (Trainer Battle - Johto)",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 130000,
+    "position": 0.25773195876288657,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "_Re7_5Kvkoo",
+    "title": "Battle Tower - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 71000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.900990099009901,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-ecruteak-city",
+    "family": "gsc",
+    "title": "Ecruteak City",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 87000,
+    "position": 0.5876288659793815,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "FH8Lb1Lk-1M",
+    "title": "Ecruteak City - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 141000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.45544554455445546,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "gsc-ecruteak-city",
+    "family": "gsc",
+    "title": "Ecruteak City",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 87000,
+    "position": 0.5876288659793815,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "S_D1-UE6IeY",
+    "title": "Pewter City - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 142000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.7623762376237624,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-ecruteak-city",
+    "family": "gsc",
+    "title": "Ecruteak City",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 87000,
+    "position": 0.5876288659793815,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "fpA7qTM_Oqk",
+    "title": "Ecruteak Dance Theater - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 49000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.46534653465346537,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-professor-oak",
+    "family": "gsc",
+    "title": "Professor Oak",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 53000,
+    "position": 0.18556701030927836,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "QwSLbsOGMsE",
+    "title": "Professor Oak - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 47000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.8217821782178217,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "gsc-professor-oak",
+    "family": "gsc",
+    "title": "Professor Oak",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 53000,
+    "position": 0.18556701030927836,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "F6H49vKU4BQ",
+    "title": "Buena's Password - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 77000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.8712871287128713,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-professor-oak",
+    "family": "gsc",
+    "title": "Professor Oak",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 53000,
+    "position": 0.18556701030927836,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "yOfaHmeKbpo",
+    "title": "Sprout Tower - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 52000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.19801980198019803,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-burned-tower",
+    "family": "gsc",
+    "title": "Burned Tower",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 68000,
+    "position": 0.6185567010309279,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "wjKDwUprAdk",
+    "title": "Burned Tower - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 61000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.48514851485148514,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "gsc-burned-tower",
+    "family": "gsc",
+    "title": "Burned Tower",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 68000,
+    "position": 0.6185567010309279,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "QwkT_yu-Rug",
+    "title": "Bell Tower - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 91000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.594059405940594,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-burned-tower",
+    "family": "gsc",
+    "title": "Burned Tower",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 68000,
+    "position": 0.6185567010309279,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "_Re7_5Kvkoo",
+    "title": "Battle Tower - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 71000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.900990099009901,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-route-1",
+    "family": "hgss",
+    "title": "Route 1",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 48000,
+    "position": 0.5806451612903226,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "myfOPlD2R-I",
+    "title": "Pokemon- Heart Gold and Soul Silver- Route 1- Music",
+    "channel": "dialga328",
+    "durationMs": 97000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-route-1",
+    "family": "hgss",
+    "title": "Route 1",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 48000,
+    "position": 0.5806451612903226,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "p6mH38yfVQY",
+    "title": "HeartGold / SoulSilver OST - Route 1",
+    "channel": "OfficialYouTunes",
+    "durationMs": 149000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-route-1",
+    "family": "hgss",
+    "title": "Route 1",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 48000,
+    "position": 0.5806451612903226,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "n2HFa5yhhRk",
+    "title": "Pokemon Heart Gold and Soul Silver Route 1 music",
+    "channel": "voblox",
+    "durationMs": 97000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-lyra",
+    "family": "hgss",
+    "title": "Lyra",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 40000,
+    "position": 0.03225806451612903,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "QuNvmcZR9-0",
+    "title": "Pokémon HeartGold & SoulSilver - Lyra Theme (HQ)",
+    "channel": "Pokeli",
+    "durationMs": 85000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-lyra",
+    "family": "hgss",
+    "title": "Lyra",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 40000,
+    "position": 0.03225806451612903,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "zx5l_Ys6Kr0",
+    "title": "Pokémon HGSS OST - Lyra",
+    "channel": "Altering Cave",
+    "durationMs": 41000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-lyra",
+    "family": "hgss",
+    "title": "Lyra",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 40000,
+    "position": 0.03225806451612903,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "E6PDJhMBpRc",
+    "title": "Pokemon- Heart Gold and Soul Silver- Lyra- Music",
+    "channel": "dialga328",
+    "durationMs": 41000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "gsc-pokemon-communication-center",
+    "family": "gsc",
+    "title": "Pokémon Communication Center",
+    "games": [
+     "crystal"
+    ],
+    "durationMs": 84000,
+    "position": 0.4639175257731959,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "dyvC3r3zow8",
+    "title": "Pokémon Communication Center - Pokémon Crystal",
+    "channel": "TimmyTurnersGrandDad",
+    "durationMs": 84000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "gsc-pokemon-communication-center",
+    "family": "gsc",
+    "title": "Pokémon Communication Center",
+    "games": [
+     "crystal"
+    ],
+    "durationMs": 84000,
+    "position": 0.4639175257731959,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "hzSNjNyF1Wk",
+    "title": "Pokemon Crystal- Pokemon Communication Center Music",
+    "channel": "09penguin",
+    "durationMs": 72000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "gsc-pokemon-communication-center",
+    "family": "gsc",
+    "title": "Pokémon Communication Center",
+    "games": [
+     "crystal"
+    ],
+    "durationMs": 84000,
+    "position": 0.4639175257731959,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "7d-Sv3EpZRg",
+    "title": "Pokémon Crystal OST - Pokémon Communication Center",
+    "channel": "Ruby Blaze",
+    "durationMs": 83000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-battle-wild-pokemon",
+    "family": "oras",
+    "title": "Battle! (Wild Pokémon)",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 100000,
+    "position": 0.064,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "laQuOCyWNWk",
+    "title": "Battle! Wild Pokémon   Pokémon Omega Ruby & Alpha Sapphire",
+    "channel": "Pokémon Original Soundtrack",
+    "durationMs": 100000,
+    "kind": "playlist",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "position": 0.6388888888888888,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "alpha",
+     "and",
+     "omega",
+     "pokemon",
+     "ruby",
+     "sapphire"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "oras-battle-wild-pokemon",
+    "family": "oras",
+    "title": "Battle! (Wild Pokémon)",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 100000,
+    "position": 0.064,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "k1ltZEDN2Ns",
+    "title": "Battle! Wally - Pokémon Omega Ruby & Alpha Sapphire",
+    "channel": "Pokémon Original Soundtrack",
+    "durationMs": 86000,
+    "kind": "playlist",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "position": 0.6111111111111112,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "alpha",
+     "and",
+     "omega",
+     "pokemon",
+     "ruby",
+     "sapphire"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "oras-battle-wild-pokemon",
+    "family": "oras",
+    "title": "Battle! (Wild Pokémon)",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "durationMs": 100000,
+    "position": 0.064,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "I8vqp7Edjqs",
+    "title": "Battle! Deoxys - Pokémon Omega Ruby & Alpha Sapphire",
+    "channel": "Pokémon Original Soundtrack",
+    "durationMs": 163000,
+    "kind": "playlist",
+    "games": [
+     "alpha-sapphire",
+     "omega-ruby"
+    ],
+    "position": 0.9444444444444444,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "alpha",
+     "and",
+     "omega",
+     "pokemon",
+     "ruby",
+     "sapphire"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "gsc-ending-theme",
+    "family": "gsc",
+    "title": "Ending Theme",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 117000,
+    "position": 0.9896907216494846,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "nU263Ud3LM4",
+    "title": "Pokemon Silver/Gold/Crystal- Ending",
+    "channel": "pokemonmusicmaster",
+    "durationMs": 113000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "gsc-ending-theme",
+    "family": "gsc",
+    "title": "Ending Theme",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "durationMs": 117000,
+    "position": 0.9896907216494846,
+    "gameBoy": true
+   },
+   "candidate": {
+    "videoId": "RAE41t-VLIo",
+    "title": "Credits/Ending Theme - Pokémon Gold/Silver/Crystal Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 116000,
+    "kind": "playlist",
+    "games": [
+     "crystal",
+     "gold",
+     "silver"
+    ],
+    "position": 0.9900990099009901,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "crystal",
+     "gold",
+     "pokemon",
+     "silver",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-radio-transmission",
+    "family": "hgss",
+    "title": "Radio Transmission",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 17000,
+    "position": 0.36129032258064514,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "nj3aWDqLDMg",
+    "title": "Pokémon HGSS OST - Radio Transmission",
+    "channel": "Altering Cave",
+    "durationMs": 18000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-radio-transmission",
+    "family": "hgss",
+    "title": "Radio Transmission",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 17000,
+    "position": 0.36129032258064514,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "k7qvU0hIzT0",
+    "title": "Pokemon Heart Gold/Soul Silver OST (D1;T31) Radio Unown (HD)",
+    "channel": "Luis Rivera",
+    "durationMs": 27000,
+    "kind": "playlist",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "position": 0.379746835443038,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "gold",
+     "hd",
+     "heart",
+     "ost",
+     "pokemon",
+     "silver",
+     "soul"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-radio-transmission",
+    "family": "hgss",
+    "title": "Radio Transmission",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 17000,
+    "position": 0.36129032258064514,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "UFavQq3WWts",
+    "title": "Pokemon Heart Gold/Soul Silver OST (D1;T46) Radio Pokemon Channel (HD)",
+    "channel": "Luis Rivera",
+    "durationMs": 11000,
+    "kind": "playlist",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "position": 0.569620253164557,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "gold",
+     "hd",
+     "heart",
+     "ost",
+     "pokemon",
+     "silver",
+     "soul"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "hgss-battle-arcade",
+    "family": "hgss",
+    "title": "Battle Arcade",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 100000,
+    "position": 0.7419354838709677,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "fVJqxzdOhw4",
+    "title": "Pokémon HGSS OST - Battle Arcade",
+    "channel": "Altering Cave",
+    "durationMs": 101000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-battle-arcade",
+    "family": "hgss",
+    "title": "Battle Arcade",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 100000,
+    "position": 0.7419354838709677,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "X_FvxMLC6pM",
+    "title": "Pokémon HeartGold & SoulSilver OST - Battle Arcade",
+    "channel": "Ruby Blaze",
+    "durationMs": 101000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "hgss-battle-arcade",
+    "family": "hgss",
+    "title": "Battle Arcade",
+    "games": [
+     "heartgold",
+     "soulsilver"
+    ],
+    "durationMs": 100000,
+    "position": 0.7419354838709677,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "jFi08dW2ZZs",
+    "title": "Pokemon HG/SS music Battle Arcade",
+    "channel": "blg4396",
+    "durationMs": 157000,
+    "kind": "search",
+    "games": [],
+    "position": null,
+    "startMs": 0,
+    "endMs": null,
+    "noise": []
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rse-littleroot-town",
+    "family": "rse",
+    "title": "Littleroot Town",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "durationMs": 88000,
+    "position": 0.037037037037037035,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "zGGR7d1lTd8",
+    "title": "Littleroot Town - Pokémon Ruby/Sapphire/Emerald Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 89000,
+    "kind": "playlist",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "position": 0.027777777777777776,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "emerald",
+     "pokemon",
+     "ruby",
+     "sapphire",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rse-littleroot-town",
+    "family": "rse",
+    "title": "Littleroot Town",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "durationMs": 88000,
+    "position": 0.037037037037037035,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "XsM_faNZIiE",
+    "title": "Oldale Town - Pokémon Ruby/Sapphire/Emerald Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 66000,
+    "kind": "playlist",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "position": 0.10185185185185185,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "emerald",
+     "pokemon",
+     "ruby",
+     "sapphire",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "rse-littleroot-town",
+    "family": "rse",
+    "title": "Littleroot Town",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "durationMs": 88000,
+    "position": 0.037037037037037035,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "NaLb44NvQ7M",
+    "title": "Fallarbor Town - Pokémon Ruby/Sapphire/Emerald Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 86000,
+    "kind": "playlist",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "position": 0.3611111111111111,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "emerald",
+     "pokemon",
+     "ruby",
+     "sapphire",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "rse-battle-pike",
+    "family": "rse",
+    "title": "Battle Pike",
+    "games": [
+     "emerald"
+    ],
+    "durationMs": 115000,
+    "position": 0.9537037037037037,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "M-tje3MWiIY",
+    "title": "Battle Pike - Pokémon Ruby/Sapphire/Emerald Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 119000,
+    "kind": "playlist",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "position": 0.8518518518518519,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "emerald",
+     "pokemon",
+     "ruby",
+     "sapphire",
+     "soundtrack"
+    ]
+   },
+   "label": "good",
+   "reason": "the track"
+  },
+  {
+   "track": {
+    "id": "rse-battle-pike",
+    "family": "rse",
+    "title": "Battle Pike",
+    "games": [
+     "emerald"
+    ],
+    "durationMs": 115000,
+    "position": 0.9537037037037037,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "vGVcmq-JUs0",
+    "title": "Mew Battle - Pokémon Ruby/Sapphire/Emerald Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 82000,
+    "kind": "playlist",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "position": 0.8888888888888888,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "emerald",
+     "pokemon",
+     "ruby",
+     "sapphire",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  },
+  {
+   "track": {
+    "id": "rse-battle-pike",
+    "family": "rse",
+    "title": "Battle Pike",
+    "games": [
+     "emerald"
+    ],
+    "durationMs": 115000,
+    "position": 0.9537037037037037,
+    "gameBoy": false
+   },
+   "candidate": {
+    "videoId": "h8TEDagk5HQ",
+    "title": "Battle Palace - Pokémon Ruby/Sapphire/Emerald Soundtrack",
+    "channel": "Daintii Music",
+    "durationMs": 145000,
+    "kind": "playlist",
+    "games": [
+     "emerald",
+     "ruby",
+     "sapphire"
+    ],
+    "position": 0.8240740740740741,
+    "startMs": 0,
+    "endMs": null,
+    "noise": [
+     "emerald",
+     "pokemon",
+     "ruby",
+     "sapphire",
+     "soundtrack"
+    ]
+   },
+   "label": "bad",
+   "reason": "another track"
+  }
+ ]
+}

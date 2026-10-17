@@ -15,7 +15,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - Unit tests: `./gradlew testDebugUnitTest` (single: `--tests "*ClassName*"`)
 - Lint/format: `./gradlew lint`, `./gradlew spotlessCheck` / `spotlessApply` (Spotless with ktlint, added in roadmap step 1)
 - Pipeline tests: `cd pipeline && uv run pytest`; lint/format/types: `uv run ruff check .`, `uv run ruff format .`, `uv run mypy .` (the Stop hook and CI run these only if `pipeline/` exists)
-- Build the draft catalog (Bulbapedia track lists + `pipeline/data/`): `cd pipeline && uv run python -m vgmixr_pipeline.catalog` (`--refresh` refetches the pages cached in `pipeline/out/bulbapedia/`). Writes `pipeline/out/draft.json` and `pipeline/out/family-report.md`.
+- Build the catalog (Bulbapedia track lists + YouTube + `pipeline/data/`): `cd pipeline && uv run python -m vgmixr_pipeline.catalog`. Writes `pipeline/out/draft.json`, `family-report.md`, `match-report.md` and `candidates.json`, then `catalog/manifest.json` if it validates. Responses are cached in `pipeline/out/bulbapedia/` and `pipeline/out/youtube/`; `--refresh` / `--refresh-youtube` refetch them, `--no-search` matches from playlists and albums only, `--cached-only` makes no YouTube requests.
 - Regenerate the invalid manifest fixtures after editing `pipeline/src/vgmixr_pipeline/fixtures/spec.py`: `cd pipeline && uv run python -m vgmixr_pipeline.fixtures.generate` (`--check` reports stale files without writing; check.sh runs it)
 - All checks live in `scripts/check.sh`, run by both the Stop hook (`.claude/settings.json`, with `--hook`) and CI (`.github/workflows/ci.yml`). Add new checks there only, as a named check (`scripts/check.sh NAME` runs one), plus a matching CI step.
 
@@ -69,3 +69,4 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 ## Gotchas (add as discovered)
 - The extractor breaks when YouTube changes. Cached downloads must keep playing without it.
 - Lossy codecs (Opus/MP3) can leave gaps at loop seams. Use FLAC or verify before building v2 looping.
+- YouTube answers a burst of yt-dlp requests with "Sign in to confirm you're not a bot". Cached responses keep builds offline (`--cached-only`); space out fresh runs. The block lifts after a while. `--cookies-from-browser` fails on Windows while Edge or Chrome is running (it locks its cookie database).

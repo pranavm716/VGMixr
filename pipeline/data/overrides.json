@@ -18,6 +18,8 @@
 
     "rse-drought": { "games": ["ruby"], "note": "Groudon's event; Emerald uses Abnormal Weather" },
     "rse-heavy-rain": { "games": ["sapphire"], "note": "Kyogre's event; Emerald uses Abnormal Weather" },
+    "rse-route-101": { "local": [ { "type": "local", "path": "rse/route-101.m4a" } ],
+                       "note": "Local file for playback development (roadmap step 8): its stream's audio, downloaded with yt-dlp" },
     "oras-drought": { "games": ["omega-ruby"], "note": "Groudon's event" },
     "oras-heavy-rain": { "games": ["alpha-sapphire"], "note": "Kyogre's event" },
     "bw-opelucid-city-pokemon-black": { "games": ["black"], "note": "Version-specific town theme" },
@@ -65,12 +67,6 @@
     "sm-the-festival-in-iki-town": { "games": ["sun", "moon"], "note": "USUM has its own version, sm-the-festival-in-iki-town-usum" }
   },
   "extras": [
-    { "id": "pla-test-tone", "family": "pla", "title": "Test Tone (Local)", "category": "other", "order": 999,
-      "note": "Local test file for playback development (roadmap step 8)",
-      "sources": [ { "type": "local", "path": "pla/test-tone.wav",
-                     "loop": { "sampleRate": 22050, "introEnd": 22050, "loopEnd": 88200 } } ] },
-
-
     { "family": "sm", "games": ["ultra-moon"], "title": "Banner Intro (Ultra Moon)", "duration": "0:03" },
     { "family": "sm", "games": ["ultra-sun"], "title": "Banner Intro (Ultra Sun)", "duration": "0:03" },
     { "family": "sm", "games": ["ultra-sun", "ultra-moon"], "id": "sm-alola-region-theme-usum", "title": "Alola Region Theme", "duration": "3:01" },

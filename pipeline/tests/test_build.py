@@ -246,3 +246,9 @@ def test_duration_override_replaces_the_computed_length() -> None:
 def test_duration_override_is_what_the_jingle_rule_sees() -> None:
     overrides = Overrides(tracks={"rby-short-theme": TrackOverride(duration="0:30")})
     assert ids(build([occ("Short Theme", seconds=10)], overrides)) == ["rby-short-theme"]
+
+
+def test_a_local_override_puts_files_in_front_of_a_tracks_sources() -> None:
+    local = LocalSource(type="local", path="rby/route-1.m4a")
+    overrides = Overrides(tracks={"rby-route-1": TrackOverride(local=[local])})
+    assert track(build([occ("Route 1")], overrides), "rby-route-1").sources == [local]
