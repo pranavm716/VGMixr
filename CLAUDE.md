@@ -69,4 +69,4 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 ## Gotchas (add as discovered)
 - The extractor breaks when YouTube changes. Cached downloads must keep playing without it.
 - Lossy codecs (Opus/MP3) can leave gaps at loop seams. Use FLAC or verify before building v2 looping.
-- YouTube answers a burst of yt-dlp requests with "Sign in to confirm you're not a bot". Cached responses keep builds offline (`--cached-only`); space out fresh runs. Downloads need `--cookies-from-browser`.
+- YouTube answers a burst of yt-dlp requests with "Sign in to confirm you're not a bot". Cached responses keep builds offline (`--cached-only`); space out fresh runs. The block lifts after a while. `--cookies-from-browser` fails on Windows while Edge or Chrome is running (it locks its cookie database).
