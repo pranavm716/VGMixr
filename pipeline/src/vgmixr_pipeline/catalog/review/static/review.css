@@ -118,7 +118,9 @@ input {
 }
 
 /* Track list */
-#tabs { display: flex; gap: 4px; padding: 8px; position: sticky; top: 0; background: var(--bg); }
+#listhead { position: sticky; top: 0; background: var(--bg); padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+#filter { width: 100%; }
+#tabs { display: flex; gap: 4px; flex-wrap: wrap; }
 #tabs button.selected { background: var(--selected); border-color: var(--accent); }
 #tracks { list-style: none; margin: 0; padding: 0; }
 

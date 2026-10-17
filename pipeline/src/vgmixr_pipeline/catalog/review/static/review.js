@@ -12,6 +12,7 @@ const ui = {
   family: null,
   status: "review",
   rows: [],
+  filter: "", // the track list's filter text
   trackId: null,
   detail: null,
   found: [], // search results and pasted videos for the open track
@@ -121,19 +122,32 @@ function renderTracks() {
     button.onclick = () => { ui.status = button.dataset.status; loadTracks(); };
   }
   const games = gamesById();
-  $("tracks").innerHTML = ui.rows.length ? ui.rows.map((r) => `
+  const rows = visibleRows();
+  $("tracks").innerHTML = rows.length ? rows.map((r) => `
     <li data-id="${esc(r.id)}" class="${r.id === ui.trackId ? "selected" : ""}">
       <span class="title">${esc(r.title)} ${r.games ? r.games.map((g) => chip(games[g])).join("") : ""}</span>
       <span class="meta status-${r.status}">${r.decided ? "✎ " : ""}${r.best == null ? "–" : r.best.toFixed(2)}</span>
-    </li>`).join("") : '<li class="empty">No tracks.</li>';
+    </li>`).join("") : `<li class="empty">${ui.rows.length ? "No tracks match the filter." : "No tracks."}</li>`;
   for (const li of $("tracks").querySelectorAll("li[data-id]")) {
     li.onclick = () => openTrack(li.dataset.id);
   }
 }
 
+// Lower case without accents, so "pokemon" finds "Pokémon".
+function plain(text) {
+  return text.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+}
+
+// The rows matching the filter: every word in the title or the id.
+function visibleRows() {
+  const words = plain(ui.filter).split(/\s+/).filter(Boolean);
+  return ui.rows.filter((r) => words.every((w) => plain(r.title).includes(w) || r.id.includes(w)));
+}
+
 function moveSelection(step) {
-  const i = ui.rows.findIndex((r) => r.id === ui.trackId);
-  const next = ui.rows[Math.min(ui.rows.length - 1, Math.max(0, i + step))];
+  const rows = visibleRows();
+  const i = rows.findIndex((r) => r.id === ui.trackId);
+  const next = rows[Math.min(rows.length - 1, Math.max(0, i + step))];
   if (next) openTrack(next.id);
 }
 
@@ -404,8 +418,15 @@ $("rebuild").onclick = async () => {
   }
 };
 
+$("filter").oninput = () => { ui.filter = $("filter").value; renderTracks(); };
+$("filter").onkeydown = (e) => {
+  if (e.key === "Escape") { $("filter").value = ""; ui.filter = ""; renderTracks(); $("filter").blur(); }
+  if (e.key === "Enter") { const first = visibleRows()[0]; if (first) openTrack(first.id); }
+};
+
 document.addEventListener("keydown", (e) => {
   if (e.target.closest("input, textarea") || e.metaKey || e.ctrlKey) return;
+  if (e.key === "/") { e.preventDefault(); $("filter").focus(); return; }
   if (e.key === "j") moveSelection(1);
   if (e.key === "k") moveSelection(-1);
 });
