@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VGMixr review</title>
+  <link rel="stylesheet" href="/static/review.css">
+</head>
+<body>
+  <header>
+    <h1>VGMixr review</h1>
+    <div id="youtube"></div>
+    <button id="rebuild" title="Run the whole builder from the cache and rewrite the manifest">Rebuild</button>
+  </header>
+  <div id="message" hidden></div>
+  <main>
+    <nav id="families"></nav>
+    <section id="list">
+      <div id="tabs"></div>
+      <ol id="tracks"></ol>
+    </section>
+    <section id="detail"><p class="empty">Pick a track.</p></section>
+  </main>
+  <dialog id="output"><pre></pre><form method="dialog"><button>Close</button></form></dialog>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="/static/review.js"></script>
+</body>
+</html>
