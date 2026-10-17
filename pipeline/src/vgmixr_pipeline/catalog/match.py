@@ -8,7 +8,7 @@ front of its streams.
 """
 
 from collections import Counter
-from collections.abc import Iterable
+from collections.abc import Collection, Iterable
 from dataclasses import dataclass
 from typing import Any, Literal, Protocol
 
@@ -25,7 +25,7 @@ from vgmixr_pipeline.catalog.score import (
     video_words,
 )
 from vgmixr_pipeline.catalog.youtube import Entry, Video
-from vgmixr_pipeline.manifest.models import StreamSource
+from vgmixr_pipeline.manifest.models import Game, StreamSource
 
 MAX_SOURCES = 3
 # Candidates kept per track (whatever their verdict) for the report, the review tool and labeling.
@@ -71,11 +71,14 @@ def match_tracks(
     videos: Videos,
     names: Names,
     search: bool = True,
+    only: Collection[str] | None = None,
 ) -> list[Match]:
+    """Matches every track, or only the tracks with ids in `only` (the review tool's rematch)."""
     matcher = _Matcher(draft, youtube, videos, names, search)
     return [
         matcher.match(track, overrides.tracks.get(track.id, TrackOverride()).streams or Streams())
         for track in draft.tracks
+        if only is None or track.id in only
     ]
 
 
@@ -173,9 +176,7 @@ class _Matcher:
     def _search_candidates(self, track: DraftTrack, facts: TrackFacts) -> Iterable[Candidate]:
         if not self._search:
             return
-        game_names = [self._games[g].name for g in self._family_games[track.family]
-                      if g in facts.games]  # fmt: skip
-        query = f"Pokémon {' '.join(game_names)} {track.title}"
+        query = search_query(facts, [self._games[g] for g in self._family_games[track.family]])
         for entry in self._videos.search(query, SEARCH_RESULTS):
             yield Candidate(entry.id, entry.title, entry.duration_ms, entry.channel, "search")
 
@@ -205,26 +206,33 @@ def candidates_json(matches: list[Match]) -> list[dict[str, Any]]:
             "title": m.title,
             "status": m.status,
             "track": _facts_json(m.facts),
-            "candidates": [
-                {
-                    "videoId": s.candidate.video_id,
-                    "startMs": s.candidate.start_ms,
-                    "endMs": s.candidate.end_ms,
-                    "title": s.candidate.title,
-                    "channel": s.candidate.channel,
-                    "durationMs": s.candidate.duration_ms,
-                    "kind": s.candidate.kind,
-                    "games": sorted(s.candidate.games),
-                    "position": s.candidate.position,
-                    "score": round(s.score.value, 3),
-                    "reasons": s.score.reasons,
-                    "noise": sorted(s.candidate.noise),
-                }
-                for s in m.candidates
-            ],
+            "candidates": [scored_json(s) for s in m.candidates],
         }
         for m in matches
     ]
+
+
+def scored_json(s: Scored) -> dict[str, Any]:
+    return {
+        "videoId": s.candidate.video_id,
+        "startMs": s.candidate.start_ms,
+        "endMs": s.candidate.end_ms,
+        "title": s.candidate.title,
+        "channel": s.candidate.channel,
+        "durationMs": s.candidate.duration_ms,
+        "kind": s.candidate.kind,
+        "games": sorted(s.candidate.games),
+        "position": s.candidate.position,
+        "score": round(s.score.value, 3),
+        "reasons": s.score.reasons,
+        "noise": sorted(s.candidate.noise),
+    }
+
+
+def search_query(facts: TrackFacts, family_games: list[Game]) -> str:
+    """The search for a track: "Pokémon", its games' names in family order, and its title."""
+    names = [g.name for g in family_games if g.id in facts.games]
+    return f"Pokémon {' '.join(names)} {facts.title}"
 
 
 def _facts_json(facts: TrackFacts | None) -> dict[str, Any] | None:

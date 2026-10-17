@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-16T23:48:16Z",
+  "generatedAt": "2026-10-17T08:28:36Z",
   "games": [
     {
       "id": "red",
@@ -568,6 +568,21 @@
       ]
     },
     {
+      "id": "rby-guide",
+      "family": "rby",
+      "title": "Guide",
+      "category": "other",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6PUPgy-Plaw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "rby-a-trainer-appears-girl-version",
       "family": "rby",
       "title": "A Trainer Appears (Girl Version)",
@@ -955,6 +970,21 @@
       ]
     },
     {
+      "id": "rby-a-trainer-appears-bad-guy-version",
+      "family": "rby",
+      "title": "A Trainer Appears (Bad Guy Version)",
+      "category": "battle",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XEmPC6s-VEA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "rby-rocket-hideout",
       "family": "rby",
       "title": "Rocket Hideout",
@@ -981,6 +1011,21 @@
           "videoId": "QUK07P45m2A",
           "startMs": 0,
           "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "rby-the-sea",
+      "family": "rby",
+      "title": "The Sea",
+      "category": "route",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "oUTW3hJx52U",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1026,6 +1071,21 @@
           "videoId": "3dD4RyxqH5Q",
           "startMs": 0,
           "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "rby-the-final-road",
+      "family": "rby",
+      "title": "The Final Road",
+      "category": "other",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2Q2et9q17eM",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1093,6 +1153,24 @@
       ]
     },
     {
+      "id": "rby-opening-movie",
+      "family": "rby",
+      "games": [
+        "yellow"
+      ],
+      "title": "Opening Movie",
+      "category": "event",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Fj_cCNy_Zmo",
+          "startMs": 3500,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "rby-theme-of-jessie-and-james",
       "family": "rby",
       "games": [
@@ -1117,6 +1195,24 @@
       ]
     },
     {
+      "id": "rby-pikachus-beach",
+      "family": "rby",
+      "games": [
+        "yellow"
+      ],
+      "title": "Pikachu's Beach",
+      "category": "other",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JK_cxgfznnM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "rby-pikachus-beach-results-announcement",
       "family": "rby",
       "games": [
@@ -1131,6 +1227,25 @@
           "videoId": "fETBAk5n494",
           "startMs": 0,
           "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "gsc-opening-movie-gold-and-silver",
+      "family": "gsc",
+      "games": [
+        "gold",
+        "silver"
+      ],
+      "title": "Opening Movie (Gold & Silver)",
+      "category": "event",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gkuOo6wOlUA",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1198,6 +1313,21 @@
           "videoId": "k7yQFSsXguk",
           "startMs": 0,
           "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "gsc-an-adventure-begins",
+      "family": "gsc",
+      "title": "An Adventure Begins!",
+      "category": "other",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1_w6r8bz-es",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1388,6 +1518,21 @@
       ]
     },
     {
+      "id": "gsc-route-30",
+      "family": "gsc",
+      "title": "Route 30",
+      "category": "route",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kXZGNMEuO9Q",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-professor-oak",
       "family": "gsc",
       "title": "Professor Oak",
@@ -1399,6 +1544,21 @@
           "videoId": "QwSLbsOGMsE",
           "startMs": 0,
           "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "gsc-rival-appears-1",
+      "family": "gsc",
+      "title": "Rival Appears! 1",
+      "category": "event",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XtXk5QQv8A8",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1448,6 +1608,36 @@
       ]
     },
     {
+      "id": "gsc-printer-menu",
+      "family": "gsc",
+      "title": "Printer Menu",
+      "category": "other",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8UOZNpeaubg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "gsc-a-trainer-appears-boy-1",
+      "family": "gsc",
+      "title": "A Trainer Appears (Boy 1)",
+      "category": "battle",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "R9go6H5ooxw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-battle-trainer-battle-johto",
       "family": "gsc",
       "title": "Battle! (Trainer Battle - Johto)",
@@ -1489,6 +1679,21 @@
           "videoId": "yOfaHmeKbpo",
           "startMs": 0,
           "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "gsc-a-trainer-appears-sage",
+      "family": "gsc",
+      "title": "A Trainer Appears (Sage)",
+      "category": "battle",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XnPm5mgN6Fg",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1553,6 +1758,36 @@
       ]
     },
     {
+      "id": "gsc-route-34",
+      "family": "gsc",
+      "title": "Route 34",
+      "category": "route",
+      "order": 33,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uqk92atS-hw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "gsc-ruins-of-alph-grounds",
+      "family": "gsc",
+      "title": "Ruins of Alph (Grounds)",
+      "category": "dungeon",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "j8AZKSQGqvc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-ruins-of-alph",
       "family": "gsc",
       "title": "Ruins of Alph",
@@ -1564,6 +1799,51 @@
           "videoId": "1Jkdykii_Ek",
           "startMs": 0,
           "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "gsc-a-trainer-appears-girl-1",
+      "family": "gsc",
+      "title": "A Trainer Appears (Girl 1)",
+      "category": "battle",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "v4mPNPDQcAo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "gsc-a-trainer-appears-suspicious-figure-1",
+      "family": "gsc",
+      "title": "A Trainer Appears (Suspicious Figure 1)",
+      "category": "battle",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uHdITCo7nWA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "gsc-a-trainer-appears-suspicious-figure-2",
+      "family": "gsc",
+      "title": "A Trainer Appears (Suspicious Figure 2)",
+      "category": "battle",
+      "order": 38,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8MvEwSoya3E",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1594,6 +1874,21 @@
           "videoId": "7eUBhMUGA2w",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "gsc-a-trainer-appears-team-rocket",
+      "family": "gsc",
+      "title": "A Trainer Appears (Team Rocket)",
+      "category": "battle",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZnW71VUY7-o",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1730,6 +2025,21 @@
       ]
     },
     {
+      "id": "gsc-pokegear-radio-pokemon-lullaby",
+      "family": "gsc",
+      "title": "Pokégear Radio (Pokémon Lullaby)",
+      "category": "other",
+      "order": 49,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_cki5sj3OjE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-pokegear-radio-buenas-password",
       "family": "gsc",
       "games": [
@@ -1759,6 +2069,21 @@
           "videoId": "9PhT0gY-BAY",
           "startMs": 0,
           "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "gsc-pokegear-radio-unown",
+      "family": "gsc",
+      "title": "Pokégear Radio (Unown)",
+      "category": "other",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UkBda-fQQaA",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1859,6 +2184,21 @@
       ]
     },
     {
+      "id": "gsc-a-trainer-appears-kimono-girl",
+      "family": "gsc",
+      "title": "A Trainer Appears (Kimono Girl)",
+      "category": "battle",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2ToEd4vI1-g",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-burned-tower",
       "family": "gsc",
       "title": "Burned Tower",
@@ -1903,6 +2243,24 @@
           "videoId": "SWZvaWzdgek",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "gsc-battle-legendary-beasts",
+      "family": "gsc",
+      "games": [
+        "crystal"
+      ],
+      "title": "Battle! (Legendary Beasts)",
+      "category": "battle",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "H6YvqT3Qg9g",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -2078,6 +2436,21 @@
       ]
     },
     {
+      "id": "gsc-route-26",
+      "family": "gsc",
+      "title": "Route 26",
+      "category": "route",
+      "order": 74,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yvm9mBLL6x0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-victory-road",
       "family": "gsc",
       "title": "Victory Road",
@@ -2210,6 +2583,21 @@
       ]
     },
     {
+      "id": "gsc-route-6",
+      "family": "gsc",
+      "title": "Route 6",
+      "category": "route",
+      "order": 83,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lfxtX-2BgOM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-battle-wild-pokemon-kanto",
       "family": "gsc",
       "title": "Battle! (Wild Pokémon - Kanto)",
@@ -2287,6 +2675,21 @@
           "videoId": "evpklkiX7DM",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "gsc-route-15",
+      "family": "gsc",
+      "title": "Route 15",
+      "category": "route",
+      "order": 89,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YNXA9tqEpAY",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -2435,29 +2838,32 @@
       ]
     },
     {
-      "id": "rse-title-screen-main-theme",
+      "id": "rse-opening-movie-setting-out-on-a-journey-in-the-hoenn-region",
       "family": "rse",
-      "title": "Title Screen: Main Theme",
+      "title": "Opening Movie",
       "category": "event",
-      "order": 2,
+      "order": 0,
       "sources": [
         {
           "type": "stream",
-          "videoId": "kYtaoZsFb3I",
+          "videoId": "shUkq1sfSyU",
           "startMs": 0,
-          "confidence": 0.81
-        },
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "rse-introductions",
+      "family": "rse",
+      "title": "Introductions",
+      "category": "other",
+      "order": 1,
+      "sources": [
         {
           "type": "stream",
-          "videoId": "urkeRpd5QUc",
+          "videoId": "k_6znrLiBYg",
           "startMs": 0,
-          "confidence": 0.81
-        },
-        {
-          "type": "stream",
-          "videoId": "SxZ-Foy-qiY",
-          "startMs": 0,
-          "confidence": 0.81
+          "confidence": 1.0
         }
       ]
     },
@@ -2466,7 +2872,7 @@
       "family": "rse",
       "title": "Littleroot Town",
       "category": "town",
-      "order": 4,
+      "order": 2,
       "sources": [
         {
           "type": "stream",
@@ -2481,7 +2887,7 @@
       "family": "rse",
       "title": "Birch Pokémon Lab",
       "category": "town",
-      "order": 5,
+      "order": 3,
       "sources": [
         {
           "type": "stream",
@@ -2496,13 +2902,13 @@
       "family": "rse",
       "title": "May",
       "category": "other",
-      "order": 6,
+      "order": 4,
       "sources": [
         {
           "type": "stream",
           "videoId": "_d1OECmX39I",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2511,7 +2917,7 @@
       "family": "rse",
       "title": "H-Help Me!",
       "category": "other",
-      "order": 7,
+      "order": 5,
       "sources": [
         {
           "type": "stream",
@@ -2538,13 +2944,13 @@
       "family": "rse",
       "title": "Battle! (Wild Pokémon)",
       "category": "battle",
-      "order": 8,
+      "order": 6,
       "sources": [
         {
           "type": "stream",
           "videoId": "e0zs9M-ITh0",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2553,13 +2959,13 @@
       "family": "rse",
       "title": "Victory! (Wild Pokémon)",
       "category": "battle",
-      "order": 9,
+      "order": 7,
       "sources": [
         {
           "type": "stream",
           "videoId": "nm0o412K3pM",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2568,7 +2974,7 @@
       "family": "rse",
       "title": "Route 101",
       "category": "route",
-      "order": 10,
+      "order": 8,
       "sources": [
         {
           "type": "local",
@@ -2578,7 +2984,7 @@
           "type": "stream",
           "videoId": "WMj9b4vYTXU",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2587,13 +2993,13 @@
       "family": "rse",
       "title": "Oldale Town",
       "category": "town",
-      "order": 11,
+      "order": 9,
       "sources": [
         {
           "type": "stream",
           "videoId": "XsM_faNZIiE",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2602,13 +3008,13 @@
       "family": "rse",
       "title": "Pokémon Center",
       "category": "town",
-      "order": 12,
+      "order": 10,
       "sources": [
         {
           "type": "stream",
           "videoId": "USiInrMpLXw",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2617,13 +3023,13 @@
       "family": "rse",
       "title": "Trainers' Eyes Meet (Youngster)",
       "category": "battle",
-      "order": 13,
+      "order": 11,
       "sources": [
         {
           "type": "stream",
           "videoId": "s12JVc2pS4U",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2632,13 +3038,13 @@
       "family": "rse",
       "title": "Trainers' Eyes Meet (Lass)",
       "category": "battle",
-      "order": 14,
+      "order": 12,
       "sources": [
         {
           "type": "stream",
           "videoId": "Dv3ImHlgRnM",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2647,13 +3053,13 @@
       "family": "rse",
       "title": "Battle! (Trainer Battle)",
       "category": "battle",
-      "order": 15,
+      "order": 13,
       "sources": [
         {
           "type": "stream",
           "videoId": "WEO2M2_SvRk",
           "startMs": 0,
-          "confidence": 0.86
+          "confidence": 0.85
         }
       ]
     },
@@ -2662,13 +3068,13 @@
       "family": "rse",
       "title": "Victory! (Trainer Battle)",
       "category": "battle",
-      "order": 16,
+      "order": 14,
       "sources": [
         {
           "type": "stream",
           "videoId": "H1R30tQWTPU",
           "startMs": 0,
-          "confidence": 0.87
+          "confidence": 0.86
         }
       ]
     },
@@ -2677,13 +3083,13 @@
       "family": "rse",
       "title": "Petalburg City",
       "category": "town",
-      "order": 17,
+      "order": 15,
       "sources": [
         {
           "type": "stream",
           "videoId": "sj3lYNPm1xU",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2692,13 +3098,13 @@
       "family": "rse",
       "title": "Hurry Along",
       "category": "other",
-      "order": 18,
+      "order": 16,
       "sources": [
         {
           "type": "stream",
           "videoId": "Jz7vWx69ZSA",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2707,13 +3113,13 @@
       "family": "rse",
       "title": "Route 104",
       "category": "route",
-      "order": 19,
+      "order": 17,
       "sources": [
         {
           "type": "stream",
           "videoId": "Q7HI_kNOjhM",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2722,13 +3128,13 @@
       "family": "rse",
       "title": "Petalburg Woods",
       "category": "dungeon",
-      "order": 20,
+      "order": 18,
       "sources": [
         {
           "type": "stream",
           "videoId": "1ZB1nN_fMGg",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2737,13 +3143,13 @@
       "family": "rse",
       "title": "Team Magma Appears!",
       "category": "event",
-      "order": 21,
+      "order": 19,
       "sources": [
         {
           "type": "stream",
           "videoId": "NJs6_s9-wpQ",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2752,13 +3158,13 @@
       "family": "rse",
       "title": "Battle! (Team Aqua / Team Magma)",
       "category": "battle",
-      "order": 22,
+      "order": 20,
       "sources": [
         {
           "type": "stream",
           "videoId": "DR06tQIFz5w",
           "startMs": 0,
-          "confidence": 0.93
+          "confidence": 0.92
         }
       ]
     },
@@ -2767,13 +3173,13 @@
       "family": "rse",
       "title": "Victory! (Team Aqua / Team Magma)",
       "category": "battle",
-      "order": 23,
+      "order": 21,
       "sources": [
         {
           "type": "stream",
           "videoId": "8R6H5Jz0N1w",
           "startMs": 0,
-          "confidence": 0.93
+          "confidence": 0.92
         }
       ]
     },
@@ -2782,13 +3188,13 @@
       "family": "rse",
       "title": "Rustboro City",
       "category": "town",
-      "order": 24,
+      "order": 22,
       "sources": [
         {
           "type": "stream",
           "videoId": "Qgwi2E3vG-s",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2797,13 +3203,13 @@
       "family": "rse",
       "title": "Trainers' School",
       "category": "other",
-      "order": 25,
+      "order": 23,
       "sources": [
         {
           "type": "stream",
           "videoId": "Pwlqi_WNUEE",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2812,13 +3218,13 @@
       "family": "rse",
       "title": "Crossing the Sea",
       "category": "route",
-      "order": 26,
+      "order": 24,
       "sources": [
         {
           "type": "stream",
           "videoId": "ELtFcSkkFQA",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2827,13 +3233,13 @@
       "family": "rse",
       "title": "Dewford Town",
       "category": "town",
-      "order": 27,
+      "order": 25,
       "sources": [
         {
           "type": "stream",
           "videoId": "jMjWcH0lKX4",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2842,7 +3248,7 @@
       "family": "rse",
       "title": "Trainers' Eyes Meet (Tuber♀)",
       "category": "battle",
-      "order": 28,
+      "order": 26,
       "sources": [
         {
           "type": "stream",
@@ -2857,13 +3263,13 @@
       "family": "rse",
       "title": "Slateport City",
       "category": "town",
-      "order": 29,
+      "order": 27,
       "sources": [
         {
           "type": "stream",
           "videoId": "3sX3CjliJtE",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2872,13 +3278,13 @@
       "family": "rse",
       "title": "Oceanic Museum",
       "category": "other",
-      "order": 30,
+      "order": 28,
       "sources": [
         {
           "type": "stream",
           "videoId": "b5kYkyIBnDM",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2887,13 +3293,13 @@
       "family": "rse",
       "title": "Route 110",
       "category": "route",
-      "order": 31,
+      "order": 29,
       "sources": [
         {
           "type": "stream",
           "videoId": "mmQ5B4HULp0",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2902,13 +3308,13 @@
       "family": "rse",
       "title": "Cycling",
       "category": "route",
-      "order": 32,
+      "order": 30,
       "sources": [
         {
           "type": "stream",
           "videoId": "8tjocS9lAtY",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2917,13 +3323,13 @@
       "family": "rse",
       "title": "Game Corner",
       "category": "town",
-      "order": 33,
+      "order": 31,
       "sources": [
         {
           "type": "stream",
           "videoId": "jphPVtS_prU",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2932,13 +3338,13 @@
       "family": "rse",
       "title": "Reel Time",
       "category": "other",
-      "order": 34,
+      "order": 32,
       "sources": [
         {
           "type": "stream",
           "videoId": "pGODXbcPXmQ",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2947,13 +3353,13 @@
       "family": "rse",
       "title": "Verdanturf Town",
       "category": "town",
-      "order": 35,
+      "order": 33,
       "sources": [
         {
           "type": "stream",
           "videoId": "mr0zRMXjbGE",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2962,13 +3368,13 @@
       "family": "rse",
       "title": "Route 113",
       "category": "route",
-      "order": 36,
+      "order": 34,
       "sources": [
         {
           "type": "stream",
           "videoId": "uyfyjAafPn0",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -2977,7 +3383,7 @@
       "family": "rse",
       "title": "Twins",
       "category": "other",
-      "order": 37,
+      "order": 35,
       "sources": [
         {
           "type": "stream",
@@ -2992,13 +3398,13 @@
       "family": "rse",
       "title": "Fallarbor Town",
       "category": "town",
-      "order": 38,
+      "order": 36,
       "sources": [
         {
           "type": "stream",
           "videoId": "NaLb44NvQ7M",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3007,13 +3413,13 @@
       "family": "rse",
       "title": "Cable Car",
       "category": "other",
-      "order": 39,
+      "order": 37,
       "sources": [
         {
           "type": "stream",
           "videoId": "_-jtpahteZo",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3022,13 +3428,13 @@
       "family": "rse",
       "title": "Mt. Chimney",
       "category": "dungeon",
-      "order": 40,
+      "order": 38,
       "sources": [
         {
           "type": "stream",
           "videoId": "DK50TQlZFNU",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3037,17 +3443,23 @@
       "family": "rse",
       "title": "Trainers' Eyes Meet (Hiker)",
       "category": "battle",
-      "order": 41,
+      "order": 39,
       "sources": [
         {
           "type": "stream",
           "videoId": "ZLqS52jfdWw",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         },
         {
           "type": "stream",
           "videoId": "ZkAlr3oDIWY",
+          "startMs": 0,
+          "confidence": 0.8
+        },
+        {
+          "type": "stream",
+          "videoId": "sVi6cuKGplY",
           "startMs": 0,
           "confidence": 0.8
         }
@@ -3058,13 +3470,13 @@
       "family": "rse",
       "title": "Route 111",
       "category": "route",
-      "order": 42,
+      "order": 40,
       "sources": [
         {
           "type": "stream",
           "videoId": "ZBcErwd2lQs",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3073,13 +3485,13 @@
       "family": "rse",
       "title": "Pokémon Gym",
       "category": "town",
-      "order": 43,
+      "order": 41,
       "sources": [
         {
           "type": "stream",
           "videoId": "y3xoH4BtNzE",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3088,13 +3500,13 @@
       "family": "rse",
       "title": "Battle! (Gym Leader)",
       "category": "battle",
-      "order": 44,
+      "order": 42,
       "sources": [
         {
           "type": "stream",
           "videoId": "OrUGA0K1iIw",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3103,13 +3515,13 @@
       "family": "rse",
       "title": "Victory! (Gym Leader)",
       "category": "battle",
-      "order": 45,
+      "order": 43,
       "sources": [
         {
           "type": "stream",
           "videoId": "DylOzhSOD2U",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3118,7 +3530,7 @@
       "family": "rse",
       "title": "Surf",
       "category": "route",
-      "order": 46,
+      "order": 44,
       "sources": [
         {
           "type": "stream",
@@ -3133,7 +3545,7 @@
       "family": "rse",
       "title": "Route 119",
       "category": "route",
-      "order": 47,
+      "order": 45,
       "sources": [
         {
           "type": "stream",
@@ -3148,7 +3560,7 @@
       "family": "rse",
       "title": "Fortree City",
       "category": "town",
-      "order": 48,
+      "order": 46,
       "sources": [
         {
           "type": "stream",
@@ -3163,7 +3575,7 @@
       "family": "rse",
       "title": "Route 120",
       "category": "route",
-      "order": 49,
+      "order": 47,
       "sources": [
         {
           "type": "stream",
@@ -3178,7 +3590,7 @@
       "family": "rse",
       "title": "Interviewers",
       "category": "other",
-      "order": 50,
+      "order": 48,
       "sources": [
         {
           "type": "stream",
@@ -3193,7 +3605,7 @@
       "family": "rse",
       "title": "Safari Zone",
       "category": "other",
-      "order": 51,
+      "order": 49,
       "sources": [
         {
           "type": "stream",
@@ -3208,7 +3620,7 @@
       "family": "rse",
       "title": "Trainers' Eyes Meet (Gentleman)",
       "category": "battle",
-      "order": 52,
+      "order": 50,
       "sources": [
         {
           "type": "stream",
@@ -3223,7 +3635,7 @@
       "family": "rse",
       "title": "Lilycove City",
       "category": "town",
-      "order": 53,
+      "order": 51,
       "sources": [
         {
           "type": "stream",
@@ -3238,7 +3650,7 @@
       "family": "rse",
       "title": "Museum",
       "category": "other",
-      "order": 54,
+      "order": 52,
       "sources": [
         {
           "type": "stream",
@@ -3253,7 +3665,7 @@
       "family": "rse",
       "title": "Brendan",
       "category": "other",
-      "order": 55,
+      "order": 53,
       "sources": [
         {
           "type": "stream",
@@ -3264,17 +3676,32 @@
       ]
     },
     {
+      "id": "rse-battle-brendan-may",
+      "family": "rse",
+      "title": "Battle! (Brendan/May)",
+      "category": "battle",
+      "order": 54,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5_OnO3x3oUU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "rse-evolution",
       "family": "rse",
       "title": "Evolution",
       "category": "event",
-      "order": 57,
+      "order": 55,
       "sources": [
         {
           "type": "stream",
           "videoId": "W4U7fILcdf4",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3283,13 +3710,13 @@
       "family": "rse",
       "title": "Poké Mart",
       "category": "town",
-      "order": 58,
+      "order": 56,
       "sources": [
         {
           "type": "stream",
           "videoId": "JhyRIPe4jLo",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3298,13 +3725,13 @@
       "family": "rse",
       "title": "Mt. Pyre",
       "category": "dungeon",
-      "order": 59,
+      "order": 57,
       "sources": [
         {
           "type": "stream",
           "videoId": "KNMRL6FOC5Q",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         },
         {
           "type": "stream",
@@ -3319,13 +3746,13 @@
       "family": "rse",
       "title": "Trainers' Eyes Meet (Psychic)",
       "category": "battle",
-      "order": 60,
+      "order": 58,
       "sources": [
         {
           "type": "stream",
           "videoId": "T86cqpbCOfI",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3334,13 +3761,13 @@
       "family": "rse",
       "title": "Trainers' Eyes Meet (Hex Maniac)",
       "category": "battle",
-      "order": 61,
+      "order": 59,
       "sources": [
         {
           "type": "stream",
           "videoId": "It_upQDoN7g",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3349,19 +3776,34 @@
       "family": "rse",
       "title": "Mt. Pyre Exterior",
       "category": "dungeon",
-      "order": 62,
+      "order": 60,
       "sources": [
         {
           "type": "stream",
           "videoId": "oLyJ9RGXIds",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         },
         {
           "type": "stream",
           "videoId": "KNMRL6FOC5Q",
           "startMs": 0,
-          "confidence": 0.86
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "rse-hideout",
+      "family": "rse",
+      "title": "Hideout",
+      "category": "dungeon",
+      "order": 61,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "u3QMT0x1jLI",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -3370,7 +3812,7 @@
       "family": "rse",
       "title": "Team Aqua Appears!",
       "category": "event",
-      "order": 64,
+      "order": 62,
       "sources": [
         {
           "type": "stream",
@@ -3385,7 +3827,7 @@
       "family": "rse",
       "title": "Battle! (Team Aqua/Team Magma Leaders)",
       "category": "battle",
-      "order": 65,
+      "order": 63,
       "sources": [
         {
           "type": "stream",
@@ -3406,7 +3848,7 @@
       "family": "rse",
       "title": "The Super-Ancient Pokémon Awaken!",
       "category": "other",
-      "order": 66,
+      "order": 64,
       "sources": [
         {
           "type": "stream",
@@ -3424,13 +3866,13 @@
       ],
       "title": "Drought",
       "category": "other",
-      "order": 67,
+      "order": 65,
       "sources": [
         {
           "type": "stream",
           "videoId": "XOn3yeVx8n4",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3442,13 +3884,13 @@
       ],
       "title": "Heavy Rain",
       "category": "other",
-      "order": 68,
+      "order": 66,
       "sources": [
         {
           "type": "stream",
           "videoId": "xdnXEVlGzUs",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -3457,7 +3899,7 @@
       "family": "rse",
       "title": "Dive",
       "category": "other",
-      "order": 69,
+      "order": 67,
       "sources": [
         {
           "type": "stream",
@@ -3478,7 +3920,7 @@
       "family": "rse",
       "title": "Sootopolis City",
       "category": "town",
-      "order": 70,
+      "order": 68,
       "sources": [
         {
           "type": "stream",
@@ -3493,7 +3935,7 @@
       "family": "rse",
       "title": "Cave of Origin",
       "category": "dungeon",
-      "order": 71,
+      "order": 69,
       "sources": [
         {
           "type": "stream",
@@ -3508,7 +3950,7 @@
       "family": "rse",
       "title": "Battle! (Super-Ancient Pokémon)",
       "category": "battle",
-      "order": 72,
+      "order": 70,
       "sources": [
         {
           "type": "stream",
@@ -3523,7 +3965,7 @@
       "family": "rse",
       "title": "Trainers' Eyes Meet (Swimmer♀)",
       "category": "battle",
-      "order": 73,
+      "order": 71,
       "sources": [
         {
           "type": "stream",
@@ -3538,7 +3980,7 @@
       "family": "rse",
       "title": "Ever Grande City",
       "category": "town",
-      "order": 74,
+      "order": 72,
       "sources": [
         {
           "type": "stream",
@@ -3553,7 +3995,7 @@
       "family": "rse",
       "title": "Contest Lobby",
       "category": "event",
-      "order": 75,
+      "order": 73,
       "sources": [
         {
           "type": "stream",
@@ -3568,7 +4010,7 @@
       "family": "rse",
       "title": "Pokémon Contest!",
       "category": "event",
-      "order": 76,
+      "order": 74,
       "sources": [
         {
           "type": "stream",
@@ -3583,7 +4025,7 @@
       "family": "rse",
       "title": "Results Announcement",
       "category": "other",
-      "order": 77,
+      "order": 75,
       "sources": [
         {
           "type": "stream",
@@ -3598,7 +4040,7 @@
       "family": "rse",
       "title": "Contest Winner",
       "category": "event",
-      "order": 78,
+      "order": 76,
       "sources": [
         {
           "type": "stream",
@@ -3613,7 +4055,7 @@
       "family": "rse",
       "title": "Sealed Chamber",
       "category": "other",
-      "order": 79,
+      "order": 77,
       "sources": [
         {
           "type": "stream",
@@ -3628,7 +4070,7 @@
       "family": "rse",
       "title": "Battle! (Regirock/Regice/Registeel)",
       "category": "battle",
-      "order": 80,
+      "order": 78,
       "sources": [
         {
           "type": "stream",
@@ -3649,7 +4091,7 @@
       "family": "rse",
       "title": "The Trick House",
       "category": "other",
-      "order": 81,
+      "order": 79,
       "sources": [
         {
           "type": "stream",
@@ -3664,7 +4106,7 @@
       "family": "rse",
       "title": "Abandoned Ship",
       "category": "other",
-      "order": 82,
+      "order": 80,
       "sources": [
         {
           "type": "stream",
@@ -3679,13 +4121,13 @@
       "family": "rse",
       "title": "Battle Tower",
       "category": "town",
-      "order": 83,
+      "order": 81,
       "sources": [
         {
           "type": "stream",
           "videoId": "geIe2TX5Yb4",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         },
         {
           "type": "stream",
@@ -3700,7 +4142,7 @@
       "family": "rse",
       "title": "Victory Road",
       "category": "dungeon",
-      "order": 84,
+      "order": 82,
       "sources": [
         {
           "type": "stream",
@@ -3715,7 +4157,7 @@
       "family": "rse",
       "title": "Trainers' Eyes Meet (Cooltrainer)",
       "category": "battle",
-      "order": 85,
+      "order": 83,
       "sources": [
         {
           "type": "stream",
@@ -3730,7 +4172,7 @@
       "family": "rse",
       "title": "The Elite Four Appear!",
       "category": "other",
-      "order": 86,
+      "order": 84,
       "sources": [
         {
           "type": "stream",
@@ -3745,7 +4187,7 @@
       "family": "rse",
       "title": "Battle! (Elite Four)",
       "category": "battle",
-      "order": 87,
+      "order": 85,
       "sources": [
         {
           "type": "stream",
@@ -3756,11 +4198,41 @@
       ]
     },
     {
+      "id": "rse-champion-steven",
+      "family": "rse",
+      "title": "Champion Steven",
+      "category": "battle",
+      "order": 86,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "12U9yMgRwRY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "rse-battle-steven",
+      "family": "rse",
+      "title": "Battle! (Steven)",
+      "category": "battle",
+      "order": 87,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LaAGsbtETIg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "rse-victory-steven",
       "family": "rse",
       "title": "Victory! (Steven)",
       "category": "battle",
-      "order": 90,
+      "order": 88,
       "sources": [
         {
           "type": "stream",
@@ -3775,7 +4247,7 @@
       "family": "rse",
       "title": "Room of Glory",
       "category": "other",
-      "order": 91,
+      "order": 89,
       "sources": [
         {
           "type": "stream",
@@ -3790,7 +4262,7 @@
       "family": "rse",
       "title": "The Hall of Fame",
       "category": "event",
-      "order": 92,
+      "order": 90,
       "sources": [
         {
           "type": "stream",
@@ -3805,7 +4277,7 @@
       "family": "rse",
       "title": "Ending Theme",
       "category": "event",
-      "order": 93,
+      "order": 91,
       "sources": [
         {
           "type": "stream",
@@ -3826,7 +4298,7 @@
       "family": "rse",
       "title": "The End",
       "category": "other",
-      "order": 94,
+      "order": 92,
       "sources": [
         {
           "type": "stream",
@@ -3844,7 +4316,7 @@
       ],
       "title": "Title Screen (Pokémon Emerald)",
       "category": "event",
-      "order": 95,
+      "order": 93,
       "sources": [
         {
           "type": "stream",
@@ -3874,13 +4346,31 @@
       ],
       "title": "Abnormal Weather",
       "category": "other",
-      "order": 96,
+      "order": 94,
       "sources": [
         {
           "type": "stream",
           "videoId": "T3J3krZuirQ",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "rse-rayquaza-appears",
+      "family": "rse",
+      "games": [
+        "emerald"
+      ],
+      "title": "Rayquaza Appears!",
+      "category": "event",
+      "order": 95,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "edJvkvprE7Y",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -3892,7 +4382,7 @@
       ],
       "title": "Battle Frontier (Hoenn Version)",
       "category": "town",
-      "order": 98,
+      "order": 96,
       "sources": [
         {
           "type": "stream",
@@ -3910,7 +4400,7 @@
       ],
       "title": "Battle Tower (Hoenn Version)",
       "category": "town",
-      "order": 99,
+      "order": 97,
       "sources": [
         {
           "type": "stream",
@@ -3934,7 +4424,7 @@
       ],
       "title": "Battle Factory (Hoenn Version)",
       "category": "town",
-      "order": 100,
+      "order": 98,
       "sources": [
         {
           "type": "stream",
@@ -3952,7 +4442,7 @@
       ],
       "title": "Battle Arena",
       "category": "town",
-      "order": 101,
+      "order": 99,
       "sources": [
         {
           "type": "stream",
@@ -3970,7 +4460,7 @@
       ],
       "title": "Battle Dome",
       "category": "town",
-      "order": 102,
+      "order": 100,
       "sources": [
         {
           "type": "stream",
@@ -3988,7 +4478,7 @@
       ],
       "title": "Battle Pike",
       "category": "town",
-      "order": 103,
+      "order": 101,
       "sources": [
         {
           "type": "stream",
@@ -4006,7 +4496,7 @@
       ],
       "title": "Battle Palace",
       "category": "town",
-      "order": 104,
+      "order": 102,
       "sources": [
         {
           "type": "stream",
@@ -4024,7 +4514,7 @@
       ],
       "title": "Battle Pyramid",
       "category": "town",
-      "order": 105,
+      "order": 103,
       "sources": [
         {
           "type": "stream",
@@ -4042,7 +4532,7 @@
       ],
       "title": "Battle Pyramid Summit",
       "category": "town",
-      "order": 106,
+      "order": 104,
       "sources": [
         {
           "type": "stream",
@@ -4066,7 +4556,7 @@
       ],
       "title": "Battle! (Frontier Brain—Hoenn Version)",
       "category": "battle",
-      "order": 107,
+      "order": 105,
       "sources": [
         {
           "type": "stream",
@@ -4084,7 +4574,7 @@
       ],
       "title": "Battle! (Mew)",
       "category": "battle",
-      "order": 108,
+      "order": 106,
       "sources": [
         {
           "type": "stream",
@@ -4425,6 +4915,21 @@
       ]
     },
     {
+      "id": "frlg-guide",
+      "family": "frlg",
+      "title": "Guide",
+      "category": "other",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "k17jEhs2TFA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "frlg-pokemon-gym",
       "family": "frlg",
       "title": "Pokémon Gym",
@@ -4683,6 +5188,21 @@
       ]
     },
     {
+      "id": "frlg-a-trainer-appears-bad-guy-version",
+      "family": "frlg",
+      "title": "A Trainer Appears (Bad Guy Version)",
+      "category": "battle",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1USkUfAb1go",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "frlg-silph-co",
       "family": "frlg",
       "title": "Silph Co.",
@@ -4749,6 +5269,21 @@
       ]
     },
     {
+      "id": "frlg-the-sea",
+      "family": "frlg",
+      "title": "The Sea",
+      "category": "route",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yaqNCCbEQcc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "frlg-battle-legendary-pokemon",
       "family": "frlg",
       "title": "Battle! (Legendary Pokémon)",
@@ -4811,6 +5346,21 @@
           "videoId": "KDMHOumwmDU",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "frlg-sevii-islands-four-and-five-islands",
+      "family": "frlg",
+      "title": "Sevii Islands: Four & Five Islands",
+      "category": "other",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kh4tuTg9SnQ",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -4920,6 +5470,21 @@
         {
           "type": "stream",
           "videoId": "rOH8TpErG7c",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "frlg-the-final-road",
+      "family": "frlg",
+      "title": "The Final Road",
+      "category": "other",
+      "order": 55,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gy0tbhWELyc",
           "startMs": 0,
           "confidence": 1.0
         }
@@ -6189,6 +6754,21 @@
       ]
     },
     {
+      "id": "hgss-clair",
+      "family": "hgss",
+      "title": "Clair",
+      "category": "other",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_ov08_X027w",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "hgss-battle-entei",
       "family": "hgss",
       "title": "Battle! (Entei)",
@@ -6645,6 +7225,21 @@
       ]
     },
     {
+      "id": "hgss-pewter-city",
+      "family": "hgss",
+      "title": "Pewter City",
+      "category": "town",
+      "order": 86,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ABh8eopErUI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "hgss-route-3",
       "family": "hgss",
       "title": "Route 3",
@@ -6740,6 +7335,21 @@
           "videoId": "UlGCDuBx_EQ",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "hgss-professor-oak",
+      "family": "hgss",
+      "title": "Professor Oak",
+      "category": "other",
+      "order": 92,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "x6THfmIBd80",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -7596,6 +8206,36 @@
       ]
     },
     {
+      "id": "hgss-the-pokemon-league",
+      "family": "hgss",
+      "title": "The Pokémon League",
+      "category": "town",
+      "order": 133,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UirOtXpDj3A",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "hgss-battle-champion",
+      "family": "hgss",
+      "title": "Battle! (Champion)",
+      "category": "battle",
+      "order": 134,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SYTS2sJWcIs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "hgss-the-hall-of-fame",
       "family": "hgss",
       "title": "The Hall of Fame",
@@ -7725,6 +8365,21 @@
       ]
     },
     {
+      "id": "hgss-poke-mart-gb-sounds",
+      "family": "hgss",
+      "title": "Poké Mart (GB Sounds)",
+      "category": "town",
+      "order": 141,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "m_j4SeCVZCg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "hgss-global-terminal-gb-sounds",
       "family": "hgss",
       "title": "Global Terminal (GB Sounds)",
@@ -7836,6 +8491,36 @@
       ]
     },
     {
+      "id": "hgss-pokeathlon-in-the-pokeathlon-dome-gb-sounds",
+      "family": "hgss",
+      "title": "Pokéathlon: In the Pokéathlon Dome (GB Sounds)",
+      "category": "event",
+      "order": 149,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZDky2WIGxGo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "hgss-pokeathlon-opening-ceremony-gb-sounds",
+      "family": "hgss",
+      "title": "Pokéathlon: Opening Ceremony (GB Sounds)",
+      "category": "event",
+      "order": 150,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "KxREVkP5MEE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "hgss-pokeathlon-results-announcement-gb-sounds",
       "family": "hgss",
       "title": "Pokéathlon: Results Announcement (GB Sounds)",
@@ -7917,6 +8602,36 @@
       ]
     },
     {
+      "id": "oras-birch-pokemon-lab",
+      "family": "oras",
+      "title": "Birch Pokémon Lab",
+      "category": "town",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iH5SucFgC5I",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "oras-may",
+      "family": "oras",
+      "title": "May",
+      "category": "other",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9U9DT8DGNtU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-h-help-me",
       "family": "oras",
       "title": "H-Help Me!",
@@ -7965,12 +8680,6 @@
       "category": "battle",
       "order": 9,
       "sources": [
-        {
-          "type": "stream",
-          "videoId": "SZwIQhIOCEI",
-          "startMs": 0,
-          "confidence": 0.93
-        },
         {
           "type": "stream",
           "videoId": "FN1EU7ib9NU",
@@ -8100,6 +8809,21 @@
       ]
     },
     {
+      "id": "oras-battle-trainer-battle",
+      "family": "oras",
+      "title": "Battle! (Trainer Battle)",
+      "category": "battle",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "in3zXwiDlkE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-petalburg-city",
       "family": "oras",
       "title": "Petalburg City",
@@ -8111,6 +8835,21 @@
           "videoId": "QE1eTP8BP8M",
           "startMs": 0,
           "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "oras-wallys-theme",
+      "family": "oras",
+      "title": "Wally's Theme",
+      "category": "event",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TTHoJJ-pizg",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -8306,6 +9045,21 @@
           "videoId": "z4SvXDgzo1Q",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "oras-leaders-theme-team-aqua-team-magma",
+      "family": "oras",
+      "title": "Leader's Theme (Team Aqua / Team Magma)",
+      "category": "event",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "z7B2jq9I1dU",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -8571,6 +9325,21 @@
       ]
     },
     {
+      "id": "oras-victory-gym-leader-elite-four",
+      "family": "oras",
+      "title": "Victory! (Gym Leader / Elite Four)",
+      "category": "battle",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "O0ICX_nirNs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-a-path-we-all-must-walk",
       "family": "oras",
       "title": "A Path We All Must Walk",
@@ -8748,6 +9517,21 @@
       ]
     },
     {
+      "id": "oras-safari-zone",
+      "family": "oras",
+      "title": "Safari Zone",
+      "category": "other",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4aYK7V_B0yA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-trainers-eyes-meet-gentleman",
       "family": "oras",
       "title": "Trainers' eyes Meet (Gentleman)",
@@ -8780,6 +9564,36 @@
           "videoId": "p8GREvJH6jM",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "oras-museum",
+      "family": "oras",
+      "title": "Museum",
+      "category": "other",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9VlS19PJtr0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "oras-brendan",
+      "family": "oras",
+      "title": "Brendan",
+      "category": "other",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "IALcyC6Lho8",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -8847,6 +9661,21 @@
       ]
     },
     {
+      "id": "oras-trainers-eyes-meet-psychic",
+      "family": "oras",
+      "title": "Trainers' eyes Meet (Psychic)",
+      "category": "battle",
+      "order": 65,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "N83paYJ-GOk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-trainers-eyes-meet-hex-maniac",
       "family": "oras",
       "title": "Trainers' eyes Meet (Hex Maniac)",
@@ -8888,6 +9717,21 @@
           "videoId": "Zpp5Y1_cwL4",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "oras-hideout",
+      "family": "oras",
+      "title": "Hideout",
+      "category": "dungeon",
+      "order": 69,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "r3fOAJ2Kmow",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -9246,6 +10090,42 @@
       ]
     },
     {
+      "id": "oras-rivals-theme",
+      "family": "oras",
+      "title": "Battle! (Wally)",
+      "category": "battle",
+      "order": 89,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9sX_54hHcEE",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "k1ltZEDN2Ns",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "oras-the-elite-four-appear",
+      "family": "oras",
+      "title": "The Elite Four Appear!",
+      "category": "other",
+      "order": 90,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FDh3OA6Z_jI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-battle-elite-four",
       "family": "oras",
       "title": "Battle! (Elite Four)",
@@ -9257,6 +10137,51 @@
           "videoId": "7DbGoUJkNfU",
           "startMs": 0,
           "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "oras-champion-steven",
+      "family": "oras",
+      "title": "Champion Steven",
+      "category": "battle",
+      "order": 92,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MQt3V7jKQpQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "oras-battle-steven",
+      "family": "oras",
+      "title": "Battle! (Steven)",
+      "category": "battle",
+      "order": 93,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yffGYzZoJ-s",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "oras-victory-steven",
+      "family": "oras",
+      "title": "Victory! (Steven)",
+      "category": "battle",
+      "order": 94,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2ryOVMO3f6U",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -9372,6 +10297,21 @@
       ]
     },
     {
+      "id": "oras-the-heirs-to-eternity",
+      "family": "oras",
+      "title": "The Heirs to Eternity",
+      "category": "other",
+      "order": 100,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dqaYXW8BNhM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-azoth",
       "family": "oras",
       "title": "Azoth",
@@ -9435,6 +10375,21 @@
       ]
     },
     {
+      "id": "oras-battle-super-ancient-pokemon",
+      "family": "oras",
+      "title": "Battle! (Super-Ancient Pokémon)",
+      "category": "battle",
+      "order": 104,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5V0kzLYkYTM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-battle-lorekeeper-zinnia",
       "family": "oras",
       "title": "Battle! (Lorekeeper Zinnia)",
@@ -9476,6 +10431,21 @@
           "videoId": "I8vqp7Edjqs",
           "startMs": 0,
           "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "oras-strains-of-a-new-beginning-theme-of-r-s",
+      "family": "oras",
+      "title": "Strains of a New Beginning -Theme of Ωrαs-",
+      "category": "other",
+      "order": 108,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yMlA26aQ0YM",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -9540,6 +10510,21 @@
       ]
     },
     {
+      "id": "oras-results",
+      "family": "oras",
+      "title": "Results",
+      "category": "other",
+      "order": 113,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Tp5CPPao6hA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-contest-victor",
       "family": "oras",
       "title": "Contest Victor",
@@ -9566,6 +10551,21 @@
           "videoId": "4KqDeAoPrz0",
           "startMs": 0,
           "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "oras-super-secret-bases",
+      "family": "oras",
+      "title": "Super-Secret Bases",
+      "category": "other",
+      "order": 116,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ysSlp5VI2dQ",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -9695,6 +10695,36 @@
           "videoId": "9z4WsXRRWTA",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "oras-battle-maison",
+      "family": "oras",
+      "title": "Battle Maison",
+      "category": "town",
+      "order": 124,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "i-QbfVQqjC8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "oras-battle-battle-chatelaine",
+      "family": "oras",
+      "title": "Battle! (Battle Chatelaine)",
+      "category": "battle",
+      "order": 125,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "azSKwOZu2WE",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     }
