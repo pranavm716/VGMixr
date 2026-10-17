@@ -28,6 +28,10 @@
     "gsc-a-trainer-appears-suspicious-figure-1": { "streams": { "accept": [ { "videoId": "uHdITCo7nWA" } ] } },
     "gsc-pokegear-radio-pokemon-lullaby": { "streams": { "accept": [ { "videoId": "_cki5sj3OjE" } ] } },
 
+    "rse-opening-movie-setting-out-on-a-journey-in-the-hoenn-region": { "title": "Opening Movie", "duration": "2:33",
+                                                                        "note": "The opening's two parts and the title screen, which play back to back (0:35 + 0:16 + 1:42)" },
+    "rse-opening-movie-double-battles": { "mergeInto": "rse-opening-movie-setting-out-on-a-journey-in-the-hoenn-region" },
+    "rse-title-screen-main-theme": { "mergeInto": "rse-opening-movie-setting-out-on-a-journey-in-the-hoenn-region" },
     "rse-drought": { "games": ["ruby"], "note": "Groudon's event; Emerald uses Abnormal Weather" },
     "rse-heavy-rain": { "games": ["sapphire"], "note": "Kyogre's event; Emerald uses Abnormal Weather" },
     "rse-route-101": { "local": [ { "type": "local", "path": "rse/route-101.m4a" } ],
