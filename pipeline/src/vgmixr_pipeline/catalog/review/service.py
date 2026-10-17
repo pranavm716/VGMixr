@@ -5,6 +5,11 @@ from the YouTube cache, with the builder's own code. Matching never makes reques
 actions (a search, looking up a pasted video) use the live client, spaced out. When YouTube asks to
 confirm we're not a bot, the tool falls back to the cache for a cooldown, and the page says so.
 Every decision is written to pipeline/data/ (see edits.py) and the track is rematched at once.
+
+Playlists: the page ranks families by their gaps, searches YouTube for playlists and previews one
+by rematching its families with it added (or removed), from the cache only. A playlist is fetched
+once, live, and then read from the cache; adding it writes games.json and rematches its families.
+Hand decisions stay first whatever the playlists are, since matching puts them first.
 """
 
 import subprocess
@@ -14,11 +19,15 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from pydantic import ValidationError
+
 from vgmixr_pipeline.catalog.build import Draft, DraftTrack
 from vgmixr_pipeline.catalog.config import (
+    Playlist,
     Slice,
     Streams,
     TrackOverride,
+    YouTube,
     load_games,
     load_overrides,
 )
@@ -33,9 +42,9 @@ from vgmixr_pipeline.catalog.match import (
     search_query,
 )
 from vgmixr_pipeline.catalog.review import edits
-from vgmixr_pipeline.catalog.review.video_id import video_id_from
-from vgmixr_pipeline.catalog.score import Candidate, Names, TrackFacts, score
-from vgmixr_pipeline.catalog.youtube import Video, YouTubeBlocked
+from vgmixr_pipeline.catalog.review.video_id import playlist_id_from, video_id_from
+from vgmixr_pipeline.catalog.score import Candidate, Names, TrackFacts, classify, score
+from vgmixr_pipeline.catalog.youtube import Entry, Video, YouTubeBlocked
 from vgmixr_pipeline.manifest.models import Game
 
 LIVE_SPACING_SECONDS = 5.0
@@ -94,7 +103,7 @@ class Review:
     # Loading and matching
 
     def _load(self) -> None:
-        self._games = load_games(self._data_dir / "games.json")
+        self._load_games()
         self._overrides = load_overrides(self._data_dir / "overrides.json")
         draft = Draft.model_validate_json(
             (self._out_dir / "draft.json").read_text(encoding="utf-8")
@@ -105,15 +114,19 @@ class Review:
             t.model_copy(update={"title": titles[t.id]}) if t.id in titles else t
             for t in draft.tracks
         ]})  # fmt: skip
-        self._names = Names.build(self._games.games, self._games.youtube.aliases)
         self._tracks = {t.id: t for t in self._draft.tracks}
         self._families: dict[str, list[Game]] = {}
         for game in self._draft.games:
             self._families.setdefault(game.family_id, []).append(game)
         self._matches = {m.track_id: m for m in self._match(None)}
 
-    def _match(self, only: set[str] | None) -> list[Match]:
-        youtube = self._games.youtube
+    def _load_games(self) -> None:
+        self._games = load_games(self._data_dir / "games.json")
+        self._names = Names.build(self._games.games, self._games.youtube.aliases)
+        self._game_family = {g.id: g.family_id for g in self._games.games}
+
+    def _match(self, only: set[str] | None, youtube: YouTube | None = None) -> list[Match]:
+        youtube = youtube or self._games.youtube
         return match_tracks(
             self._draft, youtube, self._overrides, self._cached, self._names, only=only
         )
@@ -247,6 +260,86 @@ class Review:
         extra = {"youtube": self._youtube_mode(), **({"notice": notice} if notice else {})}
         return {"candidate": self._slice_json(facts, piece, video), **extra}
 
+    # Playlists
+
+    def playlists(self) -> dict[str, Any]:
+        """Families with their gaps, those without playlists first, then by the share of tracks
+        without sources; per game, its playlists and gaps; each family's playlists."""
+        order = list(self._families)
+
+        def rank(family: dict[str, Any]) -> tuple[bool, float, int]:
+            counts = family["counts"]
+            total = counts["matched"] + counts["review"] + counts["unmatched"]
+            missing = (counts["review"] + counts["unmatched"]) / total if total else 0.0
+            return (bool(family["playlists"]), -missing, order.index(family["id"]))
+
+        families = [self._coverage(f, games) for f, games in self._families.items()]
+        return {"families": sorted(families, key=rank), "youtube": self._youtube_mode()}
+
+    def search_playlists(self, family: str, query: str) -> dict[str, Any]:
+        if family not in self._families:
+            raise ReviewError([f"{family} is not a family"])
+        names = " ".join(g.name for g in self._families[family])
+        query = query.strip() or f"Pokémon {names} soundtrack"
+        hits, notice = self._ask(lambda videos: videos.search_playlists(query))
+        playlists = self._games.youtube.playlists
+        results = [
+            {
+                "id": hit.id,
+                "title": hit.title,
+                "channel": hit.channel,
+                "listed": [i for i, p in enumerate(playlists) if p.playlist == hit.id],
+                "entries": len(self._cached.playlist(hit.id)) or None,
+            }
+            for hit in hits
+        ]
+        extra = {"youtube": self._youtube_mode(), **({"notice": notice} if notice else {})}
+        return {"query": query, "results": results, **extra}
+
+    def preview_playlist(
+        self, text: str, games: Any, first: int | None, last: int | None
+    ) -> dict[str, Any]:
+        """What adding the playlist would change; writes nothing."""
+        playlist = self._playlist(text, games, first, last, None)
+        entries, notice = self._entries(playlist.playlist)
+        youtube = self._games.youtube
+        added = youtube.model_copy(update={"playlists": [*youtube.playlists, playlist]})
+        extra = {"youtube": self._youtube_mode(), **({"notice": notice} if notice else {})}
+        return {**self._preview(added, playlist, entries, added=True), **extra}
+
+    def preview_removal(self, index: int, playlist_id: str) -> dict[str, Any]:
+        """What removing the playlist at `index` would change; writes nothing."""
+        playlist = self._listed(index, playlist_id)
+        youtube = self._games.youtube
+        rest = [p for i, p in enumerate(youtube.playlists) if i != index]
+        removed = youtube.model_copy(update={"playlists": rest})
+        entries = self._cached.playlist(playlist_id)
+        preview = self._preview(removed, playlist, entries, added=False)
+        return {**preview, "youtube": self._youtube_mode()}
+
+    def add_playlist(
+        self, text: str, games: Any, first: int | None, last: int | None, note: str | None
+    ) -> dict[str, Any]:
+        playlist = self._playlist(text, games, first, last, note)
+        self._entries(playlist.playlist)  # fetched once, so the rematch reads it from the cache
+        try:
+            edits.add_playlist(
+                self._data_dir / "games.json", playlist.model_dump(exclude_none=True)
+            )
+        except edits.EditError as e:
+            raise ReviewError(e.errors) from e
+        self._after_playlist_edit(playlist)
+        return self.playlists()
+
+    def remove_playlist(self, index: int, playlist_id: str) -> dict[str, Any]:
+        playlist = self._listed(index, playlist_id)
+        try:
+            edits.remove_playlist(self._data_dir / "games.json", index, playlist_id)
+        except edits.EditError as e:
+            raise ReviewError(e.errors) from e
+        self._after_playlist_edit(playlist)
+        return self.playlists()
+
     def rebuild(self) -> dict[str, Any]:
         ok, output = self._rebuild()
         self._load()
@@ -274,6 +367,116 @@ class Review:
             return call(self._cached), f"YouTube is blocking requests ({e}); using the cache."
         except Exception as e:  # yt-dlp's errors: unavailable video, network...
             raise ReviewError([f"YouTube: {e}"]) from e
+
+    def _playlist(
+        self, text: str, games: Any, first: int | None, last: int | None, note: str | None
+    ) -> Playlist:
+        playlist_id = playlist_id_from(text)
+        if playlist_id is None:
+            raise ReviewError([f"{text.strip()!r} is not a YouTube playlist id or link"])
+        data = {"games": games, "playlist": playlist_id, "first": first, "last": last,
+                "note": note or None}  # fmt: skip
+        try:
+            playlist = Playlist.model_validate(data)
+        except ValidationError as e:
+            raise ReviewError([err["msg"] for err in e.errors()]) from e
+        unknown = [g for g in playlist.games if g not in self._game_family]
+        if not playlist.games or unknown:
+            raise ReviewError([f"pick the playlist's games (unknown: {', '.join(unknown)})"])
+        return playlist
+
+    def _listed(self, index: int, playlist_id: str) -> Playlist:
+        playlists = self._games.youtube.playlists
+        if not 0 <= index < len(playlists) or playlists[index].playlist != playlist_id:
+            raise ReviewError([f"playlist {index + 1} is not {playlist_id}; reload the page"])
+        return playlists[index]
+
+    def _entries(self, playlist_id: str) -> tuple[list[Entry], str | None]:
+        """A playlist's entries: from the cache, else fetched live (which caches them)."""
+        cached = self._cached.playlist(playlist_id)
+        if cached:
+            return cached, None
+        found, notice = self._ask(lambda videos: videos.playlist(playlist_id))
+        if not found:
+            mode = self._youtube_mode()["mode"]
+            if mode == "live":
+                raise ReviewError([f"YouTube lists no entries for {playlist_id}"])
+            raise ReviewError([f"{playlist_id} is not cached and YouTube can't be asked ({mode})"])
+        return found, notice
+
+    def _playlist_families(self, playlist: Playlist) -> list[str]:
+        """The families of a playlist's games, in games-file order."""
+        families = {self._game_family[g] for g in playlist.games}
+        return [f for f in self._families if f in families]
+
+    def _family_tracks(self, families: list[str]) -> set[str]:
+        return {t.id for t in self._draft.tracks if t.family in families}
+
+    def _after_playlist_edit(self, playlist: Playlist) -> None:
+        self._load_games()
+        self._rematch(self._family_tracks(self._playlist_families(playlist)))
+
+    def _preview(
+        self, youtube: YouTube, playlist: Playlist, entries: list[Entry], added: bool
+    ) -> dict[str, Any]:
+        """Rematches the playlist's families with `youtube` (from the cache), against today's
+        matches. Entries are matched to tracks in whichever side has the playlist."""
+        families = self._playlist_families(playlist)
+        only = self._family_tracks(families)
+        after = {m.track_id: m for m in self._match(only, youtube)}
+        before = {track_id: self._matches[track_id] for track_id in only}
+        first = playlist.first or 1
+        last = playlist.last or max((e.position for e in entries), default=first)
+        return {
+            "playlist": playlist.playlist,
+            "games": playlist.games,
+            "first": playlist.first,
+            "last": playlist.last,
+            "entries": [
+                {
+                    "position": e.position,
+                    "videoId": e.id,
+                    "title": e.title,
+                    "durationMs": e.duration_ms,
+                    "channel": e.channel,
+                    "inRange": first <= e.position <= last,
+                    "match": _entry_match(e, after if added else before),
+                }
+                for e in entries
+            ],
+            "counts": {
+                f: {"before": self._counts(before, f), "after": self._counts(after, f)}
+                for f in families
+            },
+            "changes": [
+                self._change(t, before[t.id], after[t.id])
+                for t in self._draft.tracks
+                if t.id in only and _differs(before[t.id], after[t.id])
+            ],
+        }
+
+    def _counts(self, matches: dict[str, Match], family: str) -> dict[str, int]:
+        statuses = [self._status_of(m) for m in matches.values() if m.family == family]
+        return {s: statuses.count(s) for s in _STATUSES if s != "excluded" or s in statuses}
+
+    def _change(self, track: DraftTrack, before: Match, after: Match) -> dict[str, Any]:
+        override = self._overrides.tracks.get(track.id, TrackOverride())
+        return {
+            "id": track.id,
+            "title": track.title,
+            "family": track.family,
+            "hand": override.streams is not None,
+            "before": self._outcome(before),
+            "after": self._outcome(after),
+        }
+
+    def _outcome(self, match: Match) -> dict[str, Any]:
+        sources = [
+            {"videoId": s.videoId, "startMs": s.startMs, "endMs": s.endMs,
+             "confidence": s.confidence}
+            for s in match.streams
+        ]  # fmt: skip
+        return {"status": self._status_of(match), "sources": sources}
 
     def _is_blocked(self) -> bool:
         return self._blocked_until is not None and self._clock() < self._blocked_until
@@ -332,10 +535,13 @@ class Review:
         return scored_json(Scored(candidate, score(facts, candidate, self._names)))
 
     def _status(self, track_id: str) -> str:
+        return self._status_of(self._matches[track_id])
+
+    def _status_of(self, match: Match) -> str:
         """The match status, or "excluded" for a track removed since the last build."""
-        if self._overrides.tracks.get(track_id, TrackOverride()).exclude:
+        if self._overrides.tracks.get(match.track_id, TrackOverride()).exclude:
             return "excluded"
-        return self._matches[track_id].status
+        return match.status
 
     def _track(self, track_id: str) -> DraftTrack:
         if track_id not in self._tracks:
@@ -348,6 +554,34 @@ class Review:
 
     def _decision(self, track_id: str) -> Streams:
         return self._overrides.tracks.get(track_id, TrackOverride()).streams or Streams()
+
+    def _coverage(self, family: str, games: list[Game]) -> dict[str, Any]:
+        """A family with per-game gaps and its playlists (entry counts when cached)."""
+        playlists = self._games.youtube.playlists
+        ids = {g.id for g in games}
+        matches = [self._matches[t.id] for t in self._draft.tracks if t.family == family]
+        rows = []
+        for game in games:
+            statuses = [
+                s
+                for m in matches
+                if game.id in self._facts(m).games and (s := self._status_of(m)) != "excluded"
+            ]
+            rows.append({
+                "id": game.id, "shortName": game.shortName, "color": game.color,
+                "playlists": sum(game.id in p.games for p in playlists),
+                "tracks": len(statuses),
+                "review": statuses.count("review"),
+                "unmatched": statuses.count("unmatched"),
+            })  # fmt: skip
+        listed = [
+            {"index": i, "playlist": p.playlist, "games": p.games, "first": p.first,
+             "last": p.last, "note": p.note,
+             "entries": len(self._cached.playlist(p.playlist)) or None}
+            for i, p in enumerate(playlists)
+            if ids & set(p.games)
+        ]  # fmt: skip
+        return {**self._family(family, games), "games": rows, "playlists": listed}
 
     def _family(self, family: str, games: list[Game]) -> dict[str, Any]:
         ids = {g.id for g in games}
@@ -382,3 +616,31 @@ class Review:
 
 def _identity(candidate: Candidate) -> tuple[str, int, int | None]:
     return (candidate.video_id, candidate.start_ms, candidate.end_ms)
+
+
+def _entry_match(entry: Entry, matches: dict[str, Match]) -> dict[str, Any] | None:
+    """The track that scores the entry highest among those keeping it as a candidate."""
+    best: tuple[Match, Scored] | None = None
+    for match in matches.values():
+        for scored in match.candidates:
+            if _identity(scored.candidate) == (entry.id, 0, None) and (
+                best is None or scored.score.value > best[1].score.value
+            ):
+                best = (match, scored)
+    if best is None:
+        return None
+    match, scored = best
+    return {
+        "trackId": match.track_id,
+        "title": match.title,
+        "score": round(scored.score.value, 3),
+        "verdict": classify(scored.score.value).value,
+        "source": any(s.videoId == entry.id for s in match.streams),
+    }
+
+
+def _differs(before: Match, after: Match) -> bool:
+    def sources(match: Match) -> list[tuple[str, int, int | None]]:
+        return [(s.videoId, s.startMs, s.endMs) for s in match.streams]
+
+    return before.status != after.status or sources(before) != sources(after)

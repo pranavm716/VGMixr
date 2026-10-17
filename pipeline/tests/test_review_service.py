@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from test_match import GAMES, RS_LIST, FakeVideos, entries, track, vid
+from test_match import GAMES, ORAS_LIST, RS_LIST, FakeVideos, entries, track, vid
 
 from vgmixr_pipeline.catalog.build import Draft
 from vgmixr_pipeline.catalog.jsonfmt import format_games
@@ -15,7 +15,7 @@ from vgmixr_pipeline.catalog.review.service import (
     Review,
     ReviewError,
 )
-from vgmixr_pipeline.catalog.youtube import Entry, Video, YouTubeBlocked
+from vgmixr_pipeline.catalog.youtube import Entry, PlaylistHit, Video, YouTubeBlocked
 
 TRACKS = [track("Littleroot Town", 0), track("Route 101", 1), track("Abandoned Ship", 2)]
 PLAYLIST = entries("Littleroot Town", "Rte 101", "Littleroot Town")
@@ -360,3 +360,278 @@ def test_a_matched_tracks_row_shows_its_first_sources_confidence(review: Review)
         review.track("rse-littleroot-town")["streams"][0]["confidence"]
     )
     assert rows["rse-abandoned-ship"]["confidence"] is None
+
+
+# Playlists
+
+ORAS_TRACKS = [
+    track("Littleroot Town", 0, family="oras"),
+    track("Battle! Wild Pokémon", 1, family="oras"),
+    track("Route 101", 2, family="oras"),
+]
+ORAS_PLAYLIST = entries("Littleroot Town", "Battle! Wild Pokémon", "Petalburg Woods", start=80)
+ORAS_QUERY = "Pokémon Omega Ruby Alpha Sapphire soundtrack"
+
+
+class CachedPlaylists(CachedVideos):
+    """Like the cached-only client: an uncached playlist is empty."""
+
+    def playlist(self, playlist_id: str) -> list[Entry]:
+        self.calls.append(f"playlist {playlist_id}")
+        return self.playlists.get(playlist_id, [])
+
+
+class SharedLive(LiveVideos):
+    """Like the live client: what it fetches is cached, so the cached client sees it next."""
+
+    def __init__(self, cache: FakeVideos, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self.cache = cache
+
+    def playlist(self, playlist_id: str) -> list[Entry]:
+        if self.blocked:
+            raise YouTubeBlocked("Sign in to confirm you're not a bot")
+        found = super().playlist(playlist_id)
+        self.cache.playlists[playlist_id] = found
+        return found
+
+    def search_playlists(self, query: str, n: int = 15) -> list[PlaylistHit]:
+        if self.blocked:
+            raise YouTubeBlocked("Sign in to confirm you're not a bot")
+        return super().search_playlists(query, n)
+
+
+def make_playlists(
+    tmp_path: Path, clock: Clock, cached_only: bool = False, blocked: bool = False
+) -> tuple[Review, CachedPlaylists, SharedLive]:
+    data, out = write_inputs(tmp_path, [*TRACKS, *ORAS_TRACKS])
+    cached = CachedPlaylists({RS_LIST: PLAYLIST})
+    live = SharedLive(
+        cached,
+        blocked=blocked,
+        playlists={ORAS_LIST: ORAS_PLAYLIST},
+        playlist_searches={ORAS_QUERY: [PlaylistHit(ORAS_LIST, "ORAS OST", "Uploader"),
+                                        PlaylistHit(RS_LIST, "RS rip", "Daintii")]},
+    )  # fmt: skip
+    review = Review(data, out, cached, live, clock=clock, sleep=clock.sleep,
+                    cached_only=cached_only)  # fmt: skip
+    return review, cached, live
+
+
+def games_file(tmp_path: Path) -> dict[str, Any]:
+    path = tmp_path / "data" / "games.json"
+    data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    return data
+
+
+def test_coverage_ranks_families_without_playlists_first_with_per_game_gaps(
+    tmp_path: Path, clock: Clock
+) -> None:
+    review, _, _ = make_playlists(tmp_path, clock)
+    oras, rse = review.playlists()["families"]
+    assert (oras["id"], oras["playlists"], rse["id"]) == ("oras", [], "rse")
+    assert oras["counts"] == {"matched": 0, "review": 0, "unmatched": 3}
+    assert oras["games"][0] == {
+        "id": "omega-ruby", "shortName": "OR", "color": "#000000",
+        "playlists": 0, "tracks": 3, "review": 0, "unmatched": 3,
+    }  # fmt: skip
+    ruby, _, emerald = rse["games"]
+    assert (ruby["playlists"], ruby["review"], ruby["unmatched"]) == (1, 1, 1)
+    assert emerald["playlists"] == 0
+    assert rse["playlists"] == [{
+        "index": 0, "playlist": RS_LIST, "games": ["ruby", "sapphire"],
+        "first": None, "last": None, "note": None, "entries": 3,
+    }]  # fmt: skip
+
+
+def test_coverage_ranks_by_the_share_of_tracks_without_sources(
+    tmp_path: Path, clock: Clock
+) -> None:
+    review, _, _ = make_playlists(tmp_path, clock)
+    review.add_playlist(ORAS_LIST, ["omega-ruby", "alpha-sapphire"], None, None, None)
+    # oras: 2 of 3 matched now; rse: 1 of 3.
+    assert [f["id"] for f in review.playlists()["families"]] == ["rse", "oras"]
+
+
+def test_a_playlist_search_marks_listed_and_cached_playlists(tmp_path: Path, clock: Clock) -> None:
+    review, _, live = make_playlists(tmp_path, clock)
+    result = review.search_playlists("oras", " ")
+    assert result["query"] == ORAS_QUERY
+    assert live.calls == [f"playlists {ORAS_QUERY}"]
+    assert result["results"] == [
+        {
+            "id": ORAS_LIST,
+            "title": "ORAS OST",
+            "channel": "Uploader",
+            "listed": [],
+            "entries": None,
+        },
+        {"id": RS_LIST, "title": "RS rip", "channel": "Daintii", "listed": [0], "entries": 3},
+    ]
+    assert result["youtube"] == {"mode": "live"}
+
+
+def test_playlist_searches_are_spaced_out_and_fall_back_to_the_cache(
+    tmp_path: Path, clock: Clock
+) -> None:
+    review, cached, live = make_playlists(tmp_path, clock)
+    review.search_playlists("oras", "a")
+    clock.now += 2
+    review.search_playlists("oras", "b")
+    assert clock.sleeps == [LIVE_SPACING_SECONDS - 2]
+
+    live.blocked = True
+    cached.playlist_searches["c"] = [PlaylistHit(ORAS_LIST, "Cached", None)]
+    result = review.search_playlists("oras", "c")
+    assert [r["title"] for r in result["results"]] == ["Cached"]
+    assert "not a bot" in result["notice"]
+    assert result["youtube"]["mode"] == "blocked"
+
+
+def test_cached_only_never_searches_youtube_for_playlists(tmp_path: Path, clock: Clock) -> None:
+    review, _, live = make_playlists(tmp_path, clock, cached_only=True)
+    assert review.search_playlists("oras", "")["results"] == []
+    assert live.calls == []
+
+
+def test_a_preview_matches_entries_to_tracks_and_writes_nothing(
+    tmp_path: Path, clock: Clock
+) -> None:
+    review, _, _ = make_playlists(tmp_path, clock)
+    before = (tmp_path / "data" / "games.json").read_bytes()
+    url = f"https://www.youtube.com/playlist?list={ORAS_LIST}"
+    preview = review.preview_playlist(url, ["omega-ruby", "alpha-sapphire"], None, 2)
+    assert preview["playlist"] == ORAS_LIST
+    littleroot, battle, woods = preview["entries"]
+    assert (littleroot["position"], littleroot["videoId"], littleroot["inRange"]) == (
+        1, vid(80), True
+    )  # fmt: skip
+    assert littleroot["match"]["trackId"] == "oras-littleroot-town"
+    assert (littleroot["match"]["verdict"], littleroot["match"]["source"]) == ("accept", True)
+    assert battle["match"]["trackId"] == "oras-battle-wild-pokemon"
+    assert woods["inRange"] is False and woods["match"] is None
+    assert preview["counts"] == {"oras": {
+        "before": {"matched": 0, "review": 0, "unmatched": 3},
+        "after": {"matched": 2, "review": 0, "unmatched": 1},
+    }}  # fmt: skip
+    assert [c["id"] for c in preview["changes"]] == [
+        "oras-littleroot-town", "oras-battle-wild-pokemon"
+    ]  # fmt: skip
+    change = preview["changes"][0]
+    assert (change["hand"], change["before"]["status"], change["after"]["status"]) == (
+        False, "unmatched", "matched"
+    )  # fmt: skip
+    assert change["after"]["sources"][0]["videoId"] == vid(80)
+    # Nothing was written and the tool's own matches are unchanged.
+    assert (tmp_path / "data" / "games.json").read_bytes() == before
+    assert review.state()["families"][1]["counts"]["matched"] == 0
+
+
+def test_a_playlist_is_fetched_once_then_read_from_the_cache(tmp_path: Path, clock: Clock) -> None:
+    review, _, live = make_playlists(tmp_path, clock)
+    review.preview_playlist(ORAS_LIST, ["omega-ruby"], None, None)
+    review.preview_playlist(ORAS_LIST, ["omega-ruby", "alpha-sapphire"], 1, 2)
+    review.add_playlist(ORAS_LIST, ["omega-ruby", "alpha-sapphire"], None, None, None)
+    assert live.calls == [f"playlist {ORAS_LIST}"]
+    assert clock.sleeps == []
+
+
+def test_hand_decisions_stay_first_when_a_playlist_is_added(tmp_path: Path, clock: Clock) -> None:
+    review, _, _ = make_playlists(tmp_path, clock)
+    review.set_streams("oras-littleroot-town", {"accept": [{"videoId": vid(70)}]})
+    preview = review.preview_playlist(ORAS_LIST, ["omega-ruby", "alpha-sapphire"], None, None)
+    change = next(c for c in preview["changes"] if c["id"] == "oras-littleroot-town")
+    assert change["hand"] is True
+    assert [s["videoId"] for s in change["before"]["sources"]] == [vid(70)]
+    assert [s["videoId"] for s in change["after"]["sources"]] == [vid(70), vid(80)]
+
+    review.add_playlist(ORAS_LIST, ["omega-ruby", "alpha-sapphire"], None, None, None)
+    streams = review.track("oras-littleroot-town")["streams"]
+    assert [(s["videoId"], s["auto"]) for s in streams] == [(vid(70), False), (vid(80), True)]
+
+
+def test_a_playlist_spanning_families_previews_both(tmp_path: Path, clock: Clock) -> None:
+    review, _, _ = make_playlists(tmp_path, clock)
+    preview = review.preview_playlist(ORAS_LIST, ["omega-ruby", "emerald"], None, None)
+    assert list(preview["counts"]) == ["rse", "oras"]
+    assert preview["counts"]["oras"]["after"]["matched"] == 2
+
+
+def test_adding_a_playlist_writes_it_and_rematches_its_families(
+    tmp_path: Path, clock: Clock
+) -> None:
+    review, _, _ = make_playlists(tmp_path, clock)
+    result = review.add_playlist(ORAS_LIST, ["omega-ruby", "alpha-sapphire"], None, 2, "ORAS OST")
+    written = games_file(tmp_path)["youtube"]["playlists"]
+    assert written[-1] == {"games": ["omega-ruby", "alpha-sapphire"], "playlist": ORAS_LIST,
+                           "last": 2, "note": "ORAS OST"}  # fmt: skip
+    oras = next(f for f in result["families"] if f["id"] == "oras")
+    assert oras["counts"] == {"matched": 2, "review": 0, "unmatched": 1}
+    assert oras["playlists"][0]["index"] == 1
+    assert review.state()["families"][1]["playlists"] == 1
+    assert [r["id"] for r in review.tracks("oras", "matched")] == [
+        "oras-littleroot-town", "oras-battle-wild-pokemon"
+    ]  # fmt: skip
+
+
+def test_removing_a_playlist_previews_then_rematches(tmp_path: Path, clock: Clock) -> None:
+    review, _, _ = make_playlists(tmp_path, clock)
+    preview = review.preview_removal(0, RS_LIST)
+    assert preview["counts"]["rse"] == {
+        "before": {"matched": 1, "review": 1, "unmatched": 1},
+        "after": {"matched": 0, "review": 0, "unmatched": 3},
+    }
+    assert preview["entries"][0]["match"]["trackId"] == "rse-littleroot-town"
+    assert {c["id"] for c in preview["changes"]} == {"rse-littleroot-town", "rse-route-101"}
+
+    result = review.remove_playlist(0, RS_LIST)
+    assert games_file(tmp_path)["youtube"]["playlists"] == []
+    assert next(f for f in result["families"] if f["id"] == "rse")["counts"]["matched"] == 0
+    with pytest.raises(ReviewError):
+        review.remove_playlist(0, RS_LIST)
+
+
+def test_a_hand_accepted_video_stays_when_its_playlist_is_removed(
+    tmp_path: Path, clock: Clock
+) -> None:
+    review, _, _ = make_playlists(tmp_path, clock)
+    review.set_streams("rse-littleroot-town", {"accept": [{"videoId": vid(1)}]})
+    preview = review.preview_removal(0, RS_LIST)
+    change = next(c for c in preview["changes"] if c["id"] == "rse-littleroot-town")
+    assert change["hand"] is True and change["after"]["status"] == "matched"
+    assert [s["videoId"] for s in change["before"]["sources"]] == [vid(1), vid(3)]
+    assert [s["videoId"] for s in change["after"]["sources"]] == [vid(1)]
+    review.remove_playlist(0, RS_LIST)
+    streams = review.track("rse-littleroot-town")["streams"]
+    assert [(s["videoId"], s["auto"]) for s in streams] == [(vid(1), False)]
+
+
+@pytest.mark.parametrize("mode", ["blocked", "cached-only"])
+def test_an_uncached_playlist_cant_be_previewed_without_youtube(
+    tmp_path: Path, clock: Clock, mode: str
+) -> None:
+    review, _, _ = make_playlists(
+        tmp_path, clock, cached_only=mode == "cached-only", blocked=mode == "blocked"
+    )
+    with pytest.raises(ReviewError) as raised:
+        review.preview_playlist(ORAS_LIST, ["omega-ruby"], None, None)
+    assert "not cached" in raised.value.errors[0]
+
+
+@pytest.mark.parametrize(
+    ("text", "games", "first", "last"),
+    [
+        ("not a playlist", ["omega-ruby"], None, None),
+        (ORAS_LIST, [], None, None),
+        (ORAS_LIST, ["unknown"], None, None),
+        (ORAS_LIST, ["omega-ruby"], 3, 1),
+        (ORAS_LIST, "omega-ruby", None, None),
+    ],
+)
+def test_a_bad_playlist_preview_is_an_error(
+    tmp_path: Path, clock: Clock, text: str, games: Any, first: int | None, last: int | None
+) -> None:
+    review, _, live = make_playlists(tmp_path, clock)
+    with pytest.raises(ReviewError):
+        review.preview_playlist(text, games, first, last)
+    assert live.calls == []
