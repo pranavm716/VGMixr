@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-17T10:38:30Z",
+  "generatedAt": "2026-10-17T20:24:57Z",
   "games": [
     {
       "id": "red",
@@ -171,7 +171,7 @@
       "color": "#303E51",
       "generation": 5,
       "platform": "DS",
-      "family": "b2w2"
+      "family": "bw"
     },
     {
       "id": "white-2",
@@ -180,7 +180,7 @@
       "color": "#EBC5C3",
       "generation": 5,
       "platform": "DS",
-      "family": "b2w2"
+      "family": "bw"
     },
     {
       "id": "x",
