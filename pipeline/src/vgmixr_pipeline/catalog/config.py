@@ -63,7 +63,7 @@ class Tracklist(_Model):
 
 
 # Playlist ids are longer than video ids and vary in length by kind (PL…, OLAK5uy_…).
-_PLAYLIST_ID = re.compile(r"[A-Za-z0-9_-]{10,}")
+PLAYLIST_ID = re.compile(r"[A-Za-z0-9_-]{10,}")
 
 
 def _check_video_id(video_id: str) -> str:
@@ -84,7 +84,7 @@ class Playlist(_Model):
     @field_validator("playlist")
     @classmethod
     def _check_id(cls, playlist: str) -> str:
-        if not _PLAYLIST_ID.fullmatch(playlist):
+        if not PLAYLIST_ID.fullmatch(playlist):
             raise ValueError(f"{playlist!r} is not a YouTube playlist id")
         return playlist
 

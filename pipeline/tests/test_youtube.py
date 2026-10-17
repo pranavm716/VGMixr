@@ -5,8 +5,10 @@ from typing import Any
 import pytest
 
 from vgmixr_pipeline.catalog.youtube import (
+    PLAYLIST_RESULTS,
     Chapter,
     Entry,
+    PlaylistHit,
     Video,
     YouTube,
     YouTubeBlocked,
@@ -98,6 +100,38 @@ def test_search_takes_the_top_results(tmp_path: Path) -> None:
     assert (tmp_path / "search" / "pokemon-ruby-route-101.json").exists()
 
 
+def test_playlist_search_lists_playlists_from_the_results_page(tmp_path: Path) -> None:
+    fake = FakeYtDlp(listing(
+        entry("PLaaaaaaaaaa", "Diamond & Pearl OST", None, ie_key="YoutubeTab"),
+        entry("PLbbbbbbbbbb", "DPPt Soundtrack", None, ie_key="YoutubeTab"),
+    ))  # fmt: skip
+    youtube, _ = client(tmp_path, fake)
+    assert youtube.search_playlists("Pokémon Diamond Pearl soundtrack") == [
+        PlaylistHit("PLaaaaaaaaaa", "Diamond & Pearl OST", "Uploader"),
+        PlaylistHit("PLbbbbbbbbbb", "DPPt Soundtrack", "Uploader"),
+    ]
+    assert fake.calls == [(
+        "https://www.youtube.com/results?search_query=Pok%C3%A9mon+Diamond+Pearl+soundtrack"
+        "&sp=EgIQAw%3D%3D",
+        True,
+    )]  # fmt: skip
+    cached = tmp_path / "playlist-search" / "pokemon-diamond-pearl-soundtrack.json"
+    assert json.loads(cached.read_text(encoding="utf-8"))["entries"][0] == {
+        "id": "PLaaaaaaaaaa", "title": "Diamond & Pearl OST", "channel": "Uploader"
+    }  # fmt: skip
+
+    later = FakeYtDlp(listing())
+    assert len(client(tmp_path, later)[0].search_playlists("Pokémon Diamond Pearl soundtrack")) == 2
+    assert later.calls == []
+
+
+def test_playlist_search_keeps_the_top_results(tmp_path: Path) -> None:
+    hits = [entry(f"PL{i:010d}", f"List {i}", None) for i in range(PLAYLIST_RESULTS + 5)]
+    youtube, _ = client(tmp_path, FakeYtDlp(listing(*hits)))
+    assert len(youtube.search_playlists("Pokémon X Y soundtrack")) == PLAYLIST_RESULTS
+    assert len(youtube.search_playlists("Pokémon X Y OST", n=3)) == 3
+
+
 def test_video_reads_chapters_and_the_last_one_plays_to_the_end(tmp_path: Path) -> None:
     fake = FakeYtDlp({
         "id": "aaaaaaaaaaa", "title": "Full OST", "duration": 300, "description": "0:00 A",
@@ -129,6 +163,7 @@ def test_cached_only_reads_the_cache_and_treats_the_rest_as_empty(tmp_path: Path
     assert youtube.playlist(PLAYLIST)[0].title == "Opening"
     assert youtube.playlist("PLbcdefghijk") == []
     assert youtube.search("Pokémon Ruby Route 101") == []
+    assert youtube.search_playlists("Pokémon Ruby soundtrack") == []
     assert youtube.video("aaaaaaaaaaa") == Video("aaaaaaaaaaa", "", None, [])
     assert fake.calls == []
 

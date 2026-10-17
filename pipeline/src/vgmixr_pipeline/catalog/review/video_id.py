@@ -1,7 +1,9 @@
-"""Reduces a pasted YouTube link (or a bare id) to its video id. URLs are never stored."""
+"""Reduces a pasted YouTube link (or a bare id) to its video or playlist id. URLs are never
+stored."""
 
 from urllib.parse import parse_qs, urlsplit
 
+from vgmixr_pipeline.catalog.config import PLAYLIST_ID
 from vgmixr_pipeline.manifest.validate import VIDEO_ID
 
 _HOSTS = {"youtube.com", "m.youtube.com", "music.youtube.com", "youtube-nocookie.com"}
@@ -24,3 +26,15 @@ def video_id_from(text: str) -> str | None:
     elif host in _HOSTS and len(segments) == 2 and segments[0] in _ID_PATHS:
         candidate = segments[1]
     return candidate if candidate is not None and VIDEO_ID.fullmatch(candidate) else None
+
+
+def playlist_id_from(text: str) -> str | None:
+    """A bare playlist id, or the `list` of a YouTube playlist or watch link."""
+    text = text.strip()
+    if PLAYLIST_ID.fullmatch(text):
+        return text
+    url = urlsplit(text if "//" in text else "https://" + text)
+    if (url.hostname or "").removeprefix("www.") not in _HOSTS:
+        return None
+    candidate = parse_qs(url.query).get("list", [None])[0]
+    return candidate if candidate is not None and PLAYLIST_ID.fullmatch(candidate) else None

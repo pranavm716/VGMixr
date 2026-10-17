@@ -8,7 +8,7 @@ from vgmixr_pipeline.catalog.build import Draft, DraftTrack
 from vgmixr_pipeline.catalog.config import Overrides, YouTube
 from vgmixr_pipeline.catalog.match import Match, candidates_json, match_tracks
 from vgmixr_pipeline.catalog.score import Names
-from vgmixr_pipeline.catalog.youtube import Chapter, Entry, Video
+from vgmixr_pipeline.catalog.youtube import Chapter, Entry, PlaylistHit, Video
 from vgmixr_pipeline.manifest.models import Game, LocalSource, StreamSource
 
 
@@ -59,10 +59,12 @@ class FakeVideos:
         playlists: dict[str, list[Entry]] | None = None,
         searches: dict[str, list[Entry]] | None = None,
         videos: dict[str, Video] | None = None,
+        playlist_searches: dict[str, list[PlaylistHit]] | None = None,
     ) -> None:
         self.playlists = playlists or {}
         self.searches = searches or {}
         self.videos = videos or {}
+        self.playlist_searches = playlist_searches or {}
         self.calls: list[str] = []
 
     def playlist(self, playlist_id: str) -> list[Entry]:
@@ -72,6 +74,10 @@ class FakeVideos:
     def search(self, query: str, n: int = 10) -> list[Entry]:
         self.calls.append(f"search {query}")
         return self.searches.get(query, [])
+
+    def search_playlists(self, query: str, n: int = 15) -> list[PlaylistHit]:
+        self.calls.append(f"playlists {query}")
+        return self.playlist_searches.get(query, [])[:n]
 
     def video(self, video_id: str) -> Video:
         self.calls.append(f"video {video_id}")

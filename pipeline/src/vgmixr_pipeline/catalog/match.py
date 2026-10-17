@@ -24,7 +24,7 @@ from vgmixr_pipeline.catalog.score import (
     score,
     video_words,
 )
-from vgmixr_pipeline.catalog.youtube import Entry, Video
+from vgmixr_pipeline.catalog.youtube import Entry, PlaylistHit, Video
 from vgmixr_pipeline.manifest.models import Game, StreamSource
 
 MAX_SOURCES = 3
@@ -42,6 +42,7 @@ type Status = Literal["matched", "review", "unmatched"]
 class Videos(Protocol):
     def playlist(self, playlist_id: str) -> list[Entry]: ...
     def search(self, query: str, n: int = ...) -> list[Entry]: ...
+    def search_playlists(self, query: str, n: int = ...) -> list[PlaylistHit]: ...
     def video(self, video_id: str) -> Video: ...
 
 
