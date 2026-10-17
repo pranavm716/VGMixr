@@ -8,7 +8,7 @@ front of its streams.
 """
 
 from collections import Counter
-from collections.abc import Iterable
+from collections.abc import Collection, Iterable
 from dataclasses import dataclass
 from typing import Any, Literal, Protocol
 
@@ -71,11 +71,14 @@ def match_tracks(
     videos: Videos,
     names: Names,
     search: bool = True,
+    only: Collection[str] | None = None,
 ) -> list[Match]:
+    """Matches every track, or only the tracks with ids in `only` (the review tool's rematch)."""
     matcher = _Matcher(draft, youtube, videos, names, search)
     return [
         matcher.match(track, overrides.tracks.get(track.id, TrackOverride()).streams or Streams())
         for track in draft.tracks
+        if only is None or track.id in only
     ]
 
 

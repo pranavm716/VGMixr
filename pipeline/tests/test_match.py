@@ -265,3 +265,16 @@ def test_words_common_to_a_playlist_do_not_count_against_titles() -> None:
     match = run(draft(track("Pallet Town", 2), track("Route 1", 0)), videos, search=False)
     assert match["rse-pallet-town"].status == "matched"
     assert match["rse-route-1"].status == "matched"
+
+
+def test_only_matches_the_given_tracks_as_a_full_run_would() -> None:
+    videos = FakeVideos({RS_LIST: entries("Littleroot Town", "Route 101", "Petalburg City")})
+    d = draft(track("Littleroot Town", 0), track("Route 101", 1), track("Oldale Town", 2))
+    full = run(d, videos)
+    videos.calls.clear()
+    only = match_tracks(d, RS_CONFIG, Overrides(), videos, NAMES, only={"rse-oldale-town"})
+    assert only == [full["rse-oldale-town"]]
+    assert videos.calls == [
+        f"playlist {RS_LIST}",
+        "search Pokémon Ruby Sapphire Emerald Oldale Town",
+    ]
