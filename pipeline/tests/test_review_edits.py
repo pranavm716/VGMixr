@@ -8,8 +8,8 @@ from pathlib import Path
 import pytest
 
 from vgmixr_pipeline.catalog.config import DATA_DIR, load_overrides
-from vgmixr_pipeline.catalog.jsonfmt import games_families
-from vgmixr_pipeline.catalog.review.edits import EditError, set_streams
+from vgmixr_pipeline.catalog.jsonfmt import games_families, track_family
+from vgmixr_pipeline.catalog.review.edits import EditError, set_exclude, set_streams
 
 FAMILIES = games_families(json.loads((DATA_DIR / "games.json").read_text(encoding="utf-8")))
 TRACK_IDS = {
@@ -18,6 +18,7 @@ TRACK_IDS = {
     "dppt-twinleaf-town",
     "rse-route-101",
     "gsc-clair",
+    "rse-cable-car",
 }
 
 
@@ -34,6 +35,13 @@ def changes(path: Path) -> list[str]:
     after = path.read_text(encoding="utf-8").splitlines()
     diff = difflib.unified_diff(before, after, lineterm="", n=0)
     return [line for line in diff if line[:1] in "+-" and line[:3] not in ("+++", "---")]
+
+
+def family_rank(line: str) -> int:
+    """The position in family order of the track key a line starts with."""
+    family = track_family(line.split('"')[1], FAMILIES)
+    assert family is not None
+    return FAMILIES.index(family)
 
 
 def lines(path: Path) -> list[str]:
@@ -83,7 +91,9 @@ def test_a_family_without_overrides_gets_its_own_group_in_family_order(overrides
         '    "dppt-twinleaf-town": { "streams": { "accept": [ { "videoId": "ID2Iv5HP-0I" } ] } },'
     )
     assert text[at - 1] == "" and text[at + 1] == ""
-    assert text[at - 2].startswith('    "frlg-') and text[at + 2].startswith('    "bw-')
+    # The neighbouring groups belong to an earlier and a later family, whatever is committed.
+    dppt = FAMILIES.index("dppt")
+    assert family_rank(text[at - 2]) < dppt < family_rank(text[at + 2])
 
 
 def test_clearing_a_decision_removes_an_override_left_empty(overrides: Path) -> None:
@@ -119,3 +129,32 @@ def test_an_invalid_edit_is_refused_and_nothing_is_written(
     assert any(error in e for e in raised.value.errors)
     assert overrides.read_bytes() == before
     assert not list(overrides.parent.glob("*.tmp"))
+
+
+def test_removing_a_track_writes_exclude_before_its_note(overrides: Path) -> None:
+    set_exclude(overrides, "rse-drought", True, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == [
+        '-    "rse-drought": { "games": ["ruby"], "note": "Groudon\'s event; Emerald uses Abnormal '
+        'Weather" },',
+        '+    "rse-drought": { "games": ["ruby"], "exclude": true, '
+        '"note": "Groudon\'s event; Emerald uses Abnormal Weather" },',
+    ]
+
+
+def test_restoring_a_track_removes_exclude_and_an_override_left_empty(overrides: Path) -> None:
+    set_exclude(overrides, "rse-littleroot-town", True, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == ['+    "rse-littleroot-town": { "exclude": true },']
+    set_exclude(overrides, "rse-littleroot-town", None, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == []
+
+
+def test_restoring_a_kept_jingle_writes_exclude_false_again(overrides: Path) -> None:
+    set_exclude(overrides, "rse-cable-car", True, TRACK_IDS, FAMILIES)
+    set_exclude(overrides, "rse-cable-car", False, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == []
+
+
+def test_removing_an_unknown_track_is_refused(overrides: Path) -> None:
+    with pytest.raises(EditError):
+        set_exclude(overrides, "rse-no-such-track", True, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == []
