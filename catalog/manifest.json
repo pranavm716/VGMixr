@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-17T08:28:36Z",
+  "generatedAt": "2026-10-17T10:38:30Z",
   "games": [
     {
       "id": "red",
@@ -2840,13 +2840,17 @@
     {
       "id": "rse-opening-movie-setting-out-on-a-journey-in-the-hoenn-region",
       "family": "rse",
-      "title": "Opening Movie",
+      "games": [
+        "ruby",
+        "sapphire"
+      ],
+      "title": "Opening Movie (Ruby & Sapphire)",
       "category": "event",
       "order": 0,
       "sources": [
         {
           "type": "stream",
-          "videoId": "shUkq1sfSyU",
+          "videoId": "KeSO1hXpdB4",
           "startMs": 0,
           "confidence": 1.0
         }
@@ -4314,27 +4318,15 @@
       "games": [
         "emerald"
       ],
-      "title": "Title Screen (Pokémon Emerald)",
+      "title": "Opening Movie (Emerald)",
       "category": "event",
       "order": 93,
       "sources": [
         {
           "type": "stream",
           "videoId": "SxZ-Foy-qiY",
-          "startMs": 0,
-          "confidence": 0.85
-        },
-        {
-          "type": "stream",
-          "videoId": "kYtaoZsFb3I",
-          "startMs": 0,
-          "confidence": 0.85
-        },
-        {
-          "type": "stream",
-          "videoId": "qS_id-npavk",
-          "startMs": 0,
-          "confidence": 0.81
+          "startMs": 2000,
+          "confidence": 1.0
         }
       ]
     },
@@ -5577,6 +5569,2618 @@
           "videoId": "wdi8xecl9Gc",
           "startMs": 0,
           "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-opening-movie",
+      "family": "dppt",
+      "games": [
+        "diamond",
+        "pearl"
+      ],
+      "title": "Opening Movie",
+      "category": "event",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4v_uHj8kyPU",
+          "startMs": 0,
+          "endMs": 121000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-introduction",
+      "family": "dppt",
+      "title": "Introduction",
+      "category": "other",
+      "order": 1,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "X1CM3Hv3iMU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-special-report-search-for-the-red-gyarados",
+      "family": "dppt",
+      "title": "Special Report: \"Search for the Red Gyarados!\"",
+      "category": "other",
+      "order": 2,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SuJnLCsXvYU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-twinleaf-town-day",
+      "family": "dppt",
+      "title": "Twinleaf Town (Day)",
+      "category": "town",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "pvVNL7rYNU4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-rival",
+      "family": "dppt",
+      "title": "Rival",
+      "category": "other",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wuTvW88w5DY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-201-day",
+      "family": "dppt",
+      "title": "Route 201 (Day)",
+      "category": "route",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "l4e7xn8A9wU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-lake",
+      "family": "dppt",
+      "title": "Lake",
+      "category": "other",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CA0xQKSdg2I",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-a-surprise-at-the-lake",
+      "family": "dppt",
+      "title": "A Surprise at the Lake!",
+      "category": "other",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ezE4jdQbCzs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-wild-pokemon",
+      "family": "dppt",
+      "title": "Battle! (Wild Pokémon)",
+      "category": "battle",
+      "order": 8,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "n38uK_S2SeU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-victory-wild-pokemon",
+      "family": "dppt",
+      "title": "Victory! (Wild Pokémon)",
+      "category": "battle",
+      "order": 9,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_JNALAZXLf8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-dawn",
+      "family": "dppt",
+      "title": "Dawn",
+      "category": "other",
+      "order": 10,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5YIAAmpp9e8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-sandgem-town-day",
+      "family": "dppt",
+      "title": "Sandgem Town (Day)",
+      "category": "town",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "k9EJDw6SOk8",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "dppt-the-pokemon-lab",
+      "family": "dppt",
+      "title": "The Pokémon Lab",
+      "category": "town",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Ue_kiWX8b2M",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-hurry-along",
+      "family": "dppt",
+      "title": "Hurry Along",
+      "category": "other",
+      "order": 13,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "z1Gj8iikI_Y",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-pokemon-center-day",
+      "family": "dppt",
+      "title": "Pokémon Center (Day)",
+      "category": "town",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "7dDNMfYmX3g",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-youngster",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (Youngster)",
+      "category": "battle",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "R-uWa9aQkXg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-lass",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (Lass)",
+      "category": "battle",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "hRUk5F5kE3w",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-trainer-battle",
+      "family": "dppt",
+      "title": "Battle! (Trainer Battle)",
+      "category": "battle",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_w4vDi4IDz8",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "dppt-victory-trainer-battle",
+      "family": "dppt",
+      "title": "Victory! (Trainer Battle)",
+      "category": "battle",
+      "order": 18,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rPTHRT2N4Eo",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "dppt-jubilife-city-day",
+      "family": "dppt",
+      "title": "Jubilife City (Day)",
+      "category": "town",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2_tcf0I5aM8",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "dppt-poke-mart",
+      "family": "dppt",
+      "title": "Poké Mart",
+      "category": "town",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1DMMqaOUGlY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-203-day",
+      "family": "dppt",
+      "title": "Route 203 (Day)",
+      "category": "route",
+      "order": 21,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SWDOCU7huLs",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-rival",
+      "family": "dppt",
+      "title": "Battle! (Rival)",
+      "category": "battle",
+      "order": 22,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wuZ3DZ1tnzE",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "dppt-oreburgh-gate",
+      "family": "dppt",
+      "title": "Oreburgh Gate",
+      "category": "other",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_qmTNtQqNaY",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "dppt-oreburgh-city-day",
+      "family": "dppt",
+      "title": "Oreburgh City (Day)",
+      "category": "town",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zav8CuCFd98",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "dppt-oreburgh-mine",
+      "family": "dppt",
+      "title": "Oreburgh Mine",
+      "category": "other",
+      "order": 25,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GvRZiKW54SU",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "dppt-pokemon-gym",
+      "family": "dppt",
+      "title": "Pokémon Gym",
+      "category": "town",
+      "order": 26,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "pxMWLrcpw0c",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-gym-leader",
+      "family": "dppt",
+      "title": "Battle! (Gym Leader)",
+      "category": "battle",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dP6YbOBL8Mw",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "dppt-victory-gym-leader",
+      "family": "dppt",
+      "title": "Victory! (Gym Leader)",
+      "category": "battle",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zRSKVd-aJFU",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-twins",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (Twins)",
+      "category": "battle",
+      "order": 29,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mkYDedR4wFU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-floaroma-town-day",
+      "family": "dppt",
+      "title": "Floaroma Town (Day)",
+      "category": "town",
+      "order": 30,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9a0iuHTJ7cI",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-205-day",
+      "family": "dppt",
+      "title": "Route 205 (Day)",
+      "category": "route",
+      "order": 31,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "hm6e2Jc1qUU",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "dppt-team-galactic-appears",
+      "family": "dppt",
+      "title": "Team Galactic Appears!",
+      "category": "event",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XL-M9o96IDM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-team-galactic",
+      "family": "dppt",
+      "title": "Battle! (Team Galactic)",
+      "category": "battle",
+      "order": 33,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zL8qqU-Ru6s",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-eterna-forest",
+      "family": "dppt",
+      "title": "Eterna Forest",
+      "category": "dungeon",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BgPwu-IM0-U",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "dppt-eterna-city-day",
+      "family": "dppt",
+      "title": "Eterna City (Day)",
+      "category": "town",
+      "order": 35,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-ylYsZHNz6E",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "dppt-galactic-eterna-building",
+      "family": "dppt",
+      "title": "Galactic Eterna Building",
+      "category": "other",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "N8ltlBoSzpk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-team-galactic-commander",
+      "family": "dppt",
+      "title": "Battle! (Team Galactic Commander)",
+      "category": "battle",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "W7w7vKU8DE8",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "dppt-victory-team-galactic",
+      "family": "dppt",
+      "title": "Victory! (Team Galactic)",
+      "category": "battle",
+      "order": 38,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mX0t4rA_sec",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "dppt-evolution",
+      "family": "dppt",
+      "title": "Evolution",
+      "category": "event",
+      "order": 39,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NB7nzgiXc1Y",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "dppt-bicycle",
+      "family": "dppt",
+      "title": "Bicycle",
+      "category": "route",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9KKK-1PVDXw",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-cyclist",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (Cyclist)",
+      "category": "battle",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GjOwuoz9z-M",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "QTz-TlhuvTc",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "GjOSlveZYFE",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-206-day",
+      "family": "dppt",
+      "title": "Route 206 (Day)",
+      "category": "route",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GgeUY_r5fJ8",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "dppt-hearthome-city-day",
+      "family": "dppt",
+      "title": "Hearthome City (Day)",
+      "category": "town",
+      "order": 43,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "y0J68fWXuAg",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-209-day",
+      "family": "dppt",
+      "title": "Route 209 (Day)",
+      "category": "route",
+      "order": 44,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_JHbZaZb8iM",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-hiker",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (Hiker)",
+      "category": "battle",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dbEEp5I1cTs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-solaceon-town-day",
+      "family": "dppt",
+      "title": "Solaceon Town (Day)",
+      "category": "town",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nacYA6RMWfo",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-210-day",
+      "family": "dppt",
+      "title": "Route 210 (Day)",
+      "category": "route",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4kf9mVmpdhI",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-veilstone-city-day",
+      "family": "dppt",
+      "title": "Veilstone City (Day)",
+      "category": "town",
+      "order": 48,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uMLdT-VeCng",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-valor-lakefront-day",
+      "family": "dppt",
+      "title": "Valor Lakefront (Day)",
+      "category": "other",
+      "order": 49,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UXmaNbs3YTQ",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-canalave-city",
+      "family": "dppt",
+      "title": "Canalave City (Day)",
+      "category": "town",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WVe9w0MVprU",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-216-day",
+      "family": "dppt",
+      "title": "Route 216 (Day)",
+      "category": "route",
+      "order": 51,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3-Uru_qWxl4",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-snowpoint-city-day",
+      "family": "dppt",
+      "title": "Snowpoint City (Day)",
+      "category": "town",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "alJhHtzpqgE",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-team-galactic-hq",
+      "family": "dppt",
+      "title": "Team Galactic HQ",
+      "category": "dungeon",
+      "order": 53,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fsbCnh8Pu24",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-team-galactic-boss",
+      "family": "dppt",
+      "title": "Battle! (Team Galactic Boss)",
+      "category": "battle",
+      "order": 54,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0AnOgTPkuas",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-deep-within-team-galactic-hq",
+      "family": "dppt",
+      "title": "Deep Within Team Galactic HQ",
+      "category": "dungeon",
+      "order": 55,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VK57b-DCWo4",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-mt-coronet",
+      "family": "dppt",
+      "title": "Mt. Coronet",
+      "category": "dungeon",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iMJ50Sa-DIs",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-spear-pillar",
+      "family": "dppt",
+      "title": "Spear Pillar",
+      "category": "other",
+      "order": 57,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "72D1P2HpGVc",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-the-legendary-pokemon-appears",
+      "family": "dppt",
+      "title": "The Legendary Pokémon Appears!",
+      "category": "event",
+      "order": 58,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "t8wa1RIx8O0",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-catastrophe",
+      "family": "dppt",
+      "title": "Catastrophe!",
+      "category": "other",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "09VQkqHxc_A",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-dialga-palkia",
+      "family": "dppt",
+      "title": "Battle! (Dialga/Palkia)",
+      "category": "battle",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "psLe-FcooQQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-sunyshore-city-day",
+      "family": "dppt",
+      "title": "Sunyshore City (Day)",
+      "category": "town",
+      "order": 61,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "N5Oj7t47kzw",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-victory-road",
+      "family": "dppt",
+      "title": "Victory Road",
+      "category": "dungeon",
+      "order": 62,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "oZiUv2fc3tQ",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-ace-trainer",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (Ace Trainer)",
+      "category": "battle",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "hdDxxCoX_co",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-pokemon-league-day",
+      "family": "dppt",
+      "title": "Pokémon League (Day)",
+      "category": "town",
+      "order": 64,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Er2F9BkbklM",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-fight-area-day",
+      "family": "dppt",
+      "title": "Fight Area (Day)",
+      "category": "other",
+      "order": 65,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fRatx6HrwSo",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-225-day",
+      "family": "dppt",
+      "title": "Route 225 (Day)",
+      "category": "route",
+      "order": 66,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9jUeOunCdPk",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-228-day",
+      "family": "dppt",
+      "title": "Route 228 (Day)",
+      "category": "route",
+      "order": 67,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "So6adUz2KfM",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-twinleaf-town-night",
+      "family": "dppt",
+      "title": "Twinleaf Town (Night)",
+      "category": "town",
+      "order": 68,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kPwf59nruok",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-201-night",
+      "family": "dppt",
+      "title": "Route 201 (Night)",
+      "category": "route",
+      "order": 69,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "izzY3jwkHpM",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-pokemon-center-night",
+      "family": "dppt",
+      "title": "Pokémon Center (Night)",
+      "category": "town",
+      "order": 70,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "U1R4ugZBcYs",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-nintendo-wi-fi-connection",
+      "family": "dppt",
+      "title": "Nintendo Wi-Fi Connection",
+      "category": "other",
+      "order": 71,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vf9ECRNQ2Y0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-sandgem-town-night",
+      "family": "dppt",
+      "title": "Sandgem Town (Night)",
+      "category": "town",
+      "order": 72,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "B-KYwTQJwvo",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-lucas",
+      "family": "dppt",
+      "title": "Lucas",
+      "category": "other",
+      "order": 73,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nVPh6X7Po0M",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-jubilife-city",
+      "family": "dppt",
+      "title": "Jubilife City (Night)",
+      "category": "town",
+      "order": 74,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "g7xULLordmg",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "dppt-tv-station",
+      "family": "dppt",
+      "title": "TV Station",
+      "category": "other",
+      "order": 75,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_-4Pc4EH1WI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-gts",
+      "family": "dppt",
+      "title": "Gts",
+      "category": "other",
+      "order": 76,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "sPKRG8WBrQQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-surf",
+      "family": "dppt",
+      "title": "Surf",
+      "category": "route",
+      "order": 77,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ur9G8nrK2Hc",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "dppt-canalave-city-night",
+      "family": "dppt",
+      "title": "Canalave City (Night)",
+      "category": "town",
+      "order": 78,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5v2UFrC2lMA",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-203-night",
+      "family": "dppt",
+      "title": "Route 203 (Night)",
+      "category": "route",
+      "order": 79,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "y9zS4NnK52g",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-black-belt",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (Black Belt)",
+      "category": "battle",
+      "order": 80,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TlnYhHETXyM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-oreburgh-city-night",
+      "family": "dppt",
+      "title": "Oreburgh City (Night)",
+      "category": "town",
+      "order": 81,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "T6qyyTaaM1o",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-205-night",
+      "family": "dppt",
+      "title": "Route 205 (Night)",
+      "category": "route",
+      "order": 82,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kMbiv1EmmvY",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-sailor",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (Sailor)",
+      "category": "battle",
+      "order": 83,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "m5_-CT0_rZA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-eterna-city-night",
+      "family": "dppt",
+      "title": "Eterna City (Night)",
+      "category": "town",
+      "order": 84,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "p3Q-xuUSW6U",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "dppt-the-underground",
+      "family": "dppt",
+      "title": "The Underground",
+      "category": "other",
+      "order": 85,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JHZMnsxAHLo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-captured-a-flag-underground",
+      "family": "dppt",
+      "title": "Captured a Flag Underground!",
+      "category": "other",
+      "order": 86,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "OtFuxuErLUw",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-aroma-lady",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (Aroma Lady)",
+      "category": "battle",
+      "order": 87,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Kh5nleOTbpo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-floaroma-town-night",
+      "family": "dppt",
+      "title": "Floaroma Town (Night)",
+      "category": "town",
+      "order": 88,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jFJdcOFv4pQ",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "dppt-old-chateau",
+      "family": "dppt",
+      "title": "Old Chateau",
+      "category": "other",
+      "order": 89,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "B0xKJUPJp_c",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "dppt-solaceon-town-night",
+      "family": "dppt",
+      "title": "Solaceon Town (Night)",
+      "category": "town",
+      "order": 90,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bJqx2jZZ4Uw",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "dppt-great-marsh",
+      "family": "dppt",
+      "title": "Great Marsh",
+      "category": "other",
+      "order": 91,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GMbN8FEZxC0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-206-night",
+      "family": "dppt",
+      "title": "Route 206 (Night)",
+      "category": "route",
+      "order": 92,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "15UVsjtWlGw",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-collector",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (Collector)",
+      "category": "battle",
+      "order": 93,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bH1uhm7NNkc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-veilstone-city-night",
+      "family": "dppt",
+      "title": "Veilstone City (Night)",
+      "category": "town",
+      "order": 94,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2cf3BP-RuH0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "dppt-game-corner",
+      "family": "dppt",
+      "title": "Game Corner",
+      "category": "town",
+      "order": 95,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "q5xSWps5meo",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "dppt-youre-a-winner",
+      "family": "dppt",
+      "title": "You're a Winner!",
+      "category": "other",
+      "order": 96,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "89aOJaNMB74",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-youre-a-jackpot-winner",
+      "family": "dppt",
+      "title": "You're a Jackpot Winner!",
+      "category": "other",
+      "order": 97,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "7goZdV6K3WU",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "GUiVOUEwsEc",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-pi",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (PI)",
+      "category": "battle",
+      "order": 98,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "01ZC6zL_mZA",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "oSClXNcUFDg",
+          "startMs": 0,
+          "confidence": 0.85
+        },
+        {
+          "type": "stream",
+          "videoId": "-03NLmoOmwE",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-209-night",
+      "family": "dppt",
+      "title": "Route 209 (Night)",
+      "category": "route",
+      "order": 99,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rmnSlLOIhC0",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "dppt-snowpoint-city-night",
+      "family": "dppt",
+      "title": "Snowpoint City (Night)",
+      "category": "town",
+      "order": 100,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "me9mSLOZEXQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-216-night",
+      "family": "dppt",
+      "title": "Route 216 (Night)",
+      "category": "route",
+      "order": 101,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Xf96ect7YTk",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "dppt-lake-caverns",
+      "family": "dppt",
+      "title": "Lake Caverns",
+      "category": "other",
+      "order": 102,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ueMEg4sEbLo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-azelf-mesprit-uxie",
+      "family": "dppt",
+      "title": "Battle! (Azelf/Mesprit/Uxie)",
+      "category": "battle",
+      "order": 103,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SZRVvWTQB_w",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-210-night",
+      "family": "dppt",
+      "title": "Route 210 (Night)",
+      "category": "route",
+      "order": 104,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "sDz1xtKCrlI",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "dppt-a-poke-radar-hit",
+      "family": "dppt",
+      "title": "A Poké Radar Hit!",
+      "category": "other",
+      "order": 105,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "x2Eg9RylksY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-sunyshore-city-night",
+      "family": "dppt",
+      "title": "Sunyshore City (Night)",
+      "category": "town",
+      "order": 106,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fWqSVad6hpw",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "dppt-trainers-eyes-meet-artist",
+      "family": "dppt",
+      "title": "Trainers' Eyes Meet (Artist)",
+      "category": "battle",
+      "order": 107,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bXcfiDInhZs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-amity-square",
+      "family": "dppt",
+      "title": "Amity Square",
+      "category": "other",
+      "order": 108,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9n_wKdekOuI",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "dppt-hearthome-city-night",
+      "family": "dppt",
+      "title": "Hearthome City (Night)",
+      "category": "town",
+      "order": 109,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VuTJvXPgEs4",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "dppt-contest-hall",
+      "family": "dppt",
+      "title": "Contest Hall",
+      "category": "event",
+      "order": 110,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uhiPG0rV0CE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-poffins",
+      "family": "dppt",
+      "title": "Poffins",
+      "category": "other",
+      "order": 111,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tO57E1afUDM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-super-contest",
+      "family": "dppt",
+      "title": "Super Contest!",
+      "category": "event",
+      "order": 112,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TwzwMNysVIA",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "dppt-contest-dress-up",
+      "family": "dppt",
+      "title": "Contest: Dress Up",
+      "category": "event",
+      "order": 113,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "7TgrqPHEO-M",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-dance-easy",
+      "family": "dppt",
+      "title": "Dance: Easy",
+      "category": "other",
+      "order": 114,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BbhynIbtsrw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-dance-difficult",
+      "family": "dppt",
+      "title": "Dance: Difficult",
+      "category": "other",
+      "order": 115,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XTzu9vO8J1w",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-contest-results-announcement",
+      "family": "dppt",
+      "title": "Contest: Results Announcement",
+      "category": "event",
+      "order": 116,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6tyVOQiIw4w",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-contest-winner",
+      "family": "dppt",
+      "title": "Contest: Winner",
+      "category": "event",
+      "order": 117,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "hMe2Mo0-QCk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-228-night",
+      "family": "dppt",
+      "title": "Route 228 (Night)",
+      "category": "route",
+      "order": 118,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "b1-kMvNZKtE",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "dppt-valor-lakefront-night",
+      "family": "dppt",
+      "title": "Valor Lakefront (Night)",
+      "category": "other",
+      "order": 119,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tJeN77lmBB0",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "dppt-fight-area-night",
+      "family": "dppt",
+      "title": "Fight Area (Night)",
+      "category": "other",
+      "order": 120,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JsCeOMMcyXI",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-tower",
+      "family": "dppt",
+      "title": "Battle Tower",
+      "category": "town",
+      "order": 121,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "erjks2aUpxc",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "dppt-route-225-night",
+      "family": "dppt",
+      "title": "Route 225 (Night)",
+      "category": "route",
+      "order": 122,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wJeMtAyo5ww",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "dppt-stark-mountain",
+      "family": "dppt",
+      "title": "Stark Mountain",
+      "category": "dungeon",
+      "order": 123,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6C67n2YJfNU",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-legendary-pokemon",
+      "family": "dppt",
+      "title": "Battle! (Legendary Pokémon)",
+      "category": "battle",
+      "order": 124,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nXvvLzUH0Ys",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "dppt-mystery-gift",
+      "family": "dppt",
+      "title": "Mystery Gift",
+      "category": "other",
+      "order": 125,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ho3qUACdWyA",
+          "startMs": 0,
+          "confidence": 0.94
+        },
+        {
+          "type": "stream",
+          "videoId": "Fn99X4F64s0",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "dppt-pokemon-league-night",
+      "family": "dppt",
+      "title": "Pokémon League (Night)",
+      "category": "town",
+      "order": 126,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fn9sVrRo2yQ",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "dppt-decisive-battle-pokemon-league",
+      "family": "dppt",
+      "title": "Decisive Battle! (Pokémon League)",
+      "category": "battle",
+      "order": 127,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vMZur_Fb59c",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "o93p3xUVYos",
+          "startMs": 0,
+          "confidence": 0.85
+        },
+        {
+          "type": "stream",
+          "videoId": "nSXtqeEKm50",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "dppt-the-elite-four-appears",
+      "family": "dppt",
+      "title": "The Elite Four Appears!",
+      "category": "event",
+      "order": 128,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vo1xjxlSamk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-elite-four",
+      "family": "dppt",
+      "title": "Battle! (Elite Four)",
+      "category": "battle",
+      "order": 129,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "PjupX1veexI",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "dppt-victory-elite-four",
+      "family": "dppt",
+      "title": "Victory! (Elite Four)",
+      "category": "battle",
+      "order": 130,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WdGIAWrB82I",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "dppt-champion-cynthia",
+      "family": "dppt",
+      "title": "Champion Cynthia",
+      "category": "battle",
+      "order": 131,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "KuaUHWC_8n8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-champion",
+      "family": "dppt",
+      "title": "Battle! (Champion)",
+      "category": "battle",
+      "order": 132,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rXefFHRgyE0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-victory-champion",
+      "family": "dppt",
+      "title": "Victory! (Champion)",
+      "category": "battle",
+      "order": 133,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nbXd6g4Vy7g",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "dppt-hall-of-fame",
+      "family": "dppt",
+      "title": "Hall of Fame",
+      "category": "event",
+      "order": 134,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "I_miKfTwyWI",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "hFc066z8zGk",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "dppt-congratulations-on-entering-the-hall-of-fame",
+      "family": "dppt",
+      "title": "Congratulations on Entering the Hall of Fame!",
+      "category": "event",
+      "order": 135,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "hFc066z8zGk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-ending-theme",
+      "family": "dppt",
+      "title": "Ending Theme",
+      "category": "event",
+      "order": 136,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EhQkW75YMqU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-title-screen-pokemon-platinum",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Opening Movie (Platinum)",
+      "category": "event",
+      "order": 137,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QNaHkbprET8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-special-program-lets-ask-prof-rowan",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Special Program: \"Let's Ask Prof. Rowan!\"",
+      "category": "other",
+      "order": 138,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kA_n0_QN9II",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-lookers-theme",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Looker's Theme",
+      "category": "event",
+      "order": 139,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qVnHoC_AxSQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-global-terminal",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Global Terminal",
+      "category": "other",
+      "order": 140,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "7PFeIn5zjpM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-wi-fi-plaza",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Wi-Fi Plaza",
+      "category": "other",
+      "order": 141,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UKfJP9gVcWc",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "eZBX_f6O2zs",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "dppt-wi-fi-plaza-mini-games",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Wi-Fi Plaza: Mini-Games",
+      "category": "other",
+      "order": 142,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UKfJP9gVcWc",
+          "startMs": 0,
+          "confidence": 0.87
+        },
+        {
+          "type": "stream",
+          "videoId": "gPVABACD4Nk",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "dppt-wi-fi-plaza-parade",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Wi-Fi Plaza: Parade",
+      "category": "other",
+      "order": 143,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "eZBX_f6O2zs",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "UKfJP9gVcWc",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "dppt-giratina-appears",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Giratina Appears!",
+      "category": "event",
+      "order": 144,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vYXPE82BWcA",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "8QPunNXgRCA",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "Fu0l2JOq_1Y",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "dppt-distortion-world",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Distortion World",
+      "category": "dungeon",
+      "order": 145,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Qe_9iZzzxdE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-giratina",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Battle! (Giratina)",
+      "category": "battle",
+      "order": 146,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-eC1kNgpRZg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-spin-trade",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Spin Trade",
+      "category": "other",
+      "order": 147,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fuQ7T2Dv2v0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-mystery-gift-pokemon-platinum",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Mystery Gift (Pokémon Platinum)",
+      "category": "other",
+      "order": 148,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ho3qUACdWyA",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "dppt-super-contest-cuteness",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Super Contest: Cuteness",
+      "category": "event",
+      "order": 149,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DiFCAMS4scI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-super-contest-coolness",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Super Contest: Coolness",
+      "category": "event",
+      "order": 150,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2jGGE9dVUAg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-super-contest-toughness",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Super Contest: Toughness",
+      "category": "event",
+      "order": 151,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CGXuTpBGcaU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-super-contest-beauty",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Super Contest: Beauty",
+      "category": "event",
+      "order": 152,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SvY1UaOnFE4",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "dppt-super-contest-smartness",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Super Contest: Smartness",
+      "category": "event",
+      "order": 153,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UhxtrUI6Njg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-villa-music-box-twinleaf-tune",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Villa Music Box: Twinleaf Tune",
+      "category": "other",
+      "order": 154,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Y_FY0Jwadgk",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "dppt-villa-audio-system-bossa-nova-lilycove",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Villa Audio System: Bossa Nova Lilycove",
+      "category": "other",
+      "order": 155,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Nq74jmvr8dM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-fight-area-battle-frontier",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Fight Area (Battle Frontier)",
+      "category": "other",
+      "order": 156,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JYTq_w6Oyt0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-arcade",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Battle Arcade",
+      "category": "town",
+      "order": 157,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XKx9__RDvDA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-hall",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Battle Hall",
+      "category": "town",
+      "order": 158,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "IACCWRHbucI",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-factory-sinnoh-version",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Battle Factory (Sinnoh Version)",
+      "category": "town",
+      "order": 159,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "R4_VJ3wPkVs",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-castle",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Battle Castle",
+      "category": "town",
+      "order": 160,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "J6WyUBs4DEA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "dppt-battle-frontier-brain-sinnoh-version",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Battle! (Frontier Brain—Sinnoh Version)",
+      "category": "battle",
+      "order": 161,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mzuhYVGDgFo",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "dppt-victory-frontier-brain-sinnoh-version",
+      "family": "dppt",
+      "games": [
+        "platinum"
+      ],
+      "title": "Victory! (Frontier Brain—Sinnoh Version)",
+      "category": "battle",
+      "order": 162,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "AAPHLHgJGE4",
+          "startMs": 0,
+          "confidence": 0.87
         }
       ]
     },
