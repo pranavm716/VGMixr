@@ -7,9 +7,15 @@ from pathlib import Path
 
 import pytest
 
-from vgmixr_pipeline.catalog.config import DATA_DIR, load_overrides
+from vgmixr_pipeline.catalog.config import DATA_DIR, load_games, load_overrides
 from vgmixr_pipeline.catalog.jsonfmt import games_families, track_family
-from vgmixr_pipeline.catalog.review.edits import EditError, set_exclude, set_streams
+from vgmixr_pipeline.catalog.review.edits import (
+    EditError,
+    add_playlist,
+    remove_playlist,
+    set_exclude,
+    set_streams,
+)
 
 FAMILIES = games_families(json.loads((DATA_DIR / "games.json").read_text(encoding="utf-8")))
 TRACK_IDS = {
@@ -158,3 +164,110 @@ def test_removing_an_unknown_track_is_refused(overrides: Path) -> None:
     with pytest.raises(EditError):
         set_exclude(overrides, "rse-no-such-track", True, TRACK_IDS, FAMILIES)
     assert changes(overrides) == []
+
+
+# Playlists in games.json
+
+DP_LIST = "PLA4BF48BF9073F50B"
+RSE_LIST = "PL2uxd6YWj7PIOlswxbt16G63Klr_3lsbR"
+
+
+@pytest.fixture
+def games(tmp_path: Path) -> Path:
+    path = tmp_path / "games.json"
+    shutil.copy(DATA_DIR / "games.json", path)
+    return path
+
+
+def games_changes(path: Path) -> list[str]:
+    before = (DATA_DIR / "games.json").read_text(encoding="utf-8").splitlines()
+    after = path.read_text(encoding="utf-8").splitlines()
+    diff = difflib.unified_diff(before, after, lineterm="", n=0)
+    return [line for line in diff if line[:1] in "+-" and line[:3] not in ("+++", "---")]
+
+
+def playlist_lines(path: Path) -> list[str]:
+    text = lines(path)
+    start = text.index('    "playlists": [')
+    end = text.index("    ],", start)
+    return text[start + 1 : end]
+
+
+def test_adding_a_playlist_adds_one_line_in_family_order(games: Path) -> None:
+    add_playlist(games, {"games": ["diamond", "pearl"], "playlist": DP_LIST, "note": "discomonk"})
+    line = (
+        f'      {{ "games": ["diamond", "pearl"], "playlist": "{DP_LIST}", "note": "discomonk" }},'
+    )
+    assert games_changes(games) == ["+" + line]
+    # dppt comes after frlg and before hgss in the games file.
+    playlists = playlist_lines(games)
+    assert '"firered"' in playlists[playlists.index(line) - 1]
+    assert '"heartgold"' in playlists[playlists.index(line) + 1]
+
+
+def test_a_familys_new_playlist_goes_after_its_other_playlists(games: Path) -> None:
+    add_playlist(games, {"games": ["emerald"], "playlist": DP_LIST, "first": 1, "last": 17})
+    playlists = playlist_lines(games)
+    at = next(i for i, p in enumerate(playlists) if DP_LIST in p)
+    assert RSE_LIST in playlists[at - 1]
+    assert '"first": 1, "last": 17' in playlists[at]
+    assert '"firered"' in playlists[at + 1]
+
+
+def test_a_playlist_can_span_families_and_ranks_by_its_first_game(games: Path) -> None:
+    add_playlist(games, {"games": ["platinum", "emerald"], "playlist": DP_LIST})
+    playlists = playlist_lines(games)
+    at = next(i for i, p in enumerate(playlists) if DP_LIST in p)
+    assert '"firered"' in playlists[at - 1] and '"heartgold"' in playlists[at + 1]
+    assert load_games(games).youtube.playlists[at].games == ["platinum", "emerald"]
+
+
+def test_a_family_after_every_playlist_goes_last(games: Path) -> None:
+    add_playlist(games, {"games": ["scarlet", "violet"], "playlist": DP_LIST})
+    assert DP_LIST in playlist_lines(games)[-1]
+    assert load_games(games).youtube.playlists[-1].playlist == DP_LIST
+
+
+def test_the_same_playlist_with_another_range_is_another_entry(games: Path) -> None:
+    add_playlist(games, {"games": ["emerald"], "playlist": DP_LIST, "first": 1, "last": 17})
+    add_playlist(games, {"games": ["platinum"], "playlist": DP_LIST, "first": 18})
+    assert [p.playlist for p in load_games(games).youtube.playlists].count(DP_LIST) == 2
+
+
+@pytest.mark.parametrize(
+    ("entry", "error"),
+    [
+        ({"games": ["diamond", "unknown"], "playlist": DP_LIST}, "known game ids"),
+        ({"games": [], "playlist": DP_LIST}, "games"),
+        ({"games": ["diamond"], "playlist": "bad!"}, "playlist id"),
+        ({"games": ["diamond"], "playlist": DP_LIST, "first": 5, "last": 2}, "first"),
+        ({"games": ["diamond"], "playlist": DP_LIST, "first": 0}, "first"),
+        ({"games": ["red", "blue", "yellow"], "playlist": "PL2uxd6YWj7PLbKlHSlTO7Lv4E6csDZhRc",
+          "note": "Daintii Music, game rip"}, "already"),
+    ],
+)  # fmt: skip
+def test_an_invalid_playlist_is_refused_and_nothing_is_written(
+    games: Path, entry: dict[str, object], error: str
+) -> None:
+    before = games.read_bytes()
+    with pytest.raises(EditError) as raised:
+        add_playlist(games, entry)
+    assert any(error in e for e in raised.value.errors), raised.value.errors
+    assert games.read_bytes() == before
+    assert not list(games.parent.glob("*.tmp"))
+
+
+def test_removing_a_playlist_removes_its_line(games: Path) -> None:
+    remove_playlist(games, 2, RSE_LIST)
+    assert len(games_changes(games)) == 1
+    assert games_changes(games)[0].startswith("-") and RSE_LIST in games_changes(games)[0]
+    assert RSE_LIST not in [p.playlist for p in load_games(games).youtube.playlists]
+
+
+def test_removing_with_a_stale_index_is_refused(games: Path) -> None:
+    before = games.read_bytes()
+    with pytest.raises(EditError):
+        remove_playlist(games, 3, RSE_LIST)
+    with pytest.raises(EditError):
+        remove_playlist(games, 99, RSE_LIST)
+    assert games.read_bytes() == before
