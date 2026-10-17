@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-17T02:13:58Z",
+  "generatedAt": "2026-10-17T04:34:27Z",
   "games": [
     {
       "id": "red",
@@ -568,6 +568,21 @@
       ]
     },
     {
+      "id": "rby-guide",
+      "family": "rby",
+      "title": "Guide",
+      "category": "other",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6PUPgy-Plaw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "rby-a-trainer-appears-girl-version",
       "family": "rby",
       "title": "A Trainer Appears (Girl Version)",
@@ -1000,6 +1015,21 @@
       ]
     },
     {
+      "id": "rby-the-sea",
+      "family": "rby",
+      "title": "The Sea",
+      "category": "route",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "oUTW3hJx52U",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "rby-cinnabar-island-theme",
       "family": "rby",
       "title": "Cinnabar Island Theme",
@@ -1041,6 +1071,21 @@
           "videoId": "3dD4RyxqH5Q",
           "startMs": 0,
           "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "rby-the-final-road",
+      "family": "rby",
+      "title": "The Final Road",
+      "category": "other",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2Q2et9q17eM",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1108,6 +1153,24 @@
       ]
     },
     {
+      "id": "rby-opening-movie",
+      "family": "rby",
+      "games": [
+        "yellow"
+      ],
+      "title": "Opening Movie",
+      "category": "event",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Fj_cCNy_Zmo",
+          "startMs": 3500,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "rby-theme-of-jessie-and-james",
       "family": "rby",
       "games": [
@@ -1164,6 +1227,25 @@
           "videoId": "fETBAk5n494",
           "startMs": 0,
           "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "gsc-opening-movie-gold-and-silver",
+      "family": "gsc",
+      "games": [
+        "gold",
+        "silver"
+      ],
+      "title": "Opening Movie (Gold & Silver)",
+      "category": "event",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gkuOo6wOlUA",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1231,6 +1313,21 @@
           "videoId": "k7yQFSsXguk",
           "startMs": 0,
           "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "gsc-an-adventure-begins",
+      "family": "gsc",
+      "title": "An Adventure Begins!",
+      "category": "other",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1_w6r8bz-es",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1421,6 +1518,21 @@
       ]
     },
     {
+      "id": "gsc-route-30",
+      "family": "gsc",
+      "title": "Route 30",
+      "category": "route",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kXZGNMEuO9Q",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-professor-oak",
       "family": "gsc",
       "title": "Professor Oak",
@@ -1432,6 +1544,21 @@
           "videoId": "QwSLbsOGMsE",
           "startMs": 0,
           "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "gsc-rival-appears-1",
+      "family": "gsc",
+      "title": "Rival Appears! 1",
+      "category": "event",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XtXk5QQv8A8",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1481,6 +1608,36 @@
       ]
     },
     {
+      "id": "gsc-printer-menu",
+      "family": "gsc",
+      "title": "Printer Menu",
+      "category": "other",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8UOZNpeaubg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "gsc-a-trainer-appears-boy-1",
+      "family": "gsc",
+      "title": "A Trainer Appears (Boy 1)",
+      "category": "battle",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "R9go6H5ooxw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-battle-trainer-battle-johto",
       "family": "gsc",
       "title": "Battle! (Trainer Battle - Johto)",
@@ -1522,6 +1679,21 @@
           "videoId": "yOfaHmeKbpo",
           "startMs": 0,
           "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "gsc-a-trainer-appears-sage",
+      "family": "gsc",
+      "title": "A Trainer Appears (Sage)",
+      "category": "battle",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XnPm5mgN6Fg",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1601,6 +1773,21 @@
       ]
     },
     {
+      "id": "gsc-ruins-of-alph-grounds",
+      "family": "gsc",
+      "title": "Ruins of Alph (Grounds)",
+      "category": "dungeon",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "j8AZKSQGqvc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-ruins-of-alph",
       "family": "gsc",
       "title": "Ruins of Alph",
@@ -1612,6 +1799,21 @@
           "videoId": "1Jkdykii_Ek",
           "startMs": 0,
           "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "gsc-a-trainer-appears-girl-1",
+      "family": "gsc",
+      "title": "A Trainer Appears (Girl 1)",
+      "category": "battle",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "v4mPNPDQcAo",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1672,6 +1874,21 @@
           "videoId": "7eUBhMUGA2w",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "gsc-a-trainer-appears-team-rocket",
+      "family": "gsc",
+      "title": "A Trainer Appears (Team Rocket)",
+      "category": "battle",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZnW71VUY7-o",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -1856,6 +2073,21 @@
       ]
     },
     {
+      "id": "gsc-pokegear-radio-unown",
+      "family": "gsc",
+      "title": "Pokégear Radio (Unown)",
+      "category": "other",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UkBda-fQQaA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-a-trainer-appears-girl-2",
       "family": "gsc",
       "title": "A Trainer Appears (Girl 2)",
@@ -1952,6 +2184,21 @@
       ]
     },
     {
+      "id": "gsc-a-trainer-appears-kimono-girl",
+      "family": "gsc",
+      "title": "A Trainer Appears (Kimono Girl)",
+      "category": "battle",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2ToEd4vI1-g",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-burned-tower",
       "family": "gsc",
       "title": "Burned Tower",
@@ -1996,6 +2243,24 @@
           "videoId": "SWZvaWzdgek",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "gsc-battle-legendary-beasts",
+      "family": "gsc",
+      "games": [
+        "crystal"
+      ],
+      "title": "Battle! (Legendary Beasts)",
+      "category": "battle",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "H6YvqT3Qg9g",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -2318,6 +2583,21 @@
       ]
     },
     {
+      "id": "gsc-route-6",
+      "family": "gsc",
+      "title": "Route 6",
+      "category": "route",
+      "order": 83,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lfxtX-2BgOM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-battle-wild-pokemon-kanto",
       "family": "gsc",
       "title": "Battle! (Wild Pokémon - Kanto)",
@@ -2395,6 +2675,21 @@
           "videoId": "evpklkiX7DM",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "gsc-route-15",
+      "family": "gsc",
+      "title": "Route 15",
+      "category": "route",
+      "order": 89,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YNXA9tqEpAY",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -2537,6 +2832,21 @@
         {
           "type": "stream",
           "videoId": "4M6whh_ed-Q",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "rse-opening-movie-setting-out-on-a-journey-in-the-hoenn-region",
+      "family": "rse",
+      "title": "Opening Movie",
+      "category": "event",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "shUkq1sfSyU",
           "startMs": 0,
           "confidence": 1.0
         }
@@ -7896,6 +8206,21 @@
       ]
     },
     {
+      "id": "hgss-the-pokemon-league",
+      "family": "hgss",
+      "title": "The Pokémon League",
+      "category": "town",
+      "order": 133,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UirOtXpDj3A",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "hgss-battle-champion",
       "family": "hgss",
       "title": "Battle! (Champion)",
@@ -8277,6 +8602,21 @@
       ]
     },
     {
+      "id": "oras-may",
+      "family": "oras",
+      "title": "May",
+      "category": "other",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9U9DT8DGNtU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-h-help-me",
       "family": "oras",
       "title": "H-Help Me!",
@@ -8325,12 +8665,6 @@
       "category": "battle",
       "order": 9,
       "sources": [
-        {
-          "type": "stream",
-          "videoId": "SZwIQhIOCEI",
-          "startMs": 0,
-          "confidence": 0.93
-        },
         {
           "type": "stream",
           "videoId": "FN1EU7ib9NU",
@@ -8456,6 +8790,21 @@
           "videoId": "yCWG-D1OwX4",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "oras-battle-trainer-battle",
+      "family": "oras",
+      "title": "Battle! (Trainer Battle)",
+      "category": "battle",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "in3zXwiDlkE",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
