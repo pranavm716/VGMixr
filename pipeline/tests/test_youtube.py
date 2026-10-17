@@ -2,7 +2,16 @@ import json
 from pathlib import Path
 from typing import Any
 
-from vgmixr_pipeline.catalog.youtube import Chapter, Entry, Video, YouTube
+import pytest
+
+from vgmixr_pipeline.catalog.youtube import (
+    Chapter,
+    Entry,
+    Video,
+    YouTube,
+    YouTubeBlocked,
+    raise_if_blocked,
+)
 
 PLAYLIST = "PLabcdefghij"
 
@@ -122,3 +131,32 @@ def test_cached_only_reads_the_cache_and_treats_the_rest_as_empty(tmp_path: Path
     assert youtube.search("Pokémon Ruby Route 101") == []
     assert youtube.video("aaaaaaaaaaa") == Video("aaaaaaaaaaa", "", None, [])
     assert fake.calls == []
+
+
+BOT_CHECK = (
+    "ERROR: [youtube] aaaaaaaaaaa: Sign in to confirm you’re not a bot. Use --cookies-from-browser"
+)
+
+
+def test_the_bot_check_is_told_apart_from_other_errors() -> None:
+    with pytest.raises(YouTubeBlocked):
+        raise_if_blocked(Exception(BOT_CHECK))
+    raise_if_blocked(Exception("ERROR: [youtube] aaaaaaaaaaa: Video unavailable"))
+
+
+def test_a_block_is_raised_and_nothing_is_cached(tmp_path: Path) -> None:
+    def blocked(url: str, flat: bool) -> dict[str, Any]:
+        raise YouTubeBlocked(BOT_CHECK)
+
+    with pytest.raises(YouTubeBlocked):
+        YouTube(tmp_path, extract=blocked).search("Pokémon Ruby Route 101")
+    assert list(tmp_path.rglob("*.json")) == []
+
+
+def test_delay_sets_the_pause_between_network_calls(tmp_path: Path) -> None:
+    fake = FakeYtDlp(listing(entry("aaaaaaaaaaa", "Opening")))
+    sleeps: list[float] = []
+    youtube = YouTube(tmp_path, extract=fake.extract, sleep=sleeps.append, delay=0.0)
+    youtube.playlist(PLAYLIST)
+    youtube.playlist("PLbcdefghijk")
+    assert sleeps == []

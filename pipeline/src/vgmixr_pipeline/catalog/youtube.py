@@ -4,7 +4,8 @@ Only the fields matching needs are cached (trimmed), under playlists/, search/ a
 response is never refetched unless `refresh` is set, so builds after the first run offline and see
 the same results. Network calls are spaced out, like Bulbapedia's. With `cached_only`, nothing is
 fetched: an uncached playlist or search is empty and an uncached video has no chapters (YouTube
-answers bursts of requests with a sign-in check, so a big run can be finished from the cache).
+answers bursts of requests with a sign-in check, so a big run can be finished from the cache). That
+check raises YouTubeBlocked; failures are never cached.
 """
 
 import json
@@ -17,11 +18,22 @@ from typing import Any
 from vgmixr_pipeline.catalog.slug import slugify
 
 DELAY_SECONDS = 1.0
+# YouTube's answer to a burst of requests; it lifts after a while.
+_BOT_CHECK = "not a bot"
 # Placeholders yt-dlp lists for entries that can't be played.
 _UNAVAILABLE = {"[Deleted video]", "[Private video]"}
 
 # (url, flat) -> yt-dlp's info dict. Flat lists a playlist's entries without opening each video.
 type Extract = Callable[[str, bool], dict[str, Any]]
+
+
+class YouTubeBlocked(Exception):
+    """YouTube asks to sign in to confirm we're not a bot."""
+
+
+def raise_if_blocked(error: Exception) -> None:
+    if _BOT_CHECK in str(error):
+        raise YouTubeBlocked(str(error)) from error
 
 
 def ytdlp_extract(url: str, flat: bool) -> dict[str, Any]:
@@ -36,7 +48,11 @@ def ytdlp_extract(url: str, flat: bool) -> dict[str, Any]:
         "ignore_no_formats_error": True,
     }
     with yt_dlp.YoutubeDL(options) as ydl:
-        info: dict[str, Any] = ydl.extract_info(url, download=False)
+        try:
+            info: dict[str, Any] = ydl.extract_info(url, download=False)
+        except yt_dlp.utils.DownloadError as e:
+            raise_if_blocked(e)
+            raise
         return info
 
 
@@ -76,12 +92,14 @@ class YouTube:
         refresh: bool = False,
         sleep: Callable[[float], Any] = time.sleep,
         cached_only: bool = False,
+        delay: float = DELAY_SECONDS,
     ) -> None:
         self._cache_dir = cache_dir
         self._extract = extract
         self._refresh = refresh
         self._cached_only = cached_only
         self._sleep = sleep
+        self._delay = delay
         self._fetched: set[Path] = set()  # cache files written in this run
         self._called = False
 
@@ -124,8 +142,8 @@ class YouTube:
             return cached
         if self._cached_only:
             return trim({"title": "", "entries": []})
-        if self._called:
-            self._sleep(DELAY_SECONDS)
+        if self._called and self._delay > 0:
+            self._sleep(self._delay)
         self._called = True
         data = trim(self._extract(url, flat))
         self._fetched.add(path)
