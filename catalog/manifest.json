@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-17T04:34:27Z",
+  "generatedAt": "2026-10-17T08:28:36Z",
   "games": [
     {
       "id": "red",
@@ -8602,6 +8602,21 @@
       ]
     },
     {
+      "id": "oras-birch-pokemon-lab",
+      "family": "oras",
+      "title": "Birch Pokémon Lab",
+      "category": "town",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iH5SucFgC5I",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-may",
       "family": "oras",
       "title": "May",
@@ -8824,6 +8839,21 @@
       ]
     },
     {
+      "id": "oras-wallys-theme",
+      "family": "oras",
+      "title": "Wally's Theme",
+      "category": "event",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TTHoJJ-pizg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-route-104",
       "family": "oras",
       "title": "Route 104",
@@ -9015,6 +9045,21 @@
           "videoId": "z4SvXDgzo1Q",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "oras-leaders-theme-team-aqua-team-magma",
+      "family": "oras",
+      "title": "Leader's Theme (Team Aqua / Team Magma)",
+      "category": "event",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "z7B2jq9I1dU",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -9280,6 +9325,21 @@
       ]
     },
     {
+      "id": "oras-victory-gym-leader-elite-four",
+      "family": "oras",
+      "title": "Victory! (Gym Leader / Elite Four)",
+      "category": "battle",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "O0ICX_nirNs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-a-path-we-all-must-walk",
       "family": "oras",
       "title": "A Path We All Must Walk",
@@ -9457,6 +9517,21 @@
       ]
     },
     {
+      "id": "oras-safari-zone",
+      "family": "oras",
+      "title": "Safari Zone",
+      "category": "other",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4aYK7V_B0yA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-trainers-eyes-meet-gentleman",
       "family": "oras",
       "title": "Trainers' eyes Meet (Gentleman)",
@@ -9489,6 +9564,36 @@
           "videoId": "p8GREvJH6jM",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "oras-museum",
+      "family": "oras",
+      "title": "Museum",
+      "category": "other",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9VlS19PJtr0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "oras-brendan",
+      "family": "oras",
+      "title": "Brendan",
+      "category": "other",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "IALcyC6Lho8",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -9556,6 +9661,21 @@
       ]
     },
     {
+      "id": "oras-trainers-eyes-meet-psychic",
+      "family": "oras",
+      "title": "Trainers' eyes Meet (Psychic)",
+      "category": "battle",
+      "order": 65,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "N83paYJ-GOk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-trainers-eyes-meet-hex-maniac",
       "family": "oras",
       "title": "Trainers' eyes Meet (Hex Maniac)",
@@ -9597,6 +9717,21 @@
           "videoId": "Zpp5Y1_cwL4",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "oras-hideout",
+      "family": "oras",
+      "title": "Hideout",
+      "category": "dungeon",
+      "order": 69,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "r3fOAJ2Kmow",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -9955,6 +10090,42 @@
       ]
     },
     {
+      "id": "oras-rivals-theme",
+      "family": "oras",
+      "title": "Battle! (Wally)",
+      "category": "battle",
+      "order": 89,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9sX_54hHcEE",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "k1ltZEDN2Ns",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "oras-the-elite-four-appear",
+      "family": "oras",
+      "title": "The Elite Four Appear!",
+      "category": "other",
+      "order": 90,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FDh3OA6Z_jI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-battle-elite-four",
       "family": "oras",
       "title": "Battle! (Elite Four)",
@@ -9966,6 +10137,51 @@
           "videoId": "7DbGoUJkNfU",
           "startMs": 0,
           "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "oras-champion-steven",
+      "family": "oras",
+      "title": "Champion Steven",
+      "category": "battle",
+      "order": 92,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MQt3V7jKQpQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "oras-battle-steven",
+      "family": "oras",
+      "title": "Battle! (Steven)",
+      "category": "battle",
+      "order": 93,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yffGYzZoJ-s",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "oras-victory-steven",
+      "family": "oras",
+      "title": "Victory! (Steven)",
+      "category": "battle",
+      "order": 94,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2ryOVMO3f6U",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -10081,6 +10297,21 @@
       ]
     },
     {
+      "id": "oras-the-heirs-to-eternity",
+      "family": "oras",
+      "title": "The Heirs to Eternity",
+      "category": "other",
+      "order": 100,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dqaYXW8BNhM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-azoth",
       "family": "oras",
       "title": "Azoth",
@@ -10144,6 +10375,21 @@
       ]
     },
     {
+      "id": "oras-battle-super-ancient-pokemon",
+      "family": "oras",
+      "title": "Battle! (Super-Ancient Pokémon)",
+      "category": "battle",
+      "order": 104,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5V0kzLYkYTM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-battle-lorekeeper-zinnia",
       "family": "oras",
       "title": "Battle! (Lorekeeper Zinnia)",
@@ -10185,6 +10431,21 @@
           "videoId": "I8vqp7Edjqs",
           "startMs": 0,
           "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "oras-strains-of-a-new-beginning-theme-of-r-s",
+      "family": "oras",
+      "title": "Strains of a New Beginning -Theme of Ωrαs-",
+      "category": "other",
+      "order": 108,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yMlA26aQ0YM",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -10249,6 +10510,21 @@
       ]
     },
     {
+      "id": "oras-results",
+      "family": "oras",
+      "title": "Results",
+      "category": "other",
+      "order": 113,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Tp5CPPao6hA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-contest-victor",
       "family": "oras",
       "title": "Contest Victor",
@@ -10275,6 +10551,21 @@
           "videoId": "4KqDeAoPrz0",
           "startMs": 0,
           "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "oras-super-secret-bases",
+      "family": "oras",
+      "title": "Super-Secret Bases",
+      "category": "other",
+      "order": 116,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ysSlp5VI2dQ",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -10404,6 +10695,36 @@
           "videoId": "9z4WsXRRWTA",
           "startMs": 0,
           "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "oras-battle-maison",
+      "family": "oras",
+      "title": "Battle Maison",
+      "category": "town",
+      "order": 124,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "i-QbfVQqjC8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "oras-battle-battle-chatelaine",
+      "family": "oras",
+      "title": "Battle! (Battle Chatelaine)",
+      "category": "battle",
+      "order": 125,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "azSKwOZu2WE",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     }
