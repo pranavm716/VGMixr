@@ -1,0 +1,317 @@
+"""The review tool's request handlers, as plain methods that take and return JSON-ready data.
+
+The tool loads the draft (pipeline/out/draft.json) and the data files, then matches every track
+from the YouTube cache, with the builder's own code. Matching never makes requests: only explicit
+actions (a search, looking up a pasted video) use the live client, spaced out. When YouTube asks to
+confirm we're not a bot, the tool falls back to the cache for a cooldown, and the page says so.
+Every decision is written to pipeline/data/ (see edits.py) and the track is rematched at once.
+"""
+
+import subprocess
+import sys
+import time
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any
+
+from vgmixr_pipeline.catalog.build import Draft, DraftTrack
+from vgmixr_pipeline.catalog.config import (
+    Slice,
+    Streams,
+    TrackOverride,
+    load_games,
+    load_overrides,
+)
+from vgmixr_pipeline.catalog.match import (
+    SEARCH_RESULTS,
+    Match,
+    Scored,
+    Videos,
+    match_tracks,
+    scored_json,
+    search_query,
+)
+from vgmixr_pipeline.catalog.review import edits
+from vgmixr_pipeline.catalog.review.video_id import video_id_from
+from vgmixr_pipeline.catalog.score import Candidate, Names, TrackFacts, score
+from vgmixr_pipeline.catalog.youtube import YouTubeBlocked
+from vgmixr_pipeline.manifest.models import Game
+
+LIVE_SPACING_SECONDS = 5.0
+BLOCK_COOLDOWN_SECONDS = 30 * 60.0
+_STATUS_RANK = {"review": 0, "unmatched": 1, "matched": 2}
+
+# Runs the whole builder; returns whether it succeeded and what it printed.
+type Rebuild = Callable[[], tuple[bool, str]]
+
+
+class ReviewError(Exception):
+    """A request the tool refuses; nothing was written."""
+
+    def __init__(self, errors: list[str]) -> None:
+        super().__init__("\n".join(errors))
+        self.errors = errors
+
+
+def run_builder() -> tuple[bool, str]:
+    """The builder from the cache only, as `python -m vgmixr_pipeline.catalog --cached-only`."""
+    result = subprocess.run(
+        [sys.executable, "-m", "vgmixr_pipeline.catalog", "--cached-only"],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    return result.returncode == 0, (result.stdout + result.stderr).strip()
+
+
+class Review:
+    def __init__(
+        self,
+        data_dir: Path,
+        out_dir: Path,
+        cached: Videos,
+        live: Videos | None,
+        clock: Callable[[], float] = time.time,
+        sleep: Callable[[float], Any] = time.sleep,
+        rebuild: Rebuild = run_builder,
+        cached_only: bool = False,
+    ) -> None:
+        self._data_dir = data_dir
+        self._out_dir = out_dir
+        self._cached = cached
+        self._live = None if cached_only else live
+        self._clock = clock
+        self._sleep = sleep
+        self._rebuild = rebuild
+        self._blocked_until: float | None = None
+        self._last_live: float | None = None
+        self._load()
+
+    # Loading and matching
+
+    def _load(self) -> None:
+        self._draft = Draft.model_validate_json(
+            (self._out_dir / "draft.json").read_text(encoding="utf-8")
+        )
+        self._games = load_games(self._data_dir / "games.json")
+        self._overrides = load_overrides(self._data_dir / "overrides.json")
+        self._names = Names.build(self._games.games, self._games.youtube.aliases)
+        self._tracks = {t.id: t for t in self._draft.tracks}
+        self._families: dict[str, list[Game]] = {}
+        for game in self._draft.games:
+            self._families.setdefault(game.family_id, []).append(game)
+        self._matches = {m.track_id: m for m in self._match(None)}
+
+    def _match(self, only: set[str] | None) -> list[Match]:
+        youtube = self._games.youtube
+        return match_tracks(
+            self._draft, youtube, self._overrides, self._cached, self._names, only=only
+        )
+
+    # Endpoints
+
+    def state(self) -> dict[str, Any]:
+        return {
+            "families": [self._family(f, games) for f, games in self._families.items()],
+            "youtube": self._youtube_mode(),
+        }
+
+    def tracks(self, family: str | None, status: str | None) -> list[dict[str, Any]]:
+        rows = [
+            self._row(t, self._matches[t.id])
+            for t in self._draft.tracks
+            if (family is None or t.family == family)
+            and (status in (None, "all") or self._matches[t.id].status == status)
+        ]
+        return sorted(rows, key=lambda r: (_STATUS_RANK[r["status"]], r["order"]))
+
+    def track(self, track_id: str) -> dict[str, Any]:
+        track = self._track(track_id)
+        match = self._matches[track_id]
+        facts = self._facts(match)
+        decision = self._decision(track_id)
+        accepted = {(s.videoId, s.startMs, s.endMs) for s in decision.accept}
+        taken = {(s.videoId, s.startMs, s.endMs) for s in match.streams}
+        return {
+            "id": track.id,
+            "family": track.family,
+            "title": track.title,
+            "category": track.category,
+            "order": track.order,
+            "games": [g.id for g in self._families[track.family] if g.id in facts.games],
+            "exclusive": track.games is not None,
+            "durationMs": track.durationMs,
+            "origins": track.origins,
+            "status": match.status,
+            "streams": [
+                {
+                    "videoId": s.videoId,
+                    "startMs": s.startMs,
+                    "endMs": s.endMs,
+                    "confidence": s.confidence,
+                    "auto": (s.videoId, s.startMs, s.endMs) not in accepted,
+                }
+                for s in match.streams
+            ],
+            "decision": decision.model_dump(),
+            "candidates": [
+                {**scored_json(s), "accepted": _identity(s.candidate) in taken}
+                for s in match.candidates
+            ],
+            "query": search_query(facts, self._families[track.family]),
+        }
+
+    def set_streams(self, track_id: str, streams: dict[str, Any]) -> dict[str, Any]:
+        self._track(track_id)
+        try:
+            edits.set_streams(
+                self._data_dir / "overrides.json",
+                track_id,
+                streams,
+                self._tracks.keys(),
+                list(self._families),
+            )
+        except edits.EditError as e:
+            raise ReviewError(e.errors) from e
+        self._overrides = load_overrides(self._data_dir / "overrides.json")
+        self._rematch({track_id})
+        return self.track(track_id)
+
+    def search(self, track_id: str, query: str) -> dict[str, Any]:
+        facts = self._facts(self._matches[self._track(track_id).id])
+        query = query.strip() or search_query(facts, self._families[facts.family])
+        found, notice = self._ask(lambda videos: videos.search(query, SEARCH_RESULTS))
+        rejected = set(self._decision(track_id).reject)
+        scored = [
+            Scored(c, score(facts, c, self._names))
+            for c in (
+                Candidate(e.id, e.title, e.duration_ms, e.channel, "search")
+                for e in found
+                if e.id not in rejected
+            )
+        ]
+        # The builder's own query is cached now, so a rematch can use its results.
+        self._rematch({track_id})
+        return {
+            "query": query,
+            "results": [scored_json(s) for s in sorted(scored, key=lambda s: -s.score.value)],
+            "youtube": self._youtube_mode(),
+            **({"notice": notice} if notice else {}),
+        }
+
+    def video(
+        self, track_id: str, text: str, start_ms: int | None, end_ms: int | None
+    ) -> dict[str, Any]:
+        facts = self._facts(self._matches[self._track(track_id).id])
+        video_id = video_id_from(text)
+        if video_id is None:
+            raise ReviewError([f"{text.strip()!r} is not a YouTube video id or link"])
+        try:
+            piece = Slice(videoId=video_id, startMs=start_ms or 0, endMs=end_ms)
+        except ValueError as e:
+            raise ReviewError([str(e)]) from e
+        video, notice = self._ask(lambda videos: videos.video(video_id))
+        extra = {"youtube": self._youtube_mode(), **({"notice": notice} if notice else {})}
+        if not video.title:
+            unknown = {"videoId": video_id, "startMs": piece.startMs, "endMs": piece.endMs,
+                       "title": None, "channel": None, "durationMs": None, "kind": "search",
+                       "score": None, "reasons": ["no details: not cached"]}  # fmt: skip
+            return {"candidate": unknown, **extra}
+        end = piece.endMs if piece.endMs is not None else video.duration_ms
+        length = end - piece.startMs if end is not None else None
+        candidate = Candidate(
+            video_id,
+            video.title,
+            length,
+            None,
+            "search",
+            start_ms=piece.startMs,
+            end_ms=piece.endMs,
+        )
+        return {"candidate": scored_json(Scored(candidate, score(facts, candidate, self._names))),
+                **extra}  # fmt: skip
+
+    def rebuild(self) -> dict[str, Any]:
+        ok, output = self._rebuild()
+        self._load()
+        return {"ok": ok, "output": output}
+
+    def retry_youtube(self) -> dict[str, Any]:
+        self._blocked_until = None
+        return self._youtube_mode()
+
+    # Helpers
+
+    def _ask[T](self, call: Callable[[Videos], T]) -> tuple[T, str | None]:
+        """Asks the live client when YouTube may be asked, else the cache; a block falls back."""
+        if self._live is None or self._is_blocked():
+            return call(self._cached), None
+        if self._last_live is not None:
+            wait = LIVE_SPACING_SECONDS - (self._clock() - self._last_live)
+            if wait > 0:
+                self._sleep(wait)
+        self._last_live = self._clock()
+        try:
+            return call(self._live), None
+        except YouTubeBlocked as e:
+            self._blocked_until = self._clock() + BLOCK_COOLDOWN_SECONDS
+            return call(self._cached), f"YouTube is blocking requests ({e}); using the cache."
+        except Exception as e:  # yt-dlp's errors: unavailable video, network...
+            raise ReviewError([f"YouTube: {e}"]) from e
+
+    def _is_blocked(self) -> bool:
+        return self._blocked_until is not None and self._clock() < self._blocked_until
+
+    def _youtube_mode(self) -> dict[str, Any]:
+        if self._live is None:
+            return {"mode": "cached-only"}
+        if self._is_blocked():
+            return {"mode": "blocked", "until": self._blocked_until}
+        return {"mode": "live"}
+
+    def _rematch(self, only: set[str]) -> None:
+        for match in self._match(only):
+            self._matches[match.track_id] = match
+
+    def _track(self, track_id: str) -> DraftTrack:
+        if track_id not in self._tracks:
+            raise ReviewError([f"{track_id} is not a track in the draft"])
+        return self._tracks[track_id]
+
+    def _facts(self, match: Match) -> TrackFacts:
+        assert match.facts is not None  # match_tracks always sets them
+        return match.facts
+
+    def _decision(self, track_id: str) -> Streams:
+        return self._overrides.tracks.get(track_id, TrackOverride()).streams or Streams()
+
+    def _family(self, family: str, games: list[Game]) -> dict[str, Any]:
+        ids = {g.id for g in games}
+        statuses = [m.status for m in self._matches.values() if m.family == family]
+        return {
+            "id": family,
+            "label": "".join(g.shortName for g in games),
+            "name": " / ".join(g.name for g in games),
+            "games": [{"id": g.id, "shortName": g.shortName, "color": g.color} for g in games],
+            "counts": {s: statuses.count(s) for s in ("matched", "review", "unmatched")},
+            "playlists": sum(bool(ids & set(p.games)) for p in self._games.youtube.playlists),
+        }
+
+    def _row(self, track: DraftTrack, match: Match) -> dict[str, Any]:
+        override = self._overrides.tracks.get(track.id, TrackOverride())
+        return {
+            "id": track.id,
+            "title": track.title,
+            "status": match.status,
+            "category": track.category,
+            "games": track.games,
+            "order": track.order,
+            "durationMs": track.durationMs,
+            "best": round(match.candidates[0].score.value, 3) if match.candidates else None,
+            "sources": len(match.streams),
+            "decided": override.streams is not None,
+        }
+
+
+def _identity(candidate: Candidate) -> tuple[str, int, int | None]:
+    return (candidate.video_id, candidate.start_ms, candidate.end_ms)
