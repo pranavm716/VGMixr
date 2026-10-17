@@ -221,7 +221,8 @@ function renderDetail() {
   destroyPlayers();
   const d = ui.detail;
   const games = gamesById();
-  const shown = [...d.candidates, ...ui.found.filter((f) => !d.candidates.some((c) => same(c, f)))];
+  // Pasted videos and search results first, so a new one shows up next to the box that added it.
+  const shown = [...ui.found, ...d.candidates.filter((c) => !ui.found.some((f) => same(c, f)))];
   const sources = d.streams.length ? d.streams.map((s, i) => {
     const hand = !s.auto;
     const index = d.decision.accept.findIndex((a) => same(a, s));
@@ -285,22 +286,47 @@ function bindDetail(shown) {
   on("#search", search);
   on("#lookup", lookup);
   $("query").onkeydown = (e) => { if (e.key === "Enter") search(); };
-  $("paste").onkeydown = (e) => { if (e.key === "Enter") lookup(); };
+  for (const id of ["paste", "start", "end"]) {
+    $(id).onkeydown = (e) => { if (e.key === "Enter") lookup(); };
+  }
 }
 
 async function search() {
   const result = await api(`tracks/${encodeURIComponent(ui.trackId)}/search`, { query: $("query").value });
   ui.found = result.results;
   await openTrack(ui.trackId); // the rematch may have picked the results up as candidates
+  $("detail").querySelector(".card")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+// A link's own start time ("t=42", "t=42s", "t=1m2s") in ms, or null.
+function linkStartMs(text) {
+  const t = /[?&#]t=(?:(\d+)h)?(?:(\d+)m)?(\d+)?s?(?:&|$)/.exec(text.trim());
+  if (!t || !(t[1] || t[2] || t[3])) return null;
+  return ((Number(t[1] || 0) * 60 + Number(t[2] || 0)) * 60 + Number(t[3] || 0)) * 1000;
 }
 
 async function lookup() {
-  const ms = (id) => ($(id).value.trim() === "" ? null : Number($(id).value));
+  const ms = (id) => {
+    const text = $(id).value.trim();
+    if (text === "") return null;
+    if (!/^\d+$/.test(text)) throw new Error(`${id} must be a whole number of milliseconds, e.g. 3500`);
+    return Number(text);
+  };
+  let startMs;
+  let endMs;
+  try {
+    startMs = ms("start") ?? linkStartMs($("paste").value);
+    endMs = ms("end");
+  } catch (e) {
+    showMessage(e.message);
+    return;
+  }
   const result = await api(`tracks/${encodeURIComponent(ui.trackId)}/video`, {
-    text: $("paste").value, startMs: ms("start"), endMs: ms("end"),
+    text: $("paste").value, startMs, endMs,
   });
   ui.found = [result.candidate, ...ui.found.filter((f) => !same(f, result.candidate))];
   renderDetail();
+  $("detail").querySelector(".card")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 // Players: created on click only, one playing at a time.
