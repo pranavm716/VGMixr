@@ -272,3 +272,29 @@ def test_rebuild_runs_the_builder_and_reloads_the_draft(
     result = review.rebuild()
     assert (result["ok"], result["output"]) == (True, "Wrote catalog/manifest.json.")
     assert "rse-petalburg-city" in [r["id"] for r in review.tracks("rse", None)]
+
+
+def test_a_removed_track_is_excluded_until_restored(review: Review, tmp_path: Path) -> None:
+    detail = review.exclude("rse-abandoned-ship", True)
+    assert detail["status"] == "excluded"
+    written = json.loads((tmp_path / "data" / "overrides.json").read_text(encoding="utf-8"))
+    assert written["tracks"] == {"rse-abandoned-ship": {"exclude": True}}
+    assert "rse-abandoned-ship" not in [r["id"] for r in review.tracks("rse", "unmatched")]
+    assert [r["id"] for r in review.tracks("rse", "excluded")] == ["rse-abandoned-ship"]
+    counts = review.state()["families"][0]["counts"]
+    assert (counts["unmatched"], counts["excluded"]) == (0, 1)
+
+    assert review.exclude("rse-abandoned-ship", False)["status"] == "unmatched"
+    written = json.loads((tmp_path / "data" / "overrides.json").read_text(encoding="utf-8"))
+    assert written["tracks"] == {}
+
+
+def test_restoring_a_short_track_keeps_it_out_of_the_jingle_rule(
+    tmp_path: Path, clock: Clock, live: LiveVideos
+) -> None:
+    data, out = write_inputs(tmp_path, [track("Cable Car", 0, duration_ms=12_000)])
+    review = Review(data, out, CachedVideos({RS_LIST: []}), live, clock=clock, sleep=clock.sleep)
+    review.exclude("rse-cable-car", True)
+    review.exclude("rse-cable-car", False)
+    written = json.loads((data / "overrides.json").read_text(encoding="utf-8"))
+    assert written["tracks"] == {"rse-cable-car": {"exclude": False}}

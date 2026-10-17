@@ -22,6 +22,7 @@ from vgmixr_pipeline.catalog.config import (
     load_games,
     load_overrides,
 )
+from vgmixr_pipeline.catalog.jingles import is_jingle
 from vgmixr_pipeline.catalog.match import (
     SEARCH_RESULTS,
     Match,
@@ -39,7 +40,8 @@ from vgmixr_pipeline.manifest.models import Game
 
 LIVE_SPACING_SECONDS = 5.0
 BLOCK_COOLDOWN_SECONDS = 30 * 60.0
-_STATUS_RANK = {"review": 0, "unmatched": 1, "matched": 2}
+_STATUS_RANK = {"review": 0, "unmatched": 1, "matched": 2, "excluded": 3}
+_STATUSES = list(_STATUS_RANK)
 
 # Runs the whole builder; returns whether it succeeded and what it printed.
 type Rebuild = Callable[[], tuple[bool, str]]
@@ -121,7 +123,7 @@ class Review:
             self._row(t, self._matches[t.id])
             for t in self._draft.tracks
             if (family is None or t.family == family)
-            and (status in (None, "all") or self._matches[t.id].status == status)
+            and (status in (None, "all") or self._status(t.id) == status)
         ]
         return sorted(rows, key=lambda r: (_STATUS_RANK[r["status"]], r["order"]))
 
@@ -142,7 +144,7 @@ class Review:
             "exclusive": track.games is not None,
             "durationMs": track.durationMs,
             "origins": track.origins,
-            "status": match.status,
+            "status": self._status(track_id),
             "streams": [
                 {
                     "videoId": s.videoId,
@@ -175,6 +177,24 @@ class Review:
             raise ReviewError(e.errors) from e
         self._overrides = load_overrides(self._data_dir / "overrides.json")
         self._rematch({track_id})
+        return self.track(track_id)
+
+    def exclude(self, track_id: str, removed: bool) -> dict[str, Any]:
+        """Removes a track from the catalog (`exclude: true`), or restores it. A restored track
+        the jingle rule would drop again keeps `exclude: false`."""
+        track = self._track(track_id)
+        value = True if removed else (False if is_jingle(track.title, track.durationMs) else None)
+        try:
+            edits.set_exclude(
+                self._data_dir / "overrides.json",
+                track_id,
+                value,
+                self._tracks.keys(),
+                list(self._families),
+            )
+        except edits.EditError as e:
+            raise ReviewError(e.errors) from e
+        self._overrides = load_overrides(self._data_dir / "overrides.json")
         return self.track(track_id)
 
     def search(self, track_id: str, query: str) -> dict[str, Any]:
@@ -273,6 +293,12 @@ class Review:
         for match in self._match(only):
             self._matches[match.track_id] = match
 
+    def _status(self, track_id: str) -> str:
+        """The match status, or "excluded" for a track removed since the last build."""
+        if self._overrides.tracks.get(track_id, TrackOverride()).exclude:
+            return "excluded"
+        return self._matches[track_id].status
+
     def _track(self, track_id: str) -> DraftTrack:
         if track_id not in self._tracks:
             raise ReviewError([f"{track_id} is not a track in the draft"])
@@ -287,13 +313,14 @@ class Review:
 
     def _family(self, family: str, games: list[Game]) -> dict[str, Any]:
         ids = {g.id for g in games}
-        statuses = [m.status for m in self._matches.values() if m.family == family]
+        statuses = [self._status(m.track_id) for m in self._matches.values() if m.family == family]
         return {
             "id": family,
             "label": "".join(g.shortName for g in games),
             "name": " / ".join(g.name for g in games),
             "games": [{"id": g.id, "shortName": g.shortName, "color": g.color} for g in games],
-            "counts": {s: statuses.count(s) for s in ("matched", "review", "unmatched")},
+            # "excluded" only appears once a track was removed since the last build.
+            "counts": {s: statuses.count(s) for s in _STATUSES if s != "excluded" or s in statuses},
             "playlists": sum(bool(ids & set(p.games)) for p in self._games.youtube.playlists),
         }
 
@@ -302,7 +329,7 @@ class Review:
         return {
             "id": track.id,
             "title": track.title,
-            "status": match.status,
+            "status": self._status(track.id),
             "category": track.category,
             "games": track.games,
             "order": track.order,

@@ -5,7 +5,7 @@ const ACCEPT = 0.8;
 const REVIEW = 0.5;
 const MIN_RATIO = 0.4;
 const MAX_RATIO = 3.5;
-const TABS = [["review", "Review"], ["unmatched", "Unmatched"], ["matched", "Matched"], ["all", "All"]];
+const TABS = [["review", "Review"], ["unmatched", "Unmatched"], ["matched", "Matched"], ["excluded", "Removed"], ["all", "All"]];
 
 const ui = {
   state: null,
@@ -91,7 +91,7 @@ function renderFamilies() {
   $("families").innerHTML = ui.state.families.map((f) => `
     <button data-family="${esc(f.id)}" class="${f.id === ui.family ? "selected" : ""}" title="${esc(f.name)}">
       <span>${f.games.map(chip).join("")}${f.playlists ? "" : ' <span class="badge">no playlist</span>'}</span>
-      <span class="counts">${f.counts.matched}·<span class="r">${f.counts.review}</span>·${f.counts.unmatched}</span>
+      <span class="counts">${f.counts.matched}·<span class="r">${f.counts.review}</span>·${f.counts.unmatched}${f.counts.excluded ? ` (−${f.counts.excluded})` : ""}</span>
     </button>`).join("");
   for (const button of $("families").querySelectorAll("button")) {
     button.onclick = () => { ui.family = button.dataset.family; renderFamilies(); loadTracks(); };
@@ -146,6 +146,12 @@ async function decide(decision) {
   ui.detail = await api(`tracks/${encodeURIComponent(ui.trackId)}/streams`, decision);
   renderDetail();
   // The list and the family counts change with the status.
+  await Promise.all([loadState(), loadTracks()]);
+}
+
+async function setRemoved(removed) {
+  ui.detail = await api(`tracks/${encodeURIComponent(ui.trackId)}/exclude`, { removed });
+  renderDetail();
   await Promise.all([loadState(), loadTracks()]);
 }
 
@@ -238,6 +244,9 @@ function renderDetail() {
       · <code>${esc(d.id)}</code>
     </div>
     <div class="facts">${d.origins.map(esc).join("<br>")}</div>
+    ${d.status === "excluded"
+      ? '<p class="removed">Removed from the catalog (<code>exclude</code> override); it leaves this list at the next Rebuild. <button id="restore">Restore</button></p>'
+      : '<p><button id="remove" title="Leave this track out of the catalog: writes exclude: true">Remove track</button></p>'}
     <h3>Sources</h3>
     <ol class="sources">${sources}</ol>
     ${rejected}
@@ -270,6 +279,8 @@ function bindDetail(shown) {
   on("[data-up]", (el) => moveAccepted(Number(el.dataset.up), -1));
   on("[data-down]", (el) => moveAccepted(Number(el.dataset.down), 1));
   on("#clear", () => decide({ accept: [], reject: [] }));
+  on("#remove", () => { if (confirm(`Remove "${d.title}" from the catalog?`)) setRemoved(true); });
+  on("#restore", () => setRemoved(false));
   on(".play", (el) => play(el.parentElement, shown[el.parentElement.dataset.index]));
   on("#search", search);
   on("#lookup", lookup);

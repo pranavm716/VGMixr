@@ -74,3 +74,10 @@ def test_the_page_is_served(base: str) -> None:
     assert status == 200 and "<title>" in page
     status, script = call(f"{base}/static/review.js")
     assert status == 200 and 'api("state")' in script
+
+
+def test_a_track_can_be_removed_and_restored(base: str) -> None:
+    url = f"{base}/api/tracks/rse-abandoned-ship/exclude"
+    assert call(url, {"removed": True})[1]["status"] == "excluded"
+    assert call(url, {"removed": False})[1]["status"] == "unmatched"
+    assert call(url, {"removed": "yes"})[0] == 400

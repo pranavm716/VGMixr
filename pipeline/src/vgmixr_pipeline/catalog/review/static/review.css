@@ -136,6 +136,8 @@ input {
 .status-review { color: var(--warn); }
 .status-unmatched { color: var(--bad); }
 .status-matched { color: var(--good); }
+.status-excluded { color: var(--muted); text-decoration: line-through; }
+.removed { color: var(--bad); }
 
 /* Detail */
 #detail { padding: 16px 20px; border-right: 0; }

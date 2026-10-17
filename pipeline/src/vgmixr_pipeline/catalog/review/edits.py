@@ -29,14 +29,37 @@ def set_streams(
     families: list[str],
 ) -> None:
     """Replaces a track's `streams` decision; an empty one removes it and an empty override."""
+    _check_track(track_id, track_ids)
+    decision = _validated(Streams, streams)
+    value = _streams_json(decision) if decision.accept or decision.reject else None
+    _set_key(path, track_id, "streams", value, families)
+
+
+def set_exclude(
+    path: Path,
+    track_id: str,
+    exclude: bool | None,
+    track_ids: Collection[str],
+    families: list[str],
+) -> None:
+    """Sets a track's `exclude` (True removes it from the catalog); None removes the key."""
+    _check_track(track_id, track_ids)
+    _set_key(path, track_id, "exclude", exclude, families)
+
+
+def _check_track(track_id: str, track_ids: Collection[str]) -> None:
     if track_id not in track_ids:
         raise EditError([f"{track_id} is not a track in the draft"])
-    decision = _validated(Streams, streams)
+
+
+def _set_key(path: Path, track_id: str, key: str, value: Any, families: list[str]) -> None:
+    """Sets one key of a track's override (before its note), or removes it when `value` is None.
+    An override left empty is removed."""
     data = _load(path)
     tracks: dict[str, Any] = data.setdefault("tracks", {})
-    entry = {k: v for k, v in tracks.get(track_id, {}).items() if k != "streams"}
-    if decision.accept or decision.reject:
-        entry = _before_note(entry, "streams", _streams_json(decision))
+    entry = {k: v for k, v in tracks.get(track_id, {}).items() if k != key}
+    if value is not None:
+        entry = _before_note(entry, key, value)
     if entry:
         data["tracks"] = _put(tracks, track_id, entry, families)
     else:
