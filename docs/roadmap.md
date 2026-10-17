@@ -41,7 +41,10 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
     - Until Part B, tracks have no stream sources, so the draft (`pipeline/out/draft.json`, with each track's duration and Bulbapedia origins) is not yet a valid manifest; don't overwrite `catalog/manifest.json` in this step.
 17. [ ] Catalog builder, part B: YouTube candidate matching and a review tool for low-confidence matches. Two sessions:
     - [ ] B1: playlists, fetching, matching, scoring with a labeled set, review decisions as overrides (edited by hand until B2), manifest output, match report.
-    - [ ] B2: the review tool, a local page (stdlib `http.server`) reading `pipeline/out/candidates.json`: per needs-review track, embedded players for its best candidates with their scores and reasons; accept or reject writes `streams` overrides.
+    - [ ] B2: the review tool, a local page (stdlib `http.server`) where the user decides the final track list. Everything the user does by hand for the catalog happens here, and every decision is written to a committed file under `pipeline/data/`, so reruns keep it:
+        - Playlists: which families and games have none or too few matches; search YouTube for playlists from the page, preview their entries against the family's tracks, then add one (with its games and optional range) to the games file's `youtube` block or remove one.
+        - Tracks: per needs-review track, embedded players for its best candidates with their scores and reasons; accept or reject writes `streams` overrides. Matched tracks can be reopened to replace a wrong auto-accept; an unmatched track can get a video by search or a pasted video ID.
+        - Flags: flag a track, game, family or playlist as missing, incorrect or incomplete (e.g. a track missing from the list, a wrong title, category or games, a duplicate, wrong audio, an incomplete playlist), with a note. Flags are a to-do list kept in a committed flags file, shown in the page and the match report until resolved. Fixes still go through the existing overrides.
 
     Decisions:
     - Every track gets stream sources, including tracks that will later get local files (local sources go in front of them).
