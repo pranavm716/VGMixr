@@ -9,8 +9,8 @@ from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 import pytest
-from test_match import vid
-from test_review_service import Clock, LiveVideos, make
+from test_match import ORAS_LIST, vid
+from test_review_service import Clock, LiveVideos, make, make_playlists
 
 from vgmixr_pipeline.catalog.review.server import make_server
 
@@ -81,3 +81,29 @@ def test_a_track_can_be_removed_and_restored(base: str) -> None:
     assert call(url, {"removed": True})[1]["status"] == "excluded"
     assert call(url, {"removed": False})[1]["status"] == "unmatched"
     assert call(url, {"removed": "yes"})[0] == 400
+
+
+def test_playlists_can_be_searched_previewed_added_and_removed(tmp_path: Path) -> None:
+    server = make_server(make_playlists(tmp_path, Clock())[0], port=0)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    base = f"http://127.0.0.1:{server.server_address[1]}/api/playlists"
+    try:
+        status, coverage = call(base)
+        assert status == 200 and coverage["families"][0]["id"] == "oras"
+        status, found = call(f"{base}/search", {"family": "oras", "query": ""})
+        assert status == 200 and found["results"][0]["id"] == ORAS_LIST
+        body = {"playlist": ORAS_LIST, "games": ["omega-ruby", "alpha-sapphire"], "last": 2}
+        status, preview = call(f"{base}/preview", body)
+        assert status == 200 and preview["counts"]["oras"]["after"]["matched"] == 2
+        status, added = call(f"{base}/add", {**body, "note": "ORAS OST"})
+        assert status == 200 and added["families"][0]["id"] == "rse"
+        status, removal = call(f"{base}/preview-removal", {"index": 1, "playlist": ORAS_LIST})
+        assert status == 200 and removal["counts"]["oras"]["after"]["matched"] == 0
+        assert call(f"{base}/remove", {"index": 1, "playlist": ORAS_LIST})[0] == 200
+        assert call(f"{base}/remove", {"index": 1, "playlist": ORAS_LIST})[0] == 400
+        assert call(f"{base}/preview", {**body, "last": "2"})[0] == 400
+        assert call(f"{base}/remove", {"index": "1", "playlist": ORAS_LIST})[0] == 400
+    finally:
+        server.shutdown()
+        server.server_close()
