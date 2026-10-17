@@ -1,14 +1,18 @@
-"""The review tool's edits of the committed data files, on tmp copies of pipeline/data/."""
+"""The review tool's edits of the data files, on small fake files written to tmp_path.
+
+The fakes mimic the committed files' layout (families in games-file order, override groups per
+family, a note last), so the real data can change without touching these tests. That the
+committed files stay in the canonical format is test_jsonfmt's job.
+"""
 
 import difflib
-import json
-import shutil
 from pathlib import Path
+from typing import Any
 
 import pytest
 
-from vgmixr_pipeline.catalog.config import DATA_DIR, load_games, load_overrides
-from vgmixr_pipeline.catalog.jsonfmt import games_families, track_family
+from vgmixr_pipeline.catalog.config import load_games, load_overrides
+from vgmixr_pipeline.catalog.jsonfmt import format_games, format_overrides, games_families
 from vgmixr_pipeline.catalog.review.edits import (
     EditError,
     add_playlist,
@@ -17,7 +21,66 @@ from vgmixr_pipeline.catalog.review.edits import (
     set_streams,
 )
 
-FAMILIES = games_families(json.loads((DATA_DIR / "games.json").read_text(encoding="utf-8")))
+
+def game(id_: str, name: str, family: str, generation: int, platform: str) -> dict[str, Any]:
+    return {"id": id_, "name": name, "shortName": name[:2], "color": "#808080",
+            "generation": generation, "platform": platform, "family": family}  # fmt: skip
+
+
+RBY_LIST = "PL2uxd6YWj7PLbKlHSlTO7Lv4E6csDZhRc"
+GSC_LIST = "PL2uxd6YWj7PKk4LnkWZEyqpcvnXmv8Iuf"
+RSE_LIST = "PL2uxd6YWj7PIOlswxbt16G63Klr_3lsbR"
+FRLG_LIST = "PL2uxd6YWj7PIOaewo5Z39hSJMdUmo3taO"
+DROUGHT_NOTE = "Groudon's event; Emerald uses Abnormal Weather"
+GAMES: dict[str, Any] = {
+    "games": [
+        game("red", "Red", "rby", 1, "GB"),
+        game("blue", "Blue", "rby", 1, "GB"),
+        game("yellow", "Yellow", "rby", 1, "GB"),
+        game("gold", "Gold", "gsc", 2, "GBC"),
+        game("silver", "Silver", "gsc", 2, "GBC"),
+        game("crystal", "Crystal", "gsc", 2, "GBC"),
+        game("ruby", "Ruby", "rse", 3, "GBA"),
+        game("sapphire", "Sapphire", "rse", 3, "GBA"),
+        game("emerald", "Emerald", "rse", 3, "GBA"),
+        game("firered", "FireRed", "frlg", 3, "GBA"),
+        game("leafgreen", "LeafGreen", "frlg", 3, "GBA"),
+        game("diamond", "Diamond", "dppt", 4, "DS"),
+        game("pearl", "Pearl", "dppt", 4, "DS"),
+        game("platinum", "Platinum", "dppt", 4, "DS"),
+        game("heartgold", "HeartGold", "hgss", 4, "DS"),
+        game("soulsilver", "SoulSilver", "hgss", 4, "DS"),
+        game("scarlet", "Scarlet", "sv", 9, "Switch"),
+        game("violet", "Violet", "sv", 9, "Switch"),
+    ],
+    "tracklists": [],
+    "youtube": {
+        "playlists": [
+            {"games": ["red", "blue", "yellow"], "playlist": RBY_LIST,
+             "note": "Daintii Music, game rip"},
+            {"games": ["gold", "silver", "crystal"], "playlist": GSC_LIST},
+            {"games": ["ruby", "sapphire", "emerald"], "playlist": RSE_LIST},
+            {"games": ["firered", "leafgreen"], "playlist": FRLG_LIST},
+            {"games": ["heartgold", "soulsilver"], "playlist": "PL7657467B11931136"},
+        ],
+        "albums": [],
+        "aliases": {},
+    },
+}  # fmt: skip
+FAMILIES = games_families(GAMES)
+OVERRIDES: dict[str, Any] = {
+    "tracks": {
+        "rby-pokemon-tower": {"category": "dungeon"},
+        "gsc-clair": {"games": ["crystal"]},
+        "rse-drought": {"games": ["ruby"], "note": DROUGHT_NOTE},
+        "rse-cable-car": {"exclude": False, "note": "Short, but music, not a jingle"},
+        "frlg-sevii-islands": {"games": ["firered", "leafgreen"]},
+        "hgss-kanto-route": {"category": "route"},
+    },
+    "extras": [],
+}  # fmt: skip
+GAMES_TEXT = format_games(GAMES)
+OVERRIDES_TEXT = format_overrides(OVERRIDES, FAMILIES)
 TRACK_IDS = {
     "rse-littleroot-town",
     "rse-drought",
@@ -31,23 +94,19 @@ TRACK_IDS = {
 @pytest.fixture
 def overrides(tmp_path: Path) -> Path:
     path = tmp_path / "overrides.json"
-    shutil.copy(DATA_DIR / "overrides.json", path)
+    path.write_text(OVERRIDES_TEXT, encoding="utf-8", newline="\n")
     return path
 
 
-def changes(path: Path) -> list[str]:
-    """The diff against the committed file: added and removed lines only."""
-    before = (DATA_DIR / "overrides.json").read_text(encoding="utf-8").splitlines()
+def diff(before: str, path: Path) -> list[str]:
+    """Added and removed lines only."""
     after = path.read_text(encoding="utf-8").splitlines()
-    diff = difflib.unified_diff(before, after, lineterm="", n=0)
-    return [line for line in diff if line[:1] in "+-" and line[:3] not in ("+++", "---")]
+    lines_ = difflib.unified_diff(before.splitlines(), after, lineterm="", n=0)
+    return [line for line in lines_ if line[:1] in "+-" and line[:3] not in ("+++", "---")]
 
 
-def family_rank(line: str) -> int:
-    """The position in family order of the track key a line starts with."""
-    family = track_family(line.split('"')[1], FAMILIES)
-    assert family is not None
-    return FAMILIES.index(family)
+def changes(path: Path) -> list[str]:
+    return diff(OVERRIDES_TEXT, path)
 
 
 def lines(path: Path) -> list[str]:
@@ -90,6 +149,21 @@ def test_a_decision_joins_an_existing_override_in_place(overrides: Path) -> None
     ]
 
 
+def test_a_decision_that_makes_an_entry_too_long_moves_its_note_to_a_second_line(
+    overrides: Path,
+) -> None:
+    edit(overrides, "rse-drought", {"accept": [{"videoId": "ID2Iv5HP-0I"}]})
+    assert changes(overrides) == [
+        '-    "rse-drought": { "games": ["ruby"], "note": "Groudon\'s event; Emerald uses Abnormal '
+        'Weather" },',
+        '+    "rse-drought": { "games": ["ruby"], '
+        '"streams": { "accept": [ { "videoId": "ID2Iv5HP-0I" } ] },',
+        # Aligned under the first key, after '    "rse-drought": { '.
+        '+                     "note": "Groudon\'s event; Emerald uses Abnormal Weather" },',
+    ]
+    assert load_overrides(overrides).tracks["rse-drought"].note is not None
+
+
 def test_a_family_without_overrides_gets_its_own_group_in_family_order(overrides: Path) -> None:
     edit(overrides, "dppt-twinleaf-town", {"accept": [{"videoId": "ID2Iv5HP-0I"}]})
     text = lines(overrides)
@@ -97,9 +171,7 @@ def test_a_family_without_overrides_gets_its_own_group_in_family_order(overrides
         '    "dppt-twinleaf-town": { "streams": { "accept": [ { "videoId": "ID2Iv5HP-0I" } ] } },'
     )
     assert text[at - 1] == "" and text[at + 1] == ""
-    # The neighbouring groups belong to an earlier and a later family, whatever is committed.
-    dppt = FAMILIES.index("dppt")
-    assert family_rank(text[at - 2]) < dppt < family_rank(text[at + 2])
+    assert text[at - 2].startswith('    "frlg-') and text[at + 2].startswith('    "hgss-')
 
 
 def test_clearing_a_decision_removes_an_override_left_empty(overrides: Path) -> None:
@@ -169,21 +241,17 @@ def test_removing_an_unknown_track_is_refused(overrides: Path) -> None:
 # Playlists in games.json
 
 DP_LIST = "PLA4BF48BF9073F50B"
-RSE_LIST = "PL2uxd6YWj7PIOlswxbt16G63Klr_3lsbR"
 
 
 @pytest.fixture
 def games(tmp_path: Path) -> Path:
     path = tmp_path / "games.json"
-    shutil.copy(DATA_DIR / "games.json", path)
+    path.write_text(GAMES_TEXT, encoding="utf-8", newline="\n")
     return path
 
 
 def games_changes(path: Path) -> list[str]:
-    before = (DATA_DIR / "games.json").read_text(encoding="utf-8").splitlines()
-    after = path.read_text(encoding="utf-8").splitlines()
-    diff = difflib.unified_diff(before, after, lineterm="", n=0)
-    return [line for line in diff if line[:1] in "+-" and line[:3] not in ("+++", "---")]
+    return diff(GAMES_TEXT, path)
 
 
 def playlist_lines(path: Path) -> list[str]:
@@ -242,7 +310,7 @@ def test_the_same_playlist_with_another_range_is_another_entry(games: Path) -> N
         ({"games": ["diamond"], "playlist": "bad!"}, "playlist id"),
         ({"games": ["diamond"], "playlist": DP_LIST, "first": 5, "last": 2}, "first"),
         ({"games": ["diamond"], "playlist": DP_LIST, "first": 0}, "first"),
-        ({"games": ["red", "blue", "yellow"], "playlist": "PL2uxd6YWj7PLbKlHSlTO7Lv4E6csDZhRc",
+        ({"games": ["red", "blue", "yellow"], "playlist": RBY_LIST,
           "note": "Daintii Music, game rip"}, "already"),
     ],
 )  # fmt: skip
