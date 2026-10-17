@@ -57,6 +57,19 @@ def test_playlist_reads_flat_entries_with_their_positions(tmp_path: Path) -> Non
     assert fake.calls == [(f"https://www.youtube.com/playlist?list={PLAYLIST}", True)]
 
 
+def test_playlist_entries_without_a_title_are_unavailable_too(tmp_path: Path) -> None:
+    fake = FakeYtDlp(listing(
+        entry("aaaaaaaaaaa", "Opening"),
+        {"_type": "url", "id": "bbbbbbbbbbb", "title": None, "duration": None, "channel": None},
+        entry("ccccccccccc", "Route 101"),
+    ))  # fmt: skip
+    youtube, _ = client(tmp_path, fake)
+    assert [(e.id, e.position) for e in youtube.playlist(PLAYLIST)] == [
+        ("aaaaaaaaaaa", 1),
+        ("ccccccccccc", 3),
+    ]
+
+
 def test_responses_are_cached_trimmed(tmp_path: Path) -> None:
     fake = FakeYtDlp(listing(entry("aaaaaaaaaaa", "Opening")))
     client(tmp_path, fake)[0].playlist(PLAYLIST)

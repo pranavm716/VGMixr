@@ -200,7 +200,8 @@ def _entries(data: dict[str, Any]) -> list[Entry]:
     return [
         Entry(e["id"], e["title"], _ms(e["duration"]), e["channel"], position)
         for position, e in enumerate(data["entries"], start=1)
-        if e["title"] not in _UNAVAILABLE
+        # Unavailable videos have a placeholder title, or none at all.
+        if isinstance(e["title"], str) and e["title"] not in _UNAVAILABLE
     ]
 
 
