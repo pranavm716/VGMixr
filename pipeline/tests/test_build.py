@@ -112,6 +112,23 @@ def test_title_category_and_games_overrides_keep_the_id() -> None:
     assert (route.title, route.category, route.games) == ("Route 1 (Fixed)", "other", ["blue"])
 
 
+def test_listed_games_are_the_games_before_a_games_override() -> None:
+    overrides = Overrides(tracks={"rby-route-1": TrackOverride(games=["blue"])})
+    result = build([occ("Route 1", RB), occ("Route 2", Y), occ("Route 3")], overrides)
+    assert (track(result, "rby-route-1").games, track(result, "rby-route-1").listedGames) == (
+        ["blue"], ["red", "blue"]
+    )  # fmt: skip
+    assert track(result, "rby-route-2").listedGames == ["yellow"]
+    assert track(result, "rby-route-3").listedGames is None  # every rby game
+    assert "listedGames" in track(result, "rby-route-3").model_fields_set
+
+
+def test_an_extras_listed_games_are_its_own() -> None:
+    extra = Extra(family="rby", title="Bonus", games=["yellow"], duration="1:00")
+    overrides = Overrides(tracks={"rby-bonus": TrackOverride(games=["red"])}, extras=[extra])
+    assert track(build([], overrides), "rby-bonus").listedGames == ["yellow"]
+
+
 def test_games_override_covering_the_family_is_omitted() -> None:
     overrides = Overrides(tracks={"rby-route-1": TrackOverride(games=["yellow", "red", "blue"])})
     assert track(build([occ("Route 1", Y)], overrides), "rby-route-1").games is None

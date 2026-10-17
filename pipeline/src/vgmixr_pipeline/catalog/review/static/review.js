@@ -179,6 +179,32 @@ async function decide(decision) {
   await Promise.all([loadState(), loadTracks()]);
 }
 
+// The games a track plays in: a games override, written at once; null resets to its lists' games.
+async function setGames(games) {
+  ui.detail = await api(`tracks/${encodeURIComponent(ui.trackId)}/games`, { games });
+  renderDetail();
+  await Promise.all([loadState(), loadTracks()]);
+}
+
+function toggleGame(id) {
+  const games = ui.detail.games.includes(id) ? ui.detail.games.filter((g) => g !== id) : [...ui.detail.games, id];
+  if (!games.length) return showMessage("A track plays in at least one game.");
+  setGames(games);
+}
+
+// The family's games as toggles; "All games" (e.g. a BW track B2W2 also plays) and Reset beside them.
+function gamesEditor(d) {
+  const family = ui.state.families.find((f) => f.id === d.family).games;
+  const listed = d.listedGames ? `Its track lists give it: ${d.listedGames.map((g) => gamesById()[g].shortName).join(" ")}` : "";
+  const toggles = family.map((g) => `<button class="game-toggle ${d.games.includes(g.id) ? "on" : ""}" data-game="${esc(g.id)}"
+    title="${d.games.includes(g.id) ? "Plays in" : "Doesn't play in"} ${esc(g.shortName)}. ${esc(listed)}">${chip(g)}</button>`).join("");
+  const all = d.games.length < family.length ? ' <button id="all-games" title="Plays in every game of the family">All games</button>' : "";
+  const hand = d.gamesOverride
+    ? ` <span class="hand-games" title="A games override in overrides.json">set by hand</span>${d.listedGames ? ' <button id="reset-games" title="Back to the games its track lists give it">Reset</button>' : ""}`
+    : "";
+  return `<span class="games-edit">${toggles}${all}${hand}</span>`;
+}
+
 async function setRemoved(removed) {
   ui.detail = await api(`tracks/${encodeURIComponent(ui.trackId)}/exclude`, { removed });
   renderDetail();
@@ -277,7 +303,7 @@ function renderDetail() {
   $("detail").innerHTML = `
     <h2>${esc(d.title)}</h2>
     <div class="facts">
-      ${d.games.map((g) => chip(games[g])).join("")}${d.exclusive ? " (exclusive)" : ""}
+      ${gamesEditor(d)}
       · ${esc(d.category)} · ${minutes(d.durationMs)} · <span class="status-${d.status}">${d.status}</span>
       · <code>${esc(d.id)}</code>
     </div>
@@ -319,6 +345,9 @@ function bindDetail(shown) {
   on("#clear", () => decide({ accept: [], reject: [] }));
   on("#remove", () => { if (confirm(`Remove "${d.title}" from the catalog?`)) setRemoved(true); });
   on("#restore", () => setRemoved(false));
+  on("[data-game]", (el) => toggleGame(el.dataset.game));
+  on("#all-games", () => setGames(ui.state.families.find((f) => f.id === d.family).games.map((g) => g.id)));
+  on("#reset-games", () => setGames(null));
   on(".play", (el) => play(el.parentElement, shown[el.parentElement.dataset.index]));
   on("#search", search);
   on("#lookup", lookup);

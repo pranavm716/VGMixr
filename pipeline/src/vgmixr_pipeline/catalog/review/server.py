@@ -74,6 +74,8 @@ class _Handler(BaseHTTPRequestHandler):
             match parts:
                 case ["tracks", track_id, "streams"]:
                     return r.set_streams(track_id, body)
+                case ["tracks", track_id, "games"]:
+                    return r.set_games(track_id, body.get("games"))
                 case ["tracks", track_id, "exclude"]:
                     removed = body.get("removed")
                     if not isinstance(removed, bool):

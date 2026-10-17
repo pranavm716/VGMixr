@@ -107,3 +107,12 @@ def test_playlists_can_be_searched_previewed_added_and_removed(tmp_path: Path) -
     finally:
         server.shutdown()
         server.server_close()
+
+
+def test_a_tracks_games_can_be_set(base: str) -> None:
+    url = f"{base}/api/tracks/rse-littleroot-town/games"
+    status, detail = call(url, {"games": ["emerald"]})
+    assert (status, detail["games"], detail["gamesOverride"]) == (200, ["emerald"], True)
+    assert call(url, {"games": ["omega-ruby"]})[0] == 400
+    status, detail = call(url, {"games": None})
+    assert (status, detail["gamesOverride"]) == (200, False)

@@ -18,6 +18,7 @@ from vgmixr_pipeline.catalog.review.edits import (
     add_playlist,
     remove_playlist,
     set_exclude,
+    set_games,
     set_streams,
 )
 
@@ -235,6 +236,33 @@ def test_restoring_a_kept_jingle_writes_exclude_false_again(overrides: Path) -> 
 def test_removing_an_unknown_track_is_refused(overrides: Path) -> None:
     with pytest.raises(EditError):
         set_exclude(overrides, "rse-no-such-track", True, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == []
+
+
+def test_setting_games_writes_them_and_none_removes_them(overrides: Path) -> None:
+    set_games(overrides, "rse-littleroot-town", ["ruby", "sapphire"], TRACK_IDS, FAMILIES)
+    assert changes(overrides) == ['+    "rse-littleroot-town": { "games": ["ruby", "sapphire"] },']
+    set_games(overrides, "rse-littleroot-town", None, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == []
+
+
+def test_changing_games_keeps_the_rest_of_an_override(overrides: Path) -> None:
+    set_games(overrides, "rse-drought", ["ruby", "sapphire"], TRACK_IDS, FAMILIES)
+    assert changes(overrides) == [
+        f'-    "rse-drought": {{ "games": ["ruby"], "note": "{DROUGHT_NOTE}" }},',
+        f'+    "rse-drought": {{ "games": ["ruby", "sapphire"], "note": "{DROUGHT_NOTE}" }},',
+    ]
+    set_games(overrides, "rse-drought", None, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == [
+        f'-    "rse-drought": {{ "games": ["ruby"], "note": "{DROUGHT_NOTE}" }},',
+        f'+    "rse-drought": {{ "note": "{DROUGHT_NOTE}" }},',
+    ]
+
+
+@pytest.mark.parametrize("games", [[], ["ruby", "ruby"], "ruby"])
+def test_invalid_games_are_refused(overrides: Path, games: object) -> None:
+    with pytest.raises(EditError):
+        set_games(overrides, "rse-littleroot-town", games, TRACK_IDS, FAMILIES)  # type: ignore[arg-type]
     assert changes(overrides) == []
 
 

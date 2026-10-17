@@ -637,3 +637,100 @@ def test_a_bad_playlist_preview_is_an_error(
     with pytest.raises(ReviewError):
         review.preview_playlist(text, games, first, last)
     assert live.calls == []
+
+
+# Games
+
+
+def written_tracks(tmp_path: Path) -> dict[str, Any]:
+    path = tmp_path / "data" / "overrides.json"
+    tracks: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))["tracks"]
+    return tracks
+
+
+def test_restricting_a_tracks_games_writes_an_override_and_rematches(
+    review: Review, tmp_path: Path
+) -> None:
+    # The playlist holds Ruby and Sapphire tracks: an Emerald-only track gets nothing from it.
+    detail = review.set_games("rse-littleroot-town", ["emerald"])
+    assert (detail["games"], detail["exclusive"], detail["gamesOverride"]) == (
+        ["emerald"], True, True
+    )  # fmt: skip
+    assert detail["status"] == "unmatched"
+    assert written_tracks(tmp_path) == {"rse-littleroot-town": {"games": ["emerald"]}}
+    assert [r["games"] for r in review.tracks("rse", None) if r["id"] == "rse-littleroot-town"] == [
+        ["emerald"]
+    ]
+
+    # Picking the games its track lists give it removes the override again.
+    detail = review.set_games("rse-littleroot-town", ["emerald", "ruby", "sapphire"])
+    assert (detail["games"], detail["gamesOverride"], detail["status"]) == (
+        ["ruby", "sapphire", "emerald"], False, "matched"
+    )  # fmt: skip
+    assert written_tracks(tmp_path) == {}
+
+
+def test_a_track_can_get_more_games_than_listed_and_be_reset(
+    tmp_path: Path, clock: Clock, live: LiveVideos
+) -> None:
+    listed = ["ruby", "sapphire"]
+    rs_only = track("Route 101", 1, games=listed).model_copy(update={"listedGames": listed})
+    data, out = write_inputs(tmp_path, [track("Littleroot Town", 0), rs_only])
+    review = Review(data, out, CachedVideos({RS_LIST: PLAYLIST}), live, clock=clock,
+                    sleep=clock.sleep)  # fmt: skip
+    assert review.track("rse-route-101")["listedGames"] == listed
+    detail = review.set_games("rse-route-101", ["emerald", "ruby", "sapphire"])
+    assert (detail["games"], detail["exclusive"]) == (["ruby", "sapphire", "emerald"], False)
+    assert written_tracks(tmp_path) == {"rse-route-101": {"games": ["ruby", "sapphire", "emerald"]}}
+    detail = review.set_games("rse-route-101", None)
+    assert (detail["games"], detail["gamesOverride"]) == (listed, False)
+    assert written_tracks(tmp_path) == {}
+
+
+@pytest.mark.parametrize("games", [["omega-ruby"], ["ruby", "omega-ruby"], [], ["ruby", "ruby"],
+                                   "ruby", [3]])  # fmt: skip
+def test_games_must_be_distinct_games_of_the_tracks_family(
+    review: Review, tmp_path: Path, games: Any
+) -> None:
+    before = (tmp_path / "data" / "overrides.json").read_bytes()
+    with pytest.raises(ReviewError):
+        review.set_games("rse-littleroot-town", games)
+    assert (tmp_path / "data" / "overrides.json").read_bytes() == before
+
+
+def test_a_games_override_applies_when_the_tool_starts(
+    tmp_path: Path, clock: Clock, live: LiveVideos
+) -> None:
+    data, out = write_inputs(tmp_path, TRACKS)
+    (data / "overrides.json").write_text(
+        '{\n  "tracks": {\n    "rse-littleroot-town": { "games": ["emerald"] }\n  },\n'
+        '  "extras": []\n}\n',
+        encoding="utf-8",
+    )
+    review = Review(data, out, CachedVideos({RS_LIST: PLAYLIST}), live, clock=clock,
+                    sleep=clock.sleep)  # fmt: skip
+    detail = review.track("rse-littleroot-town")
+    assert (detail["games"], detail["gamesOverride"], detail["status"]) == (
+        ["emerald"], True, "unmatched"
+    )  # fmt: skip
+
+
+def test_without_listed_games_in_the_draft_reset_waits_for_a_rebuild(
+    tmp_path: Path, clock: Clock, live: LiveVideos
+) -> None:
+    data, out = write_inputs(tmp_path, TRACKS)
+    draft = json.loads((out / "draft.json").read_text(encoding="utf-8"))
+    for t in draft["tracks"]:
+        del t["listedGames"]  # a draft written before the builder recorded them
+    (out / "draft.json").write_text(json.dumps(draft), encoding="utf-8")
+    review = Review(data, out, CachedVideos({RS_LIST: PLAYLIST}), live, clock=clock,
+                    sleep=clock.sleep)  # fmt: skip
+    assert review.track("rse-littleroot-town")["listedGames"] is None
+    with pytest.raises(ReviewError) as raised:
+        review.set_games("rse-littleroot-town", None)
+    assert "Rebuild" in raised.value.errors[0]
+    # Without listed games, any choice is written, even the whole family.
+    review.set_games("rse-littleroot-town", ["ruby", "sapphire", "emerald"])
+    assert written_tracks(tmp_path) == {
+        "rse-littleroot-town": {"games": ["ruby", "sapphire", "emerald"]}
+    }

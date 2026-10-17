@@ -108,17 +108,41 @@ class Review:
         draft = Draft.model_validate_json(
             (self._out_dir / "draft.json").read_text(encoding="utf-8")
         )
-        # Title overrides apply at once, as the next build would apply them.
-        titles = {k: o.title for k, o in self._overrides.tracks.items() if o.title is not None}
-        self._draft = draft.model_copy(update={"tracks": [
-            t.model_copy(update={"title": titles[t.id]}) if t.id in titles else t
-            for t in draft.tracks
-        ]})  # fmt: skip
-        self._tracks = {t.id: t for t in self._draft.tracks}
         self._families: dict[str, list[Game]] = {}
-        for game in self._draft.games:
+        for game in draft.games:
             self._families.setdefault(game.family_id, []).append(game)
+        # The tracks as built, before the overrides changed in this session.
+        self._built = {t.id: t for t in draft.tracks}
+        self._draft = draft.model_copy(
+            update={"tracks": [self._overridden(t) for t in draft.tracks]}
+        )
+        self._tracks = {t.id: t for t in self._draft.tracks}
         self._matches = {m.track_id: m for m in self._match(None)}
+
+    def _overridden(self, track: DraftTrack) -> DraftTrack:
+        """Title and games overrides apply at once, as the next build would apply them. Without a
+        games override, a track has the games its track lists give it (when the draft says)."""
+        override = self._overrides.tracks.get(track.id, TrackOverride())
+        listed = self._listed_games(track)
+        games = override.games or (listed if listed is not None else track.games)
+        return track.model_copy(update={
+            "title": override.title or track.title,
+            "games": self._in_family_order(track.family, games),
+        })  # fmt: skip
+
+    def _listed_games(self, track: DraftTrack) -> list[str] | None:
+        """The games the track's lists give it, every one named; None when the draft (written
+        before the builder recorded them) doesn't say."""
+        if "listedGames" not in track.model_fields_set:
+            return None
+        return track.listedGames or [g.id for g in self._families[track.family]]
+
+    def _in_family_order(self, family: str, games: list[str] | None) -> list[str] | None:
+        """`games` in family order, or None when they cover the whole family."""
+        ids = [g.id for g in self._families[family]]
+        if games is None or set(games) >= set(ids):
+            return None
+        return [g for g in ids if g in games]
 
     def _load_games(self) -> None:
         self._games = load_games(self._data_dir / "games.json")
@@ -163,6 +187,11 @@ class Review:
             "order": track.order,
             "games": [g.id for g in self._families[track.family] if g.id in facts.games],
             "exclusive": track.games is not None,
+            # The games its track lists give it (None when the draft doesn't say), and whether a
+            # games override replaces them.
+            "listedGames": self._listed_games(self._built[track_id]),
+            "gamesOverride": self._overrides.tracks.get(track_id, TrackOverride()).games
+            is not None,
             "durationMs": track.durationMs,
             "origins": track.origins,
             "status": self._status(track_id),
@@ -201,6 +230,47 @@ class Review:
         self._overrides = load_overrides(self._data_dir / "overrides.json")
         self._rematch({track_id})
         self._look_up_accepted(track_id)
+        return self.track(track_id)
+
+    def set_games(self, track_id: str, games: Any) -> dict[str, Any]:
+        """Sets the games a track plays in (a `games` override) and rematches it. The games its
+        track lists give it, or None, remove the override."""
+        track = self._track(track_id)
+        family = [g.id for g in self._families[track.family]]
+        listed = self._listed_games(self._built[track_id])
+        if games is None:
+            if listed is None:
+                raise ReviewError(["Rebuild first: this draft doesn't say which games the track's "
+                                   "lists give it"])  # fmt: skip
+            value = None
+        else:
+            if (
+                not isinstance(games, list)
+                or not games
+                or not all(isinstance(g, str) for g in games)
+                or len(set(games)) != len(games)
+                or not set(games) <= set(family)
+            ):
+                raise ReviewError([f"games must be distinct games of {', '.join(family)}"])
+            ordered = [g for g in family if g in games]
+            value = None if listed is not None and set(ordered) == set(listed) else ordered
+        try:
+            edits.set_games(
+                self._data_dir / "overrides.json",
+                track_id,
+                value,
+                self._tracks.keys(),
+                list(self._families),
+            )
+        except edits.EditError as e:
+            raise ReviewError(e.errors) from e
+        self._overrides = load_overrides(self._data_dir / "overrides.json")
+        updated = self._overridden(self._built[track_id])
+        self._tracks[track_id] = updated
+        self._draft = self._draft.model_copy(update={
+            "tracks": [updated if t.id == track_id else t for t in self._draft.tracks]
+        })  # fmt: skip
+        self._rematch({track_id})
         return self.track(track_id)
 
     def exclude(self, track_id: str, removed: bool) -> dict[str, Any]:

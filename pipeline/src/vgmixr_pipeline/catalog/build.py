@@ -50,6 +50,9 @@ class DraftTrack(BaseModel):
     sources: list[Source]
     durationMs: int | None
     origins: list[str]
+    # The games its track lists give it (an extra's own games), before any `games` override; None
+    # is every game of the family. A draft written before this field existed doesn't set it.
+    listedGames: list[str] | None = None
 
 
 @dataclass(frozen=True)
@@ -144,6 +147,8 @@ class _Track:
     duration_ms: int | None = None
     # A length set by override, which wins over everything else.
     duration_override: int | None = None
+    # The games before a `games` override.
+    listed_games: set[str] = field(default_factory=set)
 
 
 def build_tracks(
@@ -277,6 +282,7 @@ def _apply(
         track.title = override.title
     if override.category is not None:
         track.category = override.category
+    track.listed_games = set(track.games)
     if override.games is not None:
         _check_games(track.id, override.games, family_games[track.family], errors)
         track.games = set(override.games)
@@ -300,25 +306,26 @@ def _draft(tracks: list[_Track], family_games: dict[str, list[str]]) -> list[Dra
         extras = [t for t in members if t.is_extra]
         for order, track in enumerate([*generated, *extras]):
             all_games = family_games[family]
-            games = (
-                None
-                if track.games >= set(all_games)
-                else [g for g in all_games if g in track.games]
-            )
             drafts.append(
                 DraftTrack(
                     id=track.id,
                     family=family,
-                    games=games,
+                    games=_in_order(track.games, all_games),
                     title=track.title,
                     category=track.category or guess_category(track.title),
                     order=track.explicit_order if track.explicit_order is not None else order,
                     sources=track.sources,
                     durationMs=_duration(track),
                     origins=[o.origin for o in track.occurrences],
+                    listedGames=_in_order(track.listed_games, all_games),
                 )
             )
     return drafts
+
+
+def _in_order(games: set[str], family: list[str]) -> list[str] | None:
+    """`games` in family order, or None when they cover the whole family."""
+    return None if games >= set(family) else [g for g in family if g in games]
 
 
 def _games(occurrence: Occurrence, family_games: dict[str, list[str]]) -> set[str]:

@@ -53,6 +53,26 @@ def set_exclude(
     _set_key(path, track_id, "exclude", exclude, families)
 
 
+def set_games(
+    path: Path,
+    track_id: str,
+    games: list[str] | None,
+    track_ids: Collection[str],
+    families: list[str],
+) -> None:
+    """Sets a track's `games` (distinct ids, in the order given); None removes the key. That the
+    games belong to the track's family is the caller's check, as the builder's."""
+    _check_track(track_id, track_ids)
+    if games is not None and (
+        not isinstance(games, list)
+        or not games
+        or not all(isinstance(g, str) for g in games)
+        or len(set(games)) != len(games)
+    ):
+        raise EditError([f"games must be a list of distinct game ids, not {games!r}"])
+    _set_key(path, track_id, "games", games, families)
+
+
 def add_playlist(path: Path, entry: dict[str, Any]) -> None:
     """Adds a playlist to games.json's youtube block, after the playlists of its first game's
     family (families in games-file order). The same playlist may be listed again with other games
