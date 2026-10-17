@@ -35,7 +35,7 @@ from vgmixr_pipeline.catalog.match import (
 from vgmixr_pipeline.catalog.review import edits
 from vgmixr_pipeline.catalog.review.video_id import video_id_from
 from vgmixr_pipeline.catalog.score import Candidate, Names, TrackFacts, score
-from vgmixr_pipeline.catalog.youtube import YouTubeBlocked
+from vgmixr_pipeline.catalog.youtube import Video, YouTubeBlocked
 from vgmixr_pipeline.manifest.models import Game
 
 LIVE_SPACING_SECONDS = 5.0
@@ -160,6 +160,8 @@ class Review:
                 {**scored_json(s), "accepted": _identity(s.candidate) in taken}
                 for s in match.candidates
             ],
+            # Hand-accepted slices in order, with details even when they aren't top candidates.
+            "accepted": [self._accepted_json(facts, match, s) for s in decision.accept],
             "query": search_query(facts, self._families[track.family]),
         }
 
@@ -232,24 +234,7 @@ class Review:
             raise ReviewError([str(e)]) from e
         video, notice = self._ask(lambda videos: videos.video(video_id))
         extra = {"youtube": self._youtube_mode(), **({"notice": notice} if notice else {})}
-        if not video.title:
-            unknown = {"videoId": video_id, "startMs": piece.startMs, "endMs": piece.endMs,
-                       "title": None, "channel": None, "durationMs": None, "kind": "search",
-                       "score": None, "reasons": ["no details: not cached"]}  # fmt: skip
-            return {"candidate": unknown, **extra}
-        end = piece.endMs if piece.endMs is not None else video.duration_ms
-        length = end - piece.startMs if end is not None else None
-        candidate = Candidate(
-            video_id,
-            video.title,
-            length,
-            None,
-            "search",
-            start_ms=piece.startMs,
-            end_ms=piece.endMs,
-        )
-        return {"candidate": scored_json(Scored(candidate, score(facts, candidate, self._names))),
-                **extra}  # fmt: skip
+        return {"candidate": self._slice_json(facts, piece, video), **extra}
 
     def rebuild(self) -> dict[str, Any]:
         ok, output = self._rebuild()
@@ -292,6 +277,27 @@ class Review:
     def _rematch(self, only: set[str]) -> None:
         for match in self._match(only):
             self._matches[match.track_id] = match
+
+    def _accepted_json(self, facts: TrackFacts, match: Match, piece: Slice) -> dict[str, Any]:
+        """A hand-accepted slice: its candidate when it is one, else scored from the cached video
+        (pasted or searched videos are cached when looked up)."""
+        identity = (piece.videoId, piece.startMs, piece.endMs)
+        for scored in match.candidates:
+            if _identity(scored.candidate) == identity:
+                return scored_json(scored)
+        return self._slice_json(facts, piece, self._cached.video(piece.videoId))
+
+    def _slice_json(self, facts: TrackFacts, piece: Slice, video: Video) -> dict[str, Any]:
+        """A slice of `video` scored against the track, or unscored when its details are unknown."""
+        if not video.title:
+            return {"videoId": piece.videoId, "startMs": piece.startMs, "endMs": piece.endMs,
+                    "title": None, "channel": None, "durationMs": None, "kind": "search",
+                    "score": None, "reasons": ["no details: not cached"]}  # fmt: skip
+        end = piece.endMs if piece.endMs is not None else video.duration_ms
+        length = end - piece.startMs if end is not None else None
+        candidate = Candidate(piece.videoId, video.title, length, None, "search",
+                              start_ms=piece.startMs, end_ms=piece.endMs)  # fmt: skip
+        return scored_json(Scored(candidate, score(facts, candidate, self._names)))
 
     def _status(self, track_id: str) -> str:
         """The match status, or "excluded" for a track removed since the last build."""

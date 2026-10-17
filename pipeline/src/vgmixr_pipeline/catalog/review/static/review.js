@@ -30,6 +30,14 @@ function minutes(ms) {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
+// A slice's start or end, to a tenth of a second when it isn't whole (0:03.5).
+function stamp(ms) {
+  const s = ms / 1000;
+  const whole = Math.floor(s);
+  const tenths = Math.round((s - whole) * 10);
+  return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, "0")}${tenths ? `.${tenths}` : ""}`;
+}
+
 // Black or white text, whichever contrasts more with the game's color.
 function chip(game) {
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(game.color.slice(i, i + 2), 16) / 255);
@@ -135,6 +143,7 @@ async function openTrack(id) {
   if (id !== ui.trackId) ui.found = [];
   ui.trackId = id;
   ui.detail = await api(`tracks/${encodeURIComponent(id)}`);
+  history.replaceState(null, "", `#${encodeURIComponent(id)}`); // a refresh reopens this track
   renderTracks();
   renderDetail();
 }
@@ -190,23 +199,26 @@ function lengthLine(candidate) {
 
 function card(candidate, index) {
   const slice = sliceOf(candidate);
-  const taken = ui.detail.decision.accept.some((s) => same(s, slice)) || candidate.accepted;
+  const hand = ui.detail.decision.accept.findIndex((s) => same(s, slice));
+  const auto = hand < 0 && ui.detail.streams.some((s) => s.auto && same(s, slice));
+  const badge = hand >= 0 ? `<span class="badge-accepted">Accepted #${hand + 1}</span>`
+    : auto ? '<span class="badge-auto">Auto</span>' : "";
   const range = candidate.startMs || candidate.endMs != null
-    ? ` · ${minutes(candidate.startMs)}–${candidate.endMs == null ? "end" : minutes(candidate.endMs)}` : "";
+    ? ` · ${stamp(candidate.startMs || 0)}–${candidate.endMs == null ? "end" : stamp(candidate.endMs)}` : "";
   return `
-    <div class="card ${taken ? "accepted" : ""}">
+    <div class="card ${hand >= 0 ? "hand" : auto ? "auto" : ""}">
       <div class="player" data-index="${index}">
         <img src="https://i.ytimg.com/vi/${esc(candidate.videoId)}/mqdefault.jpg" alt="">
         <button class="play" title="Play from the start of the slice">▶</button>
       </div>
-      <div class="ctitle">${esc(candidate.title ?? candidate.videoId)}</div>
+      <div class="ctitle">${badge}${esc(candidate.title ?? candidate.videoId)}</div>
       <div class="line">
         <span class="score ${verdict(candidate.score)}">${candidate.score == null ? "unscored" : candidate.score.toFixed(2)}</span>
         · ${esc(candidate.kind)} · ${esc(candidate.channel ?? "unknown channel")} · ${lengthLine(candidate)}${range}
       </div>
       <div class="line">${esc((candidate.reasons || []).join(", "))}</div>
       <div class="actions">
-        <button class="primary" data-accept="${index}" ${taken ? "disabled" : ""}>Accept</button>
+        <button class="primary" data-accept="${index}" ${hand >= 0 ? "disabled" : ""}>Accept</button>
         <button data-reject="${index}">Reject</button>
         <a href="${watchUrl(candidate)}" target="_blank" rel="noreferrer">YouTube ↗</a>
       </div>
@@ -221,14 +233,18 @@ function renderDetail() {
   destroyPlayers();
   const d = ui.detail;
   const games = gamesById();
-  // Pasted videos and search results first, so a new one shows up next to the box that added it.
-  const shown = [...ui.found, ...d.candidates.filter((c) => !ui.found.some((f) => same(c, f)))];
+  // Hand-accepted videos first (in order), then pasted videos and search results, so a new one
+  // shows up next to the box that added it, then the remaining candidates.
+  const shown = [];
+  for (const c of [...(d.accepted || []), ...ui.found, ...d.candidates]) {
+    if (!shown.some((s) => same(s, c))) shown.push(c);
+  }
   const sources = d.streams.length ? d.streams.map((s, i) => {
     const hand = !s.auto;
     const index = d.decision.accept.findIndex((a) => same(a, s));
     return `<li>
       <a href="${watchUrl(s)}" target="_blank" rel="noreferrer">${esc(s.videoId)}</a>
-      ${s.startMs || s.endMs != null ? `${minutes(s.startMs)}–${s.endMs == null ? "end" : minutes(s.endMs)}` : ""}
+      ${s.startMs || s.endMs != null ? `${stamp(s.startMs)}–${s.endMs == null ? "end" : stamp(s.endMs)}` : ""}
       ${hand ? "<strong>accepted</strong>" : `auto ${s.confidence.toFixed(2)}`}
       ${hand ? `<button data-up="${index}">↑</button><button data-down="${index}">↓</button>` : `<button data-keep="${i}">Keep</button>`}
       <button data-drop="${i}">${hand ? "Remove" : "Reject"}</button>
@@ -397,7 +413,13 @@ document.addEventListener("keydown", (e) => {
 window.onYouTubeIframeAPIReady = () => {};
 
 (async () => {
+  const linked = decodeURIComponent(location.hash.slice(1));
   await loadState();
+  if (linked) {
+    await openTrack(linked);
+    ui.family = ui.detail.family;
+    renderFamilies();
+  }
   await loadTracks();
-  if (ui.rows.length) openTrack(ui.rows[0].id);
+  if (!linked && ui.rows.length) openTrack(ui.rows[0].id);
 })();

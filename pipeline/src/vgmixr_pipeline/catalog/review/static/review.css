@@ -162,7 +162,18 @@ input {
   gap: 6px;
 }
 
-.card.accepted { border-color: var(--good); }
+.card.hand { border: 3px solid var(--good); padding: 6px; }
+.card.auto { border: 2px dashed var(--good); padding: 7px; }
+.badge-accepted, .badge-auto {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  vertical-align: 1px;
+}
+.badge-accepted { background: var(--good); color: var(--bg); }
+.badge-auto { border: 1px solid var(--good); color: var(--good); }
 .player { aspect-ratio: 16 / 9; background: #000; border-radius: 4px; position: relative; overflow: hidden; }
 .player img { width: 100%; height: 100%; object-fit: cover; opacity: 0.85; }
 

@@ -298,3 +298,21 @@ def test_restoring_a_short_track_keeps_it_out_of_the_jingle_rule(
     review.exclude("rse-cable-car", False)
     written = json.loads((data / "overrides.json").read_text(encoding="utf-8"))
     assert written["tracks"] == {"rse-cable-car": {"exclude": False}}
+
+
+def test_hand_accepted_videos_come_with_details_in_order(
+    tmp_path: Path, clock: Clock, live: LiveVideos
+) -> None:
+    data, out = write_inputs(tmp_path, TRACKS)
+    cached = CachedVideos(
+        {RS_LIST: PLAYLIST}, videos={vid(60): Video(vid(60), "Route 101", 60_000, [])}
+    )
+    review = Review(data, out, cached, live, clock=clock, sleep=clock.sleep)
+    accept = [{"videoId": vid(60), "startMs": 3500}, {"videoId": vid(2)}, {"videoId": vid(61)}]
+    detail = review.set_streams("rse-route-101", {"accept": accept})
+    pasted, candidate, unknown = detail["accepted"]
+    assert (pasted["videoId"], pasted["startMs"], pasted["title"]) == (vid(60), 3500, "Route 101")
+    assert pasted["durationMs"] == 56_500 and pasted["score"] is not None
+    assert (candidate["videoId"], candidate["title"]) == (vid(2), "Rte 101")
+    assert (unknown["videoId"], unknown["title"], unknown["score"]) == (vid(61), None, None)
+    assert review.track("rse-littleroot-town")["accepted"] == []
