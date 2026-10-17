@@ -142,6 +142,20 @@ class Split(_Model):
     title: str | None = None
 
 
+class Part(_Model):
+    """One of the tracks a `parts` override makes of an album track that plays several pieces in
+    a row (e.g. a route's spring and summer versions, one cycle each)."""
+
+    title: str
+    # "m:ss"; else an equal share of the whole track's length.
+    duration: str | None = None
+
+    @field_validator("duration")
+    @classmethod
+    def _check_duration(cls, duration: str | None) -> str | None:
+        return _check_time(duration)
+
+
 class Slice(_Model):
     """A stream source's identity: a video, or a part of one."""
 
@@ -195,6 +209,8 @@ class TrackOverride(_Model):
     streams: Streams | None = None
     # Local files (copied by hand into the app's music folder), played before any stream.
     local: list[LocalSource] = []
+    # Replaces the track with consecutive tracks, one per part, each with its own id and overrides.
+    parts: list[Part] | None = None
     note: str | None = None
 
     @field_validator("duration")

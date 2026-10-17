@@ -6,7 +6,7 @@ tracks. Every rule problem is collected and reported at once as a BuildError.
 """
 
 from collections.abc import Callable, Iterable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
@@ -165,6 +165,8 @@ def build_tracks(
     }
     tracks = _split(tracks, family_games, overrides.tracks, errors)
     known_ids |= set(tracks)
+    tracks = _parts(tracks, overrides.tracks, errors)
+    known_ids |= set(tracks)
     for extra_track in _extras(overrides, family_games, set(tracks), errors):
         tracks[extra_track.id] = extra_track
         known_ids.add(extra_track.id)
@@ -241,6 +243,44 @@ def _split(
             new = _Track(new_id, track.family, split.title or moved[0].title, moved)
             new.games = set().union(*(_games(o, family_games) for o in moved))
             result[new_id] = new
+    return result
+
+
+def _parts(
+    tracks: dict[str, _Track], overrides: dict[str, TrackOverride], errors: list[str]
+) -> dict[str, _Track]:
+    """Replaces each track with `parts` by consecutive tracks in its place: ids from their
+    titles, the track's games, and each part's own length or an equal share of the whole."""
+    result: dict[str, _Track] = {}
+    for track in tracks.values():
+        override = overrides.get(track.id, TrackOverride())
+        if override.parts is None:
+            result[track.id] = track
+            continue
+        others = override.model_fields_set - {"parts", "note"}
+        if others:
+            errors.append(f"override {track.id}: with parts, {', '.join(sorted(others))} go on "
+                          "the parts' own ids")  # fmt: skip
+        if len(override.parts) < 2:
+            errors.append(f"override {track.id}: parts need at least two parts")
+            continue
+        whole = _duration(track)
+        share = round(whole / len(override.parts)) if whole is not None else None
+        count = len(override.parts)
+        for number, part in enumerate(override.parts, start=1):
+            part_id = track_id(track.family, part.title)
+            if part_id in result or (part_id in tracks and part_id != track.id):
+                errors.append(f"override {track.id}: part id {part_id} already exists")
+                continue
+            duration = parse_duration(part.duration) if part.duration is not None else share
+            occurrences = [
+                replace(o, title=part.title, duration_ms=duration,
+                        origin=f"{o.origin} (part {number} of {count})")
+                for o in track.occurrences
+            ]  # fmt: skip
+            new = _Track(part_id, track.family, part.title, occurrences)
+            new.games = set(track.games)
+            result[part_id] = new
     return result
 
 

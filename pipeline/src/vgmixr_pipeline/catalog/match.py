@@ -14,6 +14,7 @@ from typing import Any, Literal, Protocol
 
 from vgmixr_pipeline.catalog.build import Draft, DraftTrack
 from vgmixr_pipeline.catalog.config import Overrides, Streams, TrackOverride, YouTube
+from vgmixr_pipeline.catalog.jsonfmt import track_family
 from vgmixr_pipeline.catalog.score import (
     Candidate,
     Names,
@@ -24,6 +25,7 @@ from vgmixr_pipeline.catalog.score import (
     score,
     video_words,
 )
+from vgmixr_pipeline.catalog.slug import track_id
 from vgmixr_pipeline.catalog.youtube import Entry, PlaylistHit, Video
 from vgmixr_pipeline.manifest.models import Game, StreamSource
 
@@ -35,6 +37,9 @@ _GAME_BOY = {"GB", "GBC"}
 # A word in at least this share of a playlist's titles is noise (needs a few entries to tell).
 NOISE_SHARE = 0.6
 NOISE_MIN_ENTRIES = 4
+# A part (see the `parts` override) never auto-accepts a video this much longer than itself: that's
+# an upload of the whole album track, which plays the other parts too.
+PART_MAX_RATIO = 1.5
 
 type Status = Literal["matched", "review", "unmatched"]
 
@@ -75,7 +80,7 @@ def match_tracks(
     only: Collection[str] | None = None,
 ) -> list[Match]:
     """Matches every track, or only the tracks with ids in `only` (the review tool's rematch)."""
-    matcher = _Matcher(draft, youtube, videos, names, search)
+    matcher = _Matcher(draft, youtube, videos, names, search, _part_ids(draft, overrides))
     return [
         matcher.match(track, overrides.tracks.get(track.id, TrackOverride()).streams or Streams())
         for track in draft.tracks
@@ -85,9 +90,16 @@ def match_tracks(
 
 class _Matcher:
     def __init__(
-        self, draft: Draft, youtube: YouTube, videos: Videos, names: Names, search: bool
+        self,
+        draft: Draft,
+        youtube: YouTube,
+        videos: Videos,
+        names: Names,
+        search: bool,
+        parts: frozenset[str] = frozenset(),
     ) -> None:
         self._youtube = youtube
+        self._parts = parts
         self._videos = videos
         self._names = names
         self._search = search
@@ -115,25 +127,39 @@ class _Matcher:
                 key = _identity(candidate)
                 if key not in pool or pool[key].score.value < scored.score.value:
                     pool[key] = scored
-            if any(classify(s.score.value) is Verdict.ACCEPT for s in pool.values()):
+            if any(self._verdict(track, s) is Verdict.ACCEPT for s in pool.values()):
                 break
         ranked = sorted(pool.values(), key=lambda s: -s.score.value)
         sources = [_stream(s.videoId, s.startMs, s.endMs, 1.0) for s in streams.accept]
         taken = {(s.videoId, s.startMs, s.endMs) for s in sources}
         for scored in ranked:
             c = scored.candidate
-            accepted = classify(scored.score.value) is Verdict.ACCEPT
+            accepted = self._verdict(track, scored) is Verdict.ACCEPT
             if len(sources) < MAX_SOURCES and accepted and _identity(c) not in taken:
                 value = round(scored.score.value, 2)
                 sources.append(_stream(c.video_id, c.start_ms, c.end_ms, value))
         if sources:
             status: Status = "matched"
-        elif any(classify(s.score.value) is Verdict.REVIEW for s in ranked):
+        elif any(self._verdict(track, s) is Verdict.REVIEW for s in ranked):
             status = "review"
         else:
             status = "unmatched"
         best = ranked[:KEPT_CANDIDATES]
         return Match(track.id, track.family, track.title, status, sources, best, facts)
+
+    def _verdict(self, track: DraftTrack, scored: Scored) -> Verdict:
+        """The score's verdict, except that a part reviews a video of the whole album track."""
+        verdict = classify(scored.score.value)
+        length, video = track.durationMs, scored.candidate.duration_ms
+        if (
+            verdict is Verdict.ACCEPT
+            and track.id in self._parts
+            and length is not None
+            and video is not None
+            and video > PART_MAX_RATIO * length
+        ):
+            return Verdict.REVIEW
+        return verdict
 
     def _facts(self, track: DraftTrack) -> TrackFacts:
         games = track.games or self._family_games[track.family]
@@ -196,6 +222,17 @@ class _Matcher:
                     video.id, chapter.title, length, None, "album", frozenset(album.games),
                     index / (count - 1) if count > 1 else None, chapter.start_ms, chapter.end_ms,
                 )  # fmt: skip
+
+
+def _part_ids(draft: Draft, overrides: Overrides) -> frozenset[str]:
+    """The ids of the tracks `parts` overrides make."""
+    families = list(dict.fromkeys(g.family_id for g in draft.games))
+    return frozenset(
+        track_id(family, part.title)
+        for key, override in overrides.tracks.items()
+        if override.parts and (family := track_family(key, families)) is not None
+        for part in override.parts
+    )
 
 
 def candidates_json(matches: list[Match]) -> list[dict[str, Any]]:

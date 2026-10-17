@@ -7,7 +7,7 @@ from vgmixr_pipeline.catalog.build import (
     Occurrence,
     build_tracks,
 )
-from vgmixr_pipeline.catalog.config import Extra, Overrides, Split, TrackOverride
+from vgmixr_pipeline.catalog.config import Extra, Overrides, Part, Split, TrackOverride
 from vgmixr_pipeline.manifest.models import Game, LocalSource
 
 GAMES = [
@@ -269,3 +269,49 @@ def test_a_local_override_puts_files_in_front_of_a_tracks_sources() -> None:
     local = LocalSource(type="local", path="rby/route-1.m4a")
     overrides = Overrides(tracks={"rby-route-1": TrackOverride(local=[local])})
     assert track(build([occ("Route 1")], overrides), "rby-route-1").sources == [local]
+
+
+SEASONS = [Part(title="Route 2 (Spring)", duration="0:46"), Part(title="Route 2 (Summer)")]
+
+
+def test_parts_replace_a_track_with_consecutive_tracks_in_its_place() -> None:
+    overrides = Overrides(tracks={"rby-route-2-spring-summer": TrackOverride(parts=SEASONS)})
+    result = build([occ("Route 1"), occ("Route 2 (Spring/Summer)", RB, 90), occ("Route 3")],
+                   overrides)  # fmt: skip
+    assert ids(result) == [
+        "rby-route-1", "rby-route-2-spring", "rby-route-2-summer", "rby-route-3"
+    ]  # fmt: skip
+    assert [track(result, i).order for i in ids(result)] == [0, 1, 2, 3]
+    spring, summer = track(result, "rby-route-2-spring"), track(result, "rby-route-2-summer")
+    assert (spring.title, spring.games, spring.category) == ("Route 2 (Spring)", ["red", "blue"],
+                                                             "route")  # fmt: skip
+    # A part's own length, else an equal share of the whole.
+    assert (spring.durationMs, summer.durationMs) == (46_000, 45_000)
+    assert spring.origins == ["Album / Disc 1 #Route 2 (Spring/Summer) (part 1 of 2)"]
+    assert summer.origins == ["Album / Disc 1 #Route 2 (Spring/Summer) (part 2 of 2)"]
+
+
+def test_a_part_takes_its_own_overrides() -> None:
+    overrides = Overrides(tracks={
+        "rby-route-2-spring-summer": TrackOverride(parts=SEASONS, note="Two seasons"),
+        "rby-route-2-summer": TrackOverride(title="Route 2 (Summer!)", duration="0:50"),
+    })  # fmt: skip
+    summer = track(build([occ("Route 2 (Spring/Summer)", seconds=90)], overrides),
+                   "rby-route-2-summer")  # fmt: skip
+    assert (summer.title, summer.durationMs) == ("Route 2 (Summer!)", 50_000)
+
+
+@pytest.mark.parametrize(
+    ("override", "error"),
+    [
+        (TrackOverride(parts=SEASONS, title="Route 2"), "parts"),
+        (TrackOverride(parts=SEASONS[:1]), "two"),
+        (TrackOverride(parts=[SEASONS[0], SEASONS[0]]), "rby-route-2-spring"),
+        (TrackOverride(parts=[SEASONS[0], Part(title="Route 1")]), "rby-route-1"),
+    ],
+)
+def test_bad_parts_are_errors(override: TrackOverride, error: str) -> None:
+    overrides = Overrides(tracks={"rby-route-2-spring-summer": override})
+    with pytest.raises(BuildError) as raised:
+        build([occ("Route 1"), occ("Route 2 (Spring/Summer)")], overrides)
+    assert any(error in e for e in raised.value.errors), raised.value.errors

@@ -5,7 +5,7 @@ from typing import Any
 import pytest
 
 from vgmixr_pipeline.catalog.build import Draft, DraftTrack
-from vgmixr_pipeline.catalog.config import Overrides, YouTube
+from vgmixr_pipeline.catalog.config import Overrides, Part, TrackOverride, YouTube
 from vgmixr_pipeline.catalog.match import Match, candidates_json, match_tracks
 from vgmixr_pipeline.catalog.score import Names
 from vgmixr_pipeline.catalog.youtube import Chapter, Entry, PlaylistHit, Video
@@ -284,3 +284,31 @@ def test_only_matches_the_given_tracks_as_a_full_run_would() -> None:
         f"playlist {RS_LIST}",
         "search Pokémon Ruby Sapphire Emerald Oldale Town",
     ]
+
+
+PARTS = Overrides(tracks={"rse-route-110-spring-summer": TrackOverride(
+    parts=[Part(title="Route 110 (Spring)"), Part(title="Route 110 (Summer)")]
+)})  # fmt: skip
+
+
+def test_a_part_is_not_auto_matched_to_a_video_of_the_whole() -> None:
+    # The upload of the album track plays both seasons: twice a part's length.
+    videos = FakeVideos({RS_LIST: entries("Route 110 (Spring)", duration_ms=92_000)})
+    spring = track("Route 110 (Spring)", 0, duration_ms=46_000)
+    result = run(draft(spring), videos, overrides=PARTS, search=False)
+    assert result["rse-route-110-spring"].streams == []
+    assert result["rse-route-110-spring"].status == "review"
+    assert result["rse-route-110-spring"].candidates[0].score.value >= 0.8
+
+
+def test_a_part_is_auto_matched_to_a_video_of_its_own_length() -> None:
+    videos = FakeVideos({RS_LIST: entries("Route 110 (Spring)", duration_ms=47_000)})
+    spring = track("Route 110 (Spring)", 0, duration_ms=46_000)
+    result = run(draft(spring), videos, overrides=PARTS, search=False)
+    assert ids(result["rse-route-110-spring"]) == [vid(1)]
+
+
+def test_a_track_that_is_not_a_part_still_takes_a_longer_video() -> None:
+    videos = FakeVideos({RS_LIST: entries("Route 110 (Spring)", duration_ms=92_000)})
+    result = run(draft(track("Route 110 (Spring)", 0, duration_ms=46_000)), videos, search=False)
+    assert ids(result["rse-route-110-spring"]) == [vid(1)]

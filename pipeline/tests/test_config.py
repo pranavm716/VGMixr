@@ -243,3 +243,9 @@ def test_local_override_takes_only_local_sources() -> None:
     stream = {"type": "stream", "videoId": "abcdefghijk"}
     with pytest.raises(ValidationError):
         Overrides.model_validate({"tracks": {"rse-x": {"local": [stream]}}})
+
+
+def test_part_duration_must_be_minutes_and_seconds() -> None:
+    parts = [{"title": "A", "duration": "0:4"}, {"title": "B"}]
+    with pytest.raises(ValidationError):
+        Overrides.model_validate({"tracks": {"x": {"parts": parts}}})
