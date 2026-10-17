@@ -471,9 +471,11 @@ class Review:
         }
 
     def _outcome(self, match: Match) -> dict[str, Any]:
+        accepted = {(s.videoId, s.startMs, s.endMs) for s in self._decision(match.track_id).accept}
         sources = [
             {"videoId": s.videoId, "startMs": s.startMs, "endMs": s.endMs,
-             "confidence": s.confidence}
+             "confidence": s.confidence,
+             "auto": (s.videoId, s.startMs, s.endMs) not in accepted}
             for s in match.streams
         ]  # fmt: skip
         return {"status": self._status_of(match), "sources": sources}

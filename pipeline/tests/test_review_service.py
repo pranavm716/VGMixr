@@ -543,7 +543,9 @@ def test_hand_decisions_stay_first_when_a_playlist_is_added(tmp_path: Path, cloc
     change = next(c for c in preview["changes"] if c["id"] == "oras-littleroot-town")
     assert change["hand"] is True
     assert [s["videoId"] for s in change["before"]["sources"]] == [vid(70)]
-    assert [s["videoId"] for s in change["after"]["sources"]] == [vid(70), vid(80)]
+    assert [(s["videoId"], s["auto"]) for s in change["after"]["sources"]] == [
+        (vid(70), False), (vid(80), True)
+    ]  # fmt: skip
 
     review.add_playlist(ORAS_LIST, ["omega-ruby", "alpha-sapphire"], None, None, None)
     streams = review.track("oras-littleroot-town")["streams"]

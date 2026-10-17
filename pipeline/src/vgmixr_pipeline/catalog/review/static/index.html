@@ -14,13 +14,20 @@
   </header>
   <div id="message" hidden></div>
   <main>
-    <nav id="families"></nav>
+    <nav>
+      <div id="modes">
+        <button id="mode-tracks" class="selected">Tracks</button>
+        <button id="mode-playlists" title="Families ranked by missing playlists and unmatched tracks">Playlists</button>
+      </div>
+      <div id="families"></div>
+    </nav>
     <section id="list">
       <div id="listhead">
         <input id="filter" type="search" placeholder="Filter tracks ( / )" autocomplete="off">
         <div id="tabs"></div>
       </div>
       <ol id="tracks"></ol>
+      <div id="gaps" hidden></div>
     </section>
     <section id="detail"><p class="empty">Pick a track.</p></section>
   </main>
