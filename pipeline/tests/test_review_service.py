@@ -316,3 +316,47 @@ def test_hand_accepted_videos_come_with_details_in_order(
     assert (candidate["videoId"], candidate["title"]) == (vid(2), "Rte 101")
     assert (unknown["videoId"], unknown["title"], unknown["score"]) == (vid(61), None, None)
     assert review.track("rse-littleroot-town")["accepted"] == []
+
+
+def test_a_title_override_shows_before_the_next_build(
+    tmp_path: Path, clock: Clock, live: LiveVideos
+) -> None:
+    data, out = write_inputs(tmp_path, TRACKS)
+    (data / "overrides.json").write_text(
+        '{ "tracks": { "rse-route-101": { "title": "Battle! (Wally)" } }, "extras": [] }'
+    )
+    review = Review(data, out, CachedVideos({RS_LIST: PLAYLIST}), live, clock=clock,
+                    sleep=clock.sleep)  # fmt: skip
+    (row,) = [r for r in review.tracks("rse", None) if r["id"] == "rse-route-101"]
+    assert row["title"] == "Battle! (Wally)"
+    detail = review.track("rse-route-101")
+    assert detail["title"] == "Battle! (Wally)"
+    assert detail["query"] == "Pokémon Ruby Sapphire Emerald Battle! (Wally)"
+
+
+def test_accepting_an_unknown_video_looks_up_its_details_once(
+    review: Review, live: LiveVideos
+) -> None:
+    live.videos[vid(70)] = Video(vid(70), "Route 101", 60_000, [])
+    detail = review.set_streams("rse-route-101", {"accept": [{"videoId": vid(70)}]})
+    assert (detail["accepted"][0]["title"], detail["accepted"][0]["durationMs"]) == (
+        "Route 101",
+        60_000,
+    )
+    review.track("rse-route-101")
+    assert live.calls.count(f"video {vid(70)}") == 1
+
+
+def test_a_known_video_is_not_looked_up_again(review: Review, live: LiveVideos) -> None:
+    review.set_streams("rse-route-101", {"accept": [{"videoId": vid(2)}]})
+    assert live.calls == []
+
+
+def test_a_matched_tracks_row_shows_its_first_sources_confidence(review: Review) -> None:
+    review.set_streams("rse-route-101", {"accept": [{"videoId": vid(2)}]})
+    rows = {r["id"]: r for r in review.tracks("rse", None)}
+    assert rows["rse-route-101"]["confidence"] == 1.0
+    assert rows["rse-littleroot-town"]["confidence"] == pytest.approx(
+        review.track("rse-littleroot-town")["streams"][0]["confidence"]
+    )
+    assert rows["rse-abandoned-ship"]["confidence"] is None

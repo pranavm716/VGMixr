@@ -123,11 +123,13 @@ function renderTracks() {
   }
   const games = gamesById();
   const rows = visibleRows();
-  $("tracks").innerHTML = rows.length ? rows.map((r) => `
+  // A matched track shows its first source's confidence (1.00 when picked by hand), others
+  // their best candidate's score.
+  $("tracks").innerHTML = rows.length ? rows.map((r) => { const score = r.confidence ?? r.best; return `
     <li data-id="${esc(r.id)}" class="${r.id === ui.trackId ? "selected" : ""}">
       <span class="title">${esc(r.title)} ${r.games ? r.games.map((g) => chip(games[g])).join("") : ""}</span>
-      <span class="meta status-${r.status}">${r.decided ? "✎ " : ""}${r.best == null ? "–" : r.best.toFixed(2)}</span>
-    </li>`).join("") : `<li class="empty">${ui.rows.length ? "No tracks match the filter." : "No tracks."}</li>`;
+      <span class="meta status-${r.status}">${r.decided ? "✎ " : ""}${score == null ? "–" : score.toFixed(2)}</span>
+    </li>`; }).join("") : `<li class="empty">${ui.rows.length ? "No tracks match the filter." : "No tracks."}</li>`;
   for (const li of $("tracks").querySelectorAll("li[data-id]")) {
     li.onclick = () => openTrack(li.dataset.id);
   }

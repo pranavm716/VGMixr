@@ -87,16 +87,24 @@ class Review:
         self._rebuild = rebuild
         self._blocked_until: float | None = None
         self._last_live: float | None = None
+        # Videos looked up live in this session, for details the cached-only client can't see.
+        self._details: dict[str, Video] = {}
         self._load()
 
     # Loading and matching
 
     def _load(self) -> None:
-        self._draft = Draft.model_validate_json(
-            (self._out_dir / "draft.json").read_text(encoding="utf-8")
-        )
         self._games = load_games(self._data_dir / "games.json")
         self._overrides = load_overrides(self._data_dir / "overrides.json")
+        draft = Draft.model_validate_json(
+            (self._out_dir / "draft.json").read_text(encoding="utf-8")
+        )
+        # Title overrides apply at once, as the next build would apply them.
+        titles = {k: o.title for k, o in self._overrides.tracks.items() if o.title is not None}
+        self._draft = draft.model_copy(update={"tracks": [
+            t.model_copy(update={"title": titles[t.id]}) if t.id in titles else t
+            for t in draft.tracks
+        ]})  # fmt: skip
         self._names = Names.build(self._games.games, self._games.youtube.aliases)
         self._tracks = {t.id: t for t in self._draft.tracks}
         self._families: dict[str, list[Game]] = {}
@@ -179,6 +187,7 @@ class Review:
             raise ReviewError(e.errors) from e
         self._overrides = load_overrides(self._data_dir / "overrides.json")
         self._rematch({track_id})
+        self._look_up_accepted(track_id)
         return self.track(track_id)
 
     def exclude(self, track_id: str, removed: bool) -> dict[str, Any]:
@@ -233,6 +242,8 @@ class Review:
         except ValueError as e:
             raise ReviewError([str(e)]) from e
         video, notice = self._ask(lambda videos: videos.video(video_id))
+        if video.title:
+            self._details[video_id] = video
         extra = {"youtube": self._youtube_mode(), **({"notice": notice} if notice else {})}
         return {"candidate": self._slice_json(facts, piece, video), **extra}
 
@@ -285,7 +296,28 @@ class Review:
         for scored in match.candidates:
             if _identity(scored.candidate) == identity:
                 return scored_json(scored)
-        return self._slice_json(facts, piece, self._cached.video(piece.videoId))
+        return self._slice_json(facts, piece, self._video(piece.videoId))
+
+    def _video(self, video_id: str) -> Video:
+        return self._details.get(video_id) or self._cached.video(video_id)
+
+    def _look_up_accepted(self, track_id: str) -> None:
+        """Looks up hand-accepted videos whose details aren't known yet (e.g. accepted by id),
+        when YouTube may be asked. A failed lookup only leaves the card without details."""
+        match = self._matches[track_id]
+        candidates = {s.candidate.video_id for s in match.candidates}
+        for piece in self._decision(track_id).accept:
+            video_id = piece.videoId
+            if video_id not in candidates and not self._video(video_id).title:
+                self._look_up(video_id)
+
+    def _look_up(self, video_id: str) -> None:
+        try:
+            video, _ = self._ask(lambda videos: videos.video(video_id))
+        except ReviewError:
+            return
+        if video.title:
+            self._details[video_id] = video
 
     def _slice_json(self, facts: TrackFacts, piece: Slice, video: Video) -> dict[str, Any]:
         """A slice of `video` scored against the track, or unscored when its details are unknown."""
@@ -341,6 +373,8 @@ class Review:
             "order": track.order,
             "durationMs": track.durationMs,
             "best": round(match.candidates[0].score.value, 3) if match.candidates else None,
+            # The first source's confidence (1.0 when picked by hand), for matched tracks.
+            "confidence": match.streams[0].confidence if match.streams else None,
             "sources": len(match.streams),
             "decided": override.streams is not None,
         }
