@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-18T03:09:23Z",
+  "generatedAt": "2026-10-18T03:22:59Z",
   "games": [
     {
       "id": "red",
@@ -13345,36 +13345,15 @@
     {
       "id": "oras-opening-movie-setting-out-on-a-journey-in-the-hoenn-region",
       "family": "oras",
-      "title": "Opening Movie: Setting out on a Journey in the Hoenn Region",
+      "title": "Opening Movie",
       "category": "event",
       "order": 0,
       "sources": [
         {
           "type": "stream",
-          "videoId": "8KxGMd9Ykys",
+          "videoId": "OKaeA81-Ap0",
           "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "hd6QIEy_pJg",
-          "startMs": 0,
-          "confidence": 0.87
-        }
-      ]
-    },
-    {
-      "id": "oras-title-screen-main-theme",
-      "family": "oras",
-      "title": "Title Screen: Main Theme",
-      "category": "event",
-      "order": 2,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "vInFcBjTR5c",
-          "startMs": 0,
-          "confidence": 0.84
+          "confidence": 1.0
         }
       ]
     },
@@ -13383,7 +13362,7 @@
       "family": "oras",
       "title": "Introductions",
       "category": "other",
-      "order": 3,
+      "order": 1,
       "sources": [
         {
           "type": "stream",
@@ -13398,7 +13377,7 @@
       "family": "oras",
       "title": "Littleroot Town",
       "category": "town",
-      "order": 4,
+      "order": 2,
       "sources": [
         {
           "type": "stream",
@@ -13413,7 +13392,7 @@
       "family": "oras",
       "title": "Birch Pokémon Lab",
       "category": "town",
-      "order": 5,
+      "order": 3,
       "sources": [
         {
           "type": "stream",
@@ -13428,7 +13407,7 @@
       "family": "oras",
       "title": "May",
       "category": "other",
-      "order": 6,
+      "order": 4,
       "sources": [
         {
           "type": "stream",
@@ -13443,7 +13422,7 @@
       "family": "oras",
       "title": "H-Help Me!",
       "category": "other",
-      "order": 7,
+      "order": 5,
       "sources": [
         {
           "type": "stream",
@@ -13470,7 +13449,7 @@
       "family": "oras",
       "title": "Battle! (Wild Pokémon)",
       "category": "battle",
-      "order": 8,
+      "order": 6,
       "sources": [
         {
           "type": "stream",
@@ -13485,7 +13464,7 @@
       "family": "oras",
       "title": "Victory! (Wild Pokémon)",
       "category": "battle",
-      "order": 9,
+      "order": 7,
       "sources": [
         {
           "type": "stream",
@@ -13506,7 +13485,7 @@
       "family": "oras",
       "title": "Route 101",
       "category": "route",
-      "order": 10,
+      "order": 8,
       "sources": [
         {
           "type": "stream",
@@ -13521,7 +13500,7 @@
       "family": "oras",
       "title": "Oldale Town",
       "category": "town",
-      "order": 11,
+      "order": 9,
       "sources": [
         {
           "type": "stream",
@@ -13548,7 +13527,7 @@
       "family": "oras",
       "title": "Hurry Along",
       "category": "other",
-      "order": 12,
+      "order": 10,
       "sources": [
         {
           "type": "stream",
@@ -13575,7 +13554,7 @@
       "family": "oras",
       "title": "Pokémon Center",
       "category": "town",
-      "order": 13,
+      "order": 11,
       "sources": [
         {
           "type": "stream",
@@ -13590,7 +13569,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Youngster)",
       "category": "battle",
-      "order": 14,
+      "order": 12,
       "sources": [
         {
           "type": "stream",
@@ -13605,7 +13584,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Lass)",
       "category": "battle",
-      "order": 15,
+      "order": 13,
       "sources": [
         {
           "type": "stream",
@@ -13620,7 +13599,7 @@
       "family": "oras",
       "title": "Battle! (Trainer Battle)",
       "category": "battle",
-      "order": 16,
+      "order": 14,
       "sources": [
         {
           "type": "stream",
@@ -13631,11 +13610,26 @@
       ]
     },
     {
+      "id": "oras-victory-trainer-battle",
+      "family": "oras",
+      "title": "Victory! (Trainer Battle)",
+      "category": "battle",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0jofvN3Krkc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-petalburg-city",
       "family": "oras",
       "title": "Petalburg City",
       "category": "town",
-      "order": 18,
+      "order": 16,
       "sources": [
         {
           "type": "stream",
@@ -13650,7 +13644,7 @@
       "family": "oras",
       "title": "Wally's Theme",
       "category": "event",
-      "order": 19,
+      "order": 17,
       "sources": [
         {
           "type": "stream",
@@ -13665,7 +13659,7 @@
       "family": "oras",
       "title": "Route 104",
       "category": "route",
-      "order": 20,
+      "order": 18,
       "sources": [
         {
           "type": "stream",
@@ -13680,7 +13674,7 @@
       "family": "oras",
       "title": "Petalburg Woods",
       "category": "dungeon",
-      "order": 21,
+      "order": 19,
       "sources": [
         {
           "type": "stream",
@@ -13701,7 +13695,7 @@
       "family": "oras",
       "title": "Team Magma Appears!",
       "category": "event",
-      "order": 22,
+      "order": 20,
       "sources": [
         {
           "type": "stream",
@@ -13716,7 +13710,7 @@
       "family": "oras",
       "title": "Battle! (Team Aqua / Team Magma)",
       "category": "battle",
-      "order": 23,
+      "order": 21,
       "sources": [
         {
           "type": "stream",
@@ -13731,7 +13725,7 @@
       "family": "oras",
       "title": "Victory! (Team Aqua / Team Magma)",
       "category": "battle",
-      "order": 24,
+      "order": 22,
       "sources": [
         {
           "type": "stream",
@@ -13746,13 +13740,13 @@
       "family": "oras",
       "title": "Rustboro City",
       "category": "town",
-      "order": 25,
+      "order": 23,
       "sources": [
         {
           "type": "stream",
           "videoId": "8njyRJbV-c0",
           "startMs": 0,
-          "confidence": 0.95
+          "confidence": 0.94
         }
       ]
     },
@@ -13761,7 +13755,7 @@
       "family": "oras",
       "title": "Trainers' School",
       "category": "other",
-      "order": 26,
+      "order": 24,
       "sources": [
         {
           "type": "stream",
@@ -13782,7 +13776,7 @@
       "family": "oras",
       "title": "Crossing the Sea",
       "category": "route",
-      "order": 27,
+      "order": 25,
       "sources": [
         {
           "type": "stream",
@@ -13797,7 +13791,7 @@
       "family": "oras",
       "title": "Dewford Town",
       "category": "town",
-      "order": 28,
+      "order": 26,
       "sources": [
         {
           "type": "stream",
@@ -13820,17 +13814,32 @@
       ]
     },
     {
+      "id": "oras-trainers-eyes-meet-tuber-female",
+      "family": "oras",
+      "title": "Trainers' eyes Meet (Tuber♀)",
+      "category": "battle",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jdlvp0FKJxo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-slateport-city",
       "family": "oras",
       "title": "Slateport City",
       "category": "town",
-      "order": 30,
+      "order": 28,
       "sources": [
         {
           "type": "stream",
           "videoId": "ln2f7YhMXeA",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 0.91
         }
       ]
     },
@@ -13839,7 +13848,7 @@
       "family": "oras",
       "title": "Oceanic Museum",
       "category": "other",
-      "order": 31,
+      "order": 29,
       "sources": [
         {
           "type": "stream",
@@ -13860,7 +13869,7 @@
       "family": "oras",
       "title": "Leader's Theme (Team Aqua / Team Magma)",
       "category": "event",
-      "order": 32,
+      "order": 30,
       "sources": [
         {
           "type": "stream",
@@ -13875,13 +13884,13 @@
       "family": "oras",
       "title": "Route 110",
       "category": "route",
-      "order": 33,
+      "order": 31,
       "sources": [
         {
           "type": "stream",
           "videoId": "tBksVgsh9UU",
           "startMs": 0,
-          "confidence": 0.94
+          "confidence": 0.93
         }
       ]
     },
@@ -13890,7 +13899,7 @@
       "family": "oras",
       "title": "Cycling",
       "category": "route",
-      "order": 34,
+      "order": 32,
       "sources": [
         {
           "type": "stream",
@@ -13905,7 +13914,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Triathlete)",
       "category": "battle",
-      "order": 35,
+      "order": 33,
       "sources": [
         {
           "type": "stream",
@@ -13926,7 +13935,7 @@
       "family": "oras",
       "title": "Verdanturf Town",
       "category": "town",
-      "order": 36,
+      "order": 34,
       "sources": [
         {
           "type": "stream",
@@ -13953,7 +13962,7 @@
       "family": "oras",
       "title": "Route 113",
       "category": "route",
-      "order": 37,
+      "order": 35,
       "sources": [
         {
           "type": "stream",
@@ -13980,7 +13989,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Twins)",
       "category": "battle",
-      "order": 38,
+      "order": 36,
       "sources": [
         {
           "type": "stream",
@@ -13995,7 +14004,7 @@
       "family": "oras",
       "title": "Fallarbor Town",
       "category": "town",
-      "order": 39,
+      "order": 37,
       "sources": [
         {
           "type": "stream",
@@ -14022,7 +14031,7 @@
       "family": "oras",
       "title": "Cable Car",
       "category": "other",
-      "order": 40,
+      "order": 38,
       "sources": [
         {
           "type": "stream",
@@ -14049,7 +14058,7 @@
       "family": "oras",
       "title": "Mt. Chimney",
       "category": "dungeon",
-      "order": 41,
+      "order": 39,
       "sources": [
         {
           "type": "stream",
@@ -14076,7 +14085,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Hiker)",
       "category": "battle",
-      "order": 42,
+      "order": 40,
       "sources": [
         {
           "type": "stream",
@@ -14091,7 +14100,7 @@
       "family": "oras",
       "title": "Route 111",
       "category": "route",
-      "order": 43,
+      "order": 41,
       "sources": [
         {
           "type": "stream",
@@ -14106,7 +14115,7 @@
       "family": "oras",
       "title": "Pokémon Gym",
       "category": "town",
-      "order": 44,
+      "order": 42,
       "sources": [
         {
           "type": "stream",
@@ -14121,7 +14130,7 @@
       "family": "oras",
       "title": "Battle! (Gym Leader)",
       "category": "battle",
-      "order": 45,
+      "order": 43,
       "sources": [
         {
           "type": "stream",
@@ -14136,7 +14145,7 @@
       "family": "oras",
       "title": "Victory! (Gym Leader / Elite Four)",
       "category": "battle",
-      "order": 46,
+      "order": 44,
       "sources": [
         {
           "type": "stream",
@@ -14151,7 +14160,7 @@
       "family": "oras",
       "title": "A Path We All Must Walk",
       "category": "other",
-      "order": 47,
+      "order": 45,
       "sources": [
         {
           "type": "stream",
@@ -14178,7 +14187,7 @@
       "family": "oras",
       "title": "Surf",
       "category": "route",
-      "order": 48,
+      "order": 46,
       "sources": [
         {
           "type": "stream",
@@ -14199,7 +14208,7 @@
       "family": "oras",
       "title": "Hold on Tight!",
       "category": "other",
-      "order": 49,
+      "order": 47,
       "sources": [
         {
           "type": "stream",
@@ -14214,7 +14223,7 @@
       "family": "oras",
       "title": "Southern Island",
       "category": "town",
-      "order": 50,
+      "order": 48,
       "sources": [
         {
           "type": "stream",
@@ -14229,13 +14238,13 @@
       "family": "oras",
       "title": "Route 119",
       "category": "route",
-      "order": 51,
+      "order": 49,
       "sources": [
         {
           "type": "stream",
           "videoId": "cGiHMx574B8",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 0.99
         }
       ]
     },
@@ -14244,7 +14253,7 @@
       "family": "oras",
       "title": "Explosive Encounters! Red and Blue",
       "category": "other",
-      "order": 52,
+      "order": 50,
       "sources": [
         {
           "type": "stream",
@@ -14259,7 +14268,7 @@
       "family": "oras",
       "title": "Fortree City",
       "category": "town",
-      "order": 53,
+      "order": 51,
       "sources": [
         {
           "type": "stream",
@@ -14286,7 +14295,7 @@
       "family": "oras",
       "title": "Route 120",
       "category": "route",
-      "order": 54,
+      "order": 52,
       "sources": [
         {
           "type": "stream",
@@ -14313,7 +14322,7 @@
       "family": "oras",
       "title": "Interviewers",
       "category": "other",
-      "order": 55,
+      "order": 53,
       "sources": [
         {
           "type": "stream",
@@ -14328,7 +14337,7 @@
       "family": "oras",
       "title": "Safari Zone",
       "category": "other",
-      "order": 56,
+      "order": 54,
       "sources": [
         {
           "type": "stream",
@@ -14343,7 +14352,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Gentleman)",
       "category": "battle",
-      "order": 57,
+      "order": 55,
       "sources": [
         {
           "type": "stream",
@@ -14358,7 +14367,7 @@
       "family": "oras",
       "title": "Lilycove City",
       "category": "town",
-      "order": 58,
+      "order": 56,
       "sources": [
         {
           "type": "stream",
@@ -14379,7 +14388,7 @@
       "family": "oras",
       "title": "Museum",
       "category": "other",
-      "order": 59,
+      "order": 57,
       "sources": [
         {
           "type": "stream",
@@ -14394,7 +14403,7 @@
       "family": "oras",
       "title": "Brendan",
       "category": "other",
-      "order": 60,
+      "order": 58,
       "sources": [
         {
           "type": "stream",
@@ -14409,7 +14418,7 @@
       "family": "oras",
       "title": "Battle! (Brendan / May)",
       "category": "battle",
-      "order": 61,
+      "order": 59,
       "sources": [
         {
           "type": "stream",
@@ -14420,11 +14429,26 @@
       ]
     },
     {
+      "id": "oras-evolution",
+      "family": "oras",
+      "title": "Evolution",
+      "category": "event",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uAIT3gqeVTM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-poke-mart",
       "family": "oras",
       "title": "Poké Mart",
       "category": "town",
-      "order": 63,
+      "order": 61,
       "sources": [
         {
           "type": "stream",
@@ -14451,7 +14475,7 @@
       "family": "oras",
       "title": "Mt. Pyre",
       "category": "dungeon",
-      "order": 64,
+      "order": 62,
       "sources": [
         {
           "type": "stream",
@@ -14472,7 +14496,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Psychic)",
       "category": "battle",
-      "order": 65,
+      "order": 63,
       "sources": [
         {
           "type": "stream",
@@ -14487,7 +14511,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Hex Maniac)",
       "category": "battle",
-      "order": 66,
+      "order": 64,
       "sources": [
         {
           "type": "stream",
@@ -14502,7 +14526,7 @@
       "family": "oras",
       "title": "Mt. Pyre Exterior",
       "category": "dungeon",
-      "order": 67,
+      "order": 65,
       "sources": [
         {
           "type": "stream",
@@ -14517,7 +14541,7 @@
       "family": "oras",
       "title": "The Slitherers",
       "category": "other",
-      "order": 68,
+      "order": 66,
       "sources": [
         {
           "type": "stream",
@@ -14532,7 +14556,7 @@
       "family": "oras",
       "title": "Hideout",
       "category": "dungeon",
-      "order": 69,
+      "order": 67,
       "sources": [
         {
           "type": "stream",
@@ -14547,7 +14571,7 @@
       "family": "oras",
       "title": "Five Furious Strikes!",
       "category": "other",
-      "order": 70,
+      "order": 68,
       "sources": [
         {
           "type": "stream",
@@ -14568,7 +14592,7 @@
       "family": "oras",
       "title": "Countdown to Destruction",
       "category": "other",
-      "order": 71,
+      "order": 69,
       "sources": [
         {
           "type": "stream",
@@ -14589,7 +14613,7 @@
       "family": "oras",
       "title": "Dive",
       "category": "other",
-      "order": 72,
+      "order": 70,
       "sources": [
         {
           "type": "stream",
@@ -14616,7 +14640,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Scuba Diver)",
       "category": "battle",
-      "order": 73,
+      "order": 71,
       "sources": [
         {
           "type": "stream",
@@ -14631,7 +14655,7 @@
       "family": "oras",
       "title": "Team Aqua Appears!",
       "category": "event",
-      "order": 74,
+      "order": 72,
       "sources": [
         {
           "type": "stream",
@@ -14658,7 +14682,7 @@
       "family": "oras",
       "title": "Battle! (Team Aqua / Team Magma Leaders)",
       "category": "battle",
-      "order": 75,
+      "order": 73,
       "sources": [
         {
           "type": "stream",
@@ -14673,7 +14697,7 @@
       "family": "oras",
       "title": "The Super-Ancient Pokémon Awaken!",
       "category": "other",
-      "order": 76,
+      "order": 74,
       "sources": [
         {
           "type": "stream",
@@ -14697,7 +14721,7 @@
       ],
       "title": "Drought",
       "category": "other",
-      "order": 77,
+      "order": 75,
       "sources": [
         {
           "type": "stream",
@@ -14721,7 +14745,7 @@
       ],
       "title": "Heavy Rain",
       "category": "other",
-      "order": 78,
+      "order": 76,
       "sources": [
         {
           "type": "stream",
@@ -14736,7 +14760,7 @@
       "family": "oras",
       "title": "Sootopolis City",
       "category": "town",
-      "order": 79,
+      "order": 77,
       "sources": [
         {
           "type": "stream",
@@ -14751,7 +14775,7 @@
       "family": "oras",
       "title": "Cave of Origin",
       "category": "dungeon",
-      "order": 80,
+      "order": 78,
       "sources": [
         {
           "type": "stream",
@@ -14766,13 +14790,13 @@
       "family": "oras",
       "title": "Battle! (Primal Reversion)",
       "category": "battle",
-      "order": 81,
+      "order": 79,
       "sources": [
         {
           "type": "stream",
           "videoId": "saDO1GcGnRs",
           "startMs": 0,
-          "confidence": 0.94
+          "confidence": 0.93
         }
       ]
     },
@@ -14781,7 +14805,7 @@
       "family": "oras",
       "title": "Coexistence",
       "category": "other",
-      "order": 82,
+      "order": 80,
       "sources": [
         {
           "type": "stream",
@@ -14808,7 +14832,7 @@
       "family": "oras",
       "title": "Soaring Dreams",
       "category": "other",
-      "order": 83,
+      "order": 81,
       "sources": [
         {
           "type": "stream",
@@ -14823,7 +14847,7 @@
       "family": "oras",
       "title": "Soaring Illusions",
       "category": "other",
-      "order": 84,
+      "order": 82,
       "sources": [
         {
           "type": "stream",
@@ -14834,11 +14858,26 @@
       ]
     },
     {
+      "id": "oras-trainers-eyes-meet-swimmer-female",
+      "family": "oras",
+      "title": "Trainers' eyes Meet (Swimmer♀)",
+      "category": "battle",
+      "order": 83,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HUn6PHVQicE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "oras-ever-grande-city",
       "family": "oras",
       "title": "Ever Grande City",
       "category": "town",
-      "order": 86,
+      "order": 84,
       "sources": [
         {
           "type": "stream",
@@ -14865,7 +14904,7 @@
       "family": "oras",
       "title": "Victory Road",
       "category": "dungeon",
-      "order": 87,
+      "order": 85,
       "sources": [
         {
           "type": "stream",
@@ -14880,7 +14919,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Ace Trainer)",
       "category": "battle",
-      "order": 88,
+      "order": 86,
       "sources": [
         {
           "type": "stream",
@@ -14901,7 +14940,7 @@
       "family": "oras",
       "title": "Battle! (Wally)",
       "category": "battle",
-      "order": 89,
+      "order": 87,
       "sources": [
         {
           "type": "stream",
@@ -14922,7 +14961,7 @@
       "family": "oras",
       "title": "The Elite Four Appear!",
       "category": "other",
-      "order": 90,
+      "order": 88,
       "sources": [
         {
           "type": "stream",
@@ -14937,7 +14976,7 @@
       "family": "oras",
       "title": "Battle! (Elite Four)",
       "category": "battle",
-      "order": 91,
+      "order": 89,
       "sources": [
         {
           "type": "stream",
@@ -14952,7 +14991,7 @@
       "family": "oras",
       "title": "Champion Steven",
       "category": "battle",
-      "order": 92,
+      "order": 90,
       "sources": [
         {
           "type": "stream",
@@ -14967,7 +15006,7 @@
       "family": "oras",
       "title": "Battle! (Steven)",
       "category": "battle",
-      "order": 93,
+      "order": 91,
       "sources": [
         {
           "type": "stream",
@@ -14982,7 +15021,7 @@
       "family": "oras",
       "title": "Victory! (Steven)",
       "category": "battle",
-      "order": 94,
+      "order": 92,
       "sources": [
         {
           "type": "stream",
@@ -14997,7 +15036,7 @@
       "family": "oras",
       "title": "Room of Glory",
       "category": "other",
-      "order": 95,
+      "order": 93,
       "sources": [
         {
           "type": "stream",
@@ -15024,7 +15063,7 @@
       "family": "oras",
       "title": "The Hall of Fame",
       "category": "event",
-      "order": 96,
+      "order": 94,
       "sources": [
         {
           "type": "stream",
@@ -15051,7 +15090,7 @@
       "family": "oras",
       "title": "Let's Go Home",
       "category": "other",
-      "order": 97,
+      "order": 95,
       "sources": [
         {
           "type": "stream",
@@ -15072,7 +15111,7 @@
       "family": "oras",
       "title": "Ending Theme",
       "category": "event",
-      "order": 98,
+      "order": 96,
       "sources": [
         {
           "type": "stream",
@@ -15093,7 +15132,7 @@
       "family": "oras",
       "title": "The End",
       "category": "other",
-      "order": 99,
+      "order": 97,
       "sources": [
         {
           "type": "stream",
@@ -15108,7 +15147,7 @@
       "family": "oras",
       "title": "The Heirs to Eternity",
       "category": "other",
-      "order": 100,
+      "order": 98,
       "sources": [
         {
           "type": "stream",
@@ -15123,7 +15162,7 @@
       "family": "oras",
       "title": "Azoth",
       "category": "other",
-      "order": 101,
+      "order": 99,
       "sources": [
         {
           "type": "stream",
@@ -15144,7 +15183,7 @@
       "family": "oras",
       "title": "Sky Pillar",
       "category": "other",
-      "order": 102,
+      "order": 100,
       "sources": [
         {
           "type": "stream",
@@ -15159,7 +15198,7 @@
       "family": "oras",
       "title": "The Lament of Falling Stars",
       "category": "other",
-      "order": 103,
+      "order": 101,
       "sources": [
         {
           "type": "stream",
@@ -15186,7 +15225,7 @@
       "family": "oras",
       "title": "Battle! (Super-Ancient Pokémon)",
       "category": "battle",
-      "order": 104,
+      "order": 102,
       "sources": [
         {
           "type": "stream",
@@ -15201,7 +15240,7 @@
       "family": "oras",
       "title": "Battle! (Lorekeeper Zinnia)",
       "category": "battle",
-      "order": 105,
+      "order": 103,
       "sources": [
         {
           "type": "stream",
@@ -15216,7 +15255,7 @@
       "family": "oras",
       "title": "Per Aspera Ad Astra",
       "category": "other",
-      "order": 106,
+      "order": 104,
       "sources": [
         {
           "type": "stream",
@@ -15231,7 +15270,7 @@
       "family": "oras",
       "title": "Battle! (Deoxys)",
       "category": "battle",
-      "order": 107,
+      "order": 105,
       "sources": [
         {
           "type": "stream",
@@ -15246,7 +15285,7 @@
       "family": "oras",
       "title": "Strains of a New Beginning -Theme of Ωrαs-",
       "category": "other",
-      "order": 108,
+      "order": 106,
       "sources": [
         {
           "type": "stream",
@@ -15261,7 +15300,7 @@
       "family": "oras",
       "title": "Contest Lobby",
       "category": "event",
-      "order": 109,
+      "order": 107,
       "sources": [
         {
           "type": "stream",
@@ -15276,7 +15315,7 @@
       "family": "oras",
       "title": "Lisia's Theme",
       "category": "event",
-      "order": 110,
+      "order": 108,
       "sources": [
         {
           "type": "stream",
@@ -15291,7 +15330,7 @@
       "family": "oras",
       "title": "Pokémon Contest Spectacular: Introductions!",
       "category": "event",
-      "order": 111,
+      "order": 109,
       "sources": [
         {
           "type": "stream",
@@ -15306,7 +15345,7 @@
       "family": "oras",
       "title": "Pokémon Contest Spectacular: Appeals!",
       "category": "event",
-      "order": 112,
+      "order": 110,
       "sources": [
         {
           "type": "stream",
@@ -15321,7 +15360,7 @@
       "family": "oras",
       "title": "Results",
       "category": "other",
-      "order": 113,
+      "order": 111,
       "sources": [
         {
           "type": "stream",
@@ -15336,7 +15375,7 @@
       "family": "oras",
       "title": "Contest Victor",
       "category": "event",
-      "order": 114,
+      "order": 112,
       "sources": [
         {
           "type": "stream",
@@ -15351,7 +15390,7 @@
       "family": "oras",
       "title": "Trick House",
       "category": "other",
-      "order": 115,
+      "order": 113,
       "sources": [
         {
           "type": "stream",
@@ -15366,7 +15405,7 @@
       "family": "oras",
       "title": "Super-Secret Bases",
       "category": "other",
-      "order": 116,
+      "order": 114,
       "sources": [
         {
           "type": "stream",
@@ -15381,7 +15420,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Poké Fan)",
       "category": "battle",
-      "order": 117,
+      "order": 115,
       "sources": [
         {
           "type": "stream",
@@ -15408,7 +15447,7 @@
       "family": "oras",
       "title": "Trainers' eyes Meet (Street Thug)",
       "category": "battle",
-      "order": 118,
+      "order": 116,
       "sources": [
         {
           "type": "stream",
@@ -15423,7 +15462,7 @@
       "family": "oras",
       "title": "Sea Mauville",
       "category": "route",
-      "order": 119,
+      "order": 117,
       "sources": [
         {
           "type": "stream",
@@ -15438,7 +15477,7 @@
       "family": "oras",
       "title": "Sealed Chamber",
       "category": "other",
-      "order": 120,
+      "order": 118,
       "sources": [
         {
           "type": "stream",
@@ -15453,7 +15492,7 @@
       "family": "oras",
       "title": "Battle! (Regirock / Regice / Registeel)",
       "category": "battle",
-      "order": 121,
+      "order": 119,
       "sources": [
         {
           "type": "stream",
@@ -15474,7 +15513,7 @@
       "family": "oras",
       "title": "Pokémon Link",
       "category": "other",
-      "order": 122,
+      "order": 120,
       "sources": [
         {
           "type": "stream",
@@ -15489,7 +15528,7 @@
       "family": "oras",
       "title": "Battle Resort",
       "category": "other",
-      "order": 123,
+      "order": 121,
       "sources": [
         {
           "type": "stream",
@@ -15510,7 +15549,7 @@
       "family": "oras",
       "title": "Battle Maison",
       "category": "town",
-      "order": 124,
+      "order": 122,
       "sources": [
         {
           "type": "stream",
@@ -15525,7 +15564,7 @@
       "family": "oras",
       "title": "Battle! (Battle Chatelaine)",
       "category": "battle",
-      "order": 125,
+      "order": 123,
       "sources": [
         {
           "type": "stream",
