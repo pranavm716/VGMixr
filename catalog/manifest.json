@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-18T00:08:01Z",
+  "generatedAt": "2026-10-18T03:09:23Z",
   "games": [
     {
       "id": "red",
@@ -10982,6 +10982,2363 @@
           "videoId": "L2bx_R_49Ew",
           "startMs": 0,
           "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "bw-title-screen",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Opening Movie (Black & White)",
+      "category": "event",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ApBmZQml9rk",
+          "startMs": 3000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-onward-to-adventure",
+      "family": "bw",
+      "title": "Onward to Adventure!",
+      "category": "other",
+      "order": 2,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "AT245Z_hXFM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-a-day-of-beginnings",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "A Day of Beginnings",
+      "category": "other",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_SuN4_Q_284",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-nuvema-town",
+      "family": "bw",
+      "title": "Nuvema Town",
+      "category": "town",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tBvAzy8GZS0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-cheren-bianca",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Battle! (Cheren/Bianca)",
+      "category": "battle",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8znHfLRvuZ0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bw-hurry-along-1",
+      "family": "bw",
+      "title": "Hurry Along 1",
+      "category": "other",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6bgNU47RBuo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-professor-juniper",
+      "family": "bw",
+      "title": "Professor Juniper",
+      "category": "other",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-UDXhwUqaaU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bw-juniper-pokemon-lab",
+      "family": "bw",
+      "title": "Juniper Pokémon Lab",
+      "category": "town",
+      "order": 8,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vdjuu1x-_0A",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-lets-go-together",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Let's Go Together!",
+      "category": "other",
+      "order": 9,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gayPTbvM7BE",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bw-route-1",
+      "family": "bw",
+      "title": "Route 1",
+      "category": "route",
+      "order": 10,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FxiigIaGNNY",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-wild-pokemon",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Battle! (Wild Pokémon) (Black & White)",
+      "category": "battle",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "l7GKnZ0_DwA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-victory-wild-pokemon",
+      "family": "bw",
+      "title": "Victory! (Wild Pokémon)",
+      "category": "battle",
+      "order": 13,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_QG503Sde9Q",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "bw-accumula-town",
+      "family": "bw",
+      "title": "Accumula Town",
+      "category": "town",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0MEEZ-ttiJc",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bw-hurry-along-2",
+      "family": "bw",
+      "title": "Hurry Along 2",
+      "category": "other",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Oopos8sPsUY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-pokemon-center",
+      "family": "bw",
+      "title": "Pokémon Center",
+      "category": "town",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "w2w1wy8abys",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bw-team-plasma-plots",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Team Plasma Plots",
+      "category": "other",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fr9teX2gDn8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-route-2-spring",
+      "family": "bw",
+      "title": "Route 2 (Spring)",
+      "category": "route",
+      "order": 18,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "H7LKDlba7aQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-route-2-summer",
+      "family": "bw",
+      "title": "Route 2 (Summer)",
+      "category": "route",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "PKWH11jD7hw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-youngster",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Youngster)",
+      "category": "battle",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "OZOzRd23QyY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-trainer-battle",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Battle! (Trainer Battle) (Black & White)",
+      "category": "battle",
+      "order": 21,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CHpJUyc5HeA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-victory-trainer-battle",
+      "family": "bw",
+      "title": "Victory! (Trainer Battle)",
+      "category": "battle",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "m0z3jTYJHj0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-lass",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Lass)",
+      "category": "battle",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nYGkLVDB_VI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-striaton-city",
+      "family": "bw",
+      "title": "Striaton City",
+      "category": "town",
+      "order": 25,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FnJ55kMEJEM",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bw-the-dreamyard",
+      "family": "bw",
+      "title": "The Dreamyard",
+      "category": "other",
+      "order": 26,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QbLS93caxg8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-team-plasma-appears",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Team Plasma Appears!",
+      "category": "event",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "s67vGP2r9Aw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-team-plasma",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Battle! (Team Plasma) (Black & White)",
+      "category": "battle",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QzCOmbc9dBA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-victory-team-plasma",
+      "family": "bw",
+      "title": "Victory! (Team Plasma)",
+      "category": "battle",
+      "order": 30,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_O8jlG7Gmz4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-evolution",
+      "family": "bw",
+      "title": "Evolution",
+      "category": "event",
+      "order": 31,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ITI2Ei90Uac",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-twins",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Twins)",
+      "category": "battle",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "RyBMIfvP3Ek",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-cherens-theme",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Cheren's Theme (Black & White)",
+      "category": "event",
+      "order": 33,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BHVQ63yfoPM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-theres-trouble",
+      "family": "bw",
+      "title": "There's Trouble!",
+      "category": "other",
+      "order": 35,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "j32xMxR2fUw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-nacrene-city",
+      "family": "bw",
+      "title": "Nacrene City",
+      "category": "town",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "AqTb8qxz0cY",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-pokemon-gym",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Pokémon Gym",
+      "category": "town",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "h74wJ9chZXg",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-gym-leader",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Battle! (Gym Leader) (Black & White)",
+      "category": "battle",
+      "order": 38,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kFR9-HTZIVU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-victory-lies-before-you",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Victory Lies Before You! (Black & White)",
+      "category": "other",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Kpz7xFqHFY8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-victory-gym-leader",
+      "family": "bw",
+      "title": "Victory! (Gym Leader)",
+      "category": "battle",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gT87DdNasQs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-gate",
+      "family": "bw",
+      "title": "Gate",
+      "category": "other",
+      "order": 43,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MLUh1Ln9tSQ",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-skyarrow-bridge",
+      "family": "bw",
+      "title": "Skyarrow Bridge",
+      "category": "other",
+      "order": 44,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "szJoDvmtlzQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-castelia-city",
+      "family": "bw",
+      "title": "Castelia City",
+      "category": "town",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WIxkKTT4dOU",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-clerk-male",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Clerk ♂)",
+      "category": "battle",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "369g7i0GFRc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-route-4-spring",
+      "family": "bw",
+      "title": "Route 4 (Spring)",
+      "category": "route",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "o5RY_Yy8BAA",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-backpacker",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Backpacker)",
+      "category": "battle",
+      "order": 48,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Z0UwJmxh_0s",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-nimbasa-city",
+      "family": "bw",
+      "title": "Nimbasa City",
+      "category": "town",
+      "order": 49,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kNPhu43vtbI",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-biancas-theme",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Bianca's Theme (Black & White)",
+      "category": "event",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ecejgExvru0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-an-unwavering-heart",
+      "family": "bw",
+      "title": "An Unwavering Heart",
+      "category": "other",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SivgT_swnvQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-prisoner-to-a-formula",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Prisoner to a Formula",
+      "category": "other",
+      "order": 53,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "L4XTTc-N-KM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-n",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Battle! (N) (Black & White)",
+      "category": "battle",
+      "order": 54,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MVtXGJH48oM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-a-tight-spot-during-battle",
+      "family": "bw",
+      "title": "A Tight Spot During Battle!",
+      "category": "other",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qUOpU9hT6rY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-bicycle",
+      "family": "bw",
+      "title": "Bicycle",
+      "category": "route",
+      "order": 57,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "N2rhBtaf8cU",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-champion-alder",
+      "family": "bw",
+      "title": "Champion Alder",
+      "category": "battle",
+      "order": 58,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SsSUw7oi9Ks",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-driftveil-drawbridge",
+      "family": "bw",
+      "title": "Driftveil Drawbridge",
+      "category": "other",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iue7qAMJ540",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-driftveil-city",
+      "family": "bw",
+      "title": "Driftveil City",
+      "category": "town",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UmopXpnaqlU",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-cold-storage",
+      "family": "bw",
+      "title": "Cold Storage",
+      "category": "other",
+      "order": 61,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Htz6Z9HHsVU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-route-6-spring",
+      "family": "bw",
+      "title": "Route 6 (Spring)",
+      "category": "route",
+      "order": 62,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "KdljQr1BNj8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-route-6-summer",
+      "family": "bw",
+      "title": "Route 6 (Summer)",
+      "category": "route",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Ag4qm-4qR2Q",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-parasol-lady",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Parasol Lady)",
+      "category": "battle",
+      "order": 64,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "__tIVnixSG8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-scientist",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Scientist)",
+      "category": "battle",
+      "order": 65,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1CW83Q45mYM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-chargestone-cave",
+      "family": "bw",
+      "title": "Chargestone Cave",
+      "category": "dungeon",
+      "order": 66,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5K7uT78rYf0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-mistralton-city",
+      "family": "bw",
+      "title": "Mistralton City",
+      "category": "town",
+      "order": 67,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DgsACAAVbyE",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-cedric-juniper",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Cedric Juniper",
+      "category": "other",
+      "order": 68,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "RnO2Utfj4tQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-psychic",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Psychic)",
+      "category": "battle",
+      "order": 69,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1L47sCVZ-B8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-icirrus-city",
+      "family": "bw",
+      "title": "Icirrus City",
+      "category": "town",
+      "order": 70,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xWahd6HoCq0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-dragonspiral-tower",
+      "family": "bw",
+      "title": "Dragonspiral Tower",
+      "category": "dungeon",
+      "order": 71,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2y9NwrtO58Y",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-team-plasma",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Trainers' Eyes Meet (Team Plasma) (Black & White)",
+      "category": "battle",
+      "order": 72,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Y_tQHbZ9mJA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-dragonspiral-tower-top-floor",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Dragonspiral Tower Top Floor",
+      "category": "dungeon",
+      "order": 74,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kd5dd3Rlz9s",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "bw-route-4-summer",
+      "family": "bw",
+      "title": "Route 4 (Summer)",
+      "category": "route",
+      "order": 75,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6wapjwsESLA",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "bw-relic-castle",
+      "family": "bw",
+      "title": "Relic Castle",
+      "category": "other",
+      "order": 76,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "60E67wl7vF8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-tubeline-bridge",
+      "family": "bw",
+      "title": "Tubeline Bridge",
+      "category": "other",
+      "order": 77,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bjzEcGSHDag",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-shopping-mall-nine",
+      "family": "bw",
+      "title": "Shopping Mall Nine",
+      "category": "other",
+      "order": 78,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QIxGSA1L46g",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-roughneck",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Roughneck)",
+      "category": "battle",
+      "order": 79,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "u7AogBbSkiU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-opelucid-city-pokemon-black",
+      "family": "bw",
+      "games": [
+        "black",
+        "black-2"
+      ],
+      "title": "Opelucid City (Pokémon Black)",
+      "category": "town",
+      "order": 80,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zzWbFcZ24XU",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "bw-opelucid-city-pokemon-white",
+      "family": "bw",
+      "games": [
+        "white",
+        "white-2"
+      ],
+      "title": "Opelucid City (Pokémon White)",
+      "category": "town",
+      "order": 81,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "pgGzQC47gUg",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "bw-route-10",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Route 10",
+      "category": "route",
+      "order": 82,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fxvl_malSW8",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "bw-victory-road",
+      "family": "bw",
+      "title": "Victory Road",
+      "category": "dungeon",
+      "order": 83,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MGz2w-2dj-M",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-ace-trainer",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Ace Trainer)",
+      "category": "battle",
+      "order": 84,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "i2D4NR2liGg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-the-pokemon-league",
+      "family": "bw",
+      "title": "The Pokémon League",
+      "category": "town",
+      "order": 85,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NaTDB1j5gOA",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-elite-four",
+      "family": "bw",
+      "title": "Battle! (Elite Four)",
+      "category": "battle",
+      "order": 86,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mKsFffsXMXA",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bw-the-pokemon-league-besieged",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "The Pokémon League Besieged!",
+      "category": "town",
+      "order": 87,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "eazoOMuNc2M",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-embracing-ones-duty",
+      "family": "bw",
+      "title": "Embracing One's Duty",
+      "category": "other",
+      "order": 88,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "d2goii5E1a8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-ns-castle",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "N's Castle (Black & White)",
+      "category": "other",
+      "order": 89,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iF2xdkiBZBs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-the-pokemon-child-n",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "The Pokémon Child, N",
+      "category": "other",
+      "order": 91,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3hxXWslWUn8",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bw-ns-dragon",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "N's Dragon",
+      "category": "other",
+      "order": 92,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YNpnSuoS1kI",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bw-the-dragon-awakes",
+      "family": "bw",
+      "title": "The Dragon Awakes",
+      "category": "other",
+      "order": 93,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5e9DUWGSGPY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-reshiram-zekrom",
+      "family": "bw",
+      "title": "Battle! (Reshiram/Zekrom)",
+      "category": "battle",
+      "order": 94,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "U30TLvbQiKo",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bw-decisive-battle-n",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Decisive Battle! (N)",
+      "category": "battle",
+      "order": 95,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_EVELYhfgtQ",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bw-ghetsis-ambitions",
+      "family": "bw",
+      "title": "Ghetsis' Ambitions",
+      "category": "other",
+      "order": 96,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Or4Rp3Ff6OY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-ghetsis",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Battle! (Ghetsis) (Black & White)",
+      "category": "battle",
+      "order": 97,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "c1snVQ-gxAU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-farewell",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Farewell",
+      "category": "other",
+      "order": 99,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "b5kAz3-ohRM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-ending-onward-to-our-own-futures",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Ending \"Onward to Our Own Futures\"",
+      "category": "event",
+      "order": 100,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-z_mfCbTJ4c",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "I5fzDr9frxw",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "bw-lookers-theme",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Looker's Theme",
+      "category": "event",
+      "order": 101,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YH6Zdc1FiRU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bw-route-2-autumn",
+      "family": "bw",
+      "title": "Route 2 (Autumn)",
+      "category": "route",
+      "order": 102,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "p9KVXqxt4JQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-route-2-winter",
+      "family": "bw",
+      "title": "Route 2 (Winter)",
+      "category": "route",
+      "order": 103,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gqdfDUz450I",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-the-royal-unova",
+      "family": "bw",
+      "title": "The Royal Unova",
+      "category": "other",
+      "order": 104,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WZYa64VLpfM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-nintendo-wi-fi-connection",
+      "family": "bw",
+      "title": "Nintendo Wi-Fi Connection",
+      "category": "other",
+      "order": 105,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3GOBgxAfCw0",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "bw-global-terminal",
+      "family": "bw",
+      "title": "Global Terminal",
+      "category": "other",
+      "order": 106,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ipjt4gxfcGQ",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bw-gts",
+      "family": "bw",
+      "title": "Gts",
+      "category": "other",
+      "order": 107,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VgeCtQpTmbc",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bw-spin-trade",
+      "family": "bw",
+      "title": "Spin Trade",
+      "category": "other",
+      "order": 108,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "175UcgF7mpA",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bw-route-4-autumn",
+      "family": "bw",
+      "title": "Route 4 (Autumn)",
+      "category": "route",
+      "order": 109,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xjLSvTvim7k",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "bw-gear-station",
+      "family": "bw",
+      "title": "Gear Station",
+      "category": "other",
+      "order": 110,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "J0uhG4gqYJk",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "bw-the-battle-subway",
+      "family": "bw",
+      "title": "The Battle Subway",
+      "category": "other",
+      "order": 111,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mTlWrE2gtzU",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-battle-subway-trainer",
+      "family": "bw",
+      "title": "Battle! (Battle Subway Trainer)",
+      "category": "battle",
+      "order": 112,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "RkK4Tg1MhBA",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "bw-musical-theater",
+      "family": "bw",
+      "title": "Musical Theater",
+      "category": "other",
+      "order": 113,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HZFp0y6UnJY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-dress-up-with-props",
+      "family": "bw",
+      "title": "Dress Up with Props",
+      "category": "other",
+      "order": 114,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-L9WJhDnW8M",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-the-curtain-for-the-musical-rises",
+      "family": "bw",
+      "title": "The Curtain for the Musical Rises!",
+      "category": "other",
+      "order": 115,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TCejDLCQLs8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-musical-stardom",
+      "family": "bw",
+      "title": "Musical: \"Stardom\"",
+      "category": "other",
+      "order": 116,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QXhmrQmBI6s",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "bw-musical-forest-stroll",
+      "family": "bw",
+      "title": "Musical: \"Forest Stroll\"",
+      "category": "dungeon",
+      "order": 117,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "x81RAvVt0lo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-musical-a-sweet-soiree",
+      "family": "bw",
+      "title": "Musical: \"A Sweet Soirée\"",
+      "category": "other",
+      "order": 118,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "27V-Tqdqc8Q",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-musical-exciting-nimbasa",
+      "family": "bw",
+      "title": "Musical: \"Exciting Nimbasa\"",
+      "category": "other",
+      "order": 119,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "exVtDdGryxQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-a-ferris-wheel-ride-together",
+      "family": "bw",
+      "title": "A Ferris Wheel Ride Together",
+      "category": "other",
+      "order": 120,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4GJfYOv5Js0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-route-6-autumn",
+      "family": "bw",
+      "title": "Route 6 (Autumn)",
+      "category": "route",
+      "order": 121,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "KwTmb-Mgc1I",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-route-6-winter",
+      "family": "bw",
+      "title": "Route 6 (Winter)",
+      "category": "route",
+      "order": 122,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "P7Ck8EqLjQM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-legendary-pokemon",
+      "family": "bw",
+      "title": "Battle! (Legendary Pokémon)",
+      "category": "battle",
+      "order": 123,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-e-pRQXZMSk",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-anville-town",
+      "family": "bw",
+      "title": "Anville Town",
+      "category": "town",
+      "order": 124,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_EwRQCkrqEE",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-marvelous-bridge",
+      "family": "bw",
+      "title": "Marvelous Bridge",
+      "category": "other",
+      "order": 125,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4XgSmtO53_k",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-route-12-spring",
+      "family": "bw",
+      "title": "Route 12 (Spring)",
+      "category": "route",
+      "order": 126,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "f86biwxHh-M",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-route-12-summer",
+      "family": "bw",
+      "title": "Route 12 (Summer)",
+      "category": "route",
+      "order": 127,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dPJTMx9cVrs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-cyclist",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Cyclist)",
+      "category": "battle",
+      "order": 128,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "McIUk1j05hE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-poke-transfer-lab",
+      "family": "bw",
+      "title": "Poké Transfer Lab",
+      "category": "town",
+      "order": 129,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ntfJlLxLMMQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-poke-transfer-choose-your-pokemon",
+      "family": "bw",
+      "title": "Poké Transfer: Choose Your Pokémon!",
+      "category": "other",
+      "order": 130,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YlJkV4rHohE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-poke-transfer-catch-your-pokemon",
+      "family": "bw",
+      "title": "Poké Transfer: Catch Your Pokémon!",
+      "category": "other",
+      "order": 131,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZaFWieb3bk4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-pokefan",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Pokéfan)",
+      "category": "battle",
+      "order": 132,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kVxo46X6ies",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-black-city",
+      "family": "bw",
+      "games": [
+        "black",
+        "black-2"
+      ],
+      "title": "Black City",
+      "category": "town",
+      "order": 133,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XJFDVCCyFCY",
+          "startMs": 0,
+          "confidence": 0.9
+        },
+        {
+          "type": "stream",
+          "videoId": "zzWbFcZ24XU",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "bw-white-forest",
+      "family": "bw",
+      "games": [
+        "white",
+        "white-2"
+      ],
+      "title": "White Forest",
+      "category": "dungeon",
+      "order": 134,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "paRxTZPcnNw",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-game-sync",
+      "family": "bw",
+      "title": "Game Sync",
+      "category": "other",
+      "order": 135,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NHyxU_TYuVw",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-entralink",
+      "family": "bw",
+      "title": "Entralink",
+      "category": "other",
+      "order": 136,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Cqj_4TcSRmw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-someones-entralink",
+      "family": "bw",
+      "title": "Someone's Entralink",
+      "category": "other",
+      "order": 137,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3teuiHFq_pM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-trainers-eyes-meet-gentleman",
+      "family": "bw",
+      "title": "Trainers' Eyes Meet (Gentleman)",
+      "category": "battle",
+      "order": 138,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "js3PI2yntwE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-undella-town-autumn-winter-spring",
+      "family": "bw",
+      "title": "Undella Town (Autumn/Winter/Spring)",
+      "category": "town",
+      "order": 139,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Q7-3zsZvaKI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-undella-town-summer",
+      "family": "bw",
+      "title": "Undella Town (Summer)",
+      "category": "town",
+      "order": 140,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "s4ramR2-2F4",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-cynthias-theme",
+      "family": "bw",
+      "title": "Cynthia's Theme",
+      "category": "event",
+      "order": 141,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iw2U8J3e6Xg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-cynthia",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Battle! (Cynthia)",
+      "category": "battle",
+      "order": 142,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qYQ__qyyAtI",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-lostlorn-forest",
+      "family": "bw",
+      "title": "Lostlorn Forest",
+      "category": "dungeon",
+      "order": 143,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DdJAisJvSvQ",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-strong-wild-pokemon",
+      "family": "bw",
+      "title": "Battle! (Strong Wild Pokémon)",
+      "category": "battle",
+      "order": 144,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MFS1evm72MY",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-surf",
+      "family": "bw",
+      "title": "Surf",
+      "category": "route",
+      "order": 145,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CpKGKus_7ZA",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-abyssal-ruins",
+      "family": "bw",
+      "title": "Abyssal Ruins",
+      "category": "dungeon",
+      "order": 146,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "s5qZLRzTIuk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-route-12-autumn",
+      "family": "bw",
+      "title": "Route 12 (Autumn)",
+      "category": "route",
+      "order": 147,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uZ35rnF64aE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-route-12-winter",
+      "family": "bw",
+      "title": "Route 12 (Winter)",
+      "category": "route",
+      "order": 148,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xLbzYOeJIiI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-lacunosa-town",
+      "family": "bw",
+      "title": "Lacunosa Town",
+      "category": "town",
+      "order": 149,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "G3RdZ4ECGiU",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-village-bridge",
+      "family": "bw",
+      "title": "Village Bridge",
+      "category": "town",
+      "order": 150,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QT7JfwdtBs8",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-mystery-gift",
+      "family": "bw",
+      "title": "Mystery Gift",
+      "category": "other",
+      "order": 151,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aWsy-NEWt4s",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-route-4-winter",
+      "family": "bw",
+      "title": "Route 4 (Winter)",
+      "category": "route",
+      "order": 152,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "N-BOujxW0Yk",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bw-challenging-a-battle-competition",
+      "family": "bw",
+      "title": "Challenging a Battle Competition",
+      "category": "other",
+      "order": 153,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZkV6jOq_Ql4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-team-rocket",
+      "family": "bw",
+      "games": [
+        "black",
+        "white"
+      ],
+      "title": "Team Rocket!?",
+      "category": "other",
+      "order": 154,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Nm45__tDNwk",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-kyurem",
+      "family": "bw",
+      "title": "Battle! (Kyurem)",
+      "category": "battle",
+      "order": 155,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8lq66kptJsk",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "bw-battle-champion",
+      "family": "bw",
+      "title": "Battle! (Champion)",
+      "category": "battle",
+      "order": 156,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xpSa0q7M4Oc",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "bw-victory-champion",
+      "family": "bw",
+      "title": "Victory! (Champion)",
+      "category": "battle",
+      "order": 157,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Bio4WmXEnwQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bw-congratulations-on-entering-the-hall-of-fame",
+      "family": "bw",
+      "title": "Congratulations on Entering the Hall of Fame!",
+      "category": "event",
+      "order": 158,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8fVcVhD7uig",
+          "startMs": 0,
+          "confidence": 0.92
         }
       ]
     },
