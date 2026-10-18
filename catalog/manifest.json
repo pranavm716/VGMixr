@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-18T08:29:31Z",
+  "generatedAt": "2026-10-18T22:18:00Z",
   "games": [
     {
       "id": "red",
@@ -20914,6 +20914,2001 @@
           "videoId": "CQZIBvB6hwM",
           "startMs": 0,
           "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-title-screen",
+      "family": "swsh",
+      "title": "Opening Movie",
+      "category": "event",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "oMzSxQDb918",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-welcome-to-the-world-of-pokemon",
+      "family": "swsh",
+      "title": "Welcome to the World of Pokémon!",
+      "category": "dungeon",
+      "order": 1,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HNpQzjlgjwk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-postwick",
+      "family": "swsh",
+      "title": "Postwick",
+      "category": "other",
+      "order": 2,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "KkNEyaIAICw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-hops-theme",
+      "family": "swsh",
+      "title": "Hop's Theme",
+      "category": "event",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6Uvps2wicuA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-route-1",
+      "family": "swsh",
+      "title": "Route 1",
+      "category": "route",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "pz5pwk0lNFE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-champion-leons-theme",
+      "family": "swsh",
+      "title": "Champion Leon's Theme",
+      "category": "battle",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fUb-_xYGreQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-hop",
+      "family": "swsh",
+      "title": "Battle! (Hop)",
+      "category": "battle",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-Cue4UDE--U",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-slumbering-weald",
+      "family": "swsh",
+      "title": "Slumbering Weald",
+      "category": "other",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "O--tvApwlKU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-wild-pokemon",
+      "family": "swsh",
+      "title": "Battle! (Wild Pokémon)",
+      "category": "battle",
+      "order": 8,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kWeUgcHXqyc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-victory-wild-pokemon",
+      "family": "swsh",
+      "title": "Victory! (Wild Pokémon)",
+      "category": "battle",
+      "order": 9,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wpdV5MQF6jE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-mysterious-being",
+      "family": "swsh",
+      "title": "Battle! (Mysterious Being)",
+      "category": "battle",
+      "order": 10,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DW7gR8s25js",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-wedgehurst",
+      "family": "swsh",
+      "title": "Wedgehurst",
+      "category": "other",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Zbd0QOxbET0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "swsh-hurry-along",
+      "family": "swsh",
+      "title": "Hurry Along",
+      "category": "other",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3EaR2HUfDgQ",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "swsh-pokemon-research-lab",
+      "family": "swsh",
+      "title": "Pokémon Research Lab",
+      "category": "town",
+      "order": 13,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_bYfzT3cgXA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-sonias-theme",
+      "family": "swsh",
+      "title": "Sonia's Theme",
+      "category": "event",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NRybzzPk7dk",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "swsh-pokemon-center",
+      "family": "swsh",
+      "title": "Pokémon Center",
+      "category": "town",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "M3oZKIepTOE",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "swsh-poke-jobs",
+      "family": "swsh",
+      "title": "Poké Jobs",
+      "category": "other",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Gqw5SxJS9UQ",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "swsh-trainers-eyes-meet-youngster",
+      "family": "swsh",
+      "title": "Trainers' Eyes Meet (Youngster)",
+      "category": "battle",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Xh4adxoIGuc",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "swsh-trainers-eyes-meet-lass",
+      "family": "swsh",
+      "title": "Trainers' Eyes Meet (Lass)",
+      "category": "battle",
+      "order": 18,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SsuKpv50UQ0",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-trainer",
+      "family": "swsh",
+      "title": "Battle! (Trainer)",
+      "category": "battle",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tTjd5xlyDn0",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "swsh-victory-trainer",
+      "family": "swsh",
+      "title": "Victory! (Trainer)",
+      "category": "battle",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XJdAfWDPiBE",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "swsh-boutique",
+      "family": "swsh",
+      "title": "Boutique",
+      "category": "other",
+      "order": 21,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "31fxHrI5itU",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "swsh-railway-station",
+      "family": "swsh",
+      "title": "Railway Station",
+      "category": "other",
+      "order": 22,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GxkSys_BO8s",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "swsh-wild-area-south",
+      "family": "swsh",
+      "title": "Wild Area (South)",
+      "category": "route",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "K8idJKcROTc",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "swsh-cooking",
+      "family": "swsh",
+      "title": "Cooking",
+      "category": "other",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "sTK4nkrwYLA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-rotom-rally",
+      "family": "swsh",
+      "title": "Rotom Rally",
+      "category": "other",
+      "order": 25,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "AfVT7nNHbJM",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "swsh-motostoke",
+      "family": "swsh",
+      "title": "Motostoke",
+      "category": "other",
+      "order": 26,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Hmhw-5juBIM",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "swsh-salon",
+      "family": "swsh",
+      "title": "Salon",
+      "category": "other",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "afniak8z9Es",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "swsh-budew-drop-inn",
+      "family": "swsh",
+      "title": "Budew Drop Inn",
+      "category": "other",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yclKMJUisFM",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "swsh-once-upon-a-time",
+      "family": "swsh",
+      "title": "Once Upon A Time...",
+      "category": "other",
+      "order": 29,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rVnORxhtVoI",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "swsh-team-yell-appears",
+      "family": "swsh",
+      "title": "Team Yell Appears!",
+      "category": "event",
+      "order": 30,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "J0k3JMDhDUQ",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-team-yell",
+      "family": "swsh",
+      "title": "Battle! (Team Yell)",
+      "category": "battle",
+      "order": 31,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XkKg0f8aqO4",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "swsh-marnies-theme",
+      "family": "swsh",
+      "title": "Marnie's Theme",
+      "category": "event",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "C7IA424eRrI",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "swsh-gym-challenge-opening-ceremony",
+      "family": "swsh",
+      "title": "Gym Challenge ~ Opening Ceremony",
+      "category": "event",
+      "order": 33,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2VK0E_IXGgc",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "swsh-route-3",
+      "family": "swsh",
+      "title": "Route 3",
+      "category": "route",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4MOGFc2mM_A",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "swsh-trainers-eyes-meet-farmer",
+      "family": "swsh",
+      "title": "Trainers' Eyes Meet (Farmer)",
+      "category": "battle",
+      "order": 35,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "S-sa5iDdQvQ",
+          "startMs": 0,
+          "confidence": 0.96
+        },
+        {
+          "type": "stream",
+          "videoId": "VcQTjv3LPuQ",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "swsh-galar-mines",
+      "family": "swsh",
+      "title": "Galar Mines",
+      "category": "other",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-IQ3gVs7jEI",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "swsh-trainers-eyes-meet-worker",
+      "family": "swsh",
+      "title": "Trainers' Eyes Meet (Worker)",
+      "category": "battle",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VcQTjv3LPuQ",
+          "startMs": 0,
+          "confidence": 0.96
+        },
+        {
+          "type": "stream",
+          "videoId": "S-sa5iDdQvQ",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "swsh-bedes-theme",
+      "family": "swsh",
+      "title": "Bede's Theme",
+      "category": "event",
+      "order": 38,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lEUWmFhRGPY",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-bede",
+      "family": "swsh",
+      "title": "Battle! (Bede)",
+      "category": "battle",
+      "order": 39,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "m057jPp8tTY",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "swsh-turffield",
+      "family": "swsh",
+      "title": "Turffield",
+      "category": "other",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "RYZ1ZIrpk4U",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "swsh-gym-challenge-lobby",
+      "family": "swsh",
+      "title": "Gym Challenge ~ Lobby",
+      "category": "other",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kuWGHwCzrVc",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "swsh-gym-challenge-introduction",
+      "family": "swsh",
+      "title": "Gym Challenge ~ Introduction",
+      "category": "other",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wSM7vWhdLHU",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "swsh-gym-challenge-explanation",
+      "family": "swsh",
+      "title": "Gym Challenge ~ Explanation",
+      "category": "other",
+      "order": 43,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nKEnHrKLGBE",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "swsh-gym-challenge-gym",
+      "family": "swsh",
+      "title": "Gym Challenge ~ Gym",
+      "category": "other",
+      "order": 44,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fzNPsOr-_Ak",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-trainers-eyes-meet-gym-trainer",
+      "family": "swsh",
+      "title": "Trainers' Eyes Meet (Gym Trainer)",
+      "category": "battle",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Lt3cG1QM5qI",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "swsh-victory-gym-trainer",
+      "family": "swsh",
+      "title": "Victory! (Gym Trainer)",
+      "category": "battle",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XTG_hxSandw",
+          "startMs": 0,
+          "confidence": 0.95
+        },
+        {
+          "type": "stream",
+          "videoId": "XJdAfWDPiBE",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-gym-leader",
+      "family": "swsh",
+      "title": "Battle! (Gym Leader)",
+      "category": "battle",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lcoMoQ0uN1Q",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-gym-leader-switching-pokemon",
+      "family": "swsh",
+      "title": "Battle! (Gym Leader ~ Switching Pokémon)",
+      "category": "battle",
+      "order": 48,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3gPXPIFfXJw",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "swsh-victory-gym-leader",
+      "family": "swsh",
+      "title": "Victory! (Gym Leader)",
+      "category": "battle",
+      "order": 49,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YZN6QYwQ0SU",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-hulbury",
+      "family": "swsh",
+      "title": "Hulbury",
+      "category": "other",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1aVNC25BaJQ",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-chairman-roses-theme",
+      "family": "swsh",
+      "title": "Chairman Rose's Theme",
+      "category": "event",
+      "order": 51,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1pUWrfr1JrQ",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-mystery-gift",
+      "family": "swsh",
+      "title": "Mystery Gift",
+      "category": "other",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lyTGeTtIUUI",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-trading",
+      "family": "swsh",
+      "title": "Trading",
+      "category": "other",
+      "order": 53,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "sdvQcOLS-bM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-marnie",
+      "family": "swsh",
+      "title": "Battle! (Marnie)",
+      "category": "battle",
+      "order": 54,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qLM79jo9R-g",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-evolution",
+      "family": "swsh",
+      "title": "Evolution",
+      "category": "event",
+      "order": 55,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FR6pA7u6A2s",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-wild-area-north",
+      "family": "swsh",
+      "title": "Wild Area (North)",
+      "category": "route",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LEQkF37iAsA",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-max-raid",
+      "family": "swsh",
+      "title": "Battle! (Max Raid)",
+      "category": "battle",
+      "order": 57,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2mZzhJDLEyc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-max-raid-capture-chance",
+      "family": "swsh",
+      "title": "Max Raid ~ Capture Chance!",
+      "category": "other",
+      "order": 58,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "I8sXAOcVpJY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-hammerlocke",
+      "family": "swsh",
+      "title": "Hammerlocke",
+      "category": "other",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2PdFEWzHppA",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-route-6",
+      "family": "swsh",
+      "title": "Route 6",
+      "category": "route",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9E6Y00XDo7A",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-trainers-eyes-meet-weird-trainer",
+      "family": "swsh",
+      "title": "Trainers' Eyes Meet (Weird Trainer)",
+      "category": "battle",
+      "order": 61,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jb0ZNXFekUU",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "Lt3cG1QM5qI",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "swsh-stow-on-side",
+      "family": "swsh",
+      "title": "Stow-on-Side",
+      "category": "other",
+      "order": 62,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ohYhTGV9Ekc",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-destruction-of-the-mural",
+      "family": "swsh",
+      "title": "Destruction of the Mural",
+      "category": "other",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "eVJKLsuby0o",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-the-legends-of-galar",
+      "family": "swsh",
+      "title": "The Legends of Galar",
+      "category": "other",
+      "order": 64,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0VOopRV_9ds",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-glimwood-tangle",
+      "family": "swsh",
+      "title": "Glimwood Tangle",
+      "category": "other",
+      "order": 65,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "H1gX2mFcipE",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-ballonlea",
+      "family": "swsh",
+      "title": "Ballonlea",
+      "category": "other",
+      "order": 66,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yQ_pdgODgZQ",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-circhester",
+      "family": "swsh",
+      "title": "Circhester",
+      "category": "other",
+      "order": 67,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "7kIAu5z3RF8",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "swsh-spikemuth",
+      "family": "swsh",
+      "title": "Spikemuth",
+      "category": "other",
+      "order": 68,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lOUUSovFCUs",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-gym-leader-piers",
+      "family": "swsh",
+      "title": "Battle! (Gym Leader Piers)",
+      "category": "battle",
+      "order": 69,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "o9mfRxQWWiY",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "swsh-route-10",
+      "family": "swsh",
+      "title": "Route 10",
+      "category": "route",
+      "order": 70,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "L0C67aQc83w",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-route-10-approaching-wyndon",
+      "family": "swsh",
+      "title": "Route 10 ~ Approaching Wyndon",
+      "category": "route",
+      "order": 71,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "IGQZrjeGzhg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-wyndon",
+      "family": "swsh",
+      "title": "Wyndon",
+      "category": "other",
+      "order": 72,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4Y1DVmrckoU",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-wyndon-stadium-pokemon-league-hq",
+      "family": "swsh",
+      "title": "Wyndon Stadium ~ Pokémon League HQ",
+      "category": "dungeon",
+      "order": 73,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "x_vUboJX45I",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-wyndon-stadium-locker-room",
+      "family": "swsh",
+      "title": "Wyndon Stadium ~ Locker Room",
+      "category": "other",
+      "order": 74,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mbeLoDen77o",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-showdown-marnie",
+      "family": "swsh",
+      "title": "Showdown! (Marnie)",
+      "category": "other",
+      "order": 75,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "h4vJ286Tb2U",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-showdown-hop",
+      "family": "swsh",
+      "title": "Showdown! (Hop)",
+      "category": "other",
+      "order": 76,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "K-DOf_nPKPM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-rose-tower",
+      "family": "swsh",
+      "title": "Rose Tower",
+      "category": "dungeon",
+      "order": 77,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_XoMW6nfaJM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-rose-tower-top-floor",
+      "family": "swsh",
+      "title": "Rose Tower ~ Top Floor",
+      "category": "dungeon",
+      "order": 78,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dzsSzcygm-s",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-oleana",
+      "family": "swsh",
+      "title": "Battle! (Oleana)",
+      "category": "battle",
+      "order": 79,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EY9vwj5sI8k",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "swsh-the-champion-cup",
+      "family": "swsh",
+      "title": "The Champion Cup",
+      "category": "other",
+      "order": 80,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BgB_50Op4Co",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-champion-cup",
+      "family": "swsh",
+      "title": "Battle! (Champion Cup)",
+      "category": "battle",
+      "order": 81,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ppV5syC2qdI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-champion-cup-switching-pokemon",
+      "family": "swsh",
+      "title": "Battle! (Champion Cup ~ Switching Pokémon)",
+      "category": "battle",
+      "order": 82,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8V2AJVR_t40",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-victory-champion-cup",
+      "family": "swsh",
+      "title": "Victory! (Champion Cup)",
+      "category": "battle",
+      "order": 83,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ENlFUyOSC0c",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-chairman-roses-plan",
+      "family": "swsh",
+      "title": "Chairman Rose's Plan",
+      "category": "other",
+      "order": 84,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "05flV3e2y6s",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-slumbering-weald-shrine",
+      "family": "swsh",
+      "title": "Slumbering Weald Shrine",
+      "category": "other",
+      "order": 85,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rQWM-Ss3fHc",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-the-darkest-day",
+      "family": "swsh",
+      "title": "The Darkest Day",
+      "category": "other",
+      "order": 86,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Du3xc2d--M4",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-energy-plant",
+      "family": "swsh",
+      "title": "Energy Plant",
+      "category": "other",
+      "order": 87,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jY26RmdlkWc",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-chairman-rose",
+      "family": "swsh",
+      "title": "Battle! (Chairman Rose)",
+      "category": "battle",
+      "order": 88,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tYoupY2gewQ",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-eternatus-appears",
+      "family": "swsh",
+      "title": "Eternatus Appears!",
+      "category": "event",
+      "order": 89,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-gPnSspvGTM",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-eternatus-phase-1",
+      "family": "swsh",
+      "title": "Battle! (Eternatus ~ Phase 1)",
+      "category": "battle",
+      "order": 90,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FrHnvdfF17M",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-eternatus-phase-2",
+      "family": "swsh",
+      "title": "Battle! (Eternatus ~ Phase 2)",
+      "category": "battle",
+      "order": 91,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "29lDaKIl2pE",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-eternatus-phase-3",
+      "family": "swsh",
+      "title": "Battle! (Eternatus ~ Phase 3)",
+      "category": "battle",
+      "order": 92,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JQjqi9wqp9c",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-eternatus-captured",
+      "family": "swsh",
+      "title": "Eternatus Captured!",
+      "category": "other",
+      "order": 93,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JxvyXBSLwNE",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-champion-leon",
+      "family": "swsh",
+      "title": "Battle! (Champion Leon)",
+      "category": "battle",
+      "order": 94,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EGqo6DbhXrc",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-victory-champion-leon",
+      "family": "swsh",
+      "title": "Victory! (Champion Leon)",
+      "category": "battle",
+      "order": 95,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZluwiN0p3AQ",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-the-galar-regions-new-champion",
+      "family": "swsh",
+      "title": "The Galar Region's New Champion!",
+      "category": "other",
+      "order": 96,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "KMGpipkSj6M",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-staff-credits",
+      "family": "swsh",
+      "title": "Staff Credits",
+      "category": "other",
+      "order": 97,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kESVlLrFfg4",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-zacian-zamazenta",
+      "family": "swsh",
+      "title": "Battle! (Zacian - Zamazenta)",
+      "category": "battle",
+      "order": 98,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ibZEdOR_m-w",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-tower",
+      "family": "swsh",
+      "title": "Battle Tower",
+      "category": "town",
+      "order": 99,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Mc362xpvbWM",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-battle-tower",
+      "family": "swsh",
+      "title": "Battle! (Battle Tower)",
+      "category": "battle",
+      "order": 100,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "n9n7bJEU1d4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-klaras-theme",
+      "family": "swsh",
+      "title": "Klara's Theme",
+      "category": "event",
+      "order": 101,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vVXc1VyKnTc",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-klara",
+      "family": "swsh",
+      "title": "Battle! (Klara)",
+      "category": "battle",
+      "order": 102,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5EAK2y2RnD0",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-averys-theme",
+      "family": "swsh",
+      "title": "Avery's Theme",
+      "category": "event",
+      "order": 103,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rgw8fqSJfeg",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-avery",
+      "family": "swsh",
+      "title": "Battle! (Avery)",
+      "category": "battle",
+      "order": 104,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "eToEOVITcyE",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-the-isle-of-armor",
+      "family": "swsh",
+      "title": "The Isle of Armor",
+      "category": "other",
+      "order": 105,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2GF5o-FFE7k",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-master-dojo",
+      "family": "swsh",
+      "title": "Master Dojo",
+      "category": "other",
+      "order": 106,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rFmXYgN2A0Q",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-mustards-theme",
+      "family": "swsh",
+      "title": "Mustard's Theme",
+      "category": "event",
+      "order": 107,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VvDuzC06iiU",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-mustard",
+      "family": "swsh",
+      "title": "Battle! (Mustard)",
+      "category": "battle",
+      "order": 108,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-kGBkdoCXyE",
+          "startMs": 0,
+          "confidence": 0.9
+        },
+        {
+          "type": "stream",
+          "videoId": "-7Pz3YY5QxY",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "swsh-the-secret-armor-kubfu",
+      "family": "swsh",
+      "title": "The Secret Armor ~ Kubfu!",
+      "category": "other",
+      "order": 109,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_Vv-wCmIeLk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-tower-of-darkness",
+      "family": "swsh",
+      "title": "Tower of Darkness",
+      "category": "dungeon",
+      "order": 110,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "cYe3FzQOJDU",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "swsh-tower-of-waters",
+      "family": "swsh",
+      "title": "Tower of Waters",
+      "category": "dungeon",
+      "order": 111,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "71B5PKUvN5c",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "swsh-showdown-mustard",
+      "family": "swsh",
+      "title": "Showdown! (Mustard)",
+      "category": "other",
+      "order": 112,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-7Pz3YY5QxY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-victory-mustard",
+      "family": "swsh",
+      "title": "Victory! (Mustard)",
+      "category": "battle",
+      "order": 113,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YPJZ44pribM",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "swsh-kubfus-training-complete",
+      "family": "swsh",
+      "title": "Kubfu's Training Complete!",
+      "category": "other",
+      "order": 114,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Spnw8TLnA3s",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "swsh-the-crown-tundra",
+      "family": "swsh",
+      "title": "The Crown Tundra",
+      "category": "route",
+      "order": 115,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "cdxZ5blKiQo",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-peonys-theme",
+      "family": "swsh",
+      "title": "Peony's Theme",
+      "category": "event",
+      "order": 116,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "IrMmnMRiGtU",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-peony",
+      "family": "swsh",
+      "title": "Battle! (Peony)",
+      "category": "battle",
+      "order": 117,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qlskrAZN_nA",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-max-lair",
+      "family": "swsh",
+      "title": "Max Lair",
+      "category": "other",
+      "order": 118,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "eG3F5fhLu_w",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-dynamax-adventure",
+      "family": "swsh",
+      "title": "Dynamax Adventure",
+      "category": "other",
+      "order": 119,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EUfha3dfNqg",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-max-raid-legendary-pokemon",
+      "family": "swsh",
+      "title": "Battle! (Max Raid ~ Legendary Pokémon)",
+      "category": "battle",
+      "order": 120,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6I0UZwq-aLY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-freezington",
+      "family": "swsh",
+      "title": "Freezington",
+      "category": "other",
+      "order": 121,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VN_BWZbxXVk",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-calyrexs-theme",
+      "family": "swsh",
+      "title": "Calyrex's Theme",
+      "category": "event",
+      "order": 122,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "plKJLJUjeRE",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-calyrex",
+      "family": "swsh",
+      "title": "Battle! (Calyrex)",
+      "category": "battle",
+      "order": 123,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "raCncT45lcY",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-glastrier-spectrier",
+      "family": "swsh",
+      "title": "Battle! (Glastrier - Spectrier)",
+      "category": "battle",
+      "order": 124,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jU-QwRIS_3s",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-crown-shrine",
+      "family": "swsh",
+      "title": "Crown Shrine",
+      "category": "other",
+      "order": 125,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1rfIxL1DCJY",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "swsh-calyrex-rides-again",
+      "family": "swsh",
+      "title": "Calyrex Rides Again!",
+      "category": "other",
+      "order": 126,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qu7mQTiSUqI",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-ice-rider-calyrex-shadow-rider-calyrex",
+      "family": "swsh",
+      "title": "Battle! (Ice Rider Calyrex - Shadow Rider Calyrex)",
+      "category": "battle",
+      "order": 127,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "cPE0UeTrOGg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-legendary-giants",
+      "family": "swsh",
+      "title": "Battle! (Legendary Giants)",
+      "category": "battle",
+      "order": 128,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1_DkUB7sCrQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "swsh-legendary-birds-on-the-loose",
+      "family": "swsh",
+      "title": "Legendary Birds on the Loose!",
+      "category": "other",
+      "order": 129,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HWPPpY1fEAo",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "swsh-battle-galarian-legendary-birds",
+      "family": "swsh",
+      "title": "Battle! (Galarian Legendary Birds)",
+      "category": "battle",
+      "order": 130,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iKD0VpuEjg8",
+          "startMs": 0,
+          "confidence": 0.91
         }
       ]
     },
