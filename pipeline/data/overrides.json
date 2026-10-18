@@ -154,6 +154,11 @@
     "hgss-opening-movie": { "duration": "2:25", "streams": { "accept": [ { "videoId": "yyhJCtAtw3g" } ] },
                             "note": "The opening and the title screen, played back to back (1:07 + 1:18)" },
     "hgss-title-screen": { "mergeInto": "hgss-opening-movie" },
+    "hgss-arceus": { "streams": { "accept": [ { "videoId": "ZuXI7qcNsHQ" } ] } },
+    "hgss-pokeathlon-finals-gb-sounds": { "streams": { "accept": [ { "videoId": "9FjIOHgK6QQ" } ] } },
+    "hgss-pokeathlon-an-event-begins-gb-sounds": { "streams": { "accept": [ { "videoId": "QdeuBquvtqY" } ] } },
+    "hgss-pokeathlon-event-time-gb-sounds": { "streams": { "accept": [ { "videoId": "JZr7c-Se42E" } ] } },
+    "hgss-pokeathlon-medal-ceremony-gb-sounds": { "streams": { "accept": [ { "videoId": "aQQR67wlQRk" } ] } },
 
     "bw-opelucid-city-pokemon-black": { "games": ["black", "black-2"], "note": "Version-specific town theme" },
     "bw-opelucid-city-pokemon-white": { "games": ["white", "white-2"], "note": "Version-specific town theme" },

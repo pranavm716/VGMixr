@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-18T03:34:41Z",
+  "generatedAt": "2026-10-18T03:49:52Z",
   "games": [
     {
       "id": "red",
@@ -10815,6 +10815,21 @@
       ]
     },
     {
+      "id": "hgss-arceus",
+      "family": "hgss",
+      "title": "Arceus",
+      "category": "other",
+      "order": 139,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZuXI7qcNsHQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "hgss-poke-mart-gb-sounds",
       "family": "hgss",
       "title": "Poké Mart (GB Sounds)",
@@ -10971,6 +10986,51 @@
       ]
     },
     {
+      "id": "hgss-pokeathlon-an-event-begins-gb-sounds",
+      "family": "hgss",
+      "title": "Pokéathlon: An Event Begins! (GB Sounds)",
+      "category": "event",
+      "order": 150,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QdeuBquvtqY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "hgss-pokeathlon-event-time-gb-sounds",
+      "family": "hgss",
+      "title": "Pokéathlon: Event Time! (GB Sounds)",
+      "category": "event",
+      "order": 151,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JZr7c-Se42E",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "hgss-pokeathlon-finals-gb-sounds",
+      "family": "hgss",
+      "title": "Pokéathlon: Finals! (GB Sounds)",
+      "category": "event",
+      "order": 152,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9FjIOHgK6QQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "hgss-pokeathlon-results-announcement-gb-sounds",
       "family": "hgss",
       "title": "Pokéathlon: Results Announcement (GB Sounds)",
@@ -10982,6 +11042,21 @@
           "videoId": "L2bx_R_49Ew",
           "startMs": 0,
           "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "hgss-pokeathlon-medal-ceremony-gb-sounds",
+      "family": "hgss",
+      "title": "Pokéathlon: Medal Ceremony (GB Sounds)",
+      "category": "event",
+      "order": 154,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aQQR67wlQRk",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
