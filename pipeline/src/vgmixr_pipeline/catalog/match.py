@@ -80,7 +80,9 @@ def match_tracks(
     only: Collection[str] | None = None,
 ) -> list[Match]:
     """Matches every track, or only the tracks with ids in `only` (the review tool's rematch)."""
-    matcher = _Matcher(draft, youtube, videos, names, search, _part_ids(draft, overrides))
+    matcher = _Matcher(
+        draft, youtube, videos, names, search, _part_ids(draft, overrides), _merged_ids(overrides)
+    )
     return [
         matcher.match(track, overrides.tracks.get(track.id, TrackOverride()).streams or Streams())
         for track in draft.tracks
@@ -97,9 +99,11 @@ class _Matcher:
         names: Names,
         search: bool,
         parts: frozenset[str] = frozenset(),
+        merged: frozenset[str] = frozenset(),
     ) -> None:
         self._youtube = youtube
         self._parts = parts
+        self._merged = merged
         self._videos = videos
         self._names = names
         self._search = search
@@ -148,8 +152,12 @@ class _Matcher:
         return Match(track.id, track.family, track.title, status, sources, best, facts)
 
     def _verdict(self, track: DraftTrack, scored: Scored) -> Verdict:
-        """The score's verdict, except that a part reviews a video of the whole album track."""
+        """The score's verdict, except that a merged track reviews every video (which upload holds
+        all its pieces is for the user to judge) and a part reviews a video of the whole album
+        track."""
         verdict = classify(scored.score.value)
+        if verdict is Verdict.ACCEPT and track.id in self._merged:
+            return Verdict.REVIEW
         length, video = track.durationMs, scored.candidate.duration_ms
         if (
             verdict is Verdict.ACCEPT
@@ -233,6 +241,18 @@ def _part_ids(draft: Draft, overrides: Overrides) -> frozenset[str]:
         if override.parts and (family := track_family(key, families)) is not None
         for part in override.parts
     )
+
+
+def _merged_ids(overrides: Overrides) -> frozenset[str]:
+    """Tracks made of pieces played back to back: those other tracks merge into, and those split
+    off them. Tracks merged only by sharing a title (one piece, listed twice) aren't."""
+    targets = {o.mergeInto for o in overrides.tracks.values() if o.mergeInto is not None}
+    split_off = {
+        new_id
+        for key in targets
+        for new_id in (overrides.tracks.get(key, TrackOverride()).split or {})
+    }
+    return frozenset(targets | split_off)
 
 
 def candidates_json(matches: list[Match]) -> list[dict[str, Any]]:

@@ -5,7 +5,15 @@ from typing import Any
 import pytest
 
 from vgmixr_pipeline.catalog.build import Draft, DraftTrack
-from vgmixr_pipeline.catalog.config import Overrides, Part, TrackOverride, YouTube
+from vgmixr_pipeline.catalog.config import (
+    Overrides,
+    Part,
+    Slice,
+    Split,
+    Streams,
+    TrackOverride,
+    YouTube,
+)
 from vgmixr_pipeline.catalog.match import Match, candidates_json, match_tracks
 from vgmixr_pipeline.catalog.score import Names
 from vgmixr_pipeline.catalog.youtube import Chapter, Entry, PlaylistHit, Video
@@ -312,3 +320,46 @@ def test_a_track_that_is_not_a_part_still_takes_a_longer_video() -> None:
     videos = FakeVideos({RS_LIST: entries("Route 110 (Spring)", duration_ms=92_000)})
     result = run(draft(track("Route 110 (Spring)", 0, duration_ms=46_000)), videos, search=False)
     assert ids(result["rse-route-110-spring"]) == [vid(1)]
+
+
+MERGED = Overrides(tracks={"rse-title-screen": TrackOverride(mergeInto="rse-opening-movie")})
+
+
+def test_a_merged_track_is_never_auto_matched() -> None:
+    # Pieces played back to back (an opening and a title screen loop): which upload holds all of
+    # them is for the user to judge, whatever its length.
+    videos = FakeVideos({RS_LIST: entries("Opening Movie", duration_ms=120_000)})
+    opening = track("Opening Movie", 0, duration_ms=120_000)
+    result = run(draft(opening), videos, overrides=MERGED, search=False)
+    assert result["rse-opening-movie"].streams == []
+    assert result["rse-opening-movie"].status == "review"
+    assert result["rse-opening-movie"].candidates[0].score.value >= 0.8
+
+
+def test_a_merged_track_keeps_its_hand_accepted_videos() -> None:
+    hand = TrackOverride(streams=Streams(accept=[Slice(videoId=vid(9))]))
+    overrides = Overrides(tracks={**MERGED.tracks, "rse-opening-movie": hand})
+    videos = FakeVideos({RS_LIST: entries("Opening Movie", duration_ms=120_000)})
+    result = run(draft(track("Opening Movie", 0)), videos, overrides=overrides, search=False)
+    assert ids(result["rse-opening-movie"]) == [vid(9)]
+    assert result["rse-opening-movie"].status == "matched"
+
+
+def test_a_track_split_off_a_merged_one_is_merged_too() -> None:
+    overrides = Overrides(tracks={
+        "rse-title-screen": TrackOverride(mergeInto="rse-opening-movie"),
+        "rse-opening-movie": TrackOverride(split={
+            "rse-opening-movie-emerald": Split(games=["emerald"], title="Opening Movie (Emerald)")
+        }),
+    })  # fmt: skip
+    videos = FakeVideos({E_LIST: entries("Opening Movie (Emerald)")})
+    emerald = track("Opening Movie (Emerald)", 0, games=["emerald"])
+    youtube = config(playlists=[{"games": ["emerald"], "playlist": E_LIST}])
+    result = run(draft(emerald), videos, youtube, overrides=overrides, search=False)
+    assert result["rse-opening-movie-emerald"].status == "review"
+
+
+def test_a_track_that_is_not_merged_is_still_auto_matched() -> None:
+    videos = FakeVideos({RS_LIST: entries("Opening Movie", duration_ms=120_000)})
+    result = run(draft(track("Opening Movie", 0, duration_ms=120_000)), videos, search=False)
+    assert ids(result["rse-opening-movie"]) == [vid(1)]
