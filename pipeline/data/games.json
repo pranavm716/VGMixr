@@ -101,10 +101,8 @@
     { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 4" },
     { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 5", "last": 7 },
 
-    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 1" },
-    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 2" },
-    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 3" },
-    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 4" },
+    { "family": "pla", "file": "tracklists/pla.tsv", "disc": "Disc 1" },
+    { "family": "pla", "file": "tracklists/pla.tsv", "disc": "Disc 2" },
 
     { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 1" },
     { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 2" },
@@ -131,7 +129,8 @@
       { "games": ["black-2", "white-2"], "playlist": "PLMNd7l5z4pbieh3OXLc7rnFC5kxO5IlCY" },
       { "games": ["x", "y"], "playlist": "PLaKSGGxuUf7Q" },
       { "games": ["omega-ruby", "alpha-sapphire"], "playlist": "PL9pPGq16Rk7pkD4Rjn35Fmq05tuE2zdVm", "note": "Pokémon Original Soundtrack channel, 37 tracks" },
-      { "games": ["lets-go-pikachu", "lets-go-eevee"], "playlist": "PLzXrrIvqJ7v4GPPRAYWZzK5WbYwq569ZY" }
+      { "games": ["lets-go-pikachu", "lets-go-eevee"], "playlist": "PLzXrrIvqJ7v4GPPRAYWZzK5WbYwq569ZY" },
+      { "games": ["pla"], "playlist": "PLDuK_JKMWsGj6Qj702A3b8q2TGU3hPXOR" }
     ],
     "albums": [],
     "aliases": {

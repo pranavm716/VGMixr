@@ -475,9 +475,15 @@
 
     "swsh-you-caught-eternatus": { "exclude": false, "note": "Matches the \"You Caught\" jingle title rule, but is music" },
 
-    "pla-to-a-new-land": { "exclude": false, "note": "Short, but music, not a jingle" },
-    "pla-celestica-flute": { "exclude": false, "note": "Short, but music, not a jingle" },
-    "pla-arcanine-lord-of-the-isles": { "exclude": false, "note": "Short, but music, not a jingle" },
+    "pla-jubilife-village-beginning-medley": { "exclude": true, "note": "A medley of pieces Disc 2 lists one by one" },
+    "pla-battle-noble-pokemon-medley": { "exclude": true, "note": "A medley of pieces Disc 2 lists one by one" },
+    "pla-jubilife-village-middle-medley": { "exclude": true, "note": "A medley of pieces Disc 2 lists one by one" },
+    "pla-jubilife-village-complete-medley": { "exclude": true, "note": "A medley of pieces Disc 2 lists one by one" },
+    "pla-battle-arceus-medley": { "exclude": true, "note": "A medley of pieces Disc 2 lists one by one" },
+    "pla-exploring-a-new-area": { "exclude": false, "note": "Short, but music, not a jingle" },
+    "pla-noble-arcanine-appears": { "exclude": false, "note": "Short, but music, not a jingle" },
+    "pla-exiting-the-space-time-distortion": { "exclude": false, "note": "Short, but music, not a jingle" },
+    "pla-ingos-theme": { "exclude": false, "note": "Short, but music, not a jingle" },
 
     "sv-trainers-eyes-meet-academy-trainer": { "exclude": false, "note": "Short, but music, not a jingle" },
     "sv-the-hidden-treasure-of-area-zero-epilogue": { "exclude": false, "note": "Short, but music, not a jingle" },

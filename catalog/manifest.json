@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-18T07:28:02Z",
+  "generatedAt": "2026-10-18T07:49:32Z",
   "games": [
     {
       "id": "red",
@@ -20914,6 +20914,1839 @@
           "videoId": "CQZIBvB6hwM",
           "startMs": 0,
           "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "pla-arceus-voice",
+      "family": "pla",
+      "title": "Arceus' Voice",
+      "category": "other",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-n32yD3oZQ8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pla-follow-arceus-opening-cutscene",
+      "family": "pla",
+      "title": "Follow Arceus (Opening Cutscene)",
+      "category": "event",
+      "order": 1,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "AHfGwBxK82I",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pla-professor-laventons-theme",
+      "family": "pla",
+      "title": "Professor Laventon's Theme",
+      "category": "event",
+      "order": 2,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yGSLmCGTTDY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pla-a-chat-with-the-professor",
+      "family": "pla",
+      "title": "A Chat with the Professor",
+      "category": "other",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LkfPV28bQQI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pla-galaxy-expedition-team-hq",
+      "family": "pla",
+      "title": "Galaxy Expedition Team HQ",
+      "category": "dungeon",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uH-L6E0S77s",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-pokemon-wielder",
+      "family": "pla",
+      "title": "Battle! (Pokémon Wielder)",
+      "category": "battle",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "v0deX4c2-BM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-obsidian-fieldlands-1",
+      "family": "pla",
+      "title": "Obsidian Fieldlands 1",
+      "category": "route",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "peyYqyR_XAw",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-spotted-ver-1",
+      "family": "pla",
+      "title": "Spotted! (Ver. 1)",
+      "category": "other",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tYh-NsF_VU4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-wild-pokemon",
+      "family": "pla",
+      "title": "Battle! (Wild Pokémon)",
+      "category": "battle",
+      "order": 8,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jYtLFIrYyEk",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-obsidian-fieldlands-2",
+      "family": "pla",
+      "title": "Obsidian Fieldlands 2",
+      "category": "route",
+      "order": 9,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dJlzkt-xRtk",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-survey-results-day",
+      "family": "pla",
+      "title": "Survey Results (Day)",
+      "category": "other",
+      "order": 10,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "crl-bPYBGBQ",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-field-night",
+      "family": "pla",
+      "title": "Field (Night)",
+      "category": "other",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "08avPsg91pE",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-spotted-alpha-pokemon",
+      "family": "pla",
+      "title": "Spotted! (Alpha Pokémon)",
+      "category": "other",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "RCAyZ13sV_Q",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-alpha-pokemon",
+      "family": "pla",
+      "title": "Battle! (Alpha Pokémon)",
+      "category": "battle",
+      "order": 13,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VzXOoSKjuas",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-a-new-morning",
+      "family": "pla",
+      "title": "A New Morning",
+      "category": "other",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6NK7GDXUkpw",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-trouble",
+      "family": "pla",
+      "title": "Trouble!",
+      "category": "other",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bxAL8O8teOQ",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-clan-warden",
+      "family": "pla",
+      "title": "Battle! (Clan Warden)",
+      "category": "battle",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ys9Fww7V4jI",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-suspense",
+      "family": "pla",
+      "title": "Suspense",
+      "category": "other",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_6fc9hPiCto",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-the-heartwood",
+      "family": "pla",
+      "title": "The Heartwood",
+      "category": "other",
+      "order": 18,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Y33E_ud-8kQ",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-field-late-night",
+      "family": "pla",
+      "title": "Field (Late Night)",
+      "category": "other",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CghABIc27C8",
+          "startMs": 0,
+          "confidence": 0.98
+        },
+        {
+          "type": "stream",
+          "videoId": "08avPsg91pE",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pla-survey-results-night",
+      "family": "pla",
+      "title": "Survey Results (Night)",
+      "category": "other",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_6lLvB2cpgQ",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-the-noble-pokemons-domain",
+      "family": "pla",
+      "title": "The Noble Pokémon's Domain",
+      "category": "other",
+      "order": 21,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_9zzz5lyBxk",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-noble-kleavor-appears",
+      "family": "pla",
+      "title": "Noble Kleavor Appears!",
+      "category": "event",
+      "order": 22,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mrYZXt0hVIk",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-noble-pokemon-calmed",
+      "family": "pla",
+      "title": "Noble Pokémon Calmed!",
+      "category": "other",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rYMMmRLHd04",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-conflict-resolved",
+      "family": "pla",
+      "title": "Conflict Resolved",
+      "category": "other",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "C3yUaHVluHg",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-evolution",
+      "family": "pla",
+      "title": "Evolution",
+      "category": "event",
+      "order": 25,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NonBnsV_pbA",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-minigame",
+      "family": "pla",
+      "title": "Minigame",
+      "category": "other",
+      "order": 26,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BRNjLqBDLic",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-iridas-theme",
+      "family": "pla",
+      "title": "Irida's Theme",
+      "category": "event",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_7gY97V7d8o",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-exploring-a-new-area",
+      "family": "pla",
+      "title": "Exploring a New Area",
+      "category": "other",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8Gr-S6pEELo",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-crimson-mirelands-1",
+      "family": "pla",
+      "title": "Crimson Mirelands 1",
+      "category": "route",
+      "order": 29,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "phmfyjpUH5g",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-clan-settlement",
+      "family": "pla",
+      "title": "Clan Settlement",
+      "category": "other",
+      "order": 30,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iInriekrHGA",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-crimson-mirelands-2",
+      "family": "pla",
+      "title": "Crimson Mirelands 2",
+      "category": "route",
+      "order": 31,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YaSJFNjYRSY",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-noble-lilligant-appears",
+      "family": "pla",
+      "title": "Noble Lilligant Appears!",
+      "category": "event",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kRSI8rachrY",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-iridas-flute",
+      "family": "pla",
+      "title": "Irida's Flute",
+      "category": "other",
+      "order": 33,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vKMJ8LixVo4",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-cobalt-coastlands-1",
+      "family": "pla",
+      "title": "Cobalt Coastlands 1",
+      "category": "route",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3AxMiPTrTpY",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-palinas-theme",
+      "family": "pla",
+      "title": "Palina's Theme",
+      "category": "event",
+      "order": 35,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EwQCk3pKj_c",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-cobalt-coastlands-2",
+      "family": "pla",
+      "title": "Cobalt Coastlands 2",
+      "category": "route",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NhU34z2-dVY",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-spotted-ver-2",
+      "family": "pla",
+      "title": "Spotted! (Ver. 2)",
+      "category": "other",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "79LgqU-9pBo",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-firespit-island",
+      "family": "pla",
+      "title": "Firespit Island",
+      "category": "town",
+      "order": 38,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "oorXYEhAmqQ",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-palinas-growlithe-evolves",
+      "family": "pla",
+      "title": "Palina's Growlithe Evolves!",
+      "category": "other",
+      "order": 39,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bOF2CSyxWYM",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-frenzied-arcanine",
+      "family": "pla",
+      "title": "Frenzied Arcanine",
+      "category": "other",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "h1qxV1XX3lA",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-noble-arcanine-appears",
+      "family": "pla",
+      "title": "Noble Arcanine Appears!",
+      "category": "event",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mXkkO1W28Mg",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-space-time-distortion",
+      "family": "pla",
+      "title": "Space-Time Distortion",
+      "category": "dungeon",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JpJYUKra8Xs",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-exiting-the-space-time-distortion",
+      "family": "pla",
+      "title": "Exiting the Space-Time Distortion",
+      "category": "dungeon",
+      "order": 43,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_ZCzSWRWLq8",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-coronet-highlands-base",
+      "family": "pla",
+      "title": "Coronet Highlands - Base",
+      "category": "route",
+      "order": 44,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "k9WtyKlUrp0",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-wayward-cave",
+      "family": "pla",
+      "title": "Wayward Cave",
+      "category": "dungeon",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1uMAyNUiozo",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-noble-electrode-appears",
+      "family": "pla",
+      "title": "Noble Electrode Appears!",
+      "category": "event",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SMPDfpiXUNk",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-ingos-theme",
+      "family": "pla",
+      "title": "Ingo's Theme",
+      "category": "event",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bI2AoJ3BCn0",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-alabaster-icelands-1",
+      "family": "pla",
+      "title": "Alabaster Icelands 1",
+      "category": "route",
+      "order": 48,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kibzyIBgcco",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-alabaster-icelands-2",
+      "family": "pla",
+      "title": "Alabaster Icelands 2",
+      "category": "route",
+      "order": 49,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0ZCibbAPAwA",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-spotted-ver-3",
+      "family": "pla",
+      "title": "Spotted! (Ver. 3)",
+      "category": "other",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WjIHD9eVcbM",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-lake",
+      "family": "pla",
+      "title": "Lake",
+      "category": "other",
+      "order": 51,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "--E36lEZfDg",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-snowpoint-temple",
+      "family": "pla",
+      "title": "Snowpoint Temple",
+      "category": "other",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rg44CCQG8KU",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-noble-avalugg-appears",
+      "family": "pla",
+      "title": "Noble Avalugg Appears!",
+      "category": "event",
+      "order": 53,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "n1m_JmseiZI",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-exiled",
+      "family": "pla",
+      "title": "Exiled",
+      "category": "other",
+      "order": 54,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FjwssgkSPXs",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pla-escorted-out-of-jubilife-village",
+      "family": "pla",
+      "title": "Escorted Out of Jubilife Village",
+      "category": "town",
+      "order": 55,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GbbZM5juGEw",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-disaster-looming",
+      "family": "pla",
+      "title": "Disaster Looming",
+      "category": "other",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xaoeY4p_Hxo",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-disaster-looming-spotted",
+      "family": "pla",
+      "title": "Disaster Looming ~ Spotted!",
+      "category": "other",
+      "order": 57,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "sqzmeusrDFc",
+          "startMs": 0,
+          "confidence": 0.98
+        },
+        {
+          "type": "stream",
+          "videoId": "xaoeY4p_Hxo",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pla-disaster-looming-battle",
+      "family": "pla",
+      "title": "Disaster Looming ~ Battle!",
+      "category": "other",
+      "order": 58,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aGhM7uo8lhM",
+          "startMs": 0,
+          "confidence": 0.98
+        },
+        {
+          "type": "stream",
+          "videoId": "xaoeY4p_Hxo",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pla-cogitas-retreat",
+      "family": "pla",
+      "title": "Cogita's Retreat",
+      "category": "other",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wXqeTYdm3Vk",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-lake-cavern",
+      "family": "pla",
+      "title": "Lake Cavern",
+      "category": "other",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6v2bG-FrUko",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-coronet-highlands-summit",
+      "family": "pla",
+      "title": "Coronet Highlands - Summit",
+      "category": "route",
+      "order": 61,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SVxphsCRZJw",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-the-legendary-pokemon-appears",
+      "family": "pla",
+      "title": "The Legendary Pokémon Appears!",
+      "category": "event",
+      "order": 62,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "arOGT_TbVUA",
+          "startMs": 0,
+          "confidence": 0.98
+        },
+        {
+          "type": "stream",
+          "videoId": "aY5wnokCU_0",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-dialga-palkia",
+      "family": "pla",
+      "title": "Battle! (Dialga/Palkia)",
+      "category": "battle",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "cM118COlKI0",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-the-other-legendary-appears",
+      "family": "pla",
+      "title": "The Other Legendary Appears!",
+      "category": "event",
+      "order": 64,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aY5wnokCU_0",
+          "startMs": 0,
+          "confidence": 0.98
+        },
+        {
+          "type": "stream",
+          "videoId": "arOGT_TbVUA",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pla-the-legendarys-true-form-appears",
+      "family": "pla",
+      "title": "The Legendary's True Form Appears!",
+      "category": "event",
+      "order": 65,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dYO9zuycuVQ",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-dialga-origin-form-palkia-origin-form",
+      "family": "pla",
+      "title": "Battle! (Dialga Origin Form/Palkia Origin Form)",
+      "category": "battle",
+      "order": 66,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6vt8o2bCEsA",
+          "startMs": 0,
+          "confidence": 0.98
+        },
+        {
+          "type": "stream",
+          "videoId": "cM118COlKI0",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pla-using-the-origin-ball",
+      "family": "pla",
+      "title": "Using the Origin Ball",
+      "category": "other",
+      "order": 67,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "V2-5P5aXjZU",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-staff-credits",
+      "family": "pla",
+      "title": "Staff Credits",
+      "category": "other",
+      "order": 68,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yBPG23xA_fQ",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-mystery-gift",
+      "family": "pla",
+      "title": "Mystery Gift",
+      "category": "other",
+      "order": 69,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "x_a7mfAClfw",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-lake-guardians",
+      "family": "pla",
+      "title": "Battle! (Lake Guardians)",
+      "category": "battle",
+      "order": 70,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jvaduHrbvdg",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-spotted-legendary-pokemon",
+      "family": "pla",
+      "title": "Spotted! (Legendary Pokémon)",
+      "category": "other",
+      "order": 71,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4K6Y0240H5M",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-legendary-pokemon",
+      "family": "pla",
+      "title": "Battle! (Legendary Pokémon)",
+      "category": "battle",
+      "order": 72,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ryTBj9Fj98Q",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-clefairys-dance-at-the-fabled-spring",
+      "family": "pla",
+      "title": "Clefairy's Dance at the Fabled Spring",
+      "category": "other",
+      "order": 73,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dwkG6KCEKd0",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-the-temple-of-sinnoh",
+      "family": "pla",
+      "title": "The Temple of Sinnoh",
+      "category": "other",
+      "order": 74,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Tpf0me6QF8s",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-volos-betrayal",
+      "family": "pla",
+      "title": "Volo's Betrayal",
+      "category": "other",
+      "order": 75,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4oIq0sF3CJ4",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-pokemon-wielder-volo",
+      "family": "pla",
+      "title": "Battle! (Pokémon Wielder Volo)",
+      "category": "battle",
+      "order": 76,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NDDbgAr39Ng",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-giratina-appears",
+      "family": "pla",
+      "title": "Giratina Appears!",
+      "category": "event",
+      "order": 77,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "v3szjG81xv4",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-volo-and-giratina",
+      "family": "pla",
+      "title": "Battle! (Volo & Giratina)",
+      "category": "battle",
+      "order": 78,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yK94b_YixgM",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "BhrusZd9Nqo",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-giratina",
+      "family": "pla",
+      "title": "Battle! (Giratina)",
+      "category": "battle",
+      "order": 79,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BhrusZd9Nqo",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "yK94b_YixgM",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "pla-azure-flute",
+      "family": "pla",
+      "title": "Azure Flute",
+      "category": "other",
+      "order": 80,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "J1J7zxaKTls",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-hall-of-origin",
+      "family": "pla",
+      "title": "Hall of Origin",
+      "category": "other",
+      "order": 81,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uGTo_4T2KBA",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-title-screen",
+      "family": "pla",
+      "title": "Title Screen",
+      "category": "event",
+      "order": 82,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8-SOx0D2Y4A",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pla-jubilife-village-beginning-outdoors",
+      "family": "pla",
+      "title": "Jubilife Village (Beginning) ~ Outdoors",
+      "category": "town",
+      "order": 83,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uPhgRW3tQX8",
+          "startMs": 0,
+          "confidence": 0.98
+        },
+        {
+          "type": "stream",
+          "videoId": "neNDzHlTLpw",
+          "startMs": 0,
+          "confidence": 0.86
+        },
+        {
+          "type": "stream",
+          "videoId": "Xik8MKSnRSE",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "pla-jubilife-village-beginning-indoors",
+      "family": "pla",
+      "title": "Jubilife Village (Beginning) ~ Indoors",
+      "category": "town",
+      "order": 84,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "neNDzHlTLpw",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "uPhgRW3tQX8",
+          "startMs": 0,
+          "confidence": 0.86
+        },
+        {
+          "type": "stream",
+          "videoId": "Xik8MKSnRSE",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pla-jubilife-village-beginning-home",
+      "family": "pla",
+      "title": "Jubilife Village (Beginning) ~ Home",
+      "category": "town",
+      "order": 85,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Xik8MKSnRSE",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "neNDzHlTLpw",
+          "startMs": 0,
+          "confidence": 0.82
+        },
+        {
+          "type": "stream",
+          "videoId": "uPhgRW3tQX8",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pla-obsidian-fieldlands-1-alternate-ver",
+      "family": "pla",
+      "title": "Obsidian Fieldlands 1 (Alternate Ver.)",
+      "category": "route",
+      "order": 86,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Th0IdGxbVts",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-obsidian-fieldlands-2-alternate-ver",
+      "family": "pla",
+      "title": "Obsidian Fieldlands 2 (Alternate Ver.)",
+      "category": "route",
+      "order": 87,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kWvG6fyko7M",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-spotted-alpha-pokemon-alternate-ver",
+      "family": "pla",
+      "title": "Spotted! (Alpha Pokémon) (Alternate Ver.)",
+      "category": "other",
+      "order": 88,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fSa99WL4neM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-noble-pokemon-balm-phase",
+      "family": "pla",
+      "title": "Battle! (Noble Pokémon) ~ Balm Phase",
+      "category": "battle",
+      "order": 89,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WYt2DlrgdPs",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "jj1NoOlHGjo",
+          "startMs": 0,
+          "confidence": 0.88
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-noble-pokemon-defenseless",
+      "family": "pla",
+      "title": "Battle! (Noble Pokémon) ~ Defenseless",
+      "category": "battle",
+      "order": 90,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "inIrdLhRkbo",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-noble-pokemon-battle-phase",
+      "family": "pla",
+      "title": "Battle! (Noble Pokémon) ~ Battle Phase",
+      "category": "battle",
+      "order": 91,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jj1NoOlHGjo",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "WYt2DlrgdPs",
+          "startMs": 0,
+          "confidence": 0.89
+        }
+      ]
+    },
+    {
+      "id": "pla-crimson-mirelands-1-alternate-ver",
+      "family": "pla",
+      "title": "Crimson Mirelands 1 (Alternate Ver.)",
+      "category": "route",
+      "order": 92,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gyLm_f0upD0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-crimson-mirelands-2-alternate-ver",
+      "family": "pla",
+      "title": "Crimson Mirelands 2 (Alternate Ver.)",
+      "category": "route",
+      "order": 93,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6JJmHdUMe8Q",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-jubilife-village-middle-outdoors",
+      "family": "pla",
+      "title": "Jubilife Village (Middle) ~ Outdoors",
+      "category": "town",
+      "order": 94,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "K8mHSwAF8h8",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "cwqRlco5EiA",
+          "startMs": 0,
+          "confidence": 0.86
+        },
+        {
+          "type": "stream",
+          "videoId": "-K2MEvynUKU",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pla-jubilife-village-middle-indoors",
+      "family": "pla",
+      "title": "Jubilife Village (Middle) ~ Indoors",
+      "category": "town",
+      "order": 95,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "cwqRlco5EiA",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "K8mHSwAF8h8",
+          "startMs": 0,
+          "confidence": 0.86
+        },
+        {
+          "type": "stream",
+          "videoId": "VHsm1rZ8Byc",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pla-jubilife-village-middle-home",
+      "family": "pla",
+      "title": "Jubilife Village (Middle) ~ Home",
+      "category": "town",
+      "order": 96,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VHsm1rZ8Byc",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "cwqRlco5EiA",
+          "startMs": 0,
+          "confidence": 0.81
+        },
+        {
+          "type": "stream",
+          "videoId": "K8mHSwAF8h8",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pla-cobalt-coastlands-1-alternate-ver",
+      "family": "pla",
+      "title": "Cobalt Coastlands 1 (Alternate Ver.)",
+      "category": "route",
+      "order": 97,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "OJVQ4odVm24",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-palinas-theme-alternate-intro",
+      "family": "pla",
+      "title": "Palina's Theme (Alternate Intro)",
+      "category": "event",
+      "order": 98,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "A-rvSXWnGmg",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-cobalt-coastlands-2-alternate-ver",
+      "family": "pla",
+      "title": "Cobalt Coastlands 2 (Alternate Ver.)",
+      "category": "route",
+      "order": 99,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_27Qg86mpJY",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-alabaster-icelands-1-alternate-ver",
+      "family": "pla",
+      "title": "Alabaster Icelands 1 (Alternate Ver.)",
+      "category": "route",
+      "order": 100,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1JY0EgjDahM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-alabaster-icelands-2-alternate-ver",
+      "family": "pla",
+      "title": "Alabaster Icelands 2 (Alternate Ver.)",
+      "category": "route",
+      "order": 101,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1TTgcL9lZhk",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pla-disaster-looming-spotted-alternate-ver",
+      "family": "pla",
+      "title": "Disaster Looming ~ Spotted! (Alternate Ver.)",
+      "category": "other",
+      "order": 102,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_LQy08iPwuc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pla-jubilife-village-complete-outdoors",
+      "family": "pla",
+      "title": "Jubilife Village (Complete) ~ Outdoors",
+      "category": "town",
+      "order": 103,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-K2MEvynUKU",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "yDLJeyktYXY",
+          "startMs": 0,
+          "confidence": 0.87
+        },
+        {
+          "type": "stream",
+          "videoId": "K8mHSwAF8h8",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "pla-jubilife-village-complete-indoors",
+      "family": "pla",
+      "title": "Jubilife Village (Complete) ~ Indoors",
+      "category": "town",
+      "order": 104,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yDLJeyktYXY",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "-K2MEvynUKU",
+          "startMs": 0,
+          "confidence": 0.87
+        },
+        {
+          "type": "stream",
+          "videoId": "dicx9gKO_ds",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "pla-jubilife-village-complete-home",
+      "family": "pla",
+      "title": "Jubilife Village (Complete) ~ Home",
+      "category": "town",
+      "order": 105,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dicx9gKO_ds",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "yDLJeyktYXY",
+          "startMs": 0,
+          "confidence": 0.82
+        },
+        {
+          "type": "stream",
+          "videoId": "-K2MEvynUKU",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pla-spotted-legendary-pokemon-alternate-ver",
+      "family": "pla",
+      "title": "Spotted! (Legendary Pokémon) (Alternate Ver.)",
+      "category": "other",
+      "order": 106,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xtNGfmGuiII",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-arceus-phase-1",
+      "family": "pla",
+      "title": "Battle! (Arceus) ~ Phase 1",
+      "category": "battle",
+      "order": 107,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CCeF4BPfTdE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-arceus-phase-2",
+      "family": "pla",
+      "title": "Battle! (Arceus) ~ Phase 2",
+      "category": "battle",
+      "order": 108,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xqbHNy0j9Js",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-arceus-phase-3",
+      "family": "pla",
+      "title": "Battle! (Arceus) ~ Phase 3",
+      "category": "battle",
+      "order": 109,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ubtzgB_-ioI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pla-battle-arceus-phase-4",
+      "family": "pla",
+      "title": "Battle! (Arceus) ~ Phase 4",
+      "category": "battle",
+      "order": 110,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bhs3dnFv-FA",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     }
