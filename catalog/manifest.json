@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-18T07:17:57Z",
+  "generatedAt": "2026-10-18T07:28:02Z",
   "games": [
     {
       "id": "red",
@@ -15659,6 +15659,21 @@
       ]
     },
     {
+      "id": "xy-opening-movie",
+      "family": "xy",
+      "title": "Opening Movie",
+      "category": "event",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "60-_KhJkHnA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "xy-kalos-region-theme",
       "family": "xy",
       "title": "Kalos Region Theme",
@@ -20059,6 +20074,846 @@
           "videoId": "azSKwOZu2WE",
           "startMs": 0,
           "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-into-the-game-lets-go",
+      "family": "lgpe",
+      "title": "Into the Game: Let's Go!",
+      "category": "other",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YzpfJ0zkLHM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-choose-your-language",
+      "family": "lgpe",
+      "title": "Choose Your Language",
+      "category": "other",
+      "order": 1,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XlvlqRHqLsY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-title-screen",
+      "family": "lgpe",
+      "title": "Title Screen",
+      "category": "event",
+      "order": 2,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "isN5kbAt-n0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-pallet-town-theme",
+      "family": "lgpe",
+      "title": "Pallet Town Theme",
+      "category": "town",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "47zLGyNeqEc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-professor-oak",
+      "family": "lgpe",
+      "title": "Professor Oak",
+      "category": "other",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LLYF3ZwN__o",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "lgpe-guide",
+      "family": "lgpe",
+      "title": "Guide",
+      "category": "other",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "URGpN_XCUsk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-professor-oaks-laboratory",
+      "family": "lgpe",
+      "title": "Professor Oak's Laboratory",
+      "category": "other",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LLYF3ZwN__o",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "lgpe-road-to-viridian-city-leaving-pallet-town",
+      "family": "lgpe",
+      "title": "Road to Viridian City: Leaving Pallet Town",
+      "category": "route",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "sQvFYTo0m2c",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-pokemon-center",
+      "family": "lgpe",
+      "title": "Pokémon Center",
+      "category": "town",
+      "order": 8,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kiQ-sbgGTDs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-a-trainer-appears-boy-version",
+      "family": "lgpe",
+      "title": "A Trainer Appears (Boy Version)",
+      "category": "battle",
+      "order": 9,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "7AVjoEuuzpY",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "lgpe-battle-trainer-battle",
+      "family": "lgpe",
+      "title": "Battle! (Trainer Battle)",
+      "category": "battle",
+      "order": 10,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "c4URr9ORP5Q",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "lgpe-victory-trainer-battle",
+      "family": "lgpe",
+      "title": "Victory! (Trainer Battle)",
+      "category": "battle",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UBK6nLLBER4",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "lgpe-viridian-forest",
+      "family": "lgpe",
+      "title": "Viridian Forest",
+      "category": "dungeon",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mBvfRB4J2_U",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-catch-wild-pokemon",
+      "family": "lgpe",
+      "title": "Catch! (Wild Pokémon)",
+      "category": "other",
+      "order": 13,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_Hn2GOb28hs",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-successful-catch-wild-pokemon",
+      "family": "lgpe",
+      "title": "Successful Catch! (Wild Pokémon)",
+      "category": "other",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zEuDnaI5_N8",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-a-trainer-appears-girl-version",
+      "family": "lgpe",
+      "title": "A Trainer Appears (Girl Version)",
+      "category": "battle",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fGCdMbae82g",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-pewter-city-theme",
+      "family": "lgpe",
+      "title": "Pewter City Theme",
+      "category": "town",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-Dh2xgWCQ1I",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-pokemon-gym",
+      "family": "lgpe",
+      "title": "Pokémon Gym",
+      "category": "town",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "38cTPC9TylQ",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-battle-gym-leader-battle",
+      "family": "lgpe",
+      "title": "Battle! (Gym Leader Battle)",
+      "category": "battle",
+      "order": 18,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ru5t-aYWWlc",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "lgpe-victory-gym-leader-battle",
+      "family": "lgpe",
+      "title": "Victory! (Gym Leader Battle)",
+      "category": "battle",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LafgfDLKmGk",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "lgpe-blues-theme",
+      "family": "lgpe",
+      "title": "Blue’s Theme",
+      "category": "other",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "da9KnEayBfs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-road-to-cerulean-city-leaving-mt-moon",
+      "family": "lgpe",
+      "title": "Road to Cerulean City: Leaving Mt. Moon",
+      "category": "route",
+      "order": 21,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ArKesuWv2mQ",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "lgpe-jigglypuffs-song",
+      "family": "lgpe",
+      "title": "Jigglypuff's Song",
+      "category": "other",
+      "order": 22,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qpRrZpR4HAc",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "lgpe-caves-of-mt-moon",
+      "family": "lgpe",
+      "title": "Caves of Mt. Moon",
+      "category": "dungeon",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "IZzXjut8ntE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-a-trainer-appears-bad-guy-version",
+      "family": "lgpe",
+      "title": "A Trainer Appears (Bad Guy Version)",
+      "category": "battle",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CQ-2myAcdzo",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "lgpe-theme-of-jessie-and-james",
+      "family": "lgpe",
+      "title": "Theme of Jessie and James",
+      "category": "event",
+      "order": 25,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "j4tofz872Ck",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-evolution",
+      "family": "lgpe",
+      "title": "Evolution",
+      "category": "event",
+      "order": 26,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "F5NeO7CWnkk",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-cerulean-city-theme",
+      "family": "lgpe",
+      "title": "Cerulean City Theme",
+      "category": "town",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "D-aRd3ZBHN8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-to-bill-leaving-cerulean-city",
+      "family": "lgpe",
+      "title": "To Bill: Leaving Cerulean City",
+      "category": "town",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "su4HWK-f8XM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-vermilion-city-theme",
+      "family": "lgpe",
+      "title": "Vermilion City Theme",
+      "category": "town",
+      "order": 29,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "PMhuo2ZSQQQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-the-s-s-anne",
+      "family": "lgpe",
+      "title": "The S.S. Anne",
+      "category": "other",
+      "order": 30,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vF8rJ4jd-MM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-road-to-lavender-town-leaving-vermilion-city",
+      "family": "lgpe",
+      "title": "Road to Lavender Town: Leaving Vermilion City",
+      "category": "route",
+      "order": 31,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nIeSgsdMX8A",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "lgpe-lavender-town-theme",
+      "family": "lgpe",
+      "title": "Lavender Town Theme",
+      "category": "town",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "x-rRunUxA9c",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-pokemon-tower",
+      "family": "lgpe",
+      "title": "Pokémon Tower",
+      "category": "dungeon",
+      "order": 33,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "IT2MGz29kqw",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-celadon-city-theme",
+      "family": "lgpe",
+      "title": "Celadon City Theme",
+      "category": "town",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Vb8g0j4iOzc",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-game-corner",
+      "family": "lgpe",
+      "title": "Game Corner",
+      "category": "town",
+      "order": 35,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GSbFgkjNbH0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-rocket-hideout",
+      "family": "lgpe",
+      "title": "Rocket Hideout",
+      "category": "dungeon",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "pTJENxyrSD0",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "lgpe-cubones-mother",
+      "family": "lgpe",
+      "title": "Cubone's Mother",
+      "category": "other",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2nctrVqdbJ0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-the-poke-flute",
+      "family": "lgpe",
+      "title": "The Poké Flute",
+      "category": "other",
+      "order": 38,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JFpevCHBcV8",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-battle-wild-pokemon",
+      "family": "lgpe",
+      "title": "Battle! (Wild Pokémon)",
+      "category": "battle",
+      "order": 39,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "afK_4O6-Nts",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-pokemon-road",
+      "family": "lgpe",
+      "title": "Pokémon Road",
+      "category": "other",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "q0xZbnkKbpA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-go-park",
+      "family": "lgpe",
+      "title": "GO Park",
+      "category": "other",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0t5oJdIyeqU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-catch-go-park",
+      "family": "lgpe",
+      "title": "Catch! (GO Park)",
+      "category": "other",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fovbuEIEpRo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-silph-co",
+      "family": "lgpe",
+      "title": "Silph Co.",
+      "category": "dungeon",
+      "order": 43,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LNOCgOF9KAA",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-the-sea",
+      "family": "lgpe",
+      "title": "The Sea",
+      "category": "route",
+      "order": 44,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aWbOF4Q-bJg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-cinnabar-island-theme",
+      "family": "lgpe",
+      "title": "Cinnabar Island Theme",
+      "category": "town",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "p4bvB5c84lA",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-pokemon-mansion",
+      "family": "lgpe",
+      "title": "Pokémon Mansion",
+      "category": "dungeon",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "hqnyB7k87E4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-the-final-road",
+      "family": "lgpe",
+      "title": "The Final Road",
+      "category": "other",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EITUMKp8dSU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-final-battle-rival",
+      "family": "lgpe",
+      "title": "Final Battle! (Rival)",
+      "category": "battle",
+      "order": 48,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SWIHY9DAjR0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-hall-of-fame",
+      "family": "lgpe",
+      "title": "Hall of Fame",
+      "category": "event",
+      "order": 49,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BJSpzZC3vlo",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "lgpe-congratulations",
+      "family": "lgpe",
+      "title": "Congratulations!",
+      "category": "other",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HCNEwM-nN6g",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-ending-theme",
+      "family": "lgpe",
+      "title": "Ending Theme",
+      "category": "event",
+      "order": 51,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "A1xOJVciEaM",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "lgpe-were-back",
+      "family": "lgpe",
+      "title": "We're Back",
+      "category": "other",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CXjFXJqWLW4",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "lgpe-connection",
+      "family": "lgpe",
+      "title": "Connection",
+      "category": "other",
+      "order": 53,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "P34CM1cVVak",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-mystery-gift",
+      "family": "lgpe",
+      "title": "Mystery Gift",
+      "category": "other",
+      "order": 54,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "X3RQ8AFX7_o",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "lgpe-battle-master-trainer-battle",
+      "family": "lgpe",
+      "title": "Battle! (Master Trainer Battle)",
+      "category": "battle",
+      "order": 55,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CQZIBvB6hwM",
+          "startMs": 0,
+          "confidence": 0.9
         }
       ]
     }

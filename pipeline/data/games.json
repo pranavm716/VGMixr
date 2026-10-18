@@ -130,7 +130,8 @@
       { "games": ["black", "white"], "playlist": "PL4DA9DFA77C8FF491" },
       { "games": ["black-2", "white-2"], "playlist": "PLMNd7l5z4pbieh3OXLc7rnFC5kxO5IlCY" },
       { "games": ["x", "y"], "playlist": "PLaKSGGxuUf7Q" },
-      { "games": ["omega-ruby", "alpha-sapphire"], "playlist": "PL9pPGq16Rk7pkD4Rjn35Fmq05tuE2zdVm", "note": "Pokémon Original Soundtrack channel, 37 tracks" }
+      { "games": ["omega-ruby", "alpha-sapphire"], "playlist": "PL9pPGq16Rk7pkD4Rjn35Fmq05tuE2zdVm", "note": "Pokémon Original Soundtrack channel, 37 tracks" },
+      { "games": ["lets-go-pikachu", "lets-go-eevee"], "playlist": "PLzXrrIvqJ7v4GPPRAYWZzK5WbYwq569ZY" }
     ],
     "albums": [],
     "aliases": {

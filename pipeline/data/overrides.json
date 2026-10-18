@@ -455,6 +455,23 @@
 
     "lgpe-jigglypuffs-song": { "exclude": false, "note": "Short, but music, not a jingle" },
     "lgpe-the-poke-flute": { "exclude": false, "note": "Short, but music, not a jingle" },
+    "lgpe-into-the-game-lets-go": { "streams": { "accept": [ { "videoId": "YzpfJ0zkLHM" } ] } },
+    "lgpe-to-bill-leaving-cerulean-city": { "streams": { "accept": [ { "videoId": "su4HWK-f8XM" } ] } },
+    "lgpe-go-park": { "streams": { "accept": [ { "videoId": "0t5oJdIyeqU" } ] } },
+    "lgpe-the-sea": { "streams": { "accept": [ { "videoId": "aWbOF4Q-bJg" } ] } },
+    "lgpe-choose-your-language": { "streams": { "accept": [ { "videoId": "XlvlqRHqLsY" } ] } },
+    "lgpe-road-to-viridian-city-leaving-pallet-town": { "streams": { "accept": [ { "videoId": "sQvFYTo0m2c" } ] } },
+    "lgpe-pokemon-center": { "streams": { "accept": [ { "videoId": "kiQ-sbgGTDs" } ] } },
+    "lgpe-blues-theme": { "streams": { "accept": [ { "videoId": "da9KnEayBfs" } ] } },
+    "lgpe-theme-of-jessie-and-james": { "streams": { "accept": [ { "videoId": "j4tofz872Ck" } ] } },
+    "lgpe-cerulean-city-theme": { "streams": { "accept": [ { "videoId": "D-aRd3ZBHN8" } ] } },
+    "lgpe-vermilion-city-theme": { "streams": { "accept": [ { "videoId": "PMhuo2ZSQQQ" } ] } },
+    "lgpe-the-s-s-anne": { "streams": { "accept": [ { "videoId": "vF8rJ4jd-MM" } ] } },
+    "lgpe-pokemon-road": { "streams": { "accept": [ { "videoId": "q0xZbnkKbpA" } ] } },
+    "lgpe-final-battle-rival": { "streams": { "accept": [ { "videoId": "SWIHY9DAjR0" } ] } },
+    "lgpe-catch-go-park": { "streams": { "accept": [ { "videoId": "fovbuEIEpRo" } ] } },
+    "lgpe-connection": { "streams": { "accept": [ { "videoId": "P34CM1cVVak" } ] } },
+    "lgpe-mystery-gift": { "streams": { "accept": [ { "videoId": "X3RQ8AFX7_o" } ] } },
 
     "swsh-you-caught-eternatus": { "exclude": false, "note": "Matches the \"You Caught\" jingle title rule, but is music" },
 
