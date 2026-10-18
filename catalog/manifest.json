@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-17T20:24:57Z",
+  "generatedAt": "2026-10-18T00:08:01Z",
   "games": [
     {
       "id": "red",
@@ -351,27 +351,15 @@
         "red",
         "blue"
       ],
-      "title": "Title Screen",
+      "title": "Opening Movie (Red & Blue)",
       "category": "event",
       "order": 0,
       "sources": [
         {
           "type": "stream",
-          "videoId": "njoPUWILwpo",
+          "videoId": "kJNuL_ebJMA",
           "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "5mW8NqBg3IQ",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "C8FBjEmlJTg",
-          "startMs": 0,
-          "confidence": 0.93
+          "confidence": 1.0
         }
       ]
     },
@@ -381,15 +369,15 @@
       "games": [
         "yellow"
       ],
-      "title": "Title Screen (Yellow)",
+      "title": "Opening Movie (Yellow)",
       "category": "event",
       "order": 1,
       "sources": [
         {
           "type": "stream",
-          "videoId": "SwfYT1Llm0Y",
-          "startMs": 0,
-          "confidence": 0.81
+          "videoId": "Fj_cCNy_Zmo",
+          "startMs": 3500,
+          "confidence": 1.0
         }
       ]
     },
@@ -419,7 +407,7 @@
           "type": "stream",
           "videoId": "PBGz9zkrPl8",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -548,7 +536,7 @@
           "type": "stream",
           "videoId": "I_pRfIE6PgQ",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -563,7 +551,7 @@
           "type": "stream",
           "videoId": "easI5Jcy3bE",
           "startMs": 0,
-          "confidence": 0.95
+          "confidence": 0.96
         }
       ]
     },
@@ -905,7 +893,7 @@
           "type": "stream",
           "videoId": "Y1T8qWNWTB4",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 0.99
         }
       ]
     },
@@ -920,7 +908,7 @@
           "type": "stream",
           "videoId": "rfDPaCoH-Fs",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 0.99
         }
       ]
     },
@@ -935,7 +923,7 @@
           "type": "stream",
           "videoId": "B-EQhnUYbFQ",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 0.99
         }
       ]
     },
@@ -965,7 +953,7 @@
           "type": "stream",
           "videoId": "D3pDxLa9ElA",
           "startMs": 0,
-          "confidence": 0.8
+          "confidence": 0.81
         }
       ]
     },
@@ -995,7 +983,7 @@
           "type": "stream",
           "videoId": "YyDzZAy3ZSA",
           "startMs": 0,
-          "confidence": 0.81
+          "confidence": 0.82
         }
       ]
     },
@@ -1010,7 +998,7 @@
           "type": "stream",
           "videoId": "QUK07P45m2A",
           "startMs": 0,
-          "confidence": 0.97
+          "confidence": 0.98
         }
       ]
     },
@@ -1040,7 +1028,7 @@
           "type": "stream",
           "videoId": "ru_mtMDTFTw",
           "startMs": 0,
-          "confidence": 0.97
+          "confidence": 0.98
         }
       ]
     },
@@ -1153,24 +1141,6 @@
       ]
     },
     {
-      "id": "rby-opening-movie",
-      "family": "rby",
-      "games": [
-        "yellow"
-      ],
-      "title": "Opening Movie",
-      "category": "event",
-      "order": 45,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "Fj_cCNy_Zmo",
-          "startMs": 3500,
-          "confidence": 1.0
-        }
-      ]
-    },
-    {
       "id": "rby-theme-of-jessie-and-james",
       "family": "rby",
       "games": [
@@ -1178,7 +1148,7 @@
       ],
       "title": "Theme of Jessie and James",
       "category": "event",
-      "order": 46,
+      "order": 45,
       "sources": [
         {
           "type": "stream",
@@ -1202,7 +1172,7 @@
       ],
       "title": "Pikachu's Beach",
       "category": "other",
-      "order": 47,
+      "order": 46,
       "sources": [
         {
           "type": "stream",
@@ -1220,7 +1190,7 @@
       ],
       "title": "Pikachu's Beach (Results Announcement)",
       "category": "other",
-      "order": 48,
+      "order": 47,
       "sources": [
         {
           "type": "stream",
@@ -1243,28 +1213,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "gkuOo6wOlUA",
+          "videoId": "yVv6uVeAxMA",
           "startMs": 0,
           "confidence": 1.0
-        }
-      ]
-    },
-    {
-      "id": "gsc-title-screen-gold-and-silver",
-      "family": "gsc",
-      "games": [
-        "gold",
-        "silver"
-      ],
-      "title": "Title Screen (Gold & Silver)",
-      "category": "event",
-      "order": 1,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "Ul0hUyrq2gI",
-          "startMs": 0,
-          "confidence": 0.81
         }
       ]
     },
@@ -1276,43 +1227,13 @@
       ],
       "title": "Opening Movie (Crystal)",
       "category": "event",
-      "order": 2,
+      "order": 1,
       "sources": [
         {
           "type": "stream",
-          "videoId": "164JNomeNig",
-          "startMs": 0,
-          "confidence": 0.93
-        }
-      ]
-    },
-    {
-      "id": "gsc-title-screen-crystal",
-      "family": "gsc",
-      "games": [
-        "crystal"
-      ],
-      "title": "Title Screen (Crystal)",
-      "category": "event",
-      "order": 3,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "m3Y_1JNEfHA",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "1lMrHeV2jGc",
-          "startMs": 0,
-          "confidence": 0.85
-        },
-        {
-          "type": "stream",
-          "videoId": "k7yQFSsXguk",
-          "startMs": 0,
-          "confidence": 0.81
+          "videoId": "hZ6cUkgmu4E",
+          "startMs": 2000,
+          "confidence": 1.0
         }
       ]
     },
@@ -1321,7 +1242,7 @@
       "family": "gsc",
       "title": "An Adventure Begins!",
       "category": "other",
-      "order": 4,
+      "order": 2,
       "sources": [
         {
           "type": "stream",
@@ -1339,7 +1260,7 @@
       ],
       "title": "Pokémon Mobile System GB",
       "category": "other",
-      "order": 5,
+      "order": 3,
       "sources": [
         {
           "type": "stream",
@@ -1354,13 +1275,13 @@
       "family": "gsc",
       "title": "New Bark Town",
       "category": "town",
-      "order": 7,
+      "order": 5,
       "sources": [
         {
           "type": "stream",
           "videoId": "NmtSAl68peU",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 1.0
         }
       ]
     },
@@ -1369,7 +1290,7 @@
       "family": "gsc",
       "title": "Hurry Along 1",
       "category": "other",
-      "order": 8,
+      "order": 6,
       "sources": [
         {
           "type": "stream",
@@ -1384,7 +1305,7 @@
       "family": "gsc",
       "title": "Pokémon Lab",
       "category": "town",
-      "order": 9,
+      "order": 7,
       "sources": [
         {
           "type": "stream",
@@ -1405,13 +1326,13 @@
       "family": "gsc",
       "title": "Route 29",
       "category": "route",
-      "order": 10,
+      "order": 8,
       "sources": [
         {
           "type": "stream",
           "videoId": "i-_PLH1iOdU",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 1.0
         }
       ]
     },
@@ -1420,13 +1341,13 @@
       "family": "gsc",
       "title": "Battle! (Wild Pokémon - Johto - Day)",
       "category": "battle",
-      "order": 11,
+      "order": 9,
       "sources": [
         {
           "type": "stream",
           "videoId": "jjM5mUXc3Lk",
           "startMs": 0,
-          "confidence": 0.86
+          "confidence": 0.87
         }
       ]
     },
@@ -1435,7 +1356,7 @@
       "family": "gsc",
       "title": "Battle! (Wild Pokémon - Johto - Night)",
       "category": "battle",
-      "order": 12,
+      "order": 10,
       "sources": [
         {
           "type": "stream",
@@ -1462,7 +1383,7 @@
       "family": "gsc",
       "title": "Victory! (Wild Pokémon)",
       "category": "battle",
-      "order": 13,
+      "order": 11,
       "sources": [
         {
           "type": "stream",
@@ -1477,7 +1398,7 @@
       "family": "gsc",
       "title": "Cherrygrove City",
       "category": "town",
-      "order": 14,
+      "order": 12,
       "sources": [
         {
           "type": "stream",
@@ -1492,7 +1413,7 @@
       "family": "gsc",
       "title": "Hurry Along 2",
       "category": "other",
-      "order": 15,
+      "order": 13,
       "sources": [
         {
           "type": "stream",
@@ -1507,7 +1428,7 @@
       "family": "gsc",
       "title": "Pokémon Center",
       "category": "town",
-      "order": 16,
+      "order": 14,
       "sources": [
         {
           "type": "stream",
@@ -1522,7 +1443,7 @@
       "family": "gsc",
       "title": "Route 30",
       "category": "route",
-      "order": 17,
+      "order": 15,
       "sources": [
         {
           "type": "stream",
@@ -1537,7 +1458,7 @@
       "family": "gsc",
       "title": "Professor Oak",
       "category": "other",
-      "order": 18,
+      "order": 16,
       "sources": [
         {
           "type": "stream",
@@ -1552,7 +1473,7 @@
       "family": "gsc",
       "title": "Rival Appears! 1",
       "category": "event",
-      "order": 19,
+      "order": 17,
       "sources": [
         {
           "type": "stream",
@@ -1567,7 +1488,7 @@
       "family": "gsc",
       "title": "Battle! (Rival)",
       "category": "battle",
-      "order": 20,
+      "order": 18,
       "sources": [
         {
           "type": "stream",
@@ -1582,13 +1503,13 @@
       "family": "gsc",
       "title": "Victory! (Trainer Battle)",
       "category": "battle",
-      "order": 21,
+      "order": 19,
       "sources": [
         {
           "type": "stream",
           "videoId": "ETxAL5zXUR0",
           "startMs": 0,
-          "confidence": 0.85
+          "confidence": 0.86
         }
       ]
     },
@@ -1597,7 +1518,7 @@
       "family": "gsc",
       "title": "Rival Appears! 2",
       "category": "event",
-      "order": 22,
+      "order": 20,
       "sources": [
         {
           "type": "stream",
@@ -1612,7 +1533,7 @@
       "family": "gsc",
       "title": "Printer Menu",
       "category": "other",
-      "order": 23,
+      "order": 21,
       "sources": [
         {
           "type": "stream",
@@ -1627,7 +1548,7 @@
       "family": "gsc",
       "title": "A Trainer Appears (Boy 1)",
       "category": "battle",
-      "order": 24,
+      "order": 22,
       "sources": [
         {
           "type": "stream",
@@ -1642,13 +1563,13 @@
       "family": "gsc",
       "title": "Battle! (Trainer Battle - Johto)",
       "category": "battle",
-      "order": 25,
+      "order": 23,
       "sources": [
         {
           "type": "stream",
           "videoId": "Yl05vRMfQ4k",
           "startMs": 0,
-          "confidence": 0.86
+          "confidence": 0.87
         }
       ]
     },
@@ -1657,7 +1578,7 @@
       "family": "gsc",
       "title": "Violet City",
       "category": "town",
-      "order": 26,
+      "order": 24,
       "sources": [
         {
           "type": "stream",
@@ -1672,7 +1593,7 @@
       "family": "gsc",
       "title": "Sprout Tower",
       "category": "dungeon",
-      "order": 27,
+      "order": 25,
       "sources": [
         {
           "type": "stream",
@@ -1687,7 +1608,7 @@
       "family": "gsc",
       "title": "A Trainer Appears (Sage)",
       "category": "battle",
-      "order": 28,
+      "order": 26,
       "sources": [
         {
           "type": "stream",
@@ -1702,13 +1623,13 @@
       "family": "gsc",
       "title": "Evolution",
       "category": "event",
-      "order": 29,
+      "order": 27,
       "sources": [
         {
           "type": "stream",
           "videoId": "1ID5Sd8v9kc",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -1717,7 +1638,7 @@
       "family": "gsc",
       "title": "Pokémon Gym",
       "category": "town",
-      "order": 30,
+      "order": 28,
       "sources": [
         {
           "type": "stream",
@@ -1732,7 +1653,7 @@
       "family": "gsc",
       "title": "Battle! (Gym Leader - Johto)",
       "category": "battle",
-      "order": 31,
+      "order": 29,
       "sources": [
         {
           "type": "stream",
@@ -1747,7 +1668,7 @@
       "family": "gsc",
       "title": "Victory! (Gym Leader)",
       "category": "battle",
-      "order": 32,
+      "order": 30,
       "sources": [
         {
           "type": "stream",
@@ -1762,7 +1683,7 @@
       "family": "gsc",
       "title": "Route 34",
       "category": "route",
-      "order": 33,
+      "order": 31,
       "sources": [
         {
           "type": "stream",
@@ -1777,7 +1698,7 @@
       "family": "gsc",
       "title": "Ruins of Alph (Grounds)",
       "category": "dungeon",
-      "order": 34,
+      "order": 32,
       "sources": [
         {
           "type": "stream",
@@ -1792,7 +1713,7 @@
       "family": "gsc",
       "title": "Ruins of Alph",
       "category": "dungeon",
-      "order": 35,
+      "order": 33,
       "sources": [
         {
           "type": "stream",
@@ -1807,7 +1728,7 @@
       "family": "gsc",
       "title": "A Trainer Appears (Girl 1)",
       "category": "battle",
-      "order": 36,
+      "order": 34,
       "sources": [
         {
           "type": "stream",
@@ -1822,7 +1743,7 @@
       "family": "gsc",
       "title": "A Trainer Appears (Suspicious Figure 1)",
       "category": "battle",
-      "order": 37,
+      "order": 35,
       "sources": [
         {
           "type": "stream",
@@ -1837,7 +1758,7 @@
       "family": "gsc",
       "title": "A Trainer Appears (Suspicious Figure 2)",
       "category": "battle",
-      "order": 38,
+      "order": 36,
       "sources": [
         {
           "type": "stream",
@@ -1852,7 +1773,7 @@
       "family": "gsc",
       "title": "Azalea Town",
       "category": "town",
-      "order": 39,
+      "order": 37,
       "sources": [
         {
           "type": "stream",
@@ -1867,7 +1788,7 @@
       "family": "gsc",
       "title": "Slowpoke Well",
       "category": "other",
-      "order": 40,
+      "order": 38,
       "sources": [
         {
           "type": "stream",
@@ -1882,7 +1803,7 @@
       "family": "gsc",
       "title": "A Trainer Appears (Team Rocket)",
       "category": "battle",
-      "order": 41,
+      "order": 39,
       "sources": [
         {
           "type": "stream",
@@ -1897,19 +1818,19 @@
       "family": "gsc",
       "title": "Battle! (Team Rocket)",
       "category": "battle",
-      "order": 42,
+      "order": 40,
       "sources": [
         {
           "type": "stream",
           "videoId": "qsQ15gJ6b1Y",
           "startMs": 0,
-          "confidence": 0.93
+          "confidence": 0.94
         },
         {
           "type": "stream",
           "videoId": "UGoA0JEIaiY",
           "startMs": 0,
-          "confidence": 0.83
+          "confidence": 0.82
         }
       ]
     },
@@ -1918,7 +1839,7 @@
       "family": "gsc",
       "title": "A Trainer Appears (Boy 2)",
       "category": "battle",
-      "order": 43,
+      "order": 41,
       "sources": [
         {
           "type": "stream",
@@ -1933,7 +1854,7 @@
       "family": "gsc",
       "title": "Goldenrod City",
       "category": "town",
-      "order": 44,
+      "order": 42,
       "sources": [
         {
           "type": "stream",
@@ -1951,7 +1872,7 @@
       ],
       "title": "Pokémon Communication Center",
       "category": "other",
-      "order": 45,
+      "order": 43,
       "sources": [
         {
           "type": "stream",
@@ -1978,7 +1899,7 @@
       "family": "gsc",
       "title": "Goldenrod Game Corner",
       "category": "town",
-      "order": 46,
+      "order": 44,
       "sources": [
         {
           "type": "stream",
@@ -1993,7 +1914,7 @@
       "family": "gsc",
       "title": "Pokégear Radio (Professor Oak's Pokémon Talk)",
       "category": "other",
-      "order": 47,
+      "order": 45,
       "sources": [
         {
           "type": "stream",
@@ -2014,7 +1935,7 @@
       "family": "gsc",
       "title": "Pokégear Radio (Pokémon March)",
       "category": "other",
-      "order": 48,
+      "order": 46,
       "sources": [
         {
           "type": "stream",
@@ -2029,7 +1950,7 @@
       "family": "gsc",
       "title": "Pokégear Radio (Pokémon Lullaby)",
       "category": "other",
-      "order": 49,
+      "order": 47,
       "sources": [
         {
           "type": "stream",
@@ -2047,7 +1968,7 @@
       ],
       "title": "Pokégear Radio (Buena's Password)",
       "category": "other",
-      "order": 50,
+      "order": 48,
       "sources": [
         {
           "type": "stream",
@@ -2062,7 +1983,7 @@
       "family": "gsc",
       "title": "Bicycle",
       "category": "route",
-      "order": 51,
+      "order": 49,
       "sources": [
         {
           "type": "stream",
@@ -2077,7 +1998,7 @@
       "family": "gsc",
       "title": "Pokégear Radio (Unown)",
       "category": "other",
-      "order": 52,
+      "order": 50,
       "sources": [
         {
           "type": "stream",
@@ -2092,7 +2013,7 @@
       "family": "gsc",
       "title": "A Trainer Appears (Girl 2)",
       "category": "battle",
-      "order": 53,
+      "order": 51,
       "sources": [
         {
           "type": "stream",
@@ -2107,7 +2028,7 @@
       "family": "gsc",
       "title": "National Park",
       "category": "other",
-      "order": 54,
+      "order": 52,
       "sources": [
         {
           "type": "stream",
@@ -2122,7 +2043,7 @@
       "family": "gsc",
       "title": "The Bug-Catching Contest Begins!",
       "category": "event",
-      "order": 55,
+      "order": 53,
       "sources": [
         {
           "type": "stream",
@@ -2143,7 +2064,7 @@
       "family": "gsc",
       "title": "The Bug-Catching Contest",
       "category": "event",
-      "order": 56,
+      "order": 54,
       "sources": [
         {
           "type": "stream",
@@ -2158,7 +2079,7 @@
       "family": "gsc",
       "title": "Ecruteak City",
       "category": "town",
-      "order": 57,
+      "order": 55,
       "sources": [
         {
           "type": "stream",
@@ -2173,13 +2094,13 @@
       "family": "gsc",
       "title": "Ecruteak Dance Theatre",
       "category": "other",
-      "order": 58,
+      "order": 56,
       "sources": [
         {
           "type": "stream",
           "videoId": "fpA7qTM_Oqk",
           "startMs": 0,
-          "confidence": 0.82
+          "confidence": 0.83
         }
       ]
     },
@@ -2188,7 +2109,7 @@
       "family": "gsc",
       "title": "A Trainer Appears (Kimono Girl)",
       "category": "battle",
-      "order": 59,
+      "order": 57,
       "sources": [
         {
           "type": "stream",
@@ -2203,7 +2124,7 @@
       "family": "gsc",
       "title": "Burned Tower",
       "category": "dungeon",
-      "order": 60,
+      "order": 58,
       "sources": [
         {
           "type": "stream",
@@ -2221,7 +2142,7 @@
       ],
       "title": "Eusine",
       "category": "other",
-      "order": 61,
+      "order": 59,
       "sources": [
         {
           "type": "stream",
@@ -2236,7 +2157,7 @@
       "family": "gsc",
       "title": "Route 38",
       "category": "route",
-      "order": 62,
+      "order": 60,
       "sources": [
         {
           "type": "stream",
@@ -2254,7 +2175,7 @@
       ],
       "title": "Battle! (Legendary Beasts)",
       "category": "battle",
-      "order": 63,
+      "order": 61,
       "sources": [
         {
           "type": "stream",
@@ -2269,7 +2190,7 @@
       "family": "gsc",
       "title": "Olivine Lighthouse",
       "category": "dungeon",
-      "order": 64,
+      "order": 62,
       "sources": [
         {
           "type": "stream",
@@ -2284,7 +2205,7 @@
       "family": "gsc",
       "title": "Surf",
       "category": "route",
-      "order": 65,
+      "order": 63,
       "sources": [
         {
           "type": "stream",
@@ -2308,13 +2229,13 @@
       ],
       "title": "Battle Tower (Reception Desk)",
       "category": "town",
-      "order": 66,
+      "order": 64,
       "sources": [
         {
           "type": "stream",
           "videoId": "Bn4_yDXuokI",
           "startMs": 0,
-          "confidence": 0.92
+          "confidence": 0.91
         }
       ]
     },
@@ -2326,13 +2247,13 @@
       ],
       "title": "Battle Tower",
       "category": "town",
-      "order": 67,
+      "order": 65,
       "sources": [
         {
           "type": "stream",
           "videoId": "_Re7_5Kvkoo",
           "startMs": 0,
-          "confidence": 0.92
+          "confidence": 0.91
         }
       ]
     },
@@ -2341,7 +2262,7 @@
       "family": "gsc",
       "title": "Route 42",
       "category": "route",
-      "order": 68,
+      "order": 66,
       "sources": [
         {
           "type": "stream",
@@ -2362,7 +2283,7 @@
       "family": "gsc",
       "title": "Radio Transmission",
       "category": "other",
-      "order": 69,
+      "order": 67,
       "sources": [
         {
           "type": "stream",
@@ -2377,13 +2298,13 @@
       "family": "gsc",
       "title": "Team Rocket HQ",
       "category": "dungeon",
-      "order": 70,
+      "order": 68,
       "sources": [
         {
           "type": "stream",
           "videoId": "UGoA0JEIaiY",
           "startMs": 0,
-          "confidence": 0.93
+          "confidence": 0.94
         }
       ]
     },
@@ -2392,7 +2313,7 @@
       "family": "gsc",
       "title": "Radio Tower Occupied!",
       "category": "dungeon",
-      "order": 71,
+      "order": 69,
       "sources": [
         {
           "type": "stream",
@@ -2407,7 +2328,7 @@
       "family": "gsc",
       "title": "Dragon's Den",
       "category": "dungeon",
-      "order": 72,
+      "order": 70,
       "sources": [
         {
           "type": "stream",
@@ -2425,7 +2346,7 @@
       ],
       "title": "Clair",
       "category": "other",
-      "order": 73,
+      "order": 71,
       "sources": [
         {
           "type": "stream",
@@ -2440,7 +2361,7 @@
       "family": "gsc",
       "title": "Route 26",
       "category": "route",
-      "order": 74,
+      "order": 72,
       "sources": [
         {
           "type": "stream",
@@ -2455,7 +2376,7 @@
       "family": "gsc",
       "title": "Victory Road",
       "category": "dungeon",
-      "order": 75,
+      "order": 73,
       "sources": [
         {
           "type": "stream",
@@ -2470,7 +2391,7 @@
       "family": "gsc",
       "title": "Pokémon League",
       "category": "town",
-      "order": 76,
+      "order": 74,
       "sources": [
         {
           "type": "stream",
@@ -2485,7 +2406,7 @@
       "family": "gsc",
       "title": "Battle! (Champion)",
       "category": "battle",
-      "order": 77,
+      "order": 75,
       "sources": [
         {
           "type": "stream",
@@ -2500,7 +2421,7 @@
       "family": "gsc",
       "title": "Hall of Fame",
       "category": "event",
-      "order": 78,
+      "order": 76,
       "sources": [
         {
           "type": "stream",
@@ -2515,7 +2436,7 @@
       "family": "gsc",
       "title": "S.S. Aqua",
       "category": "other",
-      "order": 79,
+      "order": 77,
       "sources": [
         {
           "type": "stream",
@@ -2530,7 +2451,7 @@
       "family": "gsc",
       "title": "Vermilion City",
       "category": "town",
-      "order": 80,
+      "order": 78,
       "sources": [
         {
           "type": "stream",
@@ -2557,13 +2478,13 @@
       "family": "gsc",
       "title": "Battle! (Trainer Battle - Kanto)",
       "category": "battle",
-      "order": 81,
+      "order": 79,
       "sources": [
         {
           "type": "stream",
           "videoId": "eLfLgFNMcC0",
           "startMs": 0,
-          "confidence": 0.89
+          "confidence": 0.9
         }
       ]
     },
@@ -2572,7 +2493,7 @@
       "family": "gsc",
       "title": "Battle! (Gym Leader - Kanto)",
       "category": "battle",
-      "order": 82,
+      "order": 80,
       "sources": [
         {
           "type": "stream",
@@ -2587,7 +2508,7 @@
       "family": "gsc",
       "title": "Route 6",
       "category": "route",
-      "order": 83,
+      "order": 81,
       "sources": [
         {
           "type": "stream",
@@ -2602,13 +2523,13 @@
       "family": "gsc",
       "title": "Battle! (Wild Pokémon - Kanto)",
       "category": "battle",
-      "order": 84,
+      "order": 82,
       "sources": [
         {
           "type": "stream",
           "videoId": "4rj9EQVwauI",
           "startMs": 0,
-          "confidence": 0.93
+          "confidence": 0.94
         }
       ]
     },
@@ -2617,7 +2538,7 @@
       "family": "gsc",
       "title": "Saffron City",
       "category": "town",
-      "order": 85,
+      "order": 83,
       "sources": [
         {
           "type": "stream",
@@ -2638,7 +2559,7 @@
       "family": "gsc",
       "title": "Lavender Town",
       "category": "town",
-      "order": 86,
+      "order": 84,
       "sources": [
         {
           "type": "stream",
@@ -2653,7 +2574,7 @@
       "family": "gsc",
       "title": "Rock Tunnel",
       "category": "dungeon",
-      "order": 87,
+      "order": 85,
       "sources": [
         {
           "type": "stream",
@@ -2668,7 +2589,7 @@
       "family": "gsc",
       "title": "Celadon City",
       "category": "town",
-      "order": 88,
+      "order": 86,
       "sources": [
         {
           "type": "stream",
@@ -2683,7 +2604,7 @@
       "family": "gsc",
       "title": "Route 15",
       "category": "route",
-      "order": 89,
+      "order": 87,
       "sources": [
         {
           "type": "stream",
@@ -2698,7 +2619,7 @@
       "family": "gsc",
       "title": "Pokégear Radio (Poké Flute)",
       "category": "other",
-      "order": 90,
+      "order": 88,
       "sources": [
         {
           "type": "stream",
@@ -2725,7 +2646,7 @@
       "family": "gsc",
       "title": "Viridian Forest",
       "category": "dungeon",
-      "order": 91,
+      "order": 89,
       "sources": [
         {
           "type": "stream",
@@ -2740,7 +2661,7 @@
       "family": "gsc",
       "title": "Mt. Moon Square",
       "category": "dungeon",
-      "order": 92,
+      "order": 90,
       "sources": [
         {
           "type": "stream",
@@ -2755,7 +2676,7 @@
       "family": "gsc",
       "title": "Route 1",
       "category": "route",
-      "order": 93,
+      "order": 91,
       "sources": [
         {
           "type": "stream",
@@ -2770,7 +2691,7 @@
       "family": "gsc",
       "title": "Pallet Town",
       "category": "town",
-      "order": 94,
+      "order": 92,
       "sources": [
         {
           "type": "stream",
@@ -2785,7 +2706,7 @@
       "family": "gsc",
       "title": "Tin Tower",
       "category": "dungeon",
-      "order": 95,
+      "order": 93,
       "sources": [
         {
           "type": "stream",
@@ -2806,7 +2727,7 @@
       "family": "gsc",
       "title": "Ending Theme",
       "category": "event",
-      "order": 96,
+      "order": 94,
       "sources": [
         {
           "type": "stream",
@@ -2827,7 +2748,7 @@
       "family": "gsc",
       "title": "THE END",
       "category": "other",
-      "order": 97,
+      "order": 95,
       "sources": [
         {
           "type": "stream",
@@ -4577,59 +4498,17 @@
       ]
     },
     {
-      "id": "frlg-game-freak-logo",
-      "family": "frlg",
-      "title": "Game Freak Logo",
-      "category": "other",
-      "order": 0,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "mfq5JU62sP4",
-          "startMs": 0,
-          "confidence": 1.0
-        }
-      ]
-    },
-    {
       "id": "frlg-opening-movie",
       "family": "frlg",
       "title": "Opening Movie",
       "category": "event",
-      "order": 1,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "6RjLM40Edho",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "HDTkHtpUqo8",
-          "startMs": 0,
-          "confidence": 0.93
-        }
-      ]
-    },
-    {
-      "id": "frlg-title-screen",
-      "family": "frlg",
-      "title": "Title Screen",
-      "category": "event",
-      "order": 2,
+      "order": 0,
       "sources": [
         {
           "type": "stream",
           "videoId": "CZjL1VwPVqU",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "zWkfiGqzA2c",
-          "startMs": 0,
-          "confidence": 0.93
+          "startMs": 2000,
+          "confidence": 1.0
         }
       ]
     },
@@ -4638,7 +4517,7 @@
       "family": "frlg",
       "title": "Game Tutorial",
       "category": "other",
-      "order": 3,
+      "order": 1,
       "sources": [
         {
           "type": "stream",
@@ -4653,7 +4532,7 @@
       "family": "frlg",
       "title": "Welcome to the World of Pokémon!",
       "category": "dungeon",
-      "order": 4,
+      "order": 2,
       "sources": [
         {
           "type": "stream",
@@ -4680,7 +4559,7 @@
       "family": "frlg",
       "title": "Pallet Town Theme",
       "category": "town",
-      "order": 5,
+      "order": 3,
       "sources": [
         {
           "type": "stream",
@@ -4695,13 +4574,13 @@
       "family": "frlg",
       "title": "Professor Oak",
       "category": "other",
-      "order": 6,
+      "order": 4,
       "sources": [
         {
           "type": "stream",
           "videoId": "20Ga6Ib6vSM",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 1.0
         }
       ]
     },
@@ -4710,13 +4589,13 @@
       "family": "frlg",
       "title": "Professor Oak's Laboratory",
       "category": "other",
-      "order": 7,
+      "order": 5,
       "sources": [
         {
           "type": "stream",
           "videoId": "xD0lEE3qnDM",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 1.0
         }
       ]
     },
@@ -4725,13 +4604,13 @@
       "family": "frlg",
       "title": "A Rival Appears",
       "category": "event",
-      "order": 8,
+      "order": 6,
       "sources": [
         {
           "type": "stream",
           "videoId": "jcegIUQlsTc",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 1.0
         }
       ]
     },
@@ -4740,13 +4619,13 @@
       "family": "frlg",
       "title": "Battle! (Trainer Battle)",
       "category": "battle",
-      "order": 9,
+      "order": 7,
       "sources": [
         {
           "type": "stream",
           "videoId": "PfDhKzpUieA",
           "startMs": 0,
-          "confidence": 0.85
+          "confidence": 0.86
         }
       ]
     },
@@ -4755,13 +4634,13 @@
       "family": "frlg",
       "title": "Victory! (Trainer Battle)",
       "category": "battle",
-      "order": 10,
+      "order": 8,
       "sources": [
         {
           "type": "stream",
           "videoId": "bcDklmem7UE",
           "startMs": 0,
-          "confidence": 0.86
+          "confidence": 0.87
         }
       ]
     },
@@ -4770,7 +4649,7 @@
       "family": "frlg",
       "title": "Road to Viridian City: Leaving Pallet Town",
       "category": "route",
-      "order": 11,
+      "order": 9,
       "sources": [
         {
           "type": "stream",
@@ -4791,13 +4670,13 @@
       "family": "frlg",
       "title": "Pewter City Theme",
       "category": "town",
-      "order": 12,
+      "order": 10,
       "sources": [
         {
           "type": "stream",
           "videoId": "069Diw2Hd2M",
           "startMs": 0,
-          "confidence": 0.95
+          "confidence": 0.94
         }
       ]
     },
@@ -4806,13 +4685,13 @@
       "family": "frlg",
       "title": "Teachy TV Menu",
       "category": "other",
-      "order": 13,
+      "order": 11,
       "sources": [
         {
           "type": "stream",
           "videoId": "tLoOyPREtvg",
           "startMs": 0,
-          "confidence": 0.87
+          "confidence": 0.86
         }
       ]
     },
@@ -4821,13 +4700,13 @@
       "family": "frlg",
       "title": "Viridian Forest",
       "category": "dungeon",
-      "order": 14,
+      "order": 12,
       "sources": [
         {
           "type": "stream",
           "videoId": "viqmn7t3hVk",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 0.97
         }
       ]
     },
@@ -4836,13 +4715,13 @@
       "family": "frlg",
       "title": "Battle! (Wild Pokémon)",
       "category": "battle",
-      "order": 15,
+      "order": 13,
       "sources": [
         {
           "type": "stream",
           "videoId": "Qr1YG2if7JQ",
           "startMs": 0,
-          "confidence": 0.97
+          "confidence": 0.98
         }
       ]
     },
@@ -4851,13 +4730,13 @@
       "family": "frlg",
       "title": "Victory! (Wild Pokémon)",
       "category": "battle",
-      "order": 16,
+      "order": 14,
       "sources": [
         {
           "type": "stream",
           "videoId": "7nTfWg2EMOQ",
           "startMs": 0,
-          "confidence": 0.97
+          "confidence": 0.98
         }
       ]
     },
@@ -4866,13 +4745,13 @@
       "family": "frlg",
       "title": "A Trainer Appears (Boy Version)",
       "category": "battle",
-      "order": 17,
+      "order": 15,
       "sources": [
         {
           "type": "stream",
           "videoId": "LHWN32Tzad8",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -4881,13 +4760,13 @@
       "family": "frlg",
       "title": "Pokémon Center",
       "category": "town",
-      "order": 18,
+      "order": 16,
       "sources": [
         {
           "type": "stream",
           "videoId": "l490gxtJMW4",
           "startMs": 0,
-          "confidence": 0.97
+          "confidence": 0.98
         }
       ]
     },
@@ -4896,13 +4775,13 @@
       "family": "frlg",
       "title": "Jigglypuff's Song",
       "category": "other",
-      "order": 19,
+      "order": 17,
       "sources": [
         {
           "type": "stream",
           "videoId": "q-Xaf6Zf5Zk",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 0.98
         }
       ]
     },
@@ -4911,7 +4790,7 @@
       "family": "frlg",
       "title": "Guide",
       "category": "other",
-      "order": 20,
+      "order": 18,
       "sources": [
         {
           "type": "stream",
@@ -4926,13 +4805,13 @@
       "family": "frlg",
       "title": "Pokémon Gym",
       "category": "town",
-      "order": 21,
+      "order": 19,
       "sources": [
         {
           "type": "stream",
           "videoId": "xkrS7iPszpU",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 0.98
         }
       ]
     },
@@ -4941,7 +4820,7 @@
       "family": "frlg",
       "title": "Tense Battle!",
       "category": "other",
-      "order": 22,
+      "order": 20,
       "sources": [
         {
           "type": "stream",
@@ -4962,7 +4841,7 @@
       "family": "frlg",
       "title": "Battle! (Gym Leader Battle)",
       "category": "battle",
-      "order": 23,
+      "order": 21,
       "sources": [
         {
           "type": "stream",
@@ -4977,13 +4856,13 @@
       "family": "frlg",
       "title": "Victory! (Gym Leader Battle)",
       "category": "battle",
-      "order": 24,
+      "order": 22,
       "sources": [
         {
           "type": "stream",
           "videoId": "jFnpbZ23AFg",
           "startMs": 0,
-          "confidence": 0.87
+          "confidence": 0.86
         },
         {
           "type": "stream",
@@ -4998,13 +4877,13 @@
       "family": "frlg",
       "title": "Evolution",
       "category": "event",
-      "order": 25,
+      "order": 23,
       "sources": [
         {
           "type": "stream",
           "videoId": "M2RUraE4AnE",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 0.98
         }
       ]
     },
@@ -5013,7 +4892,7 @@
       "family": "frlg",
       "title": "Road to Cerulean City: Leaving Mt. Moon",
       "category": "route",
-      "order": 26,
+      "order": 24,
       "sources": [
         {
           "type": "stream",
@@ -5034,13 +4913,13 @@
       "family": "frlg",
       "title": "A Trainer Appears (Girl Version)",
       "category": "battle",
-      "order": 27,
+      "order": 25,
       "sources": [
         {
           "type": "stream",
           "videoId": "hnvKHEftlAA",
           "startMs": 0,
-          "confidence": 0.94
+          "confidence": 0.95
         }
       ]
     },
@@ -5049,13 +4928,13 @@
       "family": "frlg",
       "title": "Caves of Mt. Moon",
       "category": "dungeon",
-      "order": 28,
+      "order": 26,
       "sources": [
         {
           "type": "stream",
           "videoId": "G9-ISMqRejs",
           "startMs": 0,
-          "confidence": 0.86
+          "confidence": 0.85
         }
       ]
     },
@@ -5064,13 +4943,13 @@
       "family": "frlg",
       "title": "Vermilion City Theme",
       "category": "town",
-      "order": 29,
+      "order": 27,
       "sources": [
         {
           "type": "stream",
           "videoId": "Y8TfyViYC4E",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 0.97
         }
       ]
     },
@@ -5079,13 +4958,13 @@
       "family": "frlg",
       "title": "The S.S. Anne",
       "category": "other",
-      "order": 30,
+      "order": 28,
       "sources": [
         {
           "type": "stream",
           "videoId": "5o3OtVPZX2M",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 0.97
         }
       ]
     },
@@ -5094,13 +4973,13 @@
       "family": "frlg",
       "title": "Cycling",
       "category": "route",
-      "order": 31,
+      "order": 29,
       "sources": [
         {
           "type": "stream",
           "videoId": "W4xJK0Hi0kI",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 0.97
         }
       ]
     },
@@ -5109,13 +4988,13 @@
       "family": "frlg",
       "title": "Lavender Town Theme",
       "category": "town",
-      "order": 32,
+      "order": 30,
       "sources": [
         {
           "type": "stream",
           "videoId": "T3IZbVVnSy4",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 0.97
         }
       ]
     },
@@ -5124,7 +5003,7 @@
       "family": "frlg",
       "title": "Pokémon Tower",
       "category": "dungeon",
-      "order": 33,
+      "order": 31,
       "sources": [
         {
           "type": "stream",
@@ -5139,7 +5018,7 @@
       "family": "frlg",
       "title": "Celadon City Theme",
       "category": "town",
-      "order": 34,
+      "order": 32,
       "sources": [
         {
           "type": "stream",
@@ -5154,7 +5033,7 @@
       "family": "frlg",
       "title": "Rocket Game Corner",
       "category": "town",
-      "order": 35,
+      "order": 33,
       "sources": [
         {
           "type": "stream",
@@ -5169,7 +5048,7 @@
       "family": "frlg",
       "title": "Rocket Hideout",
       "category": "dungeon",
-      "order": 36,
+      "order": 34,
       "sources": [
         {
           "type": "stream",
@@ -5184,7 +5063,7 @@
       "family": "frlg",
       "title": "A Trainer Appears (Bad Guy Version)",
       "category": "battle",
-      "order": 37,
+      "order": 35,
       "sources": [
         {
           "type": "stream",
@@ -5199,7 +5078,7 @@
       "family": "frlg",
       "title": "Silph Co.",
       "category": "dungeon",
-      "order": 38,
+      "order": 36,
       "sources": [
         {
           "type": "stream",
@@ -5214,7 +5093,7 @@
       "family": "frlg",
       "title": "Road to Fuchsia City: Leaving Lavender Town",
       "category": "route",
-      "order": 39,
+      "order": 37,
       "sources": [
         {
           "type": "stream",
@@ -5235,13 +5114,13 @@
       "family": "frlg",
       "title": "The Poké Flute",
       "category": "other",
-      "order": 40,
+      "order": 38,
       "sources": [
         {
           "type": "stream",
           "videoId": "jXhFIKJqQY0",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 0.98
         }
       ]
     },
@@ -5250,7 +5129,7 @@
       "family": "frlg",
       "title": "Fuchsia City Theme",
       "category": "town",
-      "order": 41,
+      "order": 39,
       "sources": [
         {
           "type": "stream",
@@ -5265,7 +5144,7 @@
       "family": "frlg",
       "title": "The Sea",
       "category": "route",
-      "order": 42,
+      "order": 40,
       "sources": [
         {
           "type": "stream",
@@ -5280,7 +5159,7 @@
       "family": "frlg",
       "title": "Battle! (Legendary Pokémon)",
       "category": "battle",
-      "order": 43,
+      "order": 41,
       "sources": [
         {
           "type": "stream",
@@ -5295,13 +5174,13 @@
       "family": "frlg",
       "title": "Cinnabar Island Theme",
       "category": "town",
-      "order": 44,
+      "order": 42,
       "sources": [
         {
           "type": "stream",
           "videoId": "vto5oGdNEHI",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -5310,13 +5189,13 @@
       "family": "frlg",
       "title": "Pokémon Mansion",
       "category": "dungeon",
-      "order": 45,
+      "order": 43,
       "sources": [
         {
           "type": "stream",
           "videoId": "uEfIADIvI7c",
           "startMs": 0,
-          "confidence": 1.0
+          "confidence": 0.99
         }
       ]
     },
@@ -5325,7 +5204,7 @@
       "family": "frlg",
       "title": "Pokémon Net Center",
       "category": "other",
-      "order": 46,
+      "order": 44,
       "sources": [
         {
           "type": "stream",
@@ -5346,7 +5225,7 @@
       "family": "frlg",
       "title": "Sevii Islands: Four & Five Islands",
       "category": "other",
-      "order": 47,
+      "order": 45,
       "sources": [
         {
           "type": "stream",
@@ -5361,7 +5240,7 @@
       "family": "frlg",
       "title": "Pokémon Jump",
       "category": "other",
-      "order": 48,
+      "order": 46,
       "sources": [
         {
           "type": "stream",
@@ -5376,7 +5255,7 @@
       "family": "frlg",
       "title": "Dodrio Berry Picking",
       "category": "other",
-      "order": 49,
+      "order": 47,
       "sources": [
         {
           "type": "stream",
@@ -5391,7 +5270,7 @@
       "family": "frlg",
       "title": "Sevii Islands",
       "category": "other",
-      "order": 50,
+      "order": 48,
       "sources": [
         {
           "type": "stream",
@@ -5406,7 +5285,7 @@
       "family": "frlg",
       "title": "Sevii Islands: Six & Seven Islands",
       "category": "other",
-      "order": 51,
+      "order": 49,
       "sources": [
         {
           "type": "stream",
@@ -5427,7 +5306,7 @@
       "family": "frlg",
       "title": "The Union Room",
       "category": "other",
-      "order": 52,
+      "order": 50,
       "sources": [
         {
           "type": "stream",
@@ -5442,7 +5321,7 @@
       "family": "frlg",
       "title": "Mystery Gift",
       "category": "other",
-      "order": 53,
+      "order": 51,
       "sources": [
         {
           "type": "stream",
@@ -5457,7 +5336,7 @@
       "family": "frlg",
       "title": "Battle! (Mewtwo)",
       "category": "battle",
-      "order": 54,
+      "order": 52,
       "sources": [
         {
           "type": "stream",
@@ -5472,7 +5351,7 @@
       "family": "frlg",
       "title": "The Final Road",
       "category": "other",
-      "order": 55,
+      "order": 53,
       "sources": [
         {
           "type": "stream",
@@ -5487,7 +5366,7 @@
       "family": "frlg",
       "title": "Final Battle! (Rival)",
       "category": "battle",
-      "order": 56,
+      "order": 54,
       "sources": [
         {
           "type": "stream",
@@ -5502,7 +5381,7 @@
       "family": "frlg",
       "title": "Epilogue",
       "category": "other",
-      "order": 57,
+      "order": 55,
       "sources": [
         {
           "type": "stream",
@@ -5517,7 +5396,7 @@
       "family": "frlg",
       "title": "Hall of Fame",
       "category": "event",
-      "order": 58,
+      "order": 56,
       "sources": [
         {
           "type": "stream",
@@ -5532,7 +5411,7 @@
       "family": "frlg",
       "title": "Ending Theme",
       "category": "event",
-      "order": 59,
+      "order": 57,
       "sources": [
         {
           "type": "stream",
@@ -5547,7 +5426,7 @@
       "family": "frlg",
       "title": "Deoxys Appears",
       "category": "event",
-      "order": 60,
+      "order": 58,
       "sources": [
         {
           "type": "stream",
@@ -5562,7 +5441,7 @@
       "family": "frlg",
       "title": "Battle! (Deoxys)",
       "category": "battle",
-      "order": 61,
+      "order": 59,
       "sources": [
         {
           "type": "stream",
@@ -8193,42 +8072,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "GCe_6Q2oONU",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "488cWnQaHkk",
-          "startMs": 0,
-          "confidence": 0.93
-        }
-      ]
-    },
-    {
-      "id": "hgss-title-screen",
-      "family": "hgss",
-      "title": "Title Screen",
-      "category": "event",
-      "order": 1,
-      "sources": [
-        {
-          "type": "stream",
           "videoId": "yyhJCtAtw3g",
           "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "SWl8CgAl2oI",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "ZP-P_aQR82s",
-          "startMs": 0,
-          "confidence": 0.93
+          "confidence": 1.0
         }
       ]
     },
@@ -8237,13 +8083,13 @@
       "family": "hgss",
       "title": "An Adventure Begins!",
       "category": "other",
-      "order": 2,
+      "order": 1,
       "sources": [
         {
           "type": "stream",
           "videoId": "ag-ldqUx6KI",
           "startMs": 0,
-          "confidence": 0.88
+          "confidence": 0.87
         }
       ]
     },
@@ -8252,7 +8098,7 @@
       "family": "hgss",
       "title": "New Bark Town",
       "category": "town",
-      "order": 3,
+      "order": 2,
       "sources": [
         {
           "type": "stream",
@@ -8267,7 +8113,7 @@
       "family": "hgss",
       "title": "Hurry Along",
       "category": "other",
-      "order": 4,
+      "order": 3,
       "sources": [
         {
           "type": "stream",
@@ -8294,7 +8140,7 @@
       "family": "hgss",
       "title": "Lyra",
       "category": "other",
-      "order": 5,
+      "order": 4,
       "sources": [
         {
           "type": "stream",
@@ -8321,7 +8167,7 @@
       "family": "hgss",
       "title": "Elm Pokémon Lab",
       "category": "town",
-      "order": 6,
+      "order": 5,
       "sources": [
         {
           "type": "stream",
@@ -8336,7 +8182,7 @@
       "family": "hgss",
       "title": "Route 29",
       "category": "route",
-      "order": 7,
+      "order": 6,
       "sources": [
         {
           "type": "stream",
@@ -8351,13 +8197,13 @@
       "family": "hgss",
       "title": "Battle! (Wild Pokémon—Johto Version)",
       "category": "battle",
-      "order": 8,
+      "order": 7,
       "sources": [
         {
           "type": "stream",
           "videoId": "XDny3qXvuzg",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 0.97
         }
       ]
     },
@@ -8366,7 +8212,7 @@
       "family": "hgss",
       "title": "Victory! (Wild Pokémon)",
       "category": "battle",
-      "order": 9,
+      "order": 8,
       "sources": [
         {
           "type": "stream",
@@ -8393,13 +8239,13 @@
       "family": "hgss",
       "title": "Cherrygrove City",
       "category": "town",
-      "order": 10,
+      "order": 9,
       "sources": [
         {
           "type": "stream",
           "videoId": "NCmykr7J9KA",
           "startMs": 0,
-          "confidence": 0.97
+          "confidence": 0.96
         }
       ]
     },
@@ -8408,7 +8254,7 @@
       "family": "hgss",
       "title": "Hurry Along 2",
       "category": "other",
-      "order": 11,
+      "order": 10,
       "sources": [
         {
           "type": "stream",
@@ -8435,7 +8281,7 @@
       "family": "hgss",
       "title": "Pokémon Center",
       "category": "town",
-      "order": 12,
+      "order": 11,
       "sources": [
         {
           "type": "stream",
@@ -8450,7 +8296,7 @@
       "family": "hgss",
       "title": "Trainers' Eyes Meet (Boy 1)",
       "category": "battle",
-      "order": 13,
+      "order": 12,
       "sources": [
         {
           "type": "stream",
@@ -8477,7 +8323,7 @@
       "family": "hgss",
       "title": "Battle! (Trainer Battle—Johto Version)",
       "category": "battle",
-      "order": 14,
+      "order": 13,
       "sources": [
         {
           "type": "stream",
@@ -8492,7 +8338,7 @@
       "family": "hgss",
       "title": "Victory! (Trainer Battle)",
       "category": "battle",
-      "order": 15,
+      "order": 14,
       "sources": [
         {
           "type": "stream",
@@ -8519,13 +8365,13 @@
       "family": "hgss",
       "title": "Route 30",
       "category": "route",
-      "order": 16,
+      "order": 15,
       "sources": [
         {
           "type": "stream",
           "videoId": "e1wOZNfln9Q",
           "startMs": 0,
-          "confidence": 0.95
+          "confidence": 0.94
         }
       ]
     },
@@ -8534,7 +8380,7 @@
       "family": "hgss",
       "title": "Violet City",
       "category": "town",
-      "order": 17,
+      "order": 16,
       "sources": [
         {
           "type": "stream",
@@ -8549,13 +8395,13 @@
       "family": "hgss",
       "title": "Sprout Tower",
       "category": "dungeon",
-      "order": 18,
+      "order": 17,
       "sources": [
         {
           "type": "stream",
           "videoId": "H0cYso0MffI",
           "startMs": 0,
-          "confidence": 0.94
+          "confidence": 0.93
         }
       ]
     },
@@ -8564,7 +8410,7 @@
       "family": "hgss",
       "title": "Trainers' Eyes Meet (Sage)",
       "category": "battle",
-      "order": 19,
+      "order": 18,
       "sources": [
         {
           "type": "stream",
@@ -8591,7 +8437,7 @@
       "family": "hgss",
       "title": "Poké Mart",
       "category": "town",
-      "order": 20,
+      "order": 19,
       "sources": [
         {
           "type": "stream",
@@ -8612,7 +8458,7 @@
       "family": "hgss",
       "title": "Kimono Girl",
       "category": "other",
-      "order": 21,
+      "order": 20,
       "sources": [
         {
           "type": "stream",
@@ -8627,7 +8473,7 @@
       "family": "hgss",
       "title": "Union Cave",
       "category": "dungeon",
-      "order": 22,
+      "order": 21,
       "sources": [
         {
           "type": "stream",
@@ -8642,7 +8488,7 @@
       "family": "hgss",
       "title": "Ruins of Alph",
       "category": "dungeon",
-      "order": 23,
+      "order": 22,
       "sources": [
         {
           "type": "stream",
@@ -8657,7 +8503,7 @@
       "family": "hgss",
       "title": "Pokégear Radio: Unown",
       "category": "other",
-      "order": 24,
+      "order": 23,
       "sources": [
         {
           "type": "stream",
@@ -8684,7 +8530,7 @@
       "family": "hgss",
       "title": "Azalea Town",
       "category": "town",
-      "order": 25,
+      "order": 24,
       "sources": [
         {
           "type": "stream",
@@ -8699,7 +8545,7 @@
       "family": "hgss",
       "title": "Trainers' Eyes Meet (Team Rocket)",
       "category": "battle",
-      "order": 26,
+      "order": 25,
       "sources": [
         {
           "type": "stream",
@@ -8726,7 +8572,7 @@
       "family": "hgss",
       "title": "Battle! (Team Rocket)",
       "category": "battle",
-      "order": 27,
+      "order": 26,
       "sources": [
         {
           "type": "stream",
@@ -8741,7 +8587,7 @@
       "family": "hgss",
       "title": "Route 34",
       "category": "route",
-      "order": 28,
+      "order": 27,
       "sources": [
         {
           "type": "stream",
@@ -8756,7 +8602,7 @@
       "family": "hgss",
       "title": "A Rival Appears!",
       "category": "event",
-      "order": 29,
+      "order": 28,
       "sources": [
         {
           "type": "stream",
@@ -8777,7 +8623,7 @@
       "family": "hgss",
       "title": "Battle! (Rival)",
       "category": "battle",
-      "order": 30,
+      "order": 29,
       "sources": [
         {
           "type": "stream",
@@ -8792,7 +8638,7 @@
       "family": "hgss",
       "title": "Evolution",
       "category": "event",
-      "order": 31,
+      "order": 30,
       "sources": [
         {
           "type": "stream",
@@ -8807,7 +8653,7 @@
       "family": "hgss",
       "title": "Goldenrod City",
       "category": "town",
-      "order": 32,
+      "order": 31,
       "sources": [
         {
           "type": "stream",
@@ -8822,7 +8668,7 @@
       "family": "hgss",
       "title": "Pokémon Gym",
       "category": "town",
-      "order": 33,
+      "order": 32,
       "sources": [
         {
           "type": "stream",
@@ -8837,7 +8683,7 @@
       "family": "hgss",
       "title": "Battle! (Gym Leader—Johto Version)",
       "category": "battle",
-      "order": 34,
+      "order": 33,
       "sources": [
         {
           "type": "stream",
@@ -8852,7 +8698,7 @@
       "family": "hgss",
       "title": "Victory! (Gym Leader)",
       "category": "battle",
-      "order": 35,
+      "order": 34,
       "sources": [
         {
           "type": "stream",
@@ -8879,7 +8725,7 @@
       "family": "hgss",
       "title": "Pokégear Radio: Buena's Password",
       "category": "other",
-      "order": 36,
+      "order": 35,
       "sources": [
         {
           "type": "stream",
@@ -8906,7 +8752,7 @@
       "family": "hgss",
       "title": "Goldenrod Game Corner",
       "category": "town",
-      "order": 37,
+      "order": 36,
       "sources": [
         {
           "type": "stream",
@@ -8921,7 +8767,7 @@
       "family": "hgss",
       "title": "You're a Winner!",
       "category": "other",
-      "order": 38,
+      "order": 37,
       "sources": [
         {
           "type": "stream",
@@ -8936,7 +8782,7 @@
       "family": "hgss",
       "title": "Global Terminal",
       "category": "other",
-      "order": 39,
+      "order": 38,
       "sources": [
         {
           "type": "stream",
@@ -8951,7 +8797,7 @@
       "family": "hgss",
       "title": "Gts",
       "category": "other",
-      "order": 40,
+      "order": 39,
       "sources": [
         {
           "type": "stream",
@@ -8966,7 +8812,7 @@
       "family": "hgss",
       "title": "Bicycle",
       "category": "route",
-      "order": 41,
+      "order": 40,
       "sources": [
         {
           "type": "stream",
@@ -8981,7 +8827,7 @@
       "family": "hgss",
       "title": "Trainers' Eyes Meet (Girl 1)",
       "category": "battle",
-      "order": 42,
+      "order": 41,
       "sources": [
         {
           "type": "stream",
@@ -9002,7 +8848,7 @@
       "family": "hgss",
       "title": "National Park",
       "category": "other",
-      "order": 43,
+      "order": 42,
       "sources": [
         {
           "type": "stream",
@@ -9017,7 +8863,7 @@
       "family": "hgss",
       "title": "Ecruteak City",
       "category": "town",
-      "order": 44,
+      "order": 43,
       "sources": [
         {
           "type": "stream",
@@ -9032,7 +8878,7 @@
       "family": "hgss",
       "title": "Ecruteak Dance Theater",
       "category": "other",
-      "order": 45,
+      "order": 44,
       "sources": [
         {
           "type": "stream",
@@ -9059,7 +8905,7 @@
       "family": "hgss",
       "title": "Burned Tower",
       "category": "dungeon",
-      "order": 46,
+      "order": 45,
       "sources": [
         {
           "type": "stream",
@@ -9074,7 +8920,7 @@
       "family": "hgss",
       "title": "Eusine",
       "category": "other",
-      "order": 47,
+      "order": 46,
       "sources": [
         {
           "type": "stream",
@@ -9089,7 +8935,7 @@
       "family": "hgss",
       "title": "Pokégear Radio: Professor Oak's Pokémon Talk",
       "category": "other",
-      "order": 48,
+      "order": 47,
       "sources": [
         {
           "type": "stream",
@@ -9116,7 +8962,7 @@
       "family": "hgss",
       "title": "Route 38",
       "category": "route",
-      "order": 49,
+      "order": 48,
       "sources": [
         {
           "type": "stream",
@@ -9131,7 +8977,7 @@
       "family": "hgss",
       "title": "Pokégear Radio: Pokémon March",
       "category": "other",
-      "order": 50,
+      "order": 49,
       "sources": [
         {
           "type": "stream",
@@ -9158,7 +9004,7 @@
       "family": "hgss",
       "title": "Battle! (Raikou)",
       "category": "battle",
-      "order": 51,
+      "order": 50,
       "sources": [
         {
           "type": "stream",
@@ -9173,7 +9019,7 @@
       "family": "hgss",
       "title": "Olivine Lighthouse",
       "category": "dungeon",
-      "order": 52,
+      "order": 51,
       "sources": [
         {
           "type": "stream",
@@ -9188,7 +9034,7 @@
       "family": "hgss",
       "title": "Surf",
       "category": "route",
-      "order": 53,
+      "order": 52,
       "sources": [
         {
           "type": "stream",
@@ -9203,7 +9049,7 @@
       "family": "hgss",
       "title": "Cianwood City",
       "category": "town",
-      "order": 54,
+      "order": 53,
       "sources": [
         {
           "type": "stream",
@@ -9218,7 +9064,7 @@
       "family": "hgss",
       "title": "Route 42",
       "category": "route",
-      "order": 55,
+      "order": 54,
       "sources": [
         {
           "type": "stream",
@@ -9233,7 +9079,7 @@
       "family": "hgss",
       "title": "Radio Transmission",
       "category": "other",
-      "order": 56,
+      "order": 55,
       "sources": [
         {
           "type": "stream",
@@ -9248,7 +9094,7 @@
       "family": "hgss",
       "title": "Team Rocket HQ",
       "category": "dungeon",
-      "order": 57,
+      "order": 56,
       "sources": [
         {
           "type": "stream",
@@ -9263,7 +9109,7 @@
       "family": "hgss",
       "title": "Trainers' Eyes Meet (Suspicious Figure 1)",
       "category": "battle",
-      "order": 58,
+      "order": 57,
       "sources": [
         {
           "type": "stream",
@@ -9278,7 +9124,7 @@
       "family": "hgss",
       "title": "A Rival Appears! (Version 2)",
       "category": "event",
-      "order": 59,
+      "order": 58,
       "sources": [
         {
           "type": "stream",
@@ -9305,7 +9151,7 @@
       "family": "hgss",
       "title": "Radio Tower Occupied!",
       "category": "dungeon",
-      "order": 60,
+      "order": 59,
       "sources": [
         {
           "type": "stream",
@@ -9320,7 +9166,7 @@
       "family": "hgss",
       "title": "Ice Path",
       "category": "dungeon",
-      "order": 61,
+      "order": 60,
       "sources": [
         {
           "type": "stream",
@@ -9335,7 +9181,7 @@
       "family": "hgss",
       "title": "Dragon's Den",
       "category": "dungeon",
-      "order": 62,
+      "order": 61,
       "sources": [
         {
           "type": "stream",
@@ -9362,7 +9208,7 @@
       "family": "hgss",
       "title": "Clair",
       "category": "other",
-      "order": 63,
+      "order": 62,
       "sources": [
         {
           "type": "stream",
@@ -9377,7 +9223,7 @@
       "family": "hgss",
       "title": "Battle! (Entei)",
       "category": "battle",
-      "order": 64,
+      "order": 63,
       "sources": [
         {
           "type": "stream",
@@ -9398,7 +9244,7 @@
       "family": "hgss",
       "title": "Bell Tower",
       "category": "dungeon",
-      "order": 65,
+      "order": 64,
       "sources": [
         {
           "type": "stream",
@@ -9419,7 +9265,7 @@
       "family": "hgss",
       "title": "The Dance of Ecruteak",
       "category": "other",
-      "order": 66,
+      "order": 65,
       "sources": [
         {
           "type": "stream",
@@ -9434,7 +9280,7 @@
       "family": "hgss",
       "title": "Ho-Oh Appears!",
       "category": "event",
-      "order": 67,
+      "order": 66,
       "sources": [
         {
           "type": "stream",
@@ -9455,7 +9301,7 @@
       "family": "hgss",
       "title": "Battle! (Ho-Oh)",
       "category": "battle",
-      "order": 68,
+      "order": 67,
       "sources": [
         {
           "type": "stream",
@@ -9470,7 +9316,7 @@
       "family": "hgss",
       "title": "Route 26",
       "category": "route",
-      "order": 69,
+      "order": 68,
       "sources": [
         {
           "type": "stream",
@@ -9485,7 +9331,7 @@
       "family": "hgss",
       "title": "S.S. Aqua",
       "category": "other",
-      "order": 70,
+      "order": 69,
       "sources": [
         {
           "type": "stream",
@@ -9500,7 +9346,7 @@
       "family": "hgss",
       "title": "Vermilion City",
       "category": "town",
-      "order": 71,
+      "order": 70,
       "sources": [
         {
           "type": "stream",
@@ -9515,7 +9361,7 @@
       "family": "hgss",
       "title": "Battle! (Gym Leader—Kanto Version)",
       "category": "battle",
-      "order": 72,
+      "order": 71,
       "sources": [
         {
           "type": "stream",
@@ -9536,7 +9382,7 @@
       "family": "hgss",
       "title": "Lavender Town",
       "category": "town",
-      "order": 73,
+      "order": 72,
       "sources": [
         {
           "type": "stream",
@@ -9563,7 +9409,7 @@
       "family": "hgss",
       "title": "Rock Tunnel",
       "category": "dungeon",
-      "order": 74,
+      "order": 73,
       "sources": [
         {
           "type": "stream",
@@ -9590,7 +9436,7 @@
       "family": "hgss",
       "title": "Battle! (Wild Pokémon—Kanto Version)",
       "category": "battle",
-      "order": 75,
+      "order": 74,
       "sources": [
         {
           "type": "stream",
@@ -9617,7 +9463,7 @@
       "family": "hgss",
       "title": "Cerulean City",
       "category": "town",
-      "order": 76,
+      "order": 75,
       "sources": [
         {
           "type": "stream",
@@ -9632,7 +9478,7 @@
       "family": "hgss",
       "title": "Route 24",
       "category": "route",
-      "order": 77,
+      "order": 76,
       "sources": [
         {
           "type": "stream",
@@ -9659,7 +9505,7 @@
       "family": "hgss",
       "title": "Pokégear Radio: Pokémon Lullaby",
       "category": "other",
-      "order": 78,
+      "order": 77,
       "sources": [
         {
           "type": "stream",
@@ -9686,7 +9532,7 @@
       "family": "hgss",
       "title": "Battle! (Suicune)",
       "category": "battle",
-      "order": 79,
+      "order": 78,
       "sources": [
         {
           "type": "stream",
@@ -9707,7 +9553,7 @@
       "family": "hgss",
       "title": "Celadon City",
       "category": "town",
-      "order": 80,
+      "order": 79,
       "sources": [
         {
           "type": "stream",
@@ -9728,7 +9574,7 @@
       "family": "hgss",
       "title": "Ethan",
       "category": "other",
-      "order": 81,
+      "order": 80,
       "sources": [
         {
           "type": "stream",
@@ -9743,7 +9589,7 @@
       "family": "hgss",
       "title": "Route 11",
       "category": "route",
-      "order": 82,
+      "order": 81,
       "sources": [
         {
           "type": "stream",
@@ -9770,7 +9616,7 @@
       "family": "hgss",
       "title": "Pokégear Radio: Poké Flute",
       "category": "other",
-      "order": 83,
+      "order": 82,
       "sources": [
         {
           "type": "stream",
@@ -9797,7 +9643,7 @@
       "family": "hgss",
       "title": "Viridian Forest",
       "category": "dungeon",
-      "order": 84,
+      "order": 83,
       "sources": [
         {
           "type": "stream",
@@ -9812,7 +9658,7 @@
       "family": "hgss",
       "title": "Trainers' Eyes Meet (Boy 2)",
       "category": "battle",
-      "order": 85,
+      "order": 84,
       "sources": [
         {
           "type": "stream",
@@ -9833,7 +9679,7 @@
       "family": "hgss",
       "title": "Pewter City",
       "category": "town",
-      "order": 86,
+      "order": 85,
       "sources": [
         {
           "type": "stream",
@@ -9848,7 +9694,7 @@
       "family": "hgss",
       "title": "Route 3",
       "category": "route",
-      "order": 87,
+      "order": 86,
       "sources": [
         {
           "type": "stream",
@@ -9863,7 +9709,7 @@
       "family": "hgss",
       "title": "Trainers' Eyes Meet (Suspicious Figure 2)",
       "category": "battle",
-      "order": 88,
+      "order": 87,
       "sources": [
         {
           "type": "stream",
@@ -9878,7 +9724,7 @@
       "family": "hgss",
       "title": "Mt. Moon",
       "category": "dungeon",
-      "order": 89,
+      "order": 88,
       "sources": [
         {
           "type": "stream",
@@ -9893,7 +9739,7 @@
       "family": "hgss",
       "title": "Route 1",
       "category": "route",
-      "order": 90,
+      "order": 89,
       "sources": [
         {
           "type": "stream",
@@ -9920,7 +9766,7 @@
       "family": "hgss",
       "title": "Pallet Town",
       "category": "town",
-      "order": 91,
+      "order": 90,
       "sources": [
         {
           "type": "stream",
@@ -9947,7 +9793,7 @@
       "family": "hgss",
       "title": "Professor Oak",
       "category": "other",
-      "order": 92,
+      "order": 91,
       "sources": [
         {
           "type": "stream",
@@ -9962,7 +9808,7 @@
       "family": "hgss",
       "title": "Trainers' Eyes Meet (Girl 2)",
       "category": "battle",
-      "order": 93,
+      "order": 92,
       "sources": [
         {
           "type": "stream",
@@ -9983,7 +9829,7 @@
       "family": "hgss",
       "title": "Battle! (Trainer Battle—Kanto Version)",
       "category": "battle",
-      "order": 94,
+      "order": 93,
       "sources": [
         {
           "type": "stream",
@@ -9998,7 +9844,7 @@
       "family": "hgss",
       "title": "Cinnabar Island",
       "category": "town",
-      "order": 95,
+      "order": 94,
       "sources": [
         {
           "type": "stream",
@@ -10019,7 +9865,7 @@
       "family": "hgss",
       "title": "Route 47",
       "category": "route",
-      "order": 96,
+      "order": 95,
       "sources": [
         {
           "type": "stream",
@@ -10046,7 +9892,7 @@
       "family": "hgss",
       "title": "Safari Zone Gate",
       "category": "other",
-      "order": 97,
+      "order": 96,
       "sources": [
         {
           "type": "stream",
@@ -10073,7 +9919,7 @@
       "family": "hgss",
       "title": "Safari Zone",
       "category": "other",
-      "order": 98,
+      "order": 97,
       "sources": [
         {
           "type": "stream",
@@ -10088,7 +9934,7 @@
       "family": "hgss",
       "title": "Pokégear Radio: Variety Channel",
       "category": "other",
-      "order": 99,
+      "order": 98,
       "sources": [
         {
           "type": "stream",
@@ -10115,7 +9961,7 @@
       "family": "hgss",
       "title": "The Bug-Catching Contest Begins!",
       "category": "event",
-      "order": 100,
+      "order": 99,
       "sources": [
         {
           "type": "stream",
@@ -10130,7 +9976,7 @@
       "family": "hgss",
       "title": "The Bug-Catching Contest",
       "category": "event",
-      "order": 101,
+      "order": 100,
       "sources": [
         {
           "type": "stream",
@@ -10145,7 +9991,7 @@
       "family": "hgss",
       "title": "Pokéathlon: In the Pokéathlon Dome",
       "category": "event",
-      "order": 102,
+      "order": 101,
       "sources": [
         {
           "type": "stream",
@@ -10166,7 +10012,7 @@
       "family": "hgss",
       "title": "Pokéathlon: Opening Ceremony",
       "category": "event",
-      "order": 103,
+      "order": 102,
       "sources": [
         {
           "type": "stream",
@@ -10187,7 +10033,7 @@
       "family": "hgss",
       "title": "Pokéathlon: An Event Begins!",
       "category": "event",
-      "order": 104,
+      "order": 103,
       "sources": [
         {
           "type": "stream",
@@ -10202,7 +10048,7 @@
       "family": "hgss",
       "title": "Pokéathlon: Event Time!",
       "category": "event",
-      "order": 105,
+      "order": 104,
       "sources": [
         {
           "type": "stream",
@@ -10223,7 +10069,7 @@
       "family": "hgss",
       "title": "Pokéathlon: Finals!",
       "category": "event",
-      "order": 106,
+      "order": 105,
       "sources": [
         {
           "type": "stream",
@@ -10238,7 +10084,7 @@
       "family": "hgss",
       "title": "Pokéathlon: Results Announcement",
       "category": "event",
-      "order": 107,
+      "order": 106,
       "sources": [
         {
           "type": "stream",
@@ -10259,7 +10105,7 @@
       "family": "hgss",
       "title": "Pokéathlon: Medal Ceremony",
       "category": "event",
-      "order": 108,
+      "order": 107,
       "sources": [
         {
           "type": "stream",
@@ -10280,7 +10126,7 @@
       "family": "hgss",
       "title": "Pokéathlon Winner!",
       "category": "event",
-      "order": 109,
+      "order": 108,
       "sources": [
         {
           "type": "stream",
@@ -10301,7 +10147,7 @@
       "family": "hgss",
       "title": "Mystery Gift",
       "category": "other",
-      "order": 110,
+      "order": 109,
       "sources": [
         {
           "type": "stream",
@@ -10316,7 +10162,7 @@
       "family": "hgss",
       "title": "Battle Tower Reception Desk",
       "category": "town",
-      "order": 111,
+      "order": 110,
       "sources": [
         {
           "type": "stream",
@@ -10331,7 +10177,7 @@
       "family": "hgss",
       "title": "Battle Tower (Johto)",
       "category": "town",
-      "order": 112,
+      "order": 111,
       "sources": [
         {
           "type": "stream",
@@ -10352,7 +10198,7 @@
       "family": "hgss",
       "title": "Battle Factory",
       "category": "town",
-      "order": 113,
+      "order": 112,
       "sources": [
         {
           "type": "stream",
@@ -10367,7 +10213,7 @@
       "family": "hgss",
       "title": "Battle Hall",
       "category": "town",
-      "order": 114,
+      "order": 113,
       "sources": [
         {
           "type": "stream",
@@ -10382,7 +10228,7 @@
       "family": "hgss",
       "title": "Battle Arcade",
       "category": "town",
-      "order": 115,
+      "order": 114,
       "sources": [
         {
           "type": "stream",
@@ -10409,7 +10255,7 @@
       "family": "hgss",
       "title": "Battle Castle",
       "category": "town",
-      "order": 116,
+      "order": 115,
       "sources": [
         {
           "type": "stream",
@@ -10436,7 +10282,7 @@
       "family": "hgss",
       "title": "Battle! (Frontier Brain)",
       "category": "battle",
-      "order": 117,
+      "order": 116,
       "sources": [
         {
           "type": "stream",
@@ -10457,7 +10303,7 @@
       "family": "hgss",
       "title": "Victory! (Frontier Brain)",
       "category": "battle",
-      "order": 118,
+      "order": 117,
       "sources": [
         {
           "type": "stream",
@@ -10484,7 +10330,7 @@
       "family": "hgss",
       "title": "Pokégear Radio: Trainer Channel",
       "category": "other",
-      "order": 119,
+      "order": 118,
       "sources": [
         {
           "type": "stream",
@@ -10505,7 +10351,7 @@
       "family": "hgss",
       "title": "Spin Trade",
       "category": "other",
-      "order": 120,
+      "order": 119,
       "sources": [
         {
           "type": "stream",
@@ -10532,7 +10378,7 @@
       "family": "hgss",
       "title": "Nintendo Wi-Fi Connection",
       "category": "other",
-      "order": 121,
+      "order": 120,
       "sources": [
         {
           "type": "stream",
@@ -10553,7 +10399,7 @@
       "family": "hgss",
       "title": "Wi-Fi Plaza",
       "category": "other",
-      "order": 122,
+      "order": 121,
       "sources": [
         {
           "type": "stream",
@@ -10580,7 +10426,7 @@
       "family": "hgss",
       "title": "Wi-Fi Plaza: Plaza Games",
       "category": "other",
-      "order": 123,
+      "order": 122,
       "sources": [
         {
           "type": "stream",
@@ -10607,7 +10453,7 @@
       "family": "hgss",
       "title": "Wi-Fi Plaza: Parade",
       "category": "other",
-      "order": 124,
+      "order": 123,
       "sources": [
         {
           "type": "stream",
@@ -10634,7 +10480,7 @@
       "family": "hgss",
       "title": "Pokégear Radio: Route 101",
       "category": "other",
-      "order": 125,
+      "order": 124,
       "sources": [
         {
           "type": "stream",
@@ -10655,7 +10501,7 @@
       "family": "hgss",
       "title": "Pokégear Radio: Route 201",
       "category": "other",
-      "order": 126,
+      "order": 125,
       "sources": [
         {
           "type": "stream",
@@ -10682,7 +10528,7 @@
       "family": "hgss",
       "title": "Pokéwalker",
       "category": "other",
-      "order": 127,
+      "order": 126,
       "sources": [
         {
           "type": "stream",
@@ -10697,7 +10543,7 @@
       "family": "hgss",
       "title": "Spiky-Eared Pichu Appears!",
       "category": "event",
-      "order": 128,
+      "order": 127,
       "sources": [
         {
           "type": "stream",
@@ -10724,7 +10570,7 @@
       "family": "hgss",
       "title": "Trainers' Eyes Meet (Kimono Girl)",
       "category": "battle",
-      "order": 129,
+      "order": 128,
       "sources": [
         {
           "type": "stream",
@@ -10745,7 +10591,7 @@
       "family": "hgss",
       "title": "Lugia Appears!",
       "category": "event",
-      "order": 130,
+      "order": 129,
       "sources": [
         {
           "type": "stream",
@@ -10766,7 +10612,7 @@
       "family": "hgss",
       "title": "Battle! (Lugia)",
       "category": "battle",
-      "order": 131,
+      "order": 130,
       "sources": [
         {
           "type": "stream",
@@ -10793,7 +10639,7 @@
       "family": "hgss",
       "title": "Victory Road",
       "category": "dungeon",
-      "order": 132,
+      "order": 131,
       "sources": [
         {
           "type": "stream",
@@ -10814,7 +10660,7 @@
       "family": "hgss",
       "title": "The Pokémon League",
       "category": "town",
-      "order": 133,
+      "order": 132,
       "sources": [
         {
           "type": "stream",
@@ -10829,7 +10675,7 @@
       "family": "hgss",
       "title": "Battle! (Champion)",
       "category": "battle",
-      "order": 134,
+      "order": 133,
       "sources": [
         {
           "type": "stream",
@@ -10844,7 +10690,7 @@
       "family": "hgss",
       "title": "The Hall of Fame",
       "category": "event",
-      "order": 135,
+      "order": 134,
       "sources": [
         {
           "type": "stream",
@@ -10871,7 +10717,7 @@
       "family": "hgss",
       "title": "Ending Theme",
       "category": "event",
-      "order": 136,
+      "order": 135,
       "sources": [
         {
           "type": "stream",
@@ -10898,7 +10744,7 @@
       "family": "hgss",
       "title": "The End",
       "category": "other",
-      "order": 137,
+      "order": 136,
       "sources": [
         {
           "type": "stream",
@@ -10925,7 +10771,7 @@
       "family": "hgss",
       "title": "Battle! (Super-Ancient Pokémon)",
       "category": "battle",
-      "order": 138,
+      "order": 137,
       "sources": [
         {
           "type": "stream",
@@ -10952,7 +10798,7 @@
       "family": "hgss",
       "title": "Sinjoh Ruins",
       "category": "dungeon",
-      "order": 139,
+      "order": 138,
       "sources": [
         {
           "type": "stream",
@@ -10973,7 +10819,7 @@
       "family": "hgss",
       "title": "Poké Mart (GB Sounds)",
       "category": "town",
-      "order": 141,
+      "order": 140,
       "sources": [
         {
           "type": "stream",
@@ -10988,7 +10834,7 @@
       "family": "hgss",
       "title": "Global Terminal (GB Sounds)",
       "category": "other",
-      "order": 142,
+      "order": 141,
       "sources": [
         {
           "type": "stream",
@@ -11003,7 +10849,7 @@
       "family": "hgss",
       "title": "Cerulean City (GB Sounds)",
       "category": "town",
-      "order": 143,
+      "order": 142,
       "sources": [
         {
           "type": "stream",
@@ -11024,7 +10870,7 @@
       "family": "hgss",
       "title": "Route 24 (GB Sounds)",
       "category": "route",
-      "order": 144,
+      "order": 143,
       "sources": [
         {
           "type": "stream",
@@ -11039,7 +10885,7 @@
       "family": "hgss",
       "title": "Cinnabar Island (GB Sounds)",
       "category": "town",
-      "order": 145,
+      "order": 144,
       "sources": [
         {
           "type": "stream",
@@ -11054,7 +10900,7 @@
       "family": "hgss",
       "title": "Route 47 (GB Sounds)",
       "category": "route",
-      "order": 146,
+      "order": 145,
       "sources": [
         {
           "type": "stream",
@@ -11069,7 +10915,7 @@
       "family": "hgss",
       "title": "Safari Zone Gate (GB Sounds)",
       "category": "other",
-      "order": 147,
+      "order": 146,
       "sources": [
         {
           "type": "stream",
@@ -11084,7 +10930,7 @@
       "family": "hgss",
       "title": "Safari Zone (GB Sounds)",
       "category": "other",
-      "order": 148,
+      "order": 147,
       "sources": [
         {
           "type": "stream",
@@ -11099,7 +10945,7 @@
       "family": "hgss",
       "title": "Pokéathlon: In the Pokéathlon Dome (GB Sounds)",
       "category": "event",
-      "order": 149,
+      "order": 148,
       "sources": [
         {
           "type": "stream",
@@ -11114,7 +10960,7 @@
       "family": "hgss",
       "title": "Pokéathlon: Opening Ceremony (GB Sounds)",
       "category": "event",
-      "order": 150,
+      "order": 149,
       "sources": [
         {
           "type": "stream",
@@ -11129,7 +10975,7 @@
       "family": "hgss",
       "title": "Pokéathlon: Results Announcement (GB Sounds)",
       "category": "event",
-      "order": 154,
+      "order": 153,
       "sources": [
         {
           "type": "stream",
