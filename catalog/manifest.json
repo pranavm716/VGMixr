@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-18T07:49:32Z",
+  "generatedAt": "2026-10-18T08:29:31Z",
   "games": [
     {
       "id": "red",
@@ -20918,6 +20918,2211 @@
       ]
     },
     {
+      "id": "bdsp-opening-movie",
+      "family": "bdsp",
+      "title": "Opening Movie",
+      "category": "event",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "t9IU68GWIHY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-introduction",
+      "family": "bdsp",
+      "title": "Introduction",
+      "category": "other",
+      "order": 1,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qB6MKNhPHSk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-special-report-search-for-the-red-gyarados",
+      "family": "bdsp",
+      "title": "Special Report Search for the Red Gyarados!",
+      "category": "other",
+      "order": 2,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "n20YCrPiRw0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-twinleaf-town-day",
+      "family": "bdsp",
+      "title": "Twinleaf Town (Day)",
+      "category": "town",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "H-nHExVV438",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-twinleaf-town-night",
+      "family": "bdsp",
+      "title": "Twinleaf Town (Night)",
+      "category": "town",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ju-ydFV4Lt8",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-rival",
+      "family": "bdsp",
+      "title": "Rival",
+      "category": "other",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vv2nGw-LXBg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-201-day",
+      "family": "bdsp",
+      "title": "Route 201 (Day)",
+      "category": "route",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lZqnYp9NE_A",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-201-night",
+      "family": "bdsp",
+      "title": "Route 201 (Night)",
+      "category": "route",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TaxKk-oLn-I",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-lake",
+      "family": "bdsp",
+      "title": "Lake",
+      "category": "other",
+      "order": 8,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yaUiv-rNWMU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-a-surprise-at-the-lake",
+      "family": "bdsp",
+      "title": "A Surprise At the Lake!",
+      "category": "other",
+      "order": 9,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DHk26saAVyA",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-wild-pokemon",
+      "family": "bdsp",
+      "title": "Battle! (Wild Pokémon)",
+      "category": "battle",
+      "order": 10,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tHXiP6QKqiQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-victory-wild-pokemon",
+      "family": "bdsp",
+      "title": "Victory! (Wild Pokémon)",
+      "category": "battle",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tzFzZNxvZ18",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-lucas",
+      "family": "bdsp",
+      "title": "Lucas",
+      "category": "other",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6X282X0WzW0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-dawn",
+      "family": "bdsp",
+      "title": "Dawn",
+      "category": "other",
+      "order": 13,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "RiH-dI6f_9o",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-sandgem-town-day",
+      "family": "bdsp",
+      "title": "Sandgem Town (Day)",
+      "category": "town",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qmApcqnAoNY",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-sandgem-town-night",
+      "family": "bdsp",
+      "title": "Sandgem Town (Night)",
+      "category": "town",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "pDXjVws44K0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-the-pokemon-lab",
+      "family": "bdsp",
+      "title": "The Pokémon Lab",
+      "category": "town",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gLeZ2x5VEa0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-hurry-along",
+      "family": "bdsp",
+      "title": "Hurry Along",
+      "category": "other",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "B2I2_Dl-siE",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-pokemon-center-day",
+      "family": "bdsp",
+      "title": "Pokémon Center (Day)",
+      "category": "town",
+      "order": 18,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lycu1na58EQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-pokemon-center-night",
+      "family": "bdsp",
+      "title": "Pokémon Center (Night)",
+      "category": "town",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TL6WY3JDE00",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-youngster",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (Youngster)",
+      "category": "battle",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "hsbWWAu17Kc",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-lass",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (Lass)",
+      "category": "battle",
+      "order": 21,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HIhiE4rTtfY",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-trainer",
+      "family": "bdsp",
+      "title": "Battle! (Trainer)",
+      "category": "battle",
+      "order": 22,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1kfP1nR9WJg",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-victory-trainer",
+      "family": "bdsp",
+      "title": "Victory! (Trainer)",
+      "category": "battle",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Q8VAR-TKktg",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-jubilife-city-day",
+      "family": "bdsp",
+      "title": "Jubilife City (Day)",
+      "category": "town",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9efzLRK1Wt4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-jubilife-city-night",
+      "family": "bdsp",
+      "title": "Jubilife City (Night)",
+      "category": "town",
+      "order": 25,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UcqXyzKhlkk",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-poke-mart",
+      "family": "bdsp",
+      "title": "Poké Mart",
+      "category": "town",
+      "order": 26,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LxKSEhyo8o4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-tv-station",
+      "family": "bdsp",
+      "title": "TV Station",
+      "category": "other",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8ryWi043ioU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-gts",
+      "family": "bdsp",
+      "title": "GTS",
+      "category": "other",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NK8vkx5fDnk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-203-day",
+      "family": "bdsp",
+      "title": "Route 203 (Day)",
+      "category": "route",
+      "order": 29,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BPS7f5kllxQ",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-203-night",
+      "family": "bdsp",
+      "title": "Route 203 (Night)",
+      "category": "route",
+      "order": 30,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "sNbpnz4bxb4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-rival",
+      "family": "bdsp",
+      "title": "Battle! (Rival)",
+      "category": "battle",
+      "order": 31,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zHoi25_zmRA",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-oreburgh-gate",
+      "family": "bdsp",
+      "title": "Oreburgh Gate",
+      "category": "other",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YehuoOaAJ0A",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-oreburgh-city-day",
+      "family": "bdsp",
+      "title": "Oreburgh City (Day)",
+      "category": "town",
+      "order": 33,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yPbJ74xmVBI",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-oreburgh-city-night",
+      "family": "bdsp",
+      "title": "Oreburgh City (Night)",
+      "category": "town",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "afRIWacg1WQ",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-oreburgh-mine",
+      "family": "bdsp",
+      "title": "Oreburgh Mine",
+      "category": "other",
+      "order": 35,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0TP_pX0wD_Q",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-pokemon-gym",
+      "family": "bdsp",
+      "title": "Pokémon Gym",
+      "category": "town",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-KUN2ol5bH0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-gym-leader",
+      "family": "bdsp",
+      "title": "Battle! (Gym Leader)",
+      "category": "battle",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "AD1pXn_cZ-o",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-victory-gym-leader",
+      "family": "bdsp",
+      "title": "Victory! (Gym Leader)",
+      "category": "battle",
+      "order": 38,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "is1QGI3LdKM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-twins",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (Twins)",
+      "category": "battle",
+      "order": 39,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5Ub1dMMSM9w",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-aroma-lady",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (Aroma Lady)",
+      "category": "battle",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zVs6kTCFQDA",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-floaroma-town-day",
+      "family": "bdsp",
+      "title": "Floaroma Town (Day)",
+      "category": "town",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GFVM9Vmdmc8",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-floaroma-town-night",
+      "family": "bdsp",
+      "title": "Floaroma Town (Night)",
+      "category": "town",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qjU1-f6nK-A",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-205-day",
+      "family": "bdsp",
+      "title": "Route 205 (Day)",
+      "category": "route",
+      "order": 43,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CApFEqbb9Wg",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-205-night",
+      "family": "bdsp",
+      "title": "Route 205 (Night)",
+      "category": "route",
+      "order": 44,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nj7kJyTwsM8",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-team-galactic-appears",
+      "family": "bdsp",
+      "title": "Team Galactic Appears!",
+      "category": "event",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UAD3CE5tufs",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-team-galactic",
+      "family": "bdsp",
+      "title": "Battle! (Team Galactic)",
+      "category": "battle",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Ipeftk27q2U",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "bdsp-eterna-forest",
+      "family": "bdsp",
+      "title": "Eterna Forest",
+      "category": "dungeon",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dW9o_jrqFK0",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-old-chateau",
+      "family": "bdsp",
+      "title": "Old Chateau",
+      "category": "other",
+      "order": 48,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "y7anjvn6sZo",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-eterna-city-day",
+      "family": "bdsp",
+      "title": "Eterna City (Day)",
+      "category": "town",
+      "order": 49,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "myXUquUtmfk",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-eterna-city-night",
+      "family": "bdsp",
+      "title": "Eterna City (Night)",
+      "category": "town",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mDFKx8uf9Hw",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-galactic-eterna-building",
+      "family": "bdsp",
+      "title": "Galactic Eterna Building",
+      "category": "other",
+      "order": 51,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zeEFPQLb_oA",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-team-galactic-commander",
+      "family": "bdsp",
+      "title": "Battle! (Team Galactic Commander)",
+      "category": "battle",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "B7dsHu9TPz0",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-victory-team-galactic",
+      "family": "bdsp",
+      "title": "Victory! (Team Galactic)",
+      "category": "battle",
+      "order": 53,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "b9oIoZ8AOO4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-evolution",
+      "family": "bdsp",
+      "title": "Evolution",
+      "category": "event",
+      "order": 54,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MwZy9I2QzK4",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-the-underground",
+      "family": "bdsp",
+      "title": "The Underground",
+      "category": "other",
+      "order": 55,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ifD-tgNLZtM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-bicycle",
+      "family": "bdsp",
+      "title": "Bicycle",
+      "category": "route",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wO_UPfgQGg4",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-cyclist",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (Cyclist)",
+      "category": "battle",
+      "order": 57,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gLqqW-5_zoo",
+          "startMs": 0,
+          "confidence": 0.98
+        },
+        {
+          "type": "stream",
+          "videoId": "SfzQ9REFWYU",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-206-day",
+      "family": "bdsp",
+      "title": "Route 206 (Day)",
+      "category": "route",
+      "order": 58,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xmBLQnJMTtQ",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-206-night",
+      "family": "bdsp",
+      "title": "Route 206 (Night)",
+      "category": "route",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9J0Ne00EV0Q",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-artist",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (Artist)",
+      "category": "battle",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SfzQ9REFWYU",
+          "startMs": 0,
+          "confidence": 0.98
+        },
+        {
+          "type": "stream",
+          "videoId": "gLqqW-5_zoo",
+          "startMs": 0,
+          "confidence": 0.82
+        },
+        {
+          "type": "stream",
+          "videoId": "5Ub1dMMSM9w",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "bdsp-hearthome-city-day",
+      "family": "bdsp",
+      "title": "Hearthome City (Day)",
+      "category": "town",
+      "order": 61,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "AKS-V9tv0OE",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-hearthome-city-night",
+      "family": "bdsp",
+      "title": "Hearthome City (Night)",
+      "category": "town",
+      "order": 62,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tKSD9kw3VGo",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-amity-square",
+      "family": "bdsp",
+      "title": "Amity Square",
+      "category": "other",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4FcGGNufI6c",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-contest-hall",
+      "family": "bdsp",
+      "title": "Contest Hall",
+      "category": "event",
+      "order": 64,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "islV3v4aeGw",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-poffins",
+      "family": "bdsp",
+      "title": "Poffins",
+      "category": "other",
+      "order": 65,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zZnN70CQgq8",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-contest-dress-up",
+      "family": "bdsp",
+      "title": "Contest Dress Up",
+      "category": "event",
+      "order": 66,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "cMf1_N0vTSA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-dance-easy",
+      "family": "bdsp",
+      "title": "Dance Easy",
+      "category": "other",
+      "order": 67,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rawPbQG94Yo",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-dance-difficult",
+      "family": "bdsp",
+      "title": "Dance Difficult",
+      "category": "other",
+      "order": 68,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "v8MhQg4KftQ",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-contest-cuteness",
+      "family": "bdsp",
+      "title": "Contest Cuteness",
+      "category": "event",
+      "order": 69,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wvL3m-XvYLY",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "bdsp-contest-coolness",
+      "family": "bdsp",
+      "title": "Contest Coolness",
+      "category": "event",
+      "order": 70,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Z-2I8iGuUrU",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "bdsp-contest-toughness",
+      "family": "bdsp",
+      "title": "Contest Toughness",
+      "category": "event",
+      "order": 71,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TozNXjThCoE",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "bdsp-contest-beauty",
+      "family": "bdsp",
+      "title": "Contest Beauty",
+      "category": "event",
+      "order": 72,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Y7hF-V3I8GE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-contest-smartness",
+      "family": "bdsp",
+      "title": "Contest Smartness",
+      "category": "event",
+      "order": 73,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FNqcSRemNps",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "bdsp-contest-results-announcement",
+      "family": "bdsp",
+      "title": "Contest Results Announcement",
+      "category": "event",
+      "order": 74,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jVC7W5qwRKM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-contest-winner",
+      "family": "bdsp",
+      "title": "Contest Winner",
+      "category": "event",
+      "order": 75,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jybUHqTI_k8",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-209-day",
+      "family": "bdsp",
+      "title": "Route 209 (Day)",
+      "category": "route",
+      "order": 76,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "u4z4YXFwKDA",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-209-night",
+      "family": "bdsp",
+      "title": "Route 209 (Night)",
+      "category": "route",
+      "order": 77,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HOMFUEaIdZI",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-hiker",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (Hiker)",
+      "category": "battle",
+      "order": 78,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UHUWyCNtciQ",
+          "startMs": 0,
+          "confidence": 0.98
+        },
+        {
+          "type": "stream",
+          "videoId": "uSJMTZJEWDY",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "bdsp-solaceon-town-day",
+      "family": "bdsp",
+      "title": "Solaceon Town (Day)",
+      "category": "town",
+      "order": 79,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "7FB65WMErZo",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-solaceon-town-night",
+      "family": "bdsp",
+      "title": "Solaceon Town (Night)",
+      "category": "town",
+      "order": 80,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fxtv4EaMg54",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-210-day",
+      "family": "bdsp",
+      "title": "Route 210 (Day)",
+      "category": "route",
+      "order": 81,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nO60lmOCnFo",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-210-night",
+      "family": "bdsp",
+      "title": "Route 210 (Night)",
+      "category": "route",
+      "order": 82,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FD8_hb4rI4Y",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-veilstone-city-day",
+      "family": "bdsp",
+      "title": "Veilstone City (Day)",
+      "category": "town",
+      "order": 83,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5y2UCBM2wHo",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-veilstone-city-night",
+      "family": "bdsp",
+      "title": "Veilstone City (Night)",
+      "category": "town",
+      "order": 84,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "l_EorKmO9XI",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-black-belt",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (Black Belt)",
+      "category": "battle",
+      "order": 85,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NdpCUXcAjW4",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "bdsp-game-corner",
+      "family": "bdsp",
+      "title": "Game Corner",
+      "category": "town",
+      "order": 86,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "slVT6lM_DRE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-pi",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (PI)",
+      "category": "battle",
+      "order": 87,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uSJMTZJEWDY",
+          "startMs": 0,
+          "confidence": 0.98
+        },
+        {
+          "type": "stream",
+          "videoId": "UHUWyCNtciQ",
+          "startMs": 0,
+          "confidence": 0.84
+        },
+        {
+          "type": "stream",
+          "videoId": "vhe5u6HJAU0",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "bdsp-valor-lakefront-day",
+      "family": "bdsp",
+      "title": "Valor Lakefront (Day)",
+      "category": "other",
+      "order": 88,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "W8QNDiUaYNw",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-valor-lakefront-night",
+      "family": "bdsp",
+      "title": "Valor Lakefront (Night)",
+      "category": "other",
+      "order": 89,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GVbOGMlCGxI",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-great-marsh",
+      "family": "bdsp",
+      "title": "Great Marsh",
+      "category": "other",
+      "order": 90,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9V1mK8qWels",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-collector",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (Collector)",
+      "category": "battle",
+      "order": 91,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qxtKPnPQCEM",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "bdsp-surf",
+      "family": "bdsp",
+      "title": "Surf",
+      "category": "route",
+      "order": 92,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GgiPSpmCEeg",
+          "startMs": 0,
+          "confidence": 0.94
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-sailor",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (Sailor)",
+      "category": "battle",
+      "order": 93,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vhe5u6HJAU0",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "uSJMTZJEWDY",
+          "startMs": 0,
+          "confidence": 0.83
+        },
+        {
+          "type": "stream",
+          "videoId": "UHUWyCNtciQ",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "bdsp-canalave-city-day",
+      "family": "bdsp",
+      "title": "Canalave City (Day)",
+      "category": "town",
+      "order": 94,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "v5uFMzhPU18",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-canalave-city-night",
+      "family": "bdsp",
+      "title": "Canalave City (Night)",
+      "category": "town",
+      "order": 95,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5D9d5VO03c4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-216-day",
+      "family": "bdsp",
+      "title": "Route 216 (Day)",
+      "category": "route",
+      "order": 96,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5iOZXXWZImU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-216-night",
+      "family": "bdsp",
+      "title": "Route 216 (Night)",
+      "category": "route",
+      "order": 97,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8tUbU7O-gt0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-snowpoint-city-day",
+      "family": "bdsp",
+      "title": "Snowpoint City (Day)",
+      "category": "town",
+      "order": 98,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MkTRoWWoPag",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-snowpoint-city-night",
+      "family": "bdsp",
+      "title": "Snowpoint City (Night)",
+      "category": "town",
+      "order": 99,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vwE9strIaJs",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-team-galactic-hq",
+      "family": "bdsp",
+      "title": "Team Galactic HQ",
+      "category": "dungeon",
+      "order": 100,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "eZszePdXhIc",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-team-galactic-boss",
+      "family": "bdsp",
+      "title": "Battle! (Team Galactic Boss)",
+      "category": "battle",
+      "order": 101,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Yh28Q6PMtxI",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-deep-within-team-galactic-hq",
+      "family": "bdsp",
+      "title": "Deep Within Team Galactic HQ",
+      "category": "dungeon",
+      "order": 102,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ziew5xG23-4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-mt-coronet",
+      "family": "bdsp",
+      "title": "Mt. Coronet",
+      "category": "dungeon",
+      "order": 103,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "q0aEGER23uE",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-spear-pillar",
+      "family": "bdsp",
+      "title": "Spear Pillar",
+      "category": "other",
+      "order": 104,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gjD1OKuJt8I",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-the-legendary-pokemon-appears",
+      "family": "bdsp",
+      "title": "The Legendary Pokémon Appears!",
+      "category": "event",
+      "order": 105,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-ejI_n-oQK8",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-catastrophe",
+      "family": "bdsp",
+      "title": "Catastrophe!",
+      "category": "other",
+      "order": 106,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yWRsyf9gjZk",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-dialga-palkia",
+      "family": "bdsp",
+      "title": "Battle! (Dialga Palkia)",
+      "category": "battle",
+      "order": 107,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fynRpmp_noE",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "bdsp-lake-caverns",
+      "family": "bdsp",
+      "title": "Lake Caverns",
+      "category": "other",
+      "order": 108,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "v88522sseoY",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-azelf-mesprit-uxie",
+      "family": "bdsp",
+      "title": "Battle! (Azelf Mesprit Uxie)",
+      "category": "battle",
+      "order": 109,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "oeBoq_38XSQ",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "bdsp-sunyshore-city-day",
+      "family": "bdsp",
+      "title": "Sunyshore City (Day)",
+      "category": "town",
+      "order": 110,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mLQ2HDrTCcw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-sunyshore-city-night",
+      "family": "bdsp",
+      "title": "Sunyshore City (Night)",
+      "category": "town",
+      "order": 111,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aSYmKgoG96E",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-a-poke-radar-hit",
+      "family": "bdsp",
+      "title": "A Poké Radar Hit!",
+      "category": "other",
+      "order": 112,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "I8Fzg-oU2pc",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "bdsp-fight-area-day",
+      "family": "bdsp",
+      "title": "Fight Area (Day)",
+      "category": "other",
+      "order": 113,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LSnAyrn761U",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bdsp-fight-area-night",
+      "family": "bdsp",
+      "title": "Fight Area (Night)",
+      "category": "other",
+      "order": 114,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_VWf8eT7UlY",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-tower",
+      "family": "bdsp",
+      "title": "Battle Tower",
+      "category": "town",
+      "order": 115,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Dh33VzDfMwg",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-225-day",
+      "family": "bdsp",
+      "title": "Route 225 (Day)",
+      "category": "route",
+      "order": 116,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4pE2-JiwJJU",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-225-night",
+      "family": "bdsp",
+      "title": "Route 225 (Night)",
+      "category": "route",
+      "order": 117,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YmH0wSHz9oc",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bdsp-stark-mountain",
+      "family": "bdsp",
+      "title": "Stark Mountain",
+      "category": "dungeon",
+      "order": 118,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "KsRG5Tcb46M",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-legendary-pokemon",
+      "family": "bdsp",
+      "title": "Battle! (Legendary Pokémon)",
+      "category": "battle",
+      "order": 119,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gzWI4jXb4Gc",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-228-day",
+      "family": "bdsp",
+      "title": "Route 228 (Day)",
+      "category": "route",
+      "order": 120,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "z8EvsQpaSG8",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bdsp-route-228-night",
+      "family": "bdsp",
+      "title": "Route 228 (Night)",
+      "category": "route",
+      "order": 121,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "auq1z0s4FZY",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-giratina",
+      "family": "bdsp",
+      "title": "Battle! (Giratina)",
+      "category": "battle",
+      "order": 122,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2HBAIi198_g",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "bdsp-mystery-gift",
+      "family": "bdsp",
+      "title": "Mystery Gift",
+      "category": "other",
+      "order": 123,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "RAfZvsyNrv0",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "bdsp-victory-road",
+      "family": "bdsp",
+      "title": "Victory Road",
+      "category": "dungeon",
+      "order": 124,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "obIUMrZzkHE",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-trainers-eyes-meet-ace-trainer",
+      "family": "bdsp",
+      "title": "Trainers' Eyes Meet (Ace Trainer)",
+      "category": "battle",
+      "order": 125,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vwZd0KuZF94",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-the-pokemon-league-day",
+      "family": "bdsp",
+      "title": "The Pokémon League (Day)",
+      "category": "town",
+      "order": 126,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0x-cMRbqCd4",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-the-pokemon-league-night",
+      "family": "bdsp",
+      "title": "The Pokémon League (Night)",
+      "category": "town",
+      "order": 127,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XeH8_JHCVlU",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-decisive-battle-pokemon-league",
+      "family": "bdsp",
+      "title": "Decisive Battle! (Pokémon League)",
+      "category": "battle",
+      "order": 128,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ocfE4HY7zL4",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-the-elite-four-appear",
+      "family": "bdsp",
+      "title": "The Elite Four Appear!",
+      "category": "other",
+      "order": 129,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "y_X3m4K24rE",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-elite-four",
+      "family": "bdsp",
+      "title": "Battle! (Elite Four)",
+      "category": "battle",
+      "order": 130,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HYWSiCPY44E",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-victory-elite-four",
+      "family": "bdsp",
+      "title": "Victory! (Elite Four)",
+      "category": "battle",
+      "order": 131,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ejC16b8fzEA",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-champion-cynthia",
+      "family": "bdsp",
+      "title": "Champion Cynthia",
+      "category": "battle",
+      "order": 132,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Vxon1O4fdX4",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-champion",
+      "family": "bdsp",
+      "title": "Battle! (Champion)",
+      "category": "battle",
+      "order": 133,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xoS1NHvMgck",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-victory-champion",
+      "family": "bdsp",
+      "title": "Victory! (Champion)",
+      "category": "battle",
+      "order": 134,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WKN3RMGz3vg",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-hall-of-fame",
+      "family": "bdsp",
+      "title": "Hall of Fame",
+      "category": "event",
+      "order": 135,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SePK7qN9J8M",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-congratulations-on-entering-the-hall-of-fame",
+      "family": "bdsp",
+      "title": "Congratulations On Entering the Hall of Fame!",
+      "category": "event",
+      "order": 136,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "15-djg1FSgI",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-ending",
+      "family": "bdsp",
+      "title": "Ending",
+      "category": "event",
+      "order": 137,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "q60yP0QMPMs",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-minor-legendary-pokemon",
+      "family": "bdsp",
+      "title": "Battle! (Minor Legendary Pokémon)",
+      "category": "battle",
+      "order": 138,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gzWI4jXb4Gc",
+          "startMs": 0,
+          "confidence": 0.86
+        },
+        {
+          "type": "stream",
+          "videoId": "Nv1aC2YOr3o",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-major-legendary-pokemon",
+      "family": "bdsp",
+      "title": "Battle! (Major Legendary Pokémon)",
+      "category": "battle",
+      "order": 139,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gzWI4jXb4Gc",
+          "startMs": 0,
+          "confidence": 0.86
+        },
+        {
+          "type": "stream",
+          "videoId": "1YLdKzps5Ho",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "bdsp-azure-flute",
+      "family": "bdsp",
+      "title": "Azure Flute",
+      "category": "other",
+      "order": 140,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1a0gV40TIlA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-hall-of-origin",
+      "family": "bdsp",
+      "title": "Hall of Origin",
+      "category": "other",
+      "order": 141,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aIPo0Y9LZxs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "bdsp-battle-arceus",
+      "family": "bdsp",
+      "title": "Battle! (Arceus)",
+      "category": "battle",
+      "order": 142,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "va3MkhTD14Q",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "pla-arceus-voice",
       "family": "pla",
       "title": "Arceus' Voice",
@@ -22747,6 +24952,1746 @@
           "videoId": "bhs3dnFv-FA",
           "startMs": 0,
           "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-under-the-prism-tower",
+      "family": "plza",
+      "title": "Under the Prism Tower",
+      "category": "dungeon",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "eWqjTJEVFvQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-from-the-train-window",
+      "family": "plza",
+      "title": "From the Train Window",
+      "category": "other",
+      "order": 1,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "91cZxTxzNtI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-arrival-at-the-station",
+      "family": "plza",
+      "title": "Arrival at the Station",
+      "category": "other",
+      "order": 2,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ct_m6607mQQ",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "plza-lumiose-city",
+      "family": "plza",
+      "title": "Lumiose City",
+      "category": "town",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2SbERAUyg40",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-urban-development-plan",
+      "family": "plza",
+      "title": "Urban Development Plan",
+      "category": "other",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "oufWsjTZJS4",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "plza-trouble-occurs",
+      "family": "plza",
+      "title": "Trouble Occurs?!",
+      "category": "other",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZsxhGw-MJK0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-lets-get-ready-to-battle",
+      "family": "plza",
+      "title": "Let's Get Ready To Battle!",
+      "category": "other",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gB99xU_jvRI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-trainer",
+      "family": "plza",
+      "title": "Battle! (Trainer)",
+      "category": "battle",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "a1lCdwkMj5k",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-victory-trainer",
+      "family": "plza",
+      "title": "Victory! (Trainer)",
+      "category": "battle",
+      "order": 8,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vyXEalpG-mc",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-zone",
+      "family": "plza",
+      "title": "Battle Zone",
+      "category": "other",
+      "order": 9,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "d4YkZ49ezIs",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-challenge",
+      "family": "plza",
+      "title": "Challenge",
+      "category": "other",
+      "order": 10,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xEzA_iSGowA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-hotel-z",
+      "family": "plza",
+      "title": "Hotel Z",
+      "category": "other",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JIijFCKwD9U",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-leader-of-team-mz",
+      "family": "plza",
+      "title": "Leader of Team MZ",
+      "category": "other",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GQxSFRM8SjQ",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "plza-members-of-team-mz",
+      "family": "plza",
+      "title": "Members of Team MZ",
+      "category": "other",
+      "order": 13,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LNVLHADmox4",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-team-mz",
+      "family": "plza",
+      "title": "Battle! (Team MZ)",
+      "category": "battle",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zhZX97bwBLE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-pokemon-center",
+      "family": "plza",
+      "title": "Pokémon Center",
+      "category": "town",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nBYgKciJQ5s",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-wild-zone",
+      "family": "plza",
+      "title": "Wild Zone",
+      "category": "other",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xQIeh8IUQxM",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "lpuS0geSTcU",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-pokemon",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Pokémon)",
+      "category": "battle",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lpuS0geSTcU",
+          "startMs": 0,
+          "confidence": 0.9
+        },
+        {
+          "type": "stream",
+          "videoId": "xQIeh8IUQxM",
+          "startMs": 0,
+          "confidence": 0.87
+        },
+        {
+          "type": "stream",
+          "videoId": "DnjH1jmuDWE",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "plza-pokemon-research-lab",
+      "family": "plza",
+      "title": "Pokémon Research Lab",
+      "category": "town",
+      "order": 18,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "eaRK7YQmkNE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-stronger-trainer",
+      "family": "plza",
+      "title": "Battle! (Stronger Trainer)",
+      "category": "battle",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Doh9KcYblzo",
+          "startMs": 0,
+          "confidence": 0.86
+        },
+        {
+          "type": "stream",
+          "videoId": "a1lCdwkMj5k",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "plza-emma",
+      "family": "plza",
+      "title": "Emma",
+      "category": "other",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_bSX_A0Mc9k",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-eating-together",
+      "family": "plza",
+      "title": "Eating Together",
+      "category": "other",
+      "order": 21,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "v1d5lwjMefM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-looker-bureau",
+      "family": "plza",
+      "title": "Looker Bureau",
+      "category": "other",
+      "order": 22,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "PXmFb4LVm9Y",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-alpha-pokemon",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Alpha Pokémon)",
+      "category": "battle",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DnjH1jmuDWE",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "lpuS0geSTcU",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "plza-evolution",
+      "family": "plza",
+      "title": "Evolution",
+      "category": "event",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "g8aUTwROdBg",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-photo-march",
+      "family": "plza",
+      "title": "Photo (March)",
+      "category": "other",
+      "order": 25,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tSHf6NHryKI",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "plza-photo-battle",
+      "family": "plza",
+      "title": "Photo (Battle)",
+      "category": "other",
+      "order": 26,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rHaXCwkaprY",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "plza-photo-lullaby",
+      "family": "plza",
+      "title": "Photo (Lullaby)",
+      "category": "other",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0LkTpR6vZHw",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "plza-lumiose-city-night",
+      "family": "plza",
+      "title": "Lumiose City (Night)",
+      "category": "town",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tZ_xqkibkPU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-restaurant",
+      "family": "plza",
+      "title": "Restaurant",
+      "category": "other",
+      "order": 29,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Ly9MOR5trao",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-warning",
+      "family": "plza",
+      "title": "Warning",
+      "category": "other",
+      "order": 30,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qvOmVphedTs",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-rogue-mega-evolved-pokemon",
+      "family": "plza",
+      "title": "Battle! (Rogue Mega-Evolved Pokémon)",
+      "category": "battle",
+      "order": 31,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NUGd-LpJGWI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-quasartico-incs-mission",
+      "family": "plza",
+      "title": "Quasartico Inc's Mission",
+      "category": "other",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "s8zZ3KvWuwQ",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "plza-quasartico-inc",
+      "family": "plza",
+      "title": "Quasartico Inc.",
+      "category": "other",
+      "order": 33,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ISo9DD4XkGM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-strategy-meeting-time",
+      "family": "plza",
+      "title": "Strategy Meeting Time",
+      "category": "other",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VybiCVsiV1Y",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-zygarde-10-forme",
+      "family": "plza",
+      "title": "Battle! (Zygarde 10% Forme)",
+      "category": "battle",
+      "order": 35,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zOAtc8WN8EY",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "plza-l",
+      "family": "plza",
+      "title": "L",
+      "category": "other",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rGCLw5g08kg",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-lets-go-dyn4mo",
+      "family": "plza",
+      "title": "Let's Go, DYN4MO!",
+      "category": "other",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "G1PpK2IovDU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-racine-construction",
+      "family": "plza",
+      "title": "Racine Construction",
+      "category": "other",
+      "order": 38,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FFnGg0DRuLM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-canari",
+      "family": "plza",
+      "title": "Battle! (Canari)",
+      "category": "battle",
+      "order": 39,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YBlrnj_2ibs",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-ivor-of-the-fist-of-justice",
+      "family": "plza",
+      "title": "Ivor of the Fist of Justice",
+      "category": "other",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ecKyTkx1_G4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-the-sewers",
+      "family": "plza",
+      "title": "The Sewers",
+      "category": "other",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aQOJTVCBi50",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-sewers-wild-pokemon",
+      "family": "plza",
+      "title": "Battle! (Sewers Wild Pokémon)",
+      "category": "battle",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "pcalf9b-yWI",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-sewers-alpha-pokemon",
+      "family": "plza",
+      "title": "Battle! (Sewers Alpha Pokémon)",
+      "category": "battle",
+      "order": 43,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MOaprhVq-10",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-ivor",
+      "family": "plza",
+      "title": "Battle! (Ivor)",
+      "category": "battle",
+      "order": 44,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YPJlAGkDr1w",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-tension",
+      "family": "plza",
+      "title": "Tension",
+      "category": "other",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "k6BWk2HtA6c",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-rust-syndicate-office",
+      "family": "plza",
+      "title": "Rust Syndicate Office",
+      "category": "other",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1s7L0wSM0tY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-corbeau-of-the-rust-syndicate",
+      "family": "plza",
+      "title": "Corbeau of the Rust Syndicate",
+      "category": "other",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VmNtKuS0gPs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-corbeau",
+      "family": "plza",
+      "title": "Battle! (Corbeau)",
+      "category": "battle",
+      "order": 48,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XfZ6HTmlYUI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-jacinthe-of-the-sbc",
+      "family": "plza",
+      "title": "Jacinthe of the SBC",
+      "category": "other",
+      "order": 49,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qq7zcRsVHqQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-zygarde-50-forme",
+      "family": "plza",
+      "title": "Battle! (Zygarde 50% Forme)",
+      "category": "battle",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZzlwJIyesw4",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-jacinthe",
+      "family": "plza",
+      "title": "Battle! (Jacinthe)",
+      "category": "battle",
+      "order": 51,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uaxZcagsh-E",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-team-flare-nouveau",
+      "family": "plza",
+      "title": "Team Flare Nouveau",
+      "category": "other",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Ioa30b8twcc",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "0fLXvc-sqqM",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "plza-lysandre-labs",
+      "family": "plza",
+      "title": "Lysandre Labs",
+      "category": "other",
+      "order": 53,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kpNYry3YSSM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-lysandre-labs-wild-pokemon",
+      "family": "plza",
+      "title": "Battle! (Lysandre Labs Wild Pokémon)",
+      "category": "battle",
+      "order": 54,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZPKzq5Sbe4k",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-lysandre-labs-alpha-pokemon",
+      "family": "plza",
+      "title": "Battle! (Lysandre Labs Alpha Pokémon)",
+      "category": "battle",
+      "order": 55,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "X4u1K7niG-k",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "plza-memories-of-a-prison",
+      "family": "plza",
+      "title": "Memories of a Prison",
+      "category": "other",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iSoGHSzLRF0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-team-flare-nouveau",
+      "family": "plza",
+      "title": "Battle! (Team Flare Nouveau)",
+      "category": "battle",
+      "order": 57,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0fLXvc-sqqM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-anomaly-at-prism-tower",
+      "family": "plza",
+      "title": "Anomaly at Prism Tower",
+      "category": "dungeon",
+      "order": 58,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Wb4cTNvnNLM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-serious-showdown-battle-team-mz",
+      "family": "plza",
+      "title": "Serious Showdown Battle! (Team MZ)",
+      "category": "other",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XuW_VEajk_4",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "plza-azs-thoughts",
+      "family": "plza",
+      "title": "AZ's Thoughts",
+      "category": "other",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HEql588q55A",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-to-the-prism-tower-with-floette",
+      "family": "plza",
+      "title": "To the Prism Tower with Floette",
+      "category": "dungeon",
+      "order": 61,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Q7vPR0-D3Oo",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-control-room",
+      "family": "plza",
+      "title": "Control Room",
+      "category": "other",
+      "order": 62,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "IDnzJtCZ0Ek",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-rampage",
+      "family": "plza",
+      "title": "Rampage",
+      "category": "other",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vWcQATIBk2o",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "plza-lumiose-city-in-crisis",
+      "family": "plza",
+      "title": "Lumiose City in Crisis",
+      "category": "town",
+      "order": 64,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XEMYeaL0UuM",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "ls1075-uf6g",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-lumiose-city-in-crisis",
+      "family": "plza",
+      "title": "Battle! (Lumiose City in Crisis)",
+      "category": "battle",
+      "order": 65,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ls1075-uf6g",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "XEMYeaL0UuM",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "plza-zygarde-complete-forme",
+      "family": "plza",
+      "title": "Zygarde Complete Forme",
+      "category": "other",
+      "order": 66,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5D96h2T9_6g",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "plza-decisive-battle-hyper-rogue-ange-floette",
+      "family": "plza",
+      "title": "Decisive Battle! (Hyper Rogue Ange Floette)",
+      "category": "battle",
+      "order": 67,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DXgz0AzXr4Y",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "plza-another-rampage",
+      "family": "plza",
+      "title": "Another Rampage",
+      "category": "other",
+      "order": 68,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "do5uqHlI07k",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "plza-mega-zygarde",
+      "family": "plza",
+      "title": "Mega Zygarde",
+      "category": "other",
+      "order": 69,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "u-NyukMPWmQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-nihil-light",
+      "family": "plza",
+      "title": "Nihil Light",
+      "category": "other",
+      "order": 70,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xAs2z-KKDgk",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "plza-kiseki-reprise",
+      "family": "plza",
+      "title": "KISEKI - Reprise",
+      "category": "other",
+      "order": 71,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DDL0F3fTwMw",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "plza-goodnight",
+      "family": "plza",
+      "title": "Goodnight",
+      "category": "other",
+      "order": 72,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2WY9C8K3InE",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "plza-ranked-battle",
+      "family": "plza",
+      "title": "Ranked Battle!",
+      "category": "other",
+      "order": 73,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "r63wFF8ipZA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-results",
+      "family": "plza",
+      "title": "Battle Results",
+      "category": "other",
+      "order": 74,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FhGY7UNiPdw",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-lysandre",
+      "family": "plza",
+      "title": "Battle! (Lysandre)",
+      "category": "battle",
+      "order": 75,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tI0H2r1Dp9A",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-zygarde-complete-forme",
+      "family": "plza",
+      "title": "Battle! (Zygarde Complete Forme)",
+      "category": "battle",
+      "order": 76,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lE7Dl11CsDA",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "plza-mega-dimension",
+      "family": "plza",
+      "title": "Mega Dimension",
+      "category": "other",
+      "order": 77,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VBxKh1ZbS6Y",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-ansha",
+      "family": "plza",
+      "title": "Ansha",
+      "category": "other",
+      "order": 78,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VIjN5vouU3Y",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "plza-anshas-donut-shop",
+      "family": "plza",
+      "title": "Ansha's Donut Shop",
+      "category": "other",
+      "order": 79,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "g_68JNKEwhg",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "plza-hyperspace-distortion",
+      "family": "plza",
+      "title": "Hyperspace Distortion",
+      "category": "other",
+      "order": 80,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "riCL9kbVjO4",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "plza-hyperspace-lumiose",
+      "family": "plza",
+      "title": "Hyperspace Lumiose",
+      "category": "other",
+      "order": 81,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "C8iTrC4HRuQ",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-hyperspace-lumiose-wild-pokemon",
+      "family": "plza",
+      "title": "Battle! (Hyperspace Lumiose Wild Pokémon)",
+      "category": "battle",
+      "order": 82,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1GWXmCXgFUk",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "plza-successor-korrina",
+      "family": "plza",
+      "title": "Successor Korrina",
+      "category": "other",
+      "order": 83,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_D-oo6SFA88",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-hyperspace-lumiose-alpha-pokemon",
+      "family": "plza",
+      "title": "Battle! (Hyperspace Lumiose Alpha Pokémon)",
+      "category": "battle",
+      "order": 84,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DKxFjHod21k",
+          "startMs": 0,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "plza-operation-mega-donut",
+      "family": "plza",
+      "title": "Operation Mega Donut",
+      "category": "other",
+      "order": 85,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rCEf6uw_mY0",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "plza-remnant",
+      "family": "plza",
+      "title": "Remnant",
+      "category": "other",
+      "order": 86,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "OZ4gChBZO7Y",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-rogue-mega-darkrai",
+      "family": "plza",
+      "title": "Battle! (Rogue Mega Darkrai)",
+      "category": "battle",
+      "order": 87,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "f2d4vyc2LDI",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "plza-ill-go-with-you-reprise",
+      "family": "plza",
+      "title": "I'll Go With You - Reprise",
+      "category": "other",
+      "order": 88,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "r2-4AUwVVlI",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "plza-red-orb-blue-orb",
+      "family": "plza",
+      "title": "Red Orb / Blue Orb",
+      "category": "other",
+      "order": 89,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aqQ-zMbOrG0",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "plza-rayquaza-appears",
+      "family": "plza",
+      "title": "Rayquaza Appears!",
+      "category": "event",
+      "order": 90,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "PrNuR82xSsI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-rogue-mega-rayquaza",
+      "family": "plza",
+      "title": "Battle! (Rogue Mega Rayquaza)",
+      "category": "battle",
+      "order": 91,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aRWnrx7Nboc",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "plza-the-greatest-gift",
+      "family": "plza",
+      "title": "The Greatest Gift",
+      "category": "other",
+      "order": 92,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kAGYqAXx1m0",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "plza-anshas-story",
+      "family": "plza",
+      "title": "Ansha's Story",
+      "category": "other",
+      "order": 93,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yl-3pizrmCU",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "plza-lumiose-city-rouge-district",
+      "family": "plza",
+      "title": "Lumiose City (Rouge District)",
+      "category": "town",
+      "order": 94,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gxBO0IDKOgM",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "T8bT0OccJUs",
+          "startMs": 0,
+          "confidence": 0.83
+        },
+        {
+          "type": "stream",
+          "videoId": "-H1lhxo8V8M",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "plza-lumiose-city-bleu-district",
+      "family": "plza",
+      "title": "Lumiose City (Bleu District)",
+      "category": "town",
+      "order": 95,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-H1lhxo8V8M",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "T8bT0OccJUs",
+          "startMs": 0,
+          "confidence": 0.81
+        },
+        {
+          "type": "stream",
+          "videoId": "gxBO0IDKOgM",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "plza-lumiose-city-magenta-district",
+      "family": "plza",
+      "title": "Lumiose City (Magenta District)",
+      "category": "town",
+      "order": 96,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "p5T6hTOAXm8",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "T8bT0OccJUs",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "plza-lumiose-city-jaune-district",
+      "family": "plza",
+      "title": "Lumiose City (Jaune District)",
+      "category": "town",
+      "order": 97,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "T8bT0OccJUs",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "gxBO0IDKOgM",
+          "startMs": 0,
+          "confidence": 0.81
+        },
+        {
+          "type": "stream",
+          "videoId": "-H1lhxo8V8M",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-pokemon-version-2",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Pokémon Version 2)",
+      "category": "battle",
+      "order": 98,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Q1mrFc_08e8",
+          "startMs": 0,
+          "confidence": 0.81
+        },
+        {
+          "type": "stream",
+          "videoId": "f39MyJClFKA",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-pokemon-version-3",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Pokémon Version 3)",
+      "category": "battle",
+      "order": 99,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "T7EjM5VspTw",
+          "startMs": 0,
+          "confidence": 0.81
+        },
+        {
+          "type": "stream",
+          "videoId": "Gbx81dK5myM",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-pokemon-version-4",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Pokémon Version 4)",
+      "category": "battle",
+      "order": 100,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tNKcYU1yBZU",
+          "startMs": 0,
+          "confidence": 0.81
+        },
+        {
+          "type": "stream",
+          "videoId": "Y3T2dUnv8x4",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-pokemon-version-5",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Pokémon Version 5)",
+      "category": "battle",
+      "order": 101,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5S0YYvhHVBI",
+          "startMs": 0,
+          "confidence": 0.81
+        },
+        {
+          "type": "stream",
+          "videoId": "79QPbrhSi_o",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-pokemon-version-6",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Pokémon Version 6)",
+      "category": "battle",
+      "order": 102,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DP9Ma7lOUgI",
+          "startMs": 0,
+          "confidence": 0.81
+        },
+        {
+          "type": "stream",
+          "videoId": "uRNBkI7VuPU",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-alpha-pokemon-version-2",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Alpha Pokémon Version 2)",
+      "category": "battle",
+      "order": 103,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "f39MyJClFKA",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-alpha-pokemon-version-3",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Alpha Pokémon Version 3)",
+      "category": "battle",
+      "order": 104,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Gbx81dK5myM",
+          "startMs": 0,
+          "confidence": 0.89
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-alpha-pokemon-version-4",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Alpha Pokémon Version 4)",
+      "category": "battle",
+      "order": 105,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Y3T2dUnv8x4",
+          "startMs": 0,
+          "confidence": 0.89
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-alpha-pokemon-version-5",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Alpha Pokémon Version 5)",
+      "category": "battle",
+      "order": 106,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "79QPbrhSi_o",
+          "startMs": 0,
+          "confidence": 0.89
+        }
+      ]
+    },
+    {
+      "id": "plza-battle-wild-zone-alpha-pokemon-version-6",
+      "family": "plza",
+      "title": "Battle! (Wild Zone Alpha Pokémon Version 6)",
+      "category": "battle",
+      "order": 107,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uRNBkI7VuPU",
+          "startMs": 0,
+          "confidence": 0.89
         }
       ]
     }

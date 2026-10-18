@@ -475,6 +475,16 @@
 
     "swsh-you-caught-eternatus": { "exclude": false, "note": "Matches the \"You Caught\" jingle title rule, but is music" },
 
+    "bdsp-rival": { "streams": { "accept": [ { "videoId": "vv2nGw-LXBg" } ] } },
+    "bdsp-dawn": { "streams": { "accept": [ { "videoId": "RiH-dI6f_9o" } ] } },
+    "bdsp-the-underground": { "streams": { "accept": [ { "videoId": "ifD-tgNLZtM" } ] } },
+    "bdsp-contest-beauty": { "streams": { "accept": [ { "videoId": "Y7hF-V3I8GE" } ] } },
+    "bdsp-gts": { "streams": { "accept": [ { "videoId": "NK8vkx5fDnk" } ] } },
+    "bdsp-game-corner": { "streams": { "accept": [ { "videoId": "slVT6lM_DRE" } ] } },
+    "bdsp-ramanas-park": { "exclude": true },
+    "bdsp-mystery-zone": { "exclude": true },
+    "bdsp-contest-dress-up": { "streams": { "accept": [ { "videoId": "cMf1_N0vTSA" } ] } },
+
     "pla-jubilife-village-beginning-medley": { "exclude": true, "note": "A medley of pieces Disc 2 lists one by one" },
     "pla-battle-noble-pokemon-medley": { "exclude": true, "note": "A medley of pieces Disc 2 lists one by one" },
     "pla-jubilife-village-middle-medley": { "exclude": true, "note": "A medley of pieces Disc 2 lists one by one" },
@@ -488,9 +498,22 @@
     "sv-trainers-eyes-meet-academy-trainer": { "exclude": false, "note": "Short, but music, not a jingle" },
     "sv-the-hidden-treasure-of-area-zero-epilogue": { "exclude": false, "note": "Short, but music, not a jingle" },
 
-    "plza-rayquaza-appears": { "exclude": false, "note": "Short, but music, not a jingle" },
+    "plza-rayquaza-appears": { "exclude": false, "streams": { "accept": [ { "videoId": "PrNuR82xSsI" } ] },
+                               "note": "Short, but music, not a jingle" },
     "plza-hyperspace-distortion": { "exclude": false, "note": "Short, but music, not a jingle" },
-    "plza-anshas-donut-shop": { "exclude": false, "note": "Short, but music, not a jingle" }
+    "plza-anshas-donut-shop": { "exclude": false, "note": "Short, but music, not a jingle" },
+    "plza-under-the-prism-tower": { "streams": { "accept": [ { "videoId": "eWqjTJEVFvQ" } ] } },
+    "plza-trouble-occurs": { "streams": { "accept": [ { "videoId": "ZsxhGw-MJK0" } ] } },
+    "plza-challenge": { "streams": { "accept": [ { "videoId": "xEzA_iSGowA" } ] } },
+    "plza-hotel-z": { "streams": { "accept": [ { "videoId": "JIijFCKwD9U" } ] } },
+    "plza-eating-together": { "streams": { "accept": [ { "videoId": "v1d5lwjMefM" } ] } },
+    "plza-battle-rogue-mega-evolved-pokemon": { "streams": { "accept": [ { "videoId": "NUGd-LpJGWI" } ] } },
+    "plza-mega-zygarde": { "streams": { "accept": [ { "videoId": "u-NyukMPWmQ" } ] } },
+    "plza-lets-get-ready-to-battle": { "streams": { "accept": [ { "videoId": "gB99xU_jvRI" } ] } },
+    "plza-memories-of-a-prison": { "streams": { "accept": [ { "videoId": "iSoGHSzLRF0" } ] } },
+    "plza-ranked-battle": { "streams": { "accept": [ { "videoId": "r63wFF8ipZA" } ] } },
+    "plza-mega-dimension": { "streams": { "accept": [ { "videoId": "VBxKh1ZbS6Y" } ] } },
+    "plza-remnant": { "streams": { "accept": [ { "videoId": "OZ4gChBZO7Y" } ] } }
   },
   "extras": [
     { "family": "sm", "games": ["ultra-moon"], "title": "Banner Intro (Ultra Moon)", "duration": "0:03" },

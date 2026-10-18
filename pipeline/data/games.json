@@ -130,7 +130,9 @@
       { "games": ["x", "y"], "playlist": "PLaKSGGxuUf7Q" },
       { "games": ["omega-ruby", "alpha-sapphire"], "playlist": "PL9pPGq16Rk7pkD4Rjn35Fmq05tuE2zdVm", "note": "Pokémon Original Soundtrack channel, 37 tracks" },
       { "games": ["lets-go-pikachu", "lets-go-eevee"], "playlist": "PLzXrrIvqJ7v4GPPRAYWZzK5WbYwq569ZY" },
-      { "games": ["pla"], "playlist": "PLDuK_JKMWsGj6Qj702A3b8q2TGU3hPXOR" }
+      { "games": ["brilliant-diamond", "shining-pearl"], "playlist": "PLRvV_E_y-grOlApuhXUBucApUo7A2ifbG" },
+      { "games": ["pla"], "playlist": "PLDuK_JKMWsGj6Qj702A3b8q2TGU3hPXOR" },
+      { "games": ["plza"], "playlist": "PL90nj2rNFfbcE2HR8S2TNT_h2DjM1nDGb" }
     ],
     "albums": [],
     "aliases": {
