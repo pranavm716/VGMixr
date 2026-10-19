@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-19T09:44:01Z",
+  "generatedAt": "2026-10-19T09:56:36Z",
   "games": [
     {
       "id": "red",
@@ -20080,21 +20080,108 @@
     {
       "id": "sm-title-screen",
       "family": "sm",
-      "title": "Title Screen",
+      "games": [
+        "sun",
+        "moon"
+      ],
+      "title": "Title Screen (Sun & Moon)",
       "category": "event",
       "order": 0,
       "sources": [
         {
           "type": "stream",
-          "videoId": "ZvCYkFsZh54",
+          "videoId": "TO6iwQsLj4k",
           "startMs": 0,
+          "endMs": 107000,
           "confidence": 1.0
-        },
+        }
+      ]
+    },
+    {
+      "id": "sm-an-adventure-is-beginning",
+      "family": "sm",
+      "title": "An Adventure Is Beginning",
+      "category": "other",
+      "order": 1,
+      "sources": [
         {
           "type": "stream",
-          "videoId": "rizHOXyGoQc",
-          "startMs": 0,
-          "confidence": 0.99
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 107000,
+          "endMs": 145000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-alola-region-theme",
+      "family": "sm",
+      "games": [
+        "sun",
+        "moon"
+      ],
+      "title": "Alola Region Theme",
+      "category": "other",
+      "order": 2,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 145000,
+          "endMs": 309000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-escape",
+      "family": "sm",
+      "games": [
+        "sun",
+        "moon"
+      ],
+      "title": "Escape!",
+      "category": "other",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 309000,
+          "endMs": 381000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-waking-up",
+      "family": "sm",
+      "title": "Waking Up",
+      "category": "other",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 381000,
+          "endMs": 397000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-my-home",
+      "family": "sm",
+      "title": "My Home",
+      "category": "other",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 397000,
+          "endMs": 486000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20107,9 +20194,32 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 486000,
+          "endMs": 602000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "UEKk-wWA0DU",
           "startMs": 0,
           "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "sm-route-1-on-melemele-island",
+      "family": "sm",
+      "title": "Route 1 on Melemele Island",
+      "category": "route",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 602000,
+          "endMs": 723000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20120,6 +20230,13 @@
       "category": "town",
       "order": 8,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 723000,
+          "endMs": 894000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "WHWlQ1VTD6o",
@@ -20137,6 +20254,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 894000,
+          "endMs": 1097000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "Hy9X6BSTpUk",
           "startMs": 0,
           "confidence": 1.0
@@ -20152,8 +20276,79 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 1097000,
+          "endMs": 1208000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "sOUDW1SDGQ8",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-on-the-bridge",
+      "family": "sm",
+      "title": "On the Bridge...",
+      "category": "other",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 1208000,
+          "endMs": 1223000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-a-tapu-appears",
+      "family": "sm",
+      "title": "A Tapu Appears!",
+      "category": "event",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 1223000,
+          "endMs": 1265000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-lillies-theme",
+      "family": "sm",
+      "title": "Lillie's Theme",
+      "category": "event",
+      "order": 13,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 1265000,
+          "endMs": 1385000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-haus-theme",
+      "family": "sm",
+      "title": "Hau's Theme",
+      "category": "event",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 1398000,
+          "endMs": 1517000,
           "confidence": 1.0
         }
       ]
@@ -20165,6 +20360,13 @@
       "category": "battle",
       "order": 15,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 1517000,
+          "endMs": 1640000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "h0un2_uNApA",
@@ -20186,6 +20388,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 1654000,
+          "endMs": 1778000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "e968v0J9HnM",
           "startMs": 0,
           "confidence": 1.0
@@ -20199,6 +20408,13 @@
       "category": "battle",
       "order": 17,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 1778000,
+          "endMs": 1813000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "nv7exeyQXdo",
@@ -20220,8 +20436,31 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 1813000,
+          "endMs": 1950000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "GeNI76ZD-V4",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-trainers-eyes-meet-trainer",
+      "family": "sm",
+      "title": "Trainers' Eyes Meet (Trainer)",
+      "category": "battle",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 1950000,
+          "endMs": 1967000,
           "confidence": 1.0
         }
       ]
@@ -20239,6 +20478,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 1967000,
+          "endMs": 2140000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "9o4GZGyOI44",
           "startMs": 0,
           "confidence": 1.0
@@ -20254,8 +20500,31 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 2140000,
+          "endMs": 2177000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "Q8HK-odHP-c",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-the-pokemon-research-lab",
+      "family": "sm",
+      "title": "The Pokémon Research Lab",
+      "category": "town",
+      "order": 22,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 2183000,
+          "endMs": 2279000,
           "confidence": 1.0
         }
       ]
@@ -20269,9 +20538,32 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 2279000,
+          "endMs": 2372000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "agL3fpIO3jg",
           "startMs": 0,
           "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "sm-have-a-break-at-the-cafe",
+      "family": "sm",
+      "title": "Have a Break at the Café",
+      "category": "other",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 2378000,
+          "endMs": 2495000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20282,6 +20574,13 @@
       "category": "other",
       "order": 25,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 2501000,
+          "endMs": 2628000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "BQB7S6wNQBc",
@@ -20299,9 +20598,64 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 2628000,
+          "endMs": 2743000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "rwGHG1_YRlU",
           "startMs": 0,
           "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sm-trade",
+      "family": "sm",
+      "title": "Trade",
+      "category": "other",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 2765000,
+          "endMs": 2819000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-a-mission-at-festival-plaza",
+      "family": "sm",
+      "title": "A Mission at Festival Plaza",
+      "category": "other",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 2819000,
+          "endMs": 2893000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-festival-plaza-mission-results",
+      "family": "sm",
+      "title": "Festival Plaza Mission Results",
+      "category": "other",
+      "order": 29,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 2893000,
+          "endMs": 2925000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20312,6 +20666,13 @@
       "category": "other",
       "order": 30,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 2938000,
+          "endMs": 3064000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "YxeRM6nMCXA",
@@ -20329,6 +20690,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 3070000,
+          "endMs": 3173000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "xJECI6dzEo4",
           "startMs": 0,
           "confidence": 0.99
@@ -20342,6 +20710,13 @@
       "category": "town",
       "order": 32,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 3173000,
+          "endMs": 3300000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "icknxj4kgZo",
@@ -20359,9 +20734,16 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 3300000,
+          "endMs": 3341000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "ns8TBvM3bSg",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 1.0
         }
       ]
     },
@@ -20372,6 +20754,13 @@
       "category": "other",
       "order": 34,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 3347000,
+          "endMs": 3432000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "_oEKa9XMgN8",
@@ -20389,8 +20778,31 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 3432000,
+          "endMs": 3522000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "0DHLQlRcw-M",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-malasada-shop",
+      "family": "sm",
+      "title": "Malasada Shop",
+      "category": "other",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 3522000,
+          "endMs": 3613000,
           "confidence": 1.0
         }
       ]
@@ -20402,6 +20814,13 @@
       "category": "event",
       "order": 37,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 3613000,
+          "endMs": 3657000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "hm5niEyLk5s",
@@ -20419,6 +20838,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 3657000,
+          "endMs": 3713000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "hm5niEyLk5s",
           "startMs": 0,
           "confidence": 1.0
@@ -20434,9 +20860,64 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 3713000,
+          "endMs": 3814000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "ApKuTCMnO4g",
           "startMs": 0,
           "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "sm-route-2-on-melemele-island",
+      "family": "sm",
+      "title": "Route 2 on Melemele Island",
+      "category": "route",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 3814000,
+          "endMs": 3971000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-team-skull-appears",
+      "family": "sm",
+      "title": "Team Skull Appears!",
+      "category": "event",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 3971000,
+          "endMs": 4111000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-trainers-eyes-meet-team-skull",
+      "family": "sm",
+      "title": "Trainers' Eyes Meet (Team Skull)",
+      "category": "battle",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 4111000,
+          "endMs": 4129000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20447,6 +20928,13 @@
       "category": "battle",
       "order": 43,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 4129000,
+          "endMs": 4301000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "MiCBX5pG5hQ",
@@ -20464,6 +20952,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 4301000,
+          "endMs": 4338000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "L6k7KPFZ_Kk",
           "startMs": 0,
           "confidence": 0.99
@@ -20477,6 +20972,13 @@
       "category": "event",
       "order": 45,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 4338000,
+          "endMs": 4449000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "2M4LJCfVQqQ",
@@ -20494,8 +20996,31 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 4449000,
+          "endMs": 4633000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "wE5xTJ3ibYE",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-a-totem-pokemon-appears",
+      "family": "sm",
+      "title": "A Totem Pokémon Appears!",
+      "category": "event",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 4633000,
+          "endMs": 4665000,
           "confidence": 1.0
         }
       ]
@@ -20507,6 +21032,13 @@
       "category": "battle",
       "order": 48,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 4665000,
+          "endMs": 4832000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "khcpfQPFW80",
@@ -20524,8 +21056,31 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 4832000,
+          "endMs": 4872000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "D3br4KHutxI",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-seaward-cave",
+      "family": "sm",
+      "title": "Seaward Cave",
+      "category": "dungeon",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 4889000,
+          "endMs": 5036000,
           "confidence": 1.0
         }
       ]
@@ -20537,6 +21092,13 @@
       "category": "town",
       "order": 51,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 5036000,
+          "endMs": 5142000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "LPi__uSZMJQ",
@@ -20552,6 +21114,13 @@
       "category": "battle",
       "order": 52,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 5142000,
+          "endMs": 5364000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "LPi__uSZMJQ",
@@ -20575,6 +21144,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 5364000,
+          "endMs": 5410000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "57grTAYfHtM",
           "startMs": 0,
           "confidence": 1.0
@@ -20596,6 +21172,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 5417000,
+          "endMs": 5547000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "AcDaPtT0Fzc",
           "startMs": 0,
           "confidence": 1.0
@@ -20611,9 +21194,32 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 5547000,
+          "endMs": 5692000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "0aNtuaihID8",
           "startMs": 0,
           "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "sm-on-the-ship",
+      "family": "sm",
+      "title": "On the Ship",
+      "category": "other",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 5692000,
+          "endMs": 5792000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20624,6 +21230,13 @@
       "category": "town",
       "order": 57,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 5792000,
+          "endMs": 5897000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "jahk8Ge_WzI",
@@ -20641,9 +21254,32 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 5897000,
+          "endMs": 6013000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "PP6Fu2EywNE",
           "startMs": 0,
           "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "sm-route-4-on-akala-island",
+      "family": "sm",
+      "title": "Route 4 on Akala Island",
+      "category": "route",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 6013000,
+          "endMs": 6132000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20654,6 +21290,13 @@
       "category": "town",
       "order": 60,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 6132000,
+          "endMs": 6220000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "EEkj2yPGbmw",
@@ -20671,6 +21314,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 6220000,
+          "endMs": 6338000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "h6NTzKEhfMQ",
           "startMs": 0,
           "confidence": 0.98
@@ -20686,9 +21336,32 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 6338000,
+          "endMs": 6478000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "0xkfQIYeUxE",
           "startMs": 0,
           "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "sm-gladions-theme",
+      "family": "sm",
+      "title": "Gladion's Theme",
+      "category": "event",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 6478000,
+          "endMs": 6626000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20701,9 +21374,32 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 6626000,
+          "endMs": 6780000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "pr_lBOvFVLo",
           "startMs": 0,
           "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "sm-ride-pokemon-aquatic",
+      "family": "sm",
+      "title": "Ride Pokémon (Aquatic)",
+      "category": "other",
+      "order": 65,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 6780000,
+          "endMs": 6889000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20714,6 +21410,13 @@
       "category": "other",
       "order": 66,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 6889000,
+          "endMs": 6991000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "3DqI2ZIMj1U",
@@ -20731,6 +21434,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 6991000,
+          "endMs": 7143000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "KI0qn7lsEvA",
           "startMs": 0,
           "confidence": 0.97
@@ -20744,6 +21454,13 @@
       "category": "other",
       "order": 68,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 7143000,
+          "endMs": 7266000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "dERwONcmptA",
@@ -20761,9 +21478,48 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 7266000,
+          "endMs": 7400000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "dERwONcmptA",
           "startMs": 0,
           "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "sm-battle-royal-results",
+      "family": "sm",
+      "title": "Battle Royal Results",
+      "category": "other",
+      "order": 70,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 7400000,
+          "endMs": 7454000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-mallows-trial",
+      "family": "sm",
+      "title": "Mallow's Trial",
+      "category": "event",
+      "order": 71,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 7462000,
+          "endMs": 7501000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20774,6 +21530,13 @@
       "category": "other",
       "order": 72,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 7501000,
+          "endMs": 7636000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "RskSQozeGfs",
@@ -20791,8 +21554,31 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 7636000,
+          "endMs": 7771000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "F1lzJyc7uD8",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-burnets-lab",
+      "family": "sm",
+      "title": "Burnet's Lab",
+      "category": "town",
+      "order": 74,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 7777000,
+          "endMs": 7876000,
           "confidence": 1.0
         }
       ]
@@ -20804,6 +21590,13 @@
       "category": "town",
       "order": 75,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 7876000,
+          "endMs": 7994000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "ZahyJIatiYk",
@@ -20821,9 +21614,16 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 7994000,
+          "endMs": 8142000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "37Vd1p4Q1jk",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 0.97
         }
       ]
     },
@@ -20834,6 +21634,13 @@
       "category": "battle",
       "order": 77,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 8142000,
+          "endMs": 8304000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "0AiulLk379g",
@@ -20851,9 +21658,80 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 8304000,
+          "endMs": 8438000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "5mN_8095G1k",
           "startMs": 0,
           "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "sm-an-encounter",
+      "family": "sm",
+      "title": "An Encounter",
+      "category": "other",
+      "order": 79,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 8438000,
+          "endMs": 8557000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-lusamines-theme",
+      "family": "sm",
+      "title": "Lusamine's Theme",
+      "category": "event",
+      "order": 80,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 8557000,
+          "endMs": 8675000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-the-entrance-to-another-world",
+      "family": "sm",
+      "title": "The Entrance to Another World",
+      "category": "dungeon",
+      "order": 81,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 8675000,
+          "endMs": 8701000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-beasts",
+      "family": "sm",
+      "title": "Ultra Beasts...?",
+      "category": "other",
+      "order": 82,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 8701000,
+          "endMs": 8736000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20864,6 +21742,13 @@
       "category": "battle",
       "order": 83,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 8736000,
+          "endMs": 8904000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "4lVp6HRxghA",
@@ -20881,6 +21766,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 8904000,
+          "endMs": 9035000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "4mw6Q07aa-4",
           "startMs": 0,
           "confidence": 0.98
@@ -20894,6 +21786,13 @@
       "category": "town",
       "order": 85,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 9035000,
+          "endMs": 9216000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "4cCTfP29www",
@@ -20911,6 +21810,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 9216000,
+          "endMs": 9359000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "ZDQYgtfpxy8",
           "startMs": 0,
           "confidence": 1.0
@@ -20926,8 +21832,31 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 9359000,
+          "endMs": 9470000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "LyZkR7fEnBg",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-battle-team-skull-boss",
+      "family": "sm",
+      "title": "Battle! (Team Skull Boss)",
+      "category": "battle",
+      "order": 88,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 9470000,
+          "endMs": 9637000,
           "confidence": 1.0
         }
       ]
@@ -20941,9 +21870,32 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 9637000,
+          "endMs": 9771000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "TRb9k1yRN9A",
           "startMs": 0,
           "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "sm-acerolas-trial",
+      "family": "sm",
+      "title": "Acerola's Trial",
+      "category": "event",
+      "order": 90,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 9771000,
+          "endMs": 9923000,
+          "confidence": 1.0
         }
       ]
     },
@@ -20954,6 +21906,13 @@
       "category": "other",
       "order": 91,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 9923000,
+          "endMs": 10074000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "Sfb3z1Rj_sI",
@@ -20971,6 +21930,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 10074000,
+          "endMs": 10232000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "_s0HKtxKnuk",
           "startMs": 0,
           "confidence": 0.97
@@ -20986,8 +21952,31 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 10238000,
+          "endMs": 10386000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "J7EXmLnhUH0",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-infiltration",
+      "family": "sm",
+      "title": "Infiltration",
+      "category": "other",
+      "order": 94,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 10386000,
+          "endMs": 10502000,
           "confidence": 1.0
         }
       ]
@@ -20999,6 +21988,13 @@
       "category": "other",
       "order": 95,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 10502000,
+          "endMs": 10655000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "D3mo9RlX4JE",
@@ -21016,6 +22012,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 10655000,
+          "endMs": 10687000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "b3D_cF0YqRU",
           "startMs": 0,
           "confidence": 1.0
@@ -21029,6 +22032,13 @@
       "category": "battle",
       "order": 97,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 10687000,
+          "endMs": 10840000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "qlYn40_FN_Y",
@@ -21046,9 +22056,112 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 10840000,
+          "endMs": 10912000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "5mN_8095G1k",
           "startMs": 0,
           "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "sm-unsettling-atmosphere",
+      "family": "sm",
+      "title": "Unsettling Atmosphere",
+      "category": "other",
+      "order": 99,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 10912000,
+          "endMs": 11007000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-theres-trouble",
+      "family": "sm",
+      "title": "There's Trouble!",
+      "category": "other",
+      "order": 100,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 11007000,
+          "endMs": 11113000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-a-crisis-in-alola",
+      "family": "sm",
+      "title": "A Crisis in Alola",
+      "category": "other",
+      "order": 101,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 11113000,
+          "endMs": 11175000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-battle-lusamine",
+      "family": "sm",
+      "title": "Battle! (Lusamine)",
+      "category": "battle",
+      "order": 102,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 11175000,
+          "endMs": 11365000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-lillies-resolve",
+      "family": "sm",
+      "title": "Lillie's Resolve",
+      "category": "other",
+      "order": 103,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 11365000,
+          "endMs": 11383000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-lively-lillie",
+      "family": "sm",
+      "title": "Lively Lillie!",
+      "category": "other",
+      "order": 104,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 11383000,
+          "endMs": 11495000,
+          "confidence": 1.0
         }
       ]
     },
@@ -21061,9 +22174,16 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 11502000,
+          "endMs": 11630000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "DZCzVQjvI3A",
           "startMs": 0,
-          "confidence": 0.96
+          "confidence": 0.95
         }
       ]
     },
@@ -21076,9 +22196,48 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 11630000,
+          "endMs": 11781000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "XPfKLT7EvWA",
           "startMs": 0,
           "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "sm-ancient-poni-path",
+      "family": "sm",
+      "title": "Ancient Poni Path",
+      "category": "other",
+      "order": 107,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 11781000,
+          "endMs": 11916000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-the-protector-of-the-island",
+      "family": "sm",
+      "title": "The Protector of the Island",
+      "category": "town",
+      "order": 108,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 11916000,
+          "endMs": 12012000,
+          "confidence": 1.0
         }
       ]
     },
@@ -21091,9 +22250,64 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 12012000,
+          "endMs": 12166000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "TSjUE2yh_fY",
           "startMs": 0,
           "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "sm-to-the-altar",
+      "family": "sm",
+      "title": "To the Altar...",
+      "category": "other",
+      "order": 110,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 12166000,
+          "endMs": 12254000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-solgaleo-lunala-appears",
+      "family": "sm",
+      "title": "Solgaleo / Lunala Appears!",
+      "category": "event",
+      "order": 111,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 12254000,
+          "endMs": 12369000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-lets-go-to-ultra-space",
+      "family": "sm",
+      "title": "Let's Go to Ultra Space!",
+      "category": "dungeon",
+      "order": 112,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 12369000,
+          "endMs": 12388000,
+          "confidence": 1.0
         }
       ]
     },
@@ -21106,9 +22320,128 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 12388000,
+          "endMs": 12583000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "pKMmMHFWJUs",
           "startMs": 0,
           "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "sm-lusamines-madness",
+      "family": "sm",
+      "title": "Lusamine's Madness",
+      "category": "other",
+      "order": 114,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 12583000,
+          "endMs": 12658000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-steely-lillie",
+      "family": "sm",
+      "title": "Steely Lillie!",
+      "category": "other",
+      "order": 115,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 12658000,
+          "endMs": 12754000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-lusamines-revenge",
+      "family": "sm",
+      "title": "Lusamine's Revenge",
+      "category": "other",
+      "order": 116,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 12754000,
+          "endMs": 12771000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-showdown-lusamine",
+      "family": "sm",
+      "title": "Showdown! (Lusamine)",
+      "category": "other",
+      "order": 117,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 12771000,
+          "endMs": 12947000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-victory-aether-foundation",
+      "family": "sm",
+      "title": "Victory! (Aether Foundation)",
+      "category": "battle",
+      "order": 118,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 12947000,
+          "endMs": 12979000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-a-world-falls-apart",
+      "family": "sm",
+      "title": "A World Falls Apart",
+      "category": "dungeon",
+      "order": 119,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 12979000,
+          "endMs": 13034000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-mother-and-daughter",
+      "family": "sm",
+      "title": "Mother and Daughter",
+      "category": "other",
+      "order": 120,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 13034000,
+          "endMs": 13078000,
+          "confidence": 1.0
         }
       ]
     },
@@ -21121,9 +22454,32 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 13078000,
+          "endMs": 13274000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "NPsTn9sIrb0",
           "startMs": 0,
           "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "sm-lonely-lillie",
+      "family": "sm",
+      "title": "Lonely Lillie",
+      "category": "other",
+      "order": 122,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 13274000,
+          "endMs": 13443000,
+          "confidence": 1.0
         }
       ]
     },
@@ -21136,9 +22492,48 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 13443000,
+          "endMs": 13609000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "ix3fqm_OWKA",
           "startMs": 0,
           "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "id": "sm-blues-theme",
+      "family": "sm",
+      "title": "Blue's Theme",
+      "category": "event",
+      "order": 124,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 13609000,
+          "endMs": 13699000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-battle-battle-tree-boss",
+      "family": "sm",
+      "title": "Battle! (Battle Tree Boss)",
+      "category": "battle",
+      "order": 125,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 13699000,
+          "endMs": 13869000,
+          "confidence": 1.0
         }
       ]
     },
@@ -21149,6 +22544,13 @@
       "category": "other",
       "order": 126,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 13869000,
+          "endMs": 14008000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "RzRxWcqH3ms",
@@ -21166,6 +22568,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 14008000,
+          "endMs": 14102000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "bZqB7bhC1-s",
           "startMs": 0,
           "confidence": 1.0
@@ -21179,6 +22588,13 @@
       "category": "town",
       "order": 128,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 14102000,
+          "endMs": 14191000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "sy_wzLESFbA",
@@ -21196,6 +22612,13 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 14191000,
+          "endMs": 14316000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "m_CkOVf_5qo",
           "startMs": 0,
           "confidence": 0.95
@@ -21211,8 +22634,31 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 14316000,
+          "endMs": 14541000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "jMrFbbtkmMo",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-a-champion-is-born",
+      "family": "sm",
+      "title": "A Champion Is Born!",
+      "category": "other",
+      "order": 131,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 14541000,
+          "endMs": 14640000,
           "confidence": 1.0
         }
       ]
@@ -21226,9 +22672,64 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 14640000,
+          "endMs": 14735000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "6Bp9NiKhGuY",
           "startMs": 0,
           "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "sm-battle-tapu",
+      "family": "sm",
+      "title": "Battle! (Tapu)",
+      "category": "battle",
+      "order": 133,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 14735000,
+          "endMs": 14910000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-someday",
+      "family": "sm",
+      "title": "Someday...",
+      "category": "other",
+      "order": 134,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 14923000,
+          "endMs": 15030000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-welcome-back",
+      "family": "sm",
+      "title": "Welcome Back",
+      "category": "other",
+      "order": 135,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 15030000,
+          "endMs": 15109000,
+          "confidence": 1.0
         }
       ]
     },
@@ -21241,9 +22742,16 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 15109000,
+          "endMs": 15442000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "dJPngSrTHmE",
           "startMs": 0,
-          "confidence": 0.91
+          "confidence": 0.92
         }
       ]
     },
@@ -21256,9 +22764,36 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 15442000,
+          "endMs": 15508000,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
           "videoId": "F-eCjQa1YwE",
           "startMs": 0,
           "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "sm-title-screen-usum",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Title Screen (Ultra Sun & Ultra Moon)",
+      "category": "event",
+      "order": 138,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 16441000,
+          "endMs": 16531000,
+          "confidence": 1.0
         }
       ]
     },
@@ -21271,12 +22806,39 @@
       ],
       "title": "Alola Region Theme",
       "category": "other",
-      "order": 138,
+      "order": 139,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 16531000,
+          "endMs": 16713000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "gn3B622dJ-0",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-escape-usum",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Escape!",
+      "category": "other",
+      "order": 140,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 16713000,
+          "endMs": 16766000,
           "confidence": 1.0
         }
       ]
@@ -21290,8 +22852,15 @@
       ],
       "title": "Battle! (Wild Pokémon)",
       "category": "battle",
-      "order": 140,
+      "order": 141,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 16766000,
+          "endMs": 16890000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "ROYPmOiyX-w",
@@ -21309,8 +22878,15 @@
       ],
       "title": "Battle! (Trainer)",
       "category": "battle",
-      "order": 141,
+      "order": 142,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 16890000,
+          "endMs": 17060000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "CcGkQrlEkDk",
@@ -21328,8 +22904,15 @@
       ],
       "title": "The Festival in Iki Town",
       "category": "town",
-      "order": 142,
+      "order": 143,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 17060000,
+          "endMs": 17235000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "xdn9E7ZywD0",
@@ -21347,12 +22930,59 @@
       ],
       "title": "Ultra Recon Squad's Theme",
       "category": "event",
-      "order": 143,
+      "order": 144,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 17235000,
+          "endMs": 17404000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "JXV5kKCnO0U",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-beach-spot",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Beach Spot",
+      "category": "other",
+      "order": 145,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 17404000,
+          "endMs": 17525000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-mantine-surf-cutscene",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Mantine Surf (Cutscene)",
+      "category": "other",
+      "order": 146,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 17525000,
+          "endMs": 17546000,
           "confidence": 1.0
         }
       ]
@@ -21366,8 +22996,15 @@
       ],
       "title": "Mantine Surf",
       "category": "other",
-      "order": 146,
+      "order": 147,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 17546000,
+          "endMs": 17681000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "kM8syvEszMY",
@@ -21385,8 +23022,15 @@
       ],
       "title": "Alola Photo Club",
       "category": "other",
-      "order": 147,
+      "order": 148,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 17681000,
+          "endMs": 17820000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "iQ1sUFHNMMU",
@@ -21404,12 +23048,79 @@
       ],
       "title": "Battle! (Ultra Recon Squad)",
       "category": "battle",
-      "order": 148,
+      "order": 149,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 17820000,
+          "endMs": 18009000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "bLVyIGpIS_Y",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-battle-agency",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Battle Agency",
+      "category": "town",
+      "order": 150,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18009000,
+          "endMs": 18076000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-pikachu-valley",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Pikachu Valley",
+      "category": "other",
+      "order": 151,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18076000,
+          "endMs": 18137000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-lusamine-opens-ultra-wormhole",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Lusamine Opens Ultra Wormhole",
+      "category": "other",
+      "order": 152,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18137000,
+          "endMs": 18161000,
           "confidence": 1.0
         }
       ]
@@ -21423,13 +23134,178 @@
       ],
       "title": "Necrozma Appears!",
       "category": "event",
-      "order": 152,
+      "order": 153,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18161000,
+          "endMs": 18193000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "JxwMe2zW8XA",
           "startMs": 0,
           "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sm-necrozma-vs-solgaleo-lunala",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Necrozma vs Solgaleo / Lunala",
+      "category": "battle",
+      "order": 154,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18193000,
+          "endMs": 18234000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-battle-dusk-mane-dawn-wings-necrozma",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Battle! (Dusk Mane / Dawn Wings Necrozma)",
+      "category": "battle",
+      "order": 155,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18234000,
+          "endMs": 18411000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-stakataka-appears",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Stakataka Appears!",
+      "category": "event",
+      "order": 156,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18411000,
+          "endMs": 18463000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-beasts-appear",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ultra Beasts Appear!",
+      "category": "other",
+      "order": 157,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18463000,
+          "endMs": 18491000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-lunala-cutscene",
+      "family": "sm",
+      "games": [
+        "ultra-moon"
+      ],
+      "title": "Lunala Cutscene",
+      "category": "other",
+      "order": 158,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18491000,
+          "endMs": 18511000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-solgaleo-cutscene",
+      "family": "sm",
+      "games": [
+        "ultra-sun"
+      ],
+      "title": "Solgaleo Cutscene",
+      "category": "other",
+      "order": 159,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18511000,
+          "endMs": 18531000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-wormhole",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ultra Wormhole",
+      "category": "other",
+      "order": 160,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18531000,
+          "endMs": 18668000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-unsettling-ambience",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Unsettling Ambience",
+      "category": "other",
+      "order": 161,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18668000,
+          "endMs": 18733000,
+          "confidence": 1.0
         }
       ]
     },
@@ -21442,12 +23318,39 @@
       ],
       "title": "Ultra Megalopolis",
       "category": "other",
-      "order": 161,
+      "order": 162,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18733000,
+          "endMs": 18873000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "mWAEZtMMffk",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-necrozma-appears",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ultra Necrozma Appears!",
+      "category": "event",
+      "order": 163,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18873000,
+          "endMs": 18897000,
           "confidence": 1.0
         }
       ]
@@ -21461,12 +23364,217 @@
       ],
       "title": "Battle! (Ultra Necrozma)",
       "category": "battle",
-      "order": 163,
+      "order": 164,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 18897000,
+          "endMs": 19089000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "DIFv5eFvyDk",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-necrozma-defeated-ultra-moon",
+      "family": "sm",
+      "games": [
+        "ultra-moon"
+      ],
+      "title": "Ultra Necrozma Defeated (Ultra Moon)",
+      "category": "other",
+      "order": 165,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 19089000,
+          "endMs": 19133000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-necrozma-defeated-ultra-sun",
+      "family": "sm",
+      "games": [
+        "ultra-sun"
+      ],
+      "title": "Ultra Necrozma Defeated (Ultra Sun)",
+      "category": "other",
+      "order": 166,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 19133000,
+          "endMs": 19177000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-space-wilds",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ultra Space Wilds",
+      "category": "dungeon",
+      "order": 167,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 19177000,
+          "endMs": 19226000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-space-wilds-reversed",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ultra Space Wilds (Reversed)",
+      "category": "dungeon",
+      "order": 168,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 19226000,
+          "endMs": 19275000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-plant-theme-xurkitree",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ultra Plant Theme (Xurkitree)",
+      "category": "other",
+      "order": 169,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 19275000,
+          "endMs": 19415000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-crater-theme-celesteela",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ultra Crater Theme (Celesteela)",
+      "category": "other",
+      "order": 170,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 19415000,
+          "endMs": 19557000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-desert-theme-pheromosa",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ultra Desert Theme (Pheromosa)",
+      "category": "other",
+      "order": 171,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 19557000,
+          "endMs": 19718000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-forest-theme-kartana",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ultra Forest Theme (Kartana)",
+      "category": "dungeon",
+      "order": 172,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 19718000,
+          "endMs": 19872000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-jungle-theme-buzzwole",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ultra Jungle Theme (Buzzwole)",
+      "category": "other",
+      "order": 173,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 19872000,
+          "endMs": 19994000,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ultra-ruin-theme-guzzlord",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ultra Ruin Theme (Guzzlord)",
+      "category": "other",
+      "order": 174,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 19994000,
+          "endMs": 20140000,
           "confidence": 1.0
         }
       ]
@@ -21480,8 +23588,15 @@
       ],
       "title": "Ultra Ruin Theme (Guzzlord) (Reversed)",
       "category": "other",
-      "order": 174,
+      "order": 175,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 20140000,
+          "endMs": 20286000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "aH80qo2ddNk",
@@ -21499,12 +23614,39 @@
       ],
       "title": "Battle! (Champion)",
       "category": "battle",
-      "order": 175,
+      "order": 176,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 20286000,
+          "endMs": 20485000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "jMrFbbtkmMo",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-victory-champion",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Victory! (Champion)",
+      "category": "battle",
+      "order": 177,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 20485000,
+          "endMs": 20592000,
           "confidence": 1.0
         }
       ]
@@ -21518,8 +23660,15 @@
       ],
       "title": "Kantonian Gym",
       "category": "other",
-      "order": 177,
+      "order": 178,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 20592000,
+          "endMs": 20735000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "TqRMsHPzvCI",
@@ -21537,8 +23686,15 @@
       ],
       "title": "Rainbow Rocket Hideout",
       "category": "dungeon",
-      "order": 178,
+      "order": 179,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 20735000,
+          "endMs": 20927000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "UCGNWA1DDGo",
@@ -21556,8 +23712,15 @@
       ],
       "title": "Encounter! (Team Rainbow Rocket)",
       "category": "other",
-      "order": 179,
+      "order": 180,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 20927000,
+          "endMs": 20950000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "W76cdMBS6z4",
@@ -21575,8 +23738,15 @@
       ],
       "title": "Battle! (Team Rainbow Rocket)",
       "category": "battle",
-      "order": 180,
+      "order": 181,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 20950000,
+          "endMs": 21097000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "GkAOYk23ZuM",
@@ -21600,8 +23770,15 @@
       ],
       "title": "Battle! (Team Magma/Aqua Boss Maxie & Archie)",
       "category": "battle",
-      "order": 181,
+      "order": 182,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 21097000,
+          "endMs": 21282000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "aOUZXijUyy0",
@@ -21619,8 +23796,15 @@
       ],
       "title": "Battle! (Team Galactic Boss Cyrus)",
       "category": "battle",
-      "order": 182,
+      "order": 183,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 21282000,
+          "endMs": 21471000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "Rd0x6WuhvXI",
@@ -21638,8 +23822,15 @@
       ],
       "title": "Battle! (Team Plasma Boss Ghetsis)",
       "category": "battle",
-      "order": 183,
+      "order": 184,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 21471000,
+          "endMs": 21760000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "J8BOA3cbwLY",
@@ -21657,8 +23848,15 @@
       ],
       "title": "Battle! (Team Flare Boss Lysandre)",
       "category": "battle",
-      "order": 184,
+      "order": 185,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 21760000,
+          "endMs": 21938000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "LYZG0rdYrm4",
@@ -21676,8 +23874,15 @@
       ],
       "title": "Giovanni's Theme",
       "category": "event",
-      "order": 185,
+      "order": 186,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 21938000,
+          "endMs": 22031000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "ySvWke2Wnk8",
@@ -21695,12 +23900,38 @@
       ],
       "title": "Battle! (Team Rocket Boss Giovanni)",
       "category": "battle",
-      "order": 186,
+      "order": 187,
       "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 22031000,
+          "endMs": 22237000,
+          "confidence": 1.0
+        },
         {
           "type": "stream",
           "videoId": "Kta-qPRArFw",
           "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sm-ending",
+      "family": "sm",
+      "games": [
+        "ultra-sun",
+        "ultra-moon"
+      ],
+      "title": "Ending",
+      "category": "event",
+      "order": 188,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TO6iwQsLj4k",
+          "startMs": 22237000,
           "confidence": 1.0
         }
       ]
