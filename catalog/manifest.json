@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-19T10:14:20Z",
+  "generatedAt": "2026-10-19T10:30:16Z",
   "games": [
     {
       "id": "red",
@@ -1201,6 +1201,24 @@
       ]
     },
     {
+      "id": "rby-connection",
+      "family": "rby",
+      "games": [
+        "yellow"
+      ],
+      "title": "Connection",
+      "category": "other",
+      "order": 48,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NcMkakwSLnA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "gsc-opening-movie-gold-and-silver",
       "family": "gsc",
       "games": [
@@ -1264,9 +1282,27 @@
       "sources": [
         {
           "type": "stream",
+          "videoId": "RFqMCbRzF70",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "gsc-mobile-connection",
+      "family": "gsc",
+      "games": [
+        "crystal"
+      ],
+      "title": "Mobile Connection",
+      "category": "other",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
           "videoId": "Yo9m44qRfxM",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
