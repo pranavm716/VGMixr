@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-19T09:56:36Z",
+  "generatedAt": "2026-10-19T10:14:20Z",
   "games": [
     {
       "id": "red",
@@ -20120,7 +20120,7 @@
         "sun",
         "moon"
       ],
-      "title": "Alola Region Theme",
+      "title": "Alola Region Theme (Sun & Moon)",
       "category": "other",
       "order": 2,
       "sources": [
@@ -20140,7 +20140,7 @@
         "sun",
         "moon"
       ],
-      "title": "Escape!",
+      "title": "Escape! (Sun & Moon)",
       "category": "other",
       "order": 3,
       "sources": [
@@ -20382,7 +20382,7 @@
         "sun",
         "moon"
       ],
-      "title": "Battle! (Wild Pokémon)",
+      "title": "Battle! (Wild Pokémon) (Sun & Moon)",
       "category": "battle",
       "order": 16,
       "sources": [
@@ -20430,7 +20430,7 @@
         "sun",
         "moon"
       ],
-      "title": "The Festival in Iki Town",
+      "title": "The Festival in Iki Town (Sun & Moon)",
       "category": "town",
       "order": 18,
       "sources": [
@@ -20472,7 +20472,7 @@
         "sun",
         "moon"
       ],
-      "title": "Battle! (Trainer)",
+      "title": "Battle! (Trainer) (Sun & Moon)",
       "category": "battle",
       "order": 20,
       "sources": [
@@ -22804,7 +22804,7 @@
         "ultra-sun",
         "ultra-moon"
       ],
-      "title": "Alola Region Theme",
+      "title": "Alola Region Theme (Ultra Sun & Ultra Moon)",
       "category": "other",
       "order": 139,
       "sources": [
@@ -22830,7 +22830,7 @@
         "ultra-sun",
         "ultra-moon"
       ],
-      "title": "Escape!",
+      "title": "Escape! (Ultra Sun & Ultra Moon)",
       "category": "other",
       "order": 140,
       "sources": [
@@ -22850,7 +22850,7 @@
         "ultra-sun",
         "ultra-moon"
       ],
-      "title": "Battle! (Wild Pokémon)",
+      "title": "Battle! (Wild Pokémon) (Ultra Sun & Ultra Moon)",
       "category": "battle",
       "order": 141,
       "sources": [
@@ -22865,7 +22865,7 @@
           "type": "stream",
           "videoId": "ROYPmOiyX-w",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -22876,7 +22876,7 @@
         "ultra-sun",
         "ultra-moon"
       ],
-      "title": "Battle! (Trainer)",
+      "title": "Battle! (Trainer) (Ultra Sun & Ultra Moon)",
       "category": "battle",
       "order": 142,
       "sources": [
@@ -22891,7 +22891,7 @@
           "type": "stream",
           "videoId": "CcGkQrlEkDk",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -22902,7 +22902,7 @@
         "ultra-sun",
         "ultra-moon"
       ],
-      "title": "The Festival in Iki Town",
+      "title": "The Festival in Iki Town (Ultra Sun & Ultra Moon)",
       "category": "town",
       "order": 143,
       "sources": [
@@ -22917,7 +22917,7 @@
           "type": "stream",
           "videoId": "xdn9E7ZywD0",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
