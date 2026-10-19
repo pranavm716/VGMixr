@@ -163,7 +163,7 @@ function bindDrag(li) {
     e.dataTransfer.setData("text/plain", dragged);
     li.classList.add("dragging");
   };
-  li.ondragend = () => { dragged = null; clearDropMarks(); };
+  li.ondragend = () => { dragged = null; clearDropMarks(); stopAutoScroll(); };
   li.ondragover = (e) => {
     if (!dragged || dragged === li.dataset.id) return;
     e.preventDefault();
@@ -177,11 +177,60 @@ function bindDrag(li) {
     const id = dragged;
     const side = dropSide(li, e);
     clearDropMarks();
+    stopAutoScroll();
     if (!id || id === li.dataset.id) return;
     await api(`tracks/${encodeURIComponent(id)}/move`, { [side]: li.dataset.id });
     await loadTracks();
   };
 }
+
+// While dragging, holding the row near the list's top edge (just under the sticky filter and
+// tabs, or over them) or its bottom edge scrolls the list, faster the closer to the edge.
+// Browsers fire dragover every ~50 ms even when the mouse is still, so the latest one sets the
+// speed and an animation frame loop scrolls until the drag leaves the edge or ends.
+const EDGE_PX = 48;
+const MAX_SPEED = 900; // px per second, right at the edge; the same on any refresh rate
+// `carry` keeps the sub-pixel rest of each step, which scrollTop would round away.
+const scroller = { speed: 0, lastOver: 0, frame: null, at: null, carry: 0 };
+
+function edgeSpeed(e) {
+  const list = $("list");
+  const top = $("listhead").getBoundingClientRect().bottom;
+  const bottom = list.getBoundingClientRect().bottom;
+  const depth = (distance) => Math.min(1, (EDGE_PX - distance) / EDGE_PX);
+  if (e.clientY < top + EDGE_PX) return -MAX_SPEED * depth(Math.max(0, e.clientY - top));
+  if (e.clientY > bottom - EDGE_PX) return MAX_SPEED * depth(Math.max(0, bottom - e.clientY));
+  return 0;
+}
+
+function autoScroll(now) {
+  if (!dragged || !scroller.speed || now - scroller.lastOver > 150) {
+    scroller.frame = scroller.at = null;
+    scroller.carry = 0;
+    return;
+  }
+  const seconds = scroller.at === null ? 0 : Math.min(0.1, (now - scroller.at) / 1000);
+  scroller.at = now;
+  scroller.carry += scroller.speed * seconds;
+  const step = Math.trunc(scroller.carry);
+  scroller.carry -= step;
+  $("list").scrollTop += step;
+  scroller.frame = requestAnimationFrame(autoScroll);
+}
+
+function stopAutoScroll() {
+  scroller.speed = 0;
+  if (scroller.frame) cancelAnimationFrame(scroller.frame);
+  scroller.frame = scroller.at = null;
+  scroller.carry = 0;
+}
+
+$("list").addEventListener("dragover", (e) => {
+  if (!dragged) return;
+  scroller.speed = edgeSpeed(e);
+  scroller.lastOver = performance.now();
+  if (scroller.speed && !scroller.frame) scroller.frame = requestAnimationFrame(autoScroll);
+});
 
 // Lower case without accents, so "pokemon" finds "Pokémon".
 function plain(text) {
