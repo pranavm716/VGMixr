@@ -67,11 +67,15 @@ class _Handler(BaseHTTPRequestHandler):
                     return r.tracks(args.get("family"), args.get("status"))
                 case ["tracks", track_id]:
                     return r.track(track_id)
+                case ["playlists"]:
+                    return r.playlists()
         else:
             body = self._body()
             match parts:
                 case ["tracks", track_id, "streams"]:
                     return r.set_streams(track_id, body)
+                case ["tracks", track_id, "games"]:
+                    return r.set_games(track_id, body.get("games"))
                 case ["tracks", track_id, "exclude"]:
                     removed = body.get("removed")
                     if not isinstance(removed, bool):
@@ -82,6 +86,17 @@ class _Handler(BaseHTTPRequestHandler):
                 case ["tracks", track_id, "video"]:
                     return r.video(track_id, str(body.get("text") or ""),
                                    _int(body.get("startMs")), _int(body.get("endMs")))  # fmt: skip
+                case ["playlists", "search"]:
+                    return r.search_playlists(str(body.get("family") or ""),
+                                              str(body.get("query") or ""))  # fmt: skip
+                case ["playlists", "preview"]:
+                    return r.preview_playlist(*_playlist(body))
+                case ["playlists", "add"]:
+                    return r.add_playlist(*_playlist(body), str(body.get("note") or "") or None)
+                case ["playlists", "preview-removal"]:
+                    return r.preview_removal(_index(body), str(body.get("playlist") or ""))
+                case ["playlists", "remove"]:
+                    return r.remove_playlist(_index(body), str(body.get("playlist") or ""))
                 case ["rebuild"]:
                     return r.rebuild()
                 case ["youtube", "retry"]:
@@ -126,5 +141,18 @@ def _int(value: Any) -> int | None:
     if value is None or value == "":
         return None
     if isinstance(value, bool) or not isinstance(value, int):
-        raise ReviewError([f"{value!r} is not a whole number of milliseconds"])
+        raise ReviewError([f"{value!r} is not a whole number"])
     return value
+
+
+def _playlist(body: dict[str, Any]) -> tuple[str, Any, int | None, int | None]:
+    """A playlist entry's fields; the service validates games and the range."""
+    playlist = str(body.get("playlist") or "")
+    return playlist, body.get("games"), _int(body.get("first")), _int(body.get("last"))
+
+
+def _index(body: dict[str, Any]) -> int:
+    index = _int(body.get("index"))
+    if index is None:
+        raise ReviewError(["index is missing"])
+    return index

@@ -18,8 +18,8 @@
     { "id": "soulsilver", "name": "SoulSilver", "shortName": "SS", "color": "#AAB9CF", "generation": 4, "platform": "DS", "family": "hgss" },
     { "id": "black", "name": "Black", "shortName": "B", "color": "#444444", "generation": 5, "platform": "DS", "family": "bw" },
     { "id": "white", "name": "White", "shortName": "W", "color": "#E1E1E1", "generation": 5, "platform": "DS", "family": "bw" },
-    { "id": "black-2", "name": "Black 2", "shortName": "B2", "color": "#303E51", "generation": 5, "platform": "DS", "family": "b2w2" },
-    { "id": "white-2", "name": "White 2", "shortName": "W2", "color": "#EBC5C3", "generation": 5, "platform": "DS", "family": "b2w2" },
+    { "id": "black-2", "name": "Black 2", "shortName": "B2", "color": "#303E51", "generation": 5, "platform": "DS", "family": "bw" },
+    { "id": "white-2", "name": "White 2", "shortName": "W2", "color": "#EBC5C3", "generation": 5, "platform": "DS", "family": "bw" },
     { "id": "x", "name": "X", "shortName": "X", "color": "#025DA6", "generation": 6, "platform": "3DS", "family": "xy" },
     { "id": "y", "name": "Y", "shortName": "Y", "color": "#EA1A3E", "generation": 6, "platform": "3DS", "family": "xy" },
     { "id": "omega-ruby", "name": "Omega Ruby", "shortName": "OR", "color": "#AB2813", "generation": 6, "platform": "3DS", "family": "oras" },
@@ -64,14 +64,13 @@
     { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 81, "last": 84, "titleSuffix": " (GB Sounds)" },
     { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 86, "last": 92, "titleSuffix": " (GB Sounds)" },
 
-    { "family": "bw", "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 1" },
-    { "family": "bw", "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 2" },
-    { "family": "bw", "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 3" },
-    { "family": "bw", "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 4" },
-
-    { "family": "b2w2", "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 1" },
-    { "family": "b2w2", "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 2" },
-    { "family": "b2w2", "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 3" },
+    { "family": "bw", "games": ["black", "white"], "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 1" },
+    { "family": "bw", "games": ["black", "white"], "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 2" },
+    { "family": "bw", "games": ["black", "white"], "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 3" },
+    { "family": "bw", "games": ["black", "white"], "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 4" },
+    { "family": "bw", "games": ["black-2", "white-2"], "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 1" },
+    { "family": "bw", "games": ["black-2", "white-2"], "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 2" },
+    { "family": "bw", "games": ["black-2", "white-2"], "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 3" },
 
     { "family": "xy", "page": "Pokémon X & Pokémon Y: Super Music Collection", "disc": "Disc 1" },
     { "family": "xy", "page": "Pokémon X & Pokémon Y: Super Music Collection", "disc": "Disc 2" },
@@ -91,10 +90,7 @@
     { "family": "lgpe", "page": "Pokémon: Let's Go, Pikachu! & Pokémon: Let's Go, Eevee! Super Music Collection", "disc": "Disc 1" },
     { "family": "lgpe", "page": "Pokémon: Let's Go, Pikachu! & Pokémon: Let's Go, Eevee! Super Music Collection", "disc": "Disc 2" },
 
-    { "family": "swsh", "page": "Pokémon Sword - Shield + Expansion Pass Super Music Collection", "disc": "Disc 1" },
-    { "family": "swsh", "page": "Pokémon Sword - Shield + Expansion Pass Super Music Collection", "disc": "Disc 2" },
-    { "family": "swsh", "page": "Pokémon Sword - Shield + Expansion Pass Super Music Collection", "disc": "Disc 3" },
-    { "family": "swsh", "page": "Pokémon Sword - Shield + Expansion Pass Super Music Collection", "disc": "Disc 4" },
+    { "family": "swsh", "file": "tracklists/swsh.tsv", "disc": "Disc 1" },
 
     { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 1" },
     { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 2" },
@@ -102,10 +98,8 @@
     { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 4" },
     { "family": "bdsp", "file": "tracklists/bdsp.tsv", "disc": "Disc 5", "last": 7 },
 
-    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 1" },
-    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 2" },
-    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 3" },
-    { "family": "pla", "page": "Pokémon LEGENDS Arceus Super Music Collection", "disc": "Disc 4" },
+    { "family": "pla", "file": "tracklists/pla.tsv", "disc": "Disc 1" },
+    { "family": "pla", "file": "tracklists/pla.tsv", "disc": "Disc 2" },
 
     { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 1" },
     { "family": "sv", "page": "Pokémon Scarlet - Violet + The Hidden Treasure of Area Zero Super Music Collection", "disc": "Disc 2" },
@@ -126,10 +120,26 @@
       { "games": ["gold", "silver", "crystal"], "playlist": "PL2uxd6YWj7PKk4LnkWZEyqpcvnXmv8Iuf", "note": "Daintii Music, game rip" },
       { "games": ["ruby", "sapphire", "emerald"], "playlist": "PL2uxd6YWj7PIOlswxbt16G63Klr_3lsbR", "note": "Daintii Music, game rip" },
       { "games": ["firered", "leafgreen"], "playlist": "PL2uxd6YWj7PIOaewo5Z39hSJMdUmo3taO", "note": "Daintii Music, game rip" },
+      { "games": ["diamond", "pearl", "platinum"], "playlist": "PLQOt6x9a9xdSjsJbKolxZiTMiUjyZm-Xm" },
       { "games": ["heartgold", "soulsilver"], "playlist": "PL7657467B11931136", "note": "Luis Rivera, Music Super Complete (80 of the album's tracks)" },
-      { "games": ["omega-ruby", "alpha-sapphire"], "playlist": "PL9pPGq16Rk7pkD4Rjn35Fmq05tuE2zdVm", "note": "Pokémon Original Soundtrack channel, 37 tracks" }
+      { "games": ["black", "white"], "playlist": "PL4DA9DFA77C8FF491" },
+      { "games": ["black-2", "white-2"], "playlist": "PLMNd7l5z4pbieh3OXLc7rnFC5kxO5IlCY" },
+      { "games": ["x", "y"], "playlist": "PLaKSGGxuUf7Q" },
+      { "games": ["omega-ruby", "alpha-sapphire"], "playlist": "PL9pPGq16Rk7pkD4Rjn35Fmq05tuE2zdVm", "note": "Pokémon Original Soundtrack channel, 37 tracks" },
+      { "games": ["lets-go-pikachu", "lets-go-eevee"], "playlist": "PLzXrrIvqJ7v4GPPRAYWZzK5WbYwq569ZY" },
+      { "games": ["sword", "shield"], "playlist": "PLzXrrIvqJ7v64y-H7Di8MAWWr9gWCqxns", "note": "Base game" },
+      { "games": ["sword", "shield"], "playlist": "PLzXrrIvqJ7v65ygKcgUA-LeuvTWnrE5-D", "note": "The Isle of Armor" },
+      { "games": ["sword", "shield"], "playlist": "PLzXrrIvqJ7v7a7ZDWTkdMonVgwX3ZaV4a", "note": "The Crown Tundra" },
+      { "games": ["brilliant-diamond", "shining-pearl"], "playlist": "PLRvV_E_y-grOlApuhXUBucApUo7A2ifbG" },
+      { "games": ["pla"], "playlist": "PLDuK_JKMWsGj6Qj702A3b8q2TGU3hPXOR" },
+      { "games": ["scarlet", "violet"], "playlist": "PLzXrrIvqJ7v7CMnaH0hNFQQRFK_wZgIAu", "note": "Base game" },
+      { "games": ["scarlet", "violet"], "playlist": "PLP8odx5YHM7ZkxehseQjzdWy5-rgbvJwG", "note": "The Teal Mask" },
+      { "games": ["scarlet", "violet"], "playlist": "PLgyn_xiMXpwzKc-_Y6b4WEWsCgcBarJ6O", "note": "The Indigo Disk" },
+      { "games": ["plza"], "playlist": "PL90nj2rNFfbcE2HR8S2TNT_h2DjM1nDGb" }
     ],
     "albums": [],
-    "aliases": {}
+    "aliases": {
+      "bw": ["BW", "B2W2", "BW2"]
+    }
   }
 }

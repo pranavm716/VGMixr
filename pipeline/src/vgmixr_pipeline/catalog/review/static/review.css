@@ -29,6 +29,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 body {
   margin: 0;
@@ -216,3 +217,36 @@ input {
 .find input.ms { width: 90px; }
 dialog { max-width: 80vw; background: var(--panel); color: var(--text); border: 1px solid var(--line); }
 dialog pre { white-space: pre-wrap; max-height: 60vh; overflow: auto; }
+
+/* Playlists */
+#modes { display: flex; gap: 4px; padding: 8px; position: sticky; top: 0; background: var(--bg); border-bottom: 1px solid var(--line); }
+#modes button { flex: 1; }
+#modes button.selected { background: var(--selected); border-color: var(--accent); }
+.badge.ok { color: var(--muted); }
+#gaps { padding: 8px 12px; }
+#gaps h3 { margin: 4px 0 8px; font-size: 14px; color: var(--muted); text-transform: uppercase; }
+.gap { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.gap .counts { text-align: right; }
+.playlists { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.playlists > li { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+.playlists .ptitle { font-weight: 600; }
+.playlists .line { color: var(--muted); font-size: 12px; }
+.games-pick { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; margin-bottom: 8px; }
+.games-pick label { display: inline-flex; gap: 4px; align-items: center; }
+.games-pick details { flex-basis: 100%; }
+.games-pick details > div { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 4px; }
+.preview { margin-top: 8px; padding: 8px; border-left: 3px solid var(--accent); background: var(--bg); }
+.preview table { border-collapse: collapse; width: 100%; font-size: 12px; margin-top: 6px; }
+.preview td, .preview th { text-align: left; padding: 2px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.preview tr.out { opacity: 0.45; }
+.preview .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.preview .delta { font-variant-numeric: tabular-nums; }
+.preview h4 { margin: 10px 0 2px; font-size: 13px; }
+.preview a.track { color: inherit; cursor: pointer; text-decoration: underline; }
+
+/* Games editor */
+.games-edit { display: inline-flex; gap: 2px; align-items: center; flex-wrap: wrap; }
+.game-toggle { padding: 0 1px; border: 1px solid transparent; background: none; }
+.game-toggle:not(.on) .chip { opacity: 0.3; filter: grayscale(1); }
+.game-toggle:hover { border-color: var(--accent); }
+.hand-games { font-size: 12px; color: var(--good); border: 1px solid var(--good); border-radius: 4px; padding: 0 4px; }

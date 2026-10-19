@@ -1,6 +1,7 @@
-"""Edits of the committed data files. Each edit loads the raw JSON (keeping its order), changes it,
-validates the result with the builder's own models, writes it in the canonical format (jsonfmt)
-to a temporary file and swaps it in. An invalid edit raises EditError and writes nothing.
+"""Edits of the committed data files: overrides.json, and games.json's playlists. Each edit loads
+the raw JSON (keeping its order), changes it, validates the result with the builder's own models,
+writes it in the canonical format (jsonfmt) to a temporary file and swaps it in. An invalid edit
+raises EditError and writes nothing.
 """
 
 import json
@@ -11,8 +12,13 @@ from typing import Any
 
 from pydantic import BaseModel, ValidationError
 
-from vgmixr_pipeline.catalog.config import Overrides, Streams
-from vgmixr_pipeline.catalog.jsonfmt import format_overrides, track_family
+from vgmixr_pipeline.catalog.config import GamesFile, Overrides, Playlist, Streams
+from vgmixr_pipeline.catalog.jsonfmt import (
+    format_games,
+    format_overrides,
+    games_families,
+    track_family,
+)
 
 
 class EditError(Exception):
@@ -45,6 +51,60 @@ def set_exclude(
     """Sets a track's `exclude` (True removes it from the catalog); None removes the key."""
     _check_track(track_id, track_ids)
     _set_key(path, track_id, "exclude", exclude, families)
+
+
+def set_games(
+    path: Path,
+    track_id: str,
+    games: list[str] | None,
+    track_ids: Collection[str],
+    families: list[str],
+) -> None:
+    """Sets a track's `games` (distinct ids, in the order given); None removes the key. That the
+    games belong to the track's family is the caller's check, as the builder's."""
+    _check_track(track_id, track_ids)
+    if games is not None and (
+        not isinstance(games, list)
+        or not games
+        or not all(isinstance(g, str) for g in games)
+        or len(set(games)) != len(games)
+    ):
+        raise EditError([f"games must be a list of distinct game ids, not {games!r}"])
+    _set_key(path, track_id, "games", games, families)
+
+
+def add_playlist(path: Path, entry: dict[str, Any]) -> None:
+    """Adds a playlist to games.json's youtube block, after the playlists of its first game's
+    family (families in games-file order). The same playlist may be listed again with other games
+    or another range (an album holding tracks of several families), never twice the same way."""
+    playlist = _validated(Playlist, entry)
+    data = _load(path)
+    youtube: dict[str, Any] = data.setdefault("youtube", {})
+    playlists: list[dict[str, Any]] = youtube.setdefault("playlists", [])
+    if any(_validated(Playlist, p).model_dump(exclude={"note"}) ==
+           playlist.model_dump(exclude={"note"}) for p in playlists):  # fmt: skip
+        raise EditError([f"{playlist.playlist} is already listed with these games and range"])
+    game_family = {g["id"]: g.get("family", g["id"]) for g in data["games"]}
+    families = games_families(data)
+
+    def rank(p: dict[str, Any]) -> int:
+        family = game_family.get(p["games"][0]) if p["games"] else None
+        return families.index(family) if family in families else len(families)
+
+    new = playlist.model_dump(exclude_none=True)
+    at = next((i for i, p in enumerate(playlists) if rank(p) > rank(new)), len(playlists))
+    youtube["playlists"] = [*playlists[:at], new, *playlists[at:]]
+    _write(path, data, GamesFile, format_games)
+
+
+def remove_playlist(path: Path, index: int, playlist_id: str) -> None:
+    """Removes the playlist at `index`, which must be `playlist_id` (else the page is stale)."""
+    data = _load(path)
+    playlists: list[dict[str, Any]] = data.get("youtube", {}).get("playlists", [])
+    if not 0 <= index < len(playlists) or playlists[index].get("playlist") != playlist_id:
+        raise EditError([f"playlist {index + 1} is not {playlist_id}; reload the page"])
+    del playlists[index]
+    _write(path, data, GamesFile, format_games)
 
 
 def _check_track(track_id: str, track_ids: Collection[str]) -> None:
@@ -116,7 +176,7 @@ def _validated[M: BaseModel](model: type[M], data: Any) -> M:
 
 
 def _write(
-    path: Path, data: dict[str, Any], model: type[Overrides], fmt: Callable[[Any], str]
+    path: Path, data: dict[str, Any], model: type[BaseModel], fmt: Callable[[Any], str]
 ) -> None:
     text = fmt(data)
     _validated(model, json.loads(text))

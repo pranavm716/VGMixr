@@ -17,6 +17,10 @@ const ui = {
   detail: null,
   found: [], // search results and pasted videos for the open track
   players: [],
+  mode: "tracks", // or "playlists"
+  coverage: null, // /api/playlists: families ranked by their gaps
+  playlistSearch: null, // the family's playlist search: { query, results }
+  preview: null, // { anchor, data }: shown under the control that asked for it
 };
 
 const $ = (id) => document.getElementById(id);
@@ -97,6 +101,7 @@ function renderYoutube(youtube) {
 
 function renderFamilies() {
   renderYoutube(ui.state.youtube);
+  if (ui.mode === "playlists") return renderCoverage();
   $("families").innerHTML = ui.state.families.map((f) => `
     <button data-family="${esc(f.id)}" class="${f.id === ui.family ? "selected" : ""}" title="${esc(f.name)}">
       <span>${f.games.map(chip).join("")}${f.playlists ? "" : ' <span class="badge">no playlist</span>'}</span>
@@ -172,6 +177,32 @@ async function decide(decision) {
   renderDetail();
   // The list and the family counts change with the status.
   await Promise.all([loadState(), loadTracks()]);
+}
+
+// The games a track plays in: a games override, written at once; null resets to its lists' games.
+async function setGames(games) {
+  ui.detail = await api(`tracks/${encodeURIComponent(ui.trackId)}/games`, { games });
+  renderDetail();
+  await Promise.all([loadState(), loadTracks()]);
+}
+
+function toggleGame(id) {
+  const games = ui.detail.games.includes(id) ? ui.detail.games.filter((g) => g !== id) : [...ui.detail.games, id];
+  if (!games.length) return showMessage("A track plays in at least one game.");
+  setGames(games);
+}
+
+// The family's games as toggles; "All games" (e.g. a BW track B2W2 also plays) and Reset beside them.
+function gamesEditor(d) {
+  const family = ui.state.families.find((f) => f.id === d.family).games;
+  const listed = d.listedGames ? `Its track lists give it: ${d.listedGames.map((g) => gamesById()[g].shortName).join(" ")}` : "";
+  const toggles = family.map((g) => `<button class="game-toggle ${d.games.includes(g.id) ? "on" : ""}" data-game="${esc(g.id)}"
+    title="${d.games.includes(g.id) ? "Plays in" : "Doesn't play in"} ${esc(g.shortName)}. ${esc(listed)}">${chip(g)}</button>`).join("");
+  const all = d.games.length < family.length ? ' <button id="all-games" title="Plays in every game of the family">All games</button>' : "";
+  const hand = d.gamesOverride
+    ? ` <span class="hand-games" title="A games override in overrides.json">set by hand</span>${d.listedGames ? ' <button id="reset-games" title="Back to the games its track lists give it">Reset</button>' : ""}`
+    : "";
+  return `<span class="games-edit">${toggles}${all}${hand}</span>`;
 }
 
 async function setRemoved(removed) {
@@ -272,7 +303,7 @@ function renderDetail() {
   $("detail").innerHTML = `
     <h2>${esc(d.title)}</h2>
     <div class="facts">
-      ${d.games.map((g) => chip(games[g])).join("")}${d.exclusive ? " (exclusive)" : ""}
+      ${gamesEditor(d)}
       · ${esc(d.category)} · ${minutes(d.durationMs)} · <span class="status-${d.status}">${d.status}</span>
       · <code>${esc(d.id)}</code>
     </div>
@@ -314,6 +345,9 @@ function bindDetail(shown) {
   on("#clear", () => decide({ accept: [], reject: [] }));
   on("#remove", () => { if (confirm(`Remove "${d.title}" from the catalog?`)) setRemoved(true); });
   on("#restore", () => setRemoved(false));
+  on("[data-game]", (el) => toggleGame(el.dataset.game));
+  on("#all-games", () => setGames(ui.state.families.find((f) => f.id === d.family).games.map((g) => g.id)));
+  on("#reset-games", () => setGames(null));
   on(".play", (el) => play(el.parentElement, shown[el.parentElement.dataset.index]));
   on("#search", search);
   on("#lookup", lookup);
@@ -401,6 +435,274 @@ function destroyPlayers() {
   ui.players = [];
 }
 
+// Playlists: families ranked by their gaps, then the selected family's playlists, a playlist
+// search and previews. A preview shows under the control that asked for it.
+
+async function setMode(mode) {
+  ui.mode = mode;
+  $("mode-tracks").classList.toggle("selected", mode === "tracks");
+  $("mode-playlists").classList.toggle("selected", mode === "playlists");
+  $("listhead").hidden = $("tracks").hidden = mode !== "tracks";
+  $("gaps").hidden = mode !== "playlists";
+  if (mode === "playlists") {
+    await loadCoverage();
+    renderPlaylists();
+  } else {
+    renderFamilies();
+    await loadTracks();
+    if (ui.trackId) await openTrack(ui.trackId);
+    else $("detail").innerHTML = '<p class="empty">Pick a track.</p>';
+  }
+}
+
+async function loadCoverage() {
+  ui.coverage = await api("playlists");
+  renderFamilies();
+}
+
+function coverageOf(family) {
+  return ui.coverage.families.find((f) => f.id === family);
+}
+
+function renderCoverage() {
+  $("families").innerHTML = ui.coverage.families.map((f) => `
+    <button data-family="${esc(f.id)}" class="${f.id === ui.family ? "selected" : ""}" title="${esc(f.name)}">
+      <span>${f.games.map(chip).join("")} <span class="badge ${f.playlists.length ? "ok" : ""}">${f.playlists.length ? `${f.playlists.length} playlist${f.playlists.length > 1 ? "s" : ""}` : "no playlist"}</span></span>
+      <span class="counts">${f.counts.matched}·<span class="r">${f.counts.review}</span>·${f.counts.unmatched}</span>
+    </button>`).join("");
+  for (const button of $("families").querySelectorAll("button")) {
+    button.onclick = () => {
+      if (button.dataset.family !== ui.family) { ui.playlistSearch = null; ui.preview = null; }
+      ui.family = button.dataset.family;
+      renderCoverage();
+      renderPlaylists();
+    };
+  }
+}
+
+function renderPlaylists() {
+  history.replaceState(null, "", `#playlists/${encodeURIComponent(ui.family)}`);
+  const family = coverageOf(ui.family);
+  $("gaps").innerHTML = `<h3>Games</h3>${family.games.map((g) => `
+    <div class="gap">
+      <span>${chip(g)} ${g.playlists ? `${g.playlists} playlist${g.playlists > 1 ? "s" : ""}` : '<span class="badge">no playlist</span>'}</span>
+      <span class="counts">${g.tracks} tracks<br><span class="r">${g.review} review</span> · ${g.unmatched} unmatched</span>
+    </div>`).join("")}`;
+  const listed = family.playlists.length ? family.playlists.map((p) => `
+    <li>
+      <div class="ptitle">${p.games.map((g) => chip(gamesById()[g])).join("")} ${esc(p.note ?? p.playlist)}</div>
+      <div class="line"><a href="${playlistUrl(p.playlist)}" target="_blank" rel="noreferrer">${esc(p.playlist)} ↗</a>
+        ${rangeText(p.first, p.last)} · ${p.entries == null ? "not cached" : `${p.entries} entries cached`}</div>
+      <div class="actions">
+        <button data-preview-removal="${p.index}" data-playlist="${esc(p.playlist)}">Preview removal</button>
+        <button data-remove="${p.index}" data-playlist="${esc(p.playlist)}">Remove</button>
+      </div>
+      ${previewAt(`remove:${p.index}`)}
+    </li>`).join("") : '<li class="empty">None: every track of this family is unmatched unless searched one by one.</li>';
+  const search = ui.playlistSearch;
+  const results = search ? (search.results.length ? search.results.map((r) => `
+    <li>
+      <div class="ptitle">${esc(r.title)}</div>
+      <div class="line">${esc(r.channel ?? "unknown channel")} · <a href="${playlistUrl(r.id)}" target="_blank" rel="noreferrer">${esc(r.id)} ↗</a>
+        ${r.entries == null ? "" : ` · ${r.entries} entries cached`}${r.listed.length ? ' · <strong>already listed</strong>' : ""}</div>
+      <div class="actions">
+        <button data-preview="${esc(r.id)}">Preview</button>
+        <button class="primary" data-add="${esc(r.id)}">Add</button>
+      </div>
+      ${previewAt(`search:${r.id}`)}
+    </li>`).join("") : '<li class="empty">No playlists found.</li>') : "";
+  const counts = family.counts;
+  $("detail").innerHTML = `
+    <h2>${family.games.map(chip).join("")} ${esc(family.name)}</h2>
+    <div class="facts">${counts.matched} matched · <span class="status-review">${counts.review} review</span> · <span class="status-unmatched">${counts.unmatched} unmatched</span></div>
+    <h3>Playlists</h3>
+    <ol class="playlists">${listed}</ol>
+    <h3>Add a playlist</h3>
+    ${gamesPicker(family)}
+    <div class="find">
+      <input class="ms" id="first" placeholder="first #"><input class="ms" id="last" placeholder="last #">
+      <input class="wide" id="note" placeholder="Note (uploader, kind, coverage)">
+    </div>
+    <div class="find">
+      <input class="wide" id="plquery" value="${esc(search?.query ?? "")}" placeholder="Search YouTube for playlists (empty: Pokémon + the family's games + soundtrack)">
+      <button id="plsearch">Search playlists</button>
+    </div>
+    ${search ? `<ol class="playlists">${results}</ol>` : ""}
+    <div class="find" style="margin-top:8px">
+      <input class="wide" id="plpaste" placeholder="Playlist id or link">
+      <button id="plpreview">Preview</button><button class="primary" id="pladd">Add</button>
+    </div>
+    ${previewAt("paste")}`;
+  restoreForm();
+  bindPlaylists();
+}
+
+const playlistUrl = (id) => `https://www.youtube.com/playlist?list=${encodeURIComponent(id)}`;
+
+function rangeText(first, last) {
+  return first == null && last == null ? "" : ` · entries ${first ?? 1}–${last ?? "end"}`;
+}
+
+// The family's games ticked by default; other families' games for albums that span families.
+function gamesPicker(family) {
+  const box = (g, checked) => `<label>${`<input type="checkbox" name="game" value="${esc(g.id)}" ${checked ? "checked" : ""}>`}${chip(g)}</label>`;
+  const others = ui.state.families.filter((f) => f.id !== family.id).flatMap((f) => f.games);
+  return `<div class="games-pick">Games: ${family.games.map((g) => box(g, true)).join("")}
+    <details><summary>Other games</summary><div>${others.map((g) => box(g, false)).join("")}</div></details></div>`;
+}
+
+// The form keeps what was typed across re-renders (a preview re-renders the panel).
+let form = null;
+
+function saveForm() {
+  if (!$("first")) return;
+  form = {
+    family: ui.family,
+    games: [...$("detail").querySelectorAll('input[name="game"]')].map((b) => [b.value, b.checked]),
+    first: $("first").value, last: $("last").value, note: $("note").value,
+    paste: $("plpaste").value, query: $("plquery").value,
+  };
+}
+
+function restoreForm() {
+  if (!form || form.family !== ui.family) return;
+  const checked = Object.fromEntries(form.games);
+  for (const box of $("detail").querySelectorAll('input[name="game"]')) box.checked = !!checked[box.value];
+  for (const id of ["first", "last", "note"]) $(id).value = form[id];
+  $("plpaste").value = form.paste;
+  $("plquery").value = form.query;
+}
+
+function formEntry(playlist) {
+  const number = (id) => {
+    const text = $(id).value.trim();
+    if (text === "") return null;
+    if (!/^\d+$/.test(text)) throw new Error(`${id} must be a playlist position, e.g. 18`);
+    return Number(text);
+  };
+  return {
+    playlist,
+    games: [...$("detail").querySelectorAll('input[name="game"]:checked')].map((b) => b.value),
+    first: number("first"),
+    last: number("last"),
+    note: $("note").value.trim(),
+  };
+}
+
+function bindPlaylists() {
+  const on = (selector, handler) => {
+    for (const el of $("detail").querySelectorAll(selector)) el.onclick = () => handler(el);
+  };
+  on("[data-preview-removal]", (el) => previewRemoval(Number(el.dataset.previewRemoval), el.dataset.playlist));
+  on("[data-remove]", (el) => removePlaylist(Number(el.dataset.remove), el.dataset.playlist));
+  on("[data-preview]", (el) => previewPlaylist(el.dataset.preview, `search:${el.dataset.preview}`));
+  on("[data-add]", (el) => addPlaylist(el.dataset.add));
+  on("[data-preview-add]", (el) => addPlaylist(el.dataset.previewAdd));
+  on("[data-open]", (el) => { ui.family = el.dataset.family; ui.trackId = el.dataset.open; setMode("tracks"); });
+  on("#plsearch", searchPlaylists);
+  on("#plpreview", () => previewPlaylist($("plpaste").value, "paste"));
+  on("#pladd", () => addPlaylist($("plpaste").value));
+  $("plquery").onkeydown = (e) => { if (e.key === "Enter") searchPlaylists(); };
+  $("plpaste").onkeydown = (e) => { if (e.key === "Enter") previewPlaylist($("plpaste").value, "paste"); };
+}
+
+async function searchPlaylists() {
+  saveForm();
+  const result = await api("playlists/search", { family: ui.family, query: $("plquery").value });
+  ui.playlistSearch = { query: result.query, results: result.results };
+  if (form) form.query = result.query;
+  ui.preview = null;
+  renderPlaylists();
+}
+
+async function previewPlaylist(playlist, anchor) {
+  saveForm();
+  let entry;
+  try {
+    entry = formEntry(playlist);
+  } catch (e) {
+    showMessage(e.message);
+    return;
+  }
+  ui.preview = { anchor, data: await api("playlists/preview", entry) };
+  renderPlaylists();
+  $("detail").querySelector(".preview")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+async function previewRemoval(index, playlist) {
+  saveForm();
+  ui.preview = { anchor: `remove:${index}`, data: await api("playlists/preview-removal", { index, playlist }) };
+  renderPlaylists();
+}
+
+async function addPlaylist(playlist) {
+  saveForm();
+  let entry;
+  try {
+    entry = formEntry(playlist);
+  } catch (e) {
+    showMessage(e.message);
+    return;
+  }
+  ui.coverage = await api("playlists/add", entry);
+  afterPlaylistEdit();
+}
+
+async function removePlaylist(index, playlist) {
+  if (!confirm(`Remove playlist ${playlist} from games.json?`)) return;
+  ui.coverage = await api("playlists/remove", { index, playlist });
+  afterPlaylistEdit();
+}
+
+async function afterPlaylistEdit() {
+  ui.preview = null;
+  if (form) form.paste = "";
+  ui.state = await api("state"); // the tracks view's counts and badges
+  renderFamilies();
+  renderPlaylists();
+}
+
+function previewAt(anchor) {
+  const preview = ui.preview;
+  if (!preview || preview.anchor !== anchor) return "";
+  const p = preview.data;
+  const games = gamesById();
+  const removal = anchor.startsWith("remove:");
+  const delta = (before, after, key, cls) =>
+    `<span class="${cls}">${before[key]}${before[key] === after[key] ? "" : ` → <strong>${after[key]}</strong>`} ${key}</span>`;
+  const counts = Object.entries(p.counts).map(([family, { before, after }]) => `
+    <div class="delta"><strong>${esc(family)}</strong>: ${delta(before, after, "matched", "status-matched")}
+      · ${delta(before, after, "review", "status-review")} · ${delta(before, after, "unmatched", "status-unmatched")}</div>`).join("");
+  const source = (o) => o.sources.length
+    ? `${esc(o.sources[0].videoId)} ${o.sources[0].auto ? `auto ${o.sources[0].confidence.toFixed(2)}` : "<strong>accepted</strong>"}${o.sources.length > 1 ? ` +${o.sources.length - 1}` : ""}`
+    : "–";
+  const changes = p.changes.length ? `<table>
+    <tr><th>Track</th><th>Before</th><th>After</th></tr>
+    ${p.changes.map((c) => `<tr>
+      <td>${c.hand ? '<span title="Has a hand decision: its accepted videos stay first">✎</span> ' : ""}<a class="track" data-open="${esc(c.id)}" data-family="${esc(c.family)}">${esc(c.title)}</a></td>
+      <td><span class="status-${c.before.status}">${c.before.status}</span> ${source(c.before)}</td>
+      <td><span class="status-${c.after.status}">${c.after.status}</span> ${source(c.after)}</td>
+    </tr>`).join("")}</table>` : '<p class="empty">No track would change.</p>';
+  const entries = p.entries.length ? `<table>
+    <tr><th class="num">#</th><th>Entry</th><th class="num">Length</th><th>${removal ? "Matches today" : "Would match"}</th></tr>
+    ${p.entries.map((e) => `<tr class="${e.inRange ? "" : "out"}">
+      <td class="num">${e.position}</td>
+      <td><a href="https://www.youtube.com/watch?v=${encodeURIComponent(e.videoId)}" target="_blank" rel="noreferrer">${esc(e.title)}</a></td>
+      <td class="num">${minutes(e.durationMs)}</td>
+      <td>${e.match ? `<span class="score ${e.match.verdict}">${e.match.score.toFixed(2)}</span> ${esc(e.match.title)}${e.match.source ? " (source)" : ""}` : '<span class="empty">–</span>'}</td>
+    </tr>`).join("")}</table>` : '<p class="empty">No cached entries.</p>';
+  const add = removal ? "" : `<p><button class="primary" data-preview-add="${esc(p.playlist)}">Add with ${p.games.map((g) => chip(games[g])).join("")}${rangeText(p.first, p.last)}</button></p>`;
+  return `<div class="preview">
+    <div><strong>${removal ? "Removing" : "Adding"}</strong> ${esc(p.playlist)} ${p.games.map((g) => chip(games[g])).join("")}${rangeText(p.first, p.last)}</div>
+    ${counts}${add}
+    <h4>Changed tracks (${p.changes.length})</h4>${changes}
+    <h4>Entries (${p.entries.length})</h4>${entries}
+  </div>`;
+}
+
+$("mode-tracks").onclick = () => setMode("tracks");
+$("mode-playlists").onclick = () => setMode("playlists");
+
 // Rebuild and keys
 
 $("rebuild").onclick = async () => {
@@ -412,8 +714,13 @@ $("rebuild").onclick = async () => {
     $("output").querySelector("pre").textContent = (result.ok ? "" : "FAILED\n\n") + result.output;
     $("output").showModal();
     await loadState();
-    await loadTracks();
-    if (ui.trackId) await openTrack(ui.trackId);
+    if (ui.mode === "playlists") {
+      await loadCoverage();
+      renderPlaylists();
+    } else {
+      await loadTracks();
+      if (ui.trackId) await openTrack(ui.trackId);
+    }
   } finally {
     button.disabled = false;
     button.textContent = "Rebuild";
@@ -427,7 +734,7 @@ $("filter").onkeydown = (e) => {
 };
 
 document.addEventListener("keydown", (e) => {
-  if (e.target.closest("input, textarea") || e.metaKey || e.ctrlKey) return;
+  if (e.target.closest("input, textarea") || e.metaKey || e.ctrlKey || ui.mode !== "tracks") return;
   if (e.key === "/") { e.preventDefault(); $("filter").focus(); return; }
   if (e.key === "j") moveSelection(1);
   if (e.key === "k") moveSelection(-1);
@@ -438,6 +745,12 @@ window.onYouTubeIframeAPIReady = () => {};
 (async () => {
   const linked = decodeURIComponent(location.hash.slice(1));
   await loadState();
+  if (linked.startsWith("playlists/")) {
+    const family = linked.slice("playlists/".length);
+    if (ui.state.families.some((f) => f.id === family)) ui.family = family;
+    await setMode("playlists");
+    return;
+  }
   if (linked) {
     await openTrack(linked);
     ui.family = ui.detail.family;

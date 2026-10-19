@@ -1,6 +1,7 @@
 """YouTube playlists, searches and videos through yt-dlp (no API key), cached on disk.
 
-Only the fields matching needs are cached (trimmed), under playlists/, search/ and videos/. A cached
+Only the fields matching needs are cached (trimmed), under playlists/, search/, playlist-search/
+and videos/. A cached
 response is never refetched unless `refresh` is set, so builds after the first run offline and see
 the same results. Network calls are spaced out, like Bulbapedia's. With `cached_only`, nothing is
 fetched: an uncached playlist or search is empty and an uncached video has no chapters (YouTube
@@ -14,10 +15,16 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote_plus
 
 from vgmixr_pipeline.catalog.slug import slugify
 
 DELAY_SECONDS = 1.0
+# Playlists kept from a playlist search. The results page scrolls on and on, so yt-dlp is told
+# to stop there too (a flat playlist search lists no entry counts, only id, title and channel).
+PLAYLIST_RESULTS = 15
+# YouTube's results page filter for playlists only.
+_PLAYLISTS_FILTER = "EgIQAw%3D%3D"
 # YouTube's answer to a burst of requests; it lifts after a while.
 _BOT_CHECK = "not a bot"
 # Placeholders yt-dlp lists for entries that can't be played.
@@ -39,7 +46,7 @@ def raise_if_blocked(error: Exception) -> None:
 def ytdlp_extract(url: str, flat: bool) -> dict[str, Any]:
     import yt_dlp  # only here: the rest of the pipeline never sees yt-dlp types
 
-    options = {
+    options: dict[str, Any] = {
         "quiet": True,
         "no_warnings": True,
         "skip_download": True,
@@ -47,6 +54,8 @@ def ytdlp_extract(url: str, flat: bool) -> dict[str, Any]:
         # Metadata (title, chapters) is all we need, even when no format is playable.
         "ignore_no_formats_error": True,
     }
+    if "/results?" in url:  # a playlist search: the results page paginates without end
+        options["playlistend"] = PLAYLIST_RESULTS
     with yt_dlp.YoutubeDL(options) as ydl:
         try:
             info: dict[str, Any] = ydl.extract_info(url, download=False)
@@ -66,6 +75,15 @@ class Entry:
     duration_ms: int | None
     channel: str | None
     position: int
+
+
+@dataclass(frozen=True)
+class PlaylistHit:
+    """A playlist found by a playlist search."""
+
+    id: str
+    title: str
+    channel: str | None
 
 
 @dataclass(frozen=True)
@@ -110,6 +128,11 @@ class YouTube:
     def search(self, query: str, n: int = 10) -> list[Entry]:
         key = Path("search", slugify(query))
         return _entries(self._cached(key, f"ytsearch{n}:{query}", True, _trim_listing))
+
+    def search_playlists(self, query: str, n: int = PLAYLIST_RESULTS) -> list[PlaylistHit]:
+        url = f"https://www.youtube.com/results?search_query={quote_plus(query)}&sp={_PLAYLISTS_FILTER}"
+        data = self._cached(Path("playlist-search", slugify(query)), url, True, _trim_hits)
+        return [PlaylistHit(e["id"], e["title"], e["channel"]) for e in data["entries"][:n]]
 
     def video(self, video_id: str) -> Video:
         url = f"https://www.youtube.com/watch?v={video_id}"
@@ -160,6 +183,11 @@ def _trim_listing(info: dict[str, Any]) -> dict[str, Any]:
     return {"entries": entries}
 
 
+def _trim_hits(info: dict[str, Any]) -> dict[str, Any]:
+    entries = [{k: e.get(k) for k in ("id", "title", "channel")} for e in info.get("entries") or []]
+    return {"entries": entries}
+
+
 def _trim_video(info: dict[str, Any]) -> dict[str, Any]:
     chapters = [
         {"title": c["title"], "start": c["start_time"], "end": c["end_time"]}
@@ -172,7 +200,8 @@ def _entries(data: dict[str, Any]) -> list[Entry]:
     return [
         Entry(e["id"], e["title"], _ms(e["duration"]), e["channel"], position)
         for position, e in enumerate(data["entries"], start=1)
-        if e["title"] not in _UNAVAILABLE
+        # Unavailable videos have a placeholder title, or none at all.
+        if isinstance(e["title"], str) and e["title"] not in _UNAVAILABLE
     ]
 
 
