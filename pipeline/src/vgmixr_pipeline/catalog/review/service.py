@@ -49,8 +49,7 @@ from vgmixr_pipeline.manifest.models import Game
 
 LIVE_SPACING_SECONDS = 5.0
 BLOCK_COOLDOWN_SECONDS = 30 * 60.0
-_STATUS_RANK = {"review": 0, "unmatched": 1, "matched": 2, "excluded": 3}
-_STATUSES = list(_STATUS_RANK)
+_STATUSES = ["review", "unmatched", "matched", "excluded"]
 
 # Runs the whole builder; returns whether it succeeded and what it printed.
 type Rebuild = Callable[[], tuple[bool, str]]
@@ -170,7 +169,7 @@ class Review:
             if (family is None or t.family == family)
             and (status in (None, "all") or self._status(t.id) == status)
         ]
-        return sorted(rows, key=lambda r: (_STATUS_RANK[r["status"]], r["order"]))
+        return sorted(rows, key=lambda r: r["order"])
 
     def track(self, track_id: str) -> dict[str, Any]:
         track = self._track(track_id)
@@ -213,6 +212,8 @@ class Review:
             # Hand-accepted slices in order, with details even when they aren't top candidates.
             "accepted": [self._accepted_json(facts, match, s) for s in decision.accept],
             "query": search_query(facts, self._families[track.family]),
+            "renamed": self._override(track_id).title is not None,
+            "note": self._override(track_id).note,
         }
 
     def set_streams(self, track_id: str, streams: dict[str, Any]) -> dict[str, Any]:
@@ -265,12 +266,88 @@ class Review:
         except edits.EditError as e:
             raise ReviewError(e.errors) from e
         self._overrides = load_overrides(self._data_dir / "overrides.json")
-        updated = self._overridden(self._built[track_id])
-        self._tracks[track_id] = updated
-        self._draft = self._draft.model_copy(update={
-            "tracks": [updated if t.id == track_id else t for t in self._draft.tracks]
+        self._refresh(track_id)
+        return self.track(track_id)
+
+    def move(
+        self, track_id: str, before: str | None = None, after: str | None = None
+    ) -> dict[str, Any]:
+        """Moves a track right before or after another track of its family and writes the
+        family's whole order to order.json. The target is a row of whichever tab is shown, so a
+        move from a filtered tab is still well defined. Matching doesn't use the order."""
+        track = self._track(track_id)
+        if (before is None) == (after is None):
+            raise ReviewError(["name the track to move before or after"])
+        target_id = before if before is not None else after
+        assert target_id is not None
+        target = self._track(target_id)
+        if target.family != track.family:
+            raise ReviewError([f"{target_id} is not a track of {track.family}"])
+        if target_id == track_id:
+            raise ReviewError(["a track can't move next to itself"])
+        ids = [t.id for t in self._in_order(track.family) if t.id != track_id]
+        at = ids.index(target_id) + (0 if before is not None else 1)
+        ids.insert(at, track_id)
+        try:
+            edits.set_order(self._data_dir / "order.json", track.family, ids, list(self._families))
+        except edits.EditError as e:
+            raise ReviewError(e.errors) from e
+        position = {id_: i for i, id_ in enumerate(ids)}
+        self._replace({
+            id_: self._tracks[id_].model_copy(update={"order": i}) for id_, i in position.items()
         })  # fmt: skip
-        self._rematch({track_id})
+        return {"family": track.family, "order": ids}
+
+    def rename(self, track_id: str, title: str) -> dict[str, Any]:
+        """Sets a track's title (a `title` override). Its current videos are pinned first, as
+        accepted ones in order, since matching scores titles and cached searches are keyed by
+        the old one: a rename never drops or reorders a source."""
+        track = self._track(track_id)
+        title = " ".join(str(title).split())
+        if not title:
+            raise ReviewError(["a title can't be empty"])
+        if title == track.title:
+            raise ReviewError([f"the track is already titled {title!r}"])
+        for other in self._draft.tracks:
+            if other.family == track.family and other.id != track_id:
+                if other.title.casefold() == title.casefold():
+                    raise ReviewError([f"{other.id} is already titled {other.title!r}"])
+        decision = self._decision(track_id)
+        pinned = [Slice(videoId=s.videoId, startMs=s.startMs, endMs=s.endMs)
+                  for s in self._matches[track_id].streams]  # fmt: skip
+        streams = None
+        if pinned != list(decision.accept):
+            streams = {"accept": [p.model_dump() for p in pinned], "reject": list(decision.reject)}
+        try:
+            edits.rename(
+                self._data_dir / "overrides.json",
+                track_id,
+                title,
+                streams,
+                self._tracks.keys(),
+                list(self._families),
+            )
+        except edits.EditError as e:
+            raise ReviewError(e.errors) from e
+        self._overrides = load_overrides(self._data_dir / "overrides.json")
+        self._refresh(track_id)
+        return self.track(track_id)
+
+    def set_note(self, track_id: str, note: str) -> dict[str, Any]:
+        """Sets a track's hand-written note (the override's `note`) as one line; blank clears it."""
+        self._track(track_id)
+        text = " ".join(str(note).split()) or None
+        try:
+            edits.set_note(
+                self._data_dir / "overrides.json",
+                track_id,
+                text,
+                self._tracks.keys(),
+                list(self._families),
+            )
+        except edits.EditError as e:
+            raise ReviewError(e.errors) from e
+        self._overrides = load_overrides(self._data_dir / "overrides.json")
         return self.track(track_id)
 
     def exclude(self, track_id: str, removed: bool) -> dict[str, Any]:
@@ -560,6 +637,27 @@ class Review:
             return {"mode": "blocked", "until": self._blocked_until}
         return {"mode": "live"}
 
+    def _refresh(self, track_id: str) -> None:
+        """Reapplies a track's title and games overrides (keeping its order) and rematches it."""
+        updated = self._overridden(self._built[track_id])
+        self._replace(
+            {track_id: updated.model_copy(update={"order": self._tracks[track_id].order})}
+        )
+        self._rematch({track_id})
+
+    def _replace(self, updated: dict[str, DraftTrack]) -> None:
+        self._tracks.update(updated)
+        self._draft = self._draft.model_copy(
+            update={"tracks": [updated.get(t.id, t) for t in self._draft.tracks]}
+        )
+
+    def _in_order(self, family: str) -> list[DraftTrack]:
+        tracks = [t for t in self._draft.tracks if t.family == family]
+        return sorted(tracks, key=lambda t: t.order)
+
+    def _override(self, track_id: str) -> TrackOverride:
+        return self._overrides.tracks.get(track_id, TrackOverride())
+
     def _rematch(self, only: set[str]) -> None:
         for match in self._match(only):
             self._matches[match.track_id] = match
@@ -683,6 +781,7 @@ class Review:
             "confidence": match.streams[0].confidence if match.streams else None,
             "sources": len(match.streams),
             "decided": override.streams is not None,
+            "noted": override.note is not None,
         }
 
 

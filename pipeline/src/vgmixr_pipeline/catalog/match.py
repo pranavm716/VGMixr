@@ -111,9 +111,11 @@ class _Matcher:
         self._family_games: dict[str, list[str]] = {}
         for game in draft.games:
             self._family_games.setdefault(game.family_id, []).append(game.id)
+        # Positions are track-list positions (which playlists follow), not the hand-set order.
         self._last_order: dict[str, int] = {}
         for track in draft.tracks:
-            self._last_order[track.family] = max(self._last_order.get(track.family, 0), track.order)
+            last = self._last_order.get(track.family, 0)
+            self._last_order[track.family] = max(last, _list_order(track))
         self._playlists: dict[str, list[Entry]] = {}
         self._albums: dict[str, Video] = {}
         self._playlist_noise: dict[str, frozenset[str]] = {}
@@ -177,7 +179,7 @@ class _Matcher:
             games=frozenset(games),
             title=track.title,
             duration_ms=track.durationMs,
-            position=track.order / last if last > 0 else None,
+            position=_list_order(track) / last if last > 0 else None,
             game_boy=all(self._games[g].platform in _GAME_BOY for g in games),
         )
 
@@ -230,6 +232,11 @@ class _Matcher:
                     video.id, chapter.title, length, None, "album", frozenset(album.games),
                     index / (count - 1) if count > 1 else None, chapter.start_ms, chapter.end_ms,
                 )  # fmt: skip
+
+
+def _list_order(track: DraftTrack) -> int:
+    """The track-list position; a draft written before listOrder existed has it as `order`."""
+    return track.listOrder if track.listOrder is not None else track.order
 
 
 def _part_ids(draft: Draft, overrides: Overrides) -> frozenset[str]:

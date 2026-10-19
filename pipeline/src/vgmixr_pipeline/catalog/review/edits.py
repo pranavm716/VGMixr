@@ -1,7 +1,7 @@
-"""Edits of the committed data files: overrides.json, and games.json's playlists. Each edit loads
-the raw JSON (keeping its order), changes it, validates the result with the builder's own models,
-writes it in the canonical format (jsonfmt) to a temporary file and swaps it in. An invalid edit
-raises EditError and writes nothing.
+"""Edits of the committed data files: overrides.json, games.json's playlists and order.json. Each
+edit loads the raw JSON (keeping its order), changes it, validates the result with the builder's
+own models, writes it in the canonical format (jsonfmt) to a temporary file and swaps it in. An
+invalid edit raises EditError and writes nothing.
 """
 
 import json
@@ -12,9 +12,10 @@ from typing import Any
 
 from pydantic import BaseModel, ValidationError
 
-from vgmixr_pipeline.catalog.config import GamesFile, Overrides, Playlist, Streams
+from vgmixr_pipeline.catalog.config import GamesFile, Overrides, Playlist, Streams, TrackOrder
 from vgmixr_pipeline.catalog.jsonfmt import (
     format_games,
+    format_order,
     format_overrides,
     games_families,
     track_family,
@@ -73,6 +74,54 @@ def set_games(
     _set_key(path, track_id, "games", games, families)
 
 
+def rename(
+    path: Path,
+    track_id: str,
+    title: str,
+    streams: dict[str, Any] | None,
+    track_ids: Collection[str],
+    families: list[str],
+) -> None:
+    """Sets a track's `title` and, in the same write, its `streams` decision (the videos a rename
+    pins); None leaves the decision as it is."""
+    _check_track(track_id, track_ids)
+    if not isinstance(title, str) or not title.strip() or "\n" in title or title != title.strip():
+        raise EditError([f"a title is one line of text, not {title!r}"])
+    keys: dict[str, Any] = {"title": title}
+    if streams is not None:
+        decision = _validated(Streams, streams)
+        keys["streams"] = _streams_json(decision) if decision.accept or decision.reject else None
+    _set_keys(path, track_id, keys, families)
+
+
+def set_note(
+    path: Path,
+    track_id: str,
+    note: str | None,
+    track_ids: Collection[str],
+    families: list[str],
+) -> None:
+    """Sets a track's `note` (always the override's last key); None removes it."""
+    _check_track(track_id, track_ids)
+    if note is not None and (not isinstance(note, str) or not note.strip() or "\n" in note):
+        raise EditError([f"a note is one line of text, not {note!r}"])
+    _set_keys(path, track_id, {"note": note}, families)
+
+
+def set_order(path: Path, family: str, ids: list[str], families: list[str]) -> None:
+    """Replaces a family's hand-set track order in order.json (created when missing); families
+    stay in games-file order. That `ids` are the family's tracks is the caller's check."""
+    if family not in families:
+        raise EditError([f"{family} is not a family"])
+    if not isinstance(ids, list) or not ids:
+        raise EditError([f"{family}: an order lists the family's tracks, not {ids!r}"])
+    data = _load(path) if path.exists() else {}
+    data[family] = ids
+    rank = {f: i for i, f in enumerate(families)}
+    data = dict(sorted(data.items(), key=lambda item: rank.get(item[0], len(families))))
+    _write(path, data, TrackOrder, format_order)
+
+
 def add_playlist(path: Path, entry: dict[str, Any]) -> None:
     """Adds a playlist to games.json's youtube block, after the playlists of its first game's
     family (families in games-file order). The same playlist may be listed again with other games
@@ -113,13 +162,19 @@ def _check_track(track_id: str, track_ids: Collection[str]) -> None:
 
 
 def _set_key(path: Path, track_id: str, key: str, value: Any, families: list[str]) -> None:
-    """Sets one key of a track's override (before its note), or removes it when `value` is None.
-    An override left empty is removed."""
+    _set_keys(path, track_id, {key: value}, families)
+
+
+def _set_keys(path: Path, track_id: str, keys: dict[str, Any], families: list[str]) -> None:
+    """Sets keys of a track's override in one write (each before its note, which stays last), or
+    removes a key whose value is None. An override left empty is removed."""
     data = _load(path)
     tracks: dict[str, Any] = data.setdefault("tracks", {})
-    entry = {k: v for k, v in tracks.get(track_id, {}).items() if k != key}
-    if value is not None:
-        entry = _before_note(entry, key, value)
+    entry = dict(tracks.get(track_id, {}))
+    for key, value in keys.items():
+        entry = {k: v for k, v in entry.items() if k != key}
+        if value is not None:
+            entry = {**entry, key: value} if key == "note" else _before_note(entry, key, value)
     if entry:
         data["tracks"] = _put(tracks, track_id, entry, families)
     else:

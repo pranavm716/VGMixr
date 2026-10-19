@@ -107,11 +107,12 @@ def test_state_lists_families_with_their_counts_and_playlists(review: Review) ->
     assert state["youtube"] == {"mode": "live"}
 
 
-def test_track_list_puts_needs_review_first_then_unmatched_then_matched(review: Review) -> None:
+def test_every_tab_lists_tracks_in_the_familys_order(review: Review) -> None:
     rows = review.tracks("rse", None)
-    assert [r["id"] for r in rows] == ["rse-route-101", "rse-abandoned-ship", "rse-littleroot-town"]
-    assert 0.5 <= rows[0]["best"] < 0.8
-    assert rows[2]["sources"] == 2 and rows[2]["decided"] is False
+    assert [r["id"] for r in rows] == ["rse-littleroot-town", "rse-route-101", "rse-abandoned-ship"]
+    assert [r["status"] for r in rows] == ["matched", "review", "unmatched"]
+    assert 0.5 <= rows[1]["best"] < 0.8
+    assert rows[0]["sources"] == 2 and rows[0]["decided"] is False
     assert [r["id"] for r in review.tracks("rse", "review")] == ["rse-route-101"]
     assert review.tracks("oras", None) == []
 
@@ -734,3 +735,115 @@ def test_without_listed_games_in_the_draft_reset_waits_for_a_rebuild(
     assert written_tracks(tmp_path) == {
         "rse-littleroot-town": {"games": ["ruby", "sapphire", "emerald"]}
     }
+
+
+# Track order, renaming and notes
+
+
+def order_file(tmp_path: Path) -> Any:
+    return json.loads((tmp_path / "data" / "order.json").read_text(encoding="utf-8"))
+
+
+def test_moving_a_track_writes_the_familys_whole_order(review: Review, tmp_path: Path) -> None:
+    result = review.move("rse-abandoned-ship", before="rse-littleroot-town")
+    order = ["rse-abandoned-ship", "rse-littleroot-town", "rse-route-101"]
+    assert result == {"family": "rse", "order": order}
+    assert order_file(tmp_path) == {"rse": order}
+    assert [r["id"] for r in review.tracks("rse", None)] == order
+    assert [r["order"] for r in review.tracks("rse", None)] == [0, 1, 2]
+
+
+def test_a_track_moves_after_another_one_from_a_filtered_tab(review: Review) -> None:
+    # The Review tab shows only Route 101; dropping Littleroot below it still means "after it".
+    review.move("rse-littleroot-town", after="rse-route-101")
+    assert [r["id"] for r in review.tracks("rse", None)] == [
+        "rse-route-101", "rse-littleroot-town", "rse-abandoned-ship"
+    ]  # fmt: skip
+
+
+def test_a_move_keeps_every_match(review: Review) -> None:
+    before = {i: review.track(i)["streams"] for i in ("rse-littleroot-town", "rse-route-101")}
+    review.move("rse-littleroot-town", after="rse-abandoned-ship")
+    assert {i: review.track(i)["streams"] for i in before} == before
+
+
+@pytest.mark.parametrize(
+    ("target", "error"),
+    [
+        ({"before": "oras-littleroot-town"}, "rse"),
+        ({"before": "rse-littleroot-town"}, "itself"),
+        ({}, "before or after"),
+        ({"before": "rse-route-101", "after": "rse-route-101"}, "before or after"),
+        ({"after": "rse-nope"}, "rse-nope"),
+    ],
+)
+def test_a_bad_move_is_refused_and_nothing_is_written(
+    tmp_path: Path, clock: Clock, live: LiveVideos, target: dict[str, str], error: str
+) -> None:
+    data, out = write_inputs(tmp_path, [*TRACKS, *ORAS_TRACKS])
+    review = Review(data, out, CachedVideos({RS_LIST: PLAYLIST}), live, clock=clock,
+                    sleep=clock.sleep)  # fmt: skip
+    with pytest.raises(ReviewError) as raised:
+        review.move("rse-littleroot-town", **target)
+    assert any(error in e for e in raised.value.errors), raised.value.errors
+    assert not (data / "order.json").exists()
+
+
+def test_renaming_pins_the_tracks_videos_and_shows_the_new_title(
+    review: Review, tmp_path: Path
+) -> None:
+    detail = review.rename("rse-littleroot-town", "Littleroot Town (Day)")
+    assert detail["title"] == "Littleroot Town (Day)" and detail["renamed"] is True
+    assert [(s["videoId"], s["auto"]) for s in detail["streams"]] == [
+        (vid(1), False),
+        (vid(3), False),
+    ]
+    assert detail["query"] == "Pokémon Ruby Sapphire Emerald Littleroot Town (Day)"
+    written = json.loads((tmp_path / "data" / "overrides.json").read_text(encoding="utf-8"))
+    assert written["tracks"] == {
+        "rse-littleroot-town": {
+            "title": "Littleroot Town (Day)",
+            "streams": {"accept": [{"videoId": vid(1)}, {"videoId": vid(3)}]},
+        }
+    }
+    (row,) = [r for r in review.tracks("rse", None) if r["id"] == "rse-littleroot-town"]
+    assert row["title"] == "Littleroot Town (Day)"
+
+
+def test_renaming_keeps_rejected_videos_and_hand_accepted_ones_first(review: Review) -> None:
+    review.set_streams("rse-littleroot-town", {"accept": [{"videoId": vid(3)}], "reject": [vid(2)]})
+    detail = review.rename("rse-littleroot-town", "Littleroot")
+    assert detail["decision"] == {
+        "accept": [{"videoId": vid(3), "startMs": 0, "endMs": None},
+                   {"videoId": vid(1), "startMs": 0, "endMs": None}],
+        "reject": [vid(2)],
+    }  # fmt: skip
+
+
+def test_renaming_an_unmatched_track_writes_only_the_title(review: Review, tmp_path: Path) -> None:
+    review.rename("rse-abandoned-ship", "  Abandoned  Ship (Inside) ")
+    written = json.loads((tmp_path / "data" / "overrides.json").read_text(encoding="utf-8"))
+    assert written["tracks"] == {"rse-abandoned-ship": {"title": "Abandoned Ship (Inside)"}}
+
+
+@pytest.mark.parametrize(
+    ("title", "error"), [("", "title"), ("Littleroot Town", "already"), ("route 101", "Route 101")]
+)
+def test_a_bad_rename_is_refused(review: Review, tmp_path: Path, title: str, error: str) -> None:
+    path = tmp_path / "data" / "overrides.json"
+    before = path.read_bytes()
+    with pytest.raises(ReviewError) as raised:
+        review.rename("rse-littleroot-town", title)
+    assert any(error in e for e in raised.value.errors), raised.value.errors
+    assert path.read_bytes() == before
+
+
+def test_a_note_is_written_shown_and_cleared(review: Review, tmp_path: Path) -> None:
+    detail = review.set_note("rse-route-101", " Also plays\nin Emerald ")
+    assert detail["note"] == "Also plays in Emerald"
+    assert [r["noted"] for r in review.tracks("rse", None)] == [False, True, False]
+    written = json.loads((tmp_path / "data" / "overrides.json").read_text(encoding="utf-8"))
+    assert written["tracks"] == {"rse-route-101": {"note": "Also plays in Emerald"}}
+    assert review.set_note("rse-route-101", "  ")["note"] is None
+    written = json.loads((tmp_path / "data" / "overrides.json").read_text(encoding="utf-8"))
+    assert written["tracks"] == {}

@@ -8,6 +8,7 @@ import pytest
 from vgmixr_pipeline.catalog.config import DATA_DIR
 from vgmixr_pipeline.catalog.jsonfmt import (
     format_games,
+    format_order,
     format_overrides,
     games_families,
     track_family,
@@ -25,6 +26,11 @@ def test_committed_overrides_file_is_canonical() -> None:
     games = json.loads((DATA_DIR / "games.json").read_text(encoding="utf-8"))
     text = (DATA_DIR / "overrides.json").read_text(encoding="utf-8")
     assert format_overrides(json.loads(text), games_families(games)) == text
+
+
+def test_committed_order_file_is_canonical() -> None:
+    text = (DATA_DIR / "order.json").read_text(encoding="utf-8")
+    assert format_order(json.loads(text)) == text
 
 
 def test_families_come_in_game_order_and_a_game_without_family_is_its_own() -> None:
@@ -147,3 +153,23 @@ def test_empty_collections_are_compact() -> None:
     assert format_overrides({"tracks": {}, "extras": []}, FAMILIES) == (
         '{\n  "tracks": {},\n  "extras": []\n}\n'
     )
+
+
+def test_an_order_lists_one_id_per_line_with_families_apart() -> None:
+    data = {"rby": ["rby-opening", "rby-pallet-town"], "rse": ["rse-route-101"]}
+    assert format_order(data) == (
+        "{\n"
+        '  "rby": [\n'
+        '    "rby-opening",\n'
+        '    "rby-pallet-town"\n'
+        "  ],\n"
+        "\n"
+        '  "rse": [\n'
+        '    "rse-route-101"\n'
+        "  ]\n"
+        "}\n"
+    )
+
+
+def test_an_empty_order_is_compact() -> None:
+    assert format_order({}) == "{}\n"

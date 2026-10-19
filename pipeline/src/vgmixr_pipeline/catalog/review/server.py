@@ -81,6 +81,12 @@ class _Handler(BaseHTTPRequestHandler):
                     if not isinstance(removed, bool):
                         raise ReviewError(["removed must be true or false"])
                     return r.exclude(track_id, removed)
+                case ["tracks", track_id, "move"]:
+                    return r.move(track_id, _text(body, "before"), _text(body, "after"))
+                case ["tracks", track_id, "title"]:
+                    return r.rename(track_id, _text(body, "title") or "")
+                case ["tracks", track_id, "note"]:
+                    return r.set_note(track_id, _text(body, "note") or "")
                 case ["tracks", track_id, "search"]:
                     return r.search(track_id, str(body.get("query") or ""))
                 case ["tracks", track_id, "video"]:
@@ -142,6 +148,14 @@ def _int(value: Any) -> int | None:
         return None
     if isinstance(value, bool) or not isinstance(value, int):
         raise ReviewError([f"{value!r} is not a whole number"])
+    return value
+
+
+def _text(body: dict[str, Any], key: str) -> str | None:
+    """A text field, or None when it's missing or null."""
+    value = body.get(key)
+    if value is not None and not isinstance(value, str):
+        raise ReviewError([f"{key} must be text, not {value!r}"])
     return value
 
 

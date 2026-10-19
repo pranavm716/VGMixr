@@ -2,7 +2,8 @@
 
 games.json: the games (in manifest form) and, per family, which Bulbapedia album discs list its
 tracks. overrides.json: hand corrections keyed by generated track id, plus extra tracks.
-durations.json: track lengths for album pages that list none. All are reapplied on every build;
+durations.json: track lengths for album pages that list none. order.json: each family's track order,
+set by hand in the review tool. All are reapplied on every build;
 the generated draft is never edited by hand.
 """
 
@@ -10,7 +11,7 @@ import re
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, RootModel, field_validator, model_validator
 
 from vgmixr_pipeline.catalog.tracklist import parse_duration
 from vgmixr_pipeline.manifest.models import Game, LocalSource, Source
@@ -273,6 +274,22 @@ class Durations(_Model):
         return parse_duration(time) if time is not None else None
 
 
+class TrackOrder(RootModel[dict[str, list[str]]]):
+    """Family id -> its track ids in the order set by hand (see catalog/order.py). The ids are
+    source keys, like the overrides'."""
+
+    model_config = ConfigDict(strict=True, frozen=True)
+
+    @field_validator("root")
+    @classmethod
+    def _check_distinct(cls, root: dict[str, list[str]]) -> dict[str, list[str]]:
+        for family, ids in root.items():
+            twice = sorted({i for i in ids if ids.count(i) > 1})
+            if twice:
+                raise ValueError(f"{family}: lists {', '.join(twice)} twice")
+        return root
+
+
 def load_games(path: Path = DATA_DIR / "games.json") -> GamesFile:
     return GamesFile.model_validate_json(path.read_text(encoding="utf-8"))
 
@@ -283,3 +300,10 @@ def load_overrides(path: Path = DATA_DIR / "overrides.json") -> Overrides:
 
 def load_durations(path: Path = DATA_DIR / "durations.json") -> Durations:
     return Durations.model_validate_json(path.read_text(encoding="utf-8"))
+
+
+def load_order(path: Path = DATA_DIR / "order.json") -> TrackOrder:
+    """The hand-set order; none when the file doesn't exist."""
+    if not path.exists():
+        return TrackOrder({})
+    return TrackOrder.model_validate_json(path.read_text(encoding="utf-8"))
