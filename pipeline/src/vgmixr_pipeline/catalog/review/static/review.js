@@ -131,13 +131,56 @@ function renderTracks() {
   // A matched track shows its first source's confidence (1.00 when picked by hand), others
   // their best candidate's score.
   $("tracks").innerHTML = rows.length ? rows.map((r) => { const score = r.confidence ?? r.best; return `
-    <li data-id="${esc(r.id)}" class="${r.id === ui.trackId ? "selected" : ""}">
-      <span class="title">${esc(r.title)} ${r.games ? r.games.map((g) => chip(games[g])).join("") : ""}</span>
+    <li data-id="${esc(r.id)}" class="${r.id === ui.trackId ? "selected" : ""}" draggable="true" title="Drag to reorder the family">
+      <span class="title">${esc(r.title)} ${r.games ? r.games.map((g) => chip(games[g])).join("") : ""}${r.noted ? ' <span class="noted" title="Has a note">¶</span>' : ""}</span>
       <span class="meta status-${r.status}">${r.decided ? "✎ " : ""}${score == null ? "–" : score.toFixed(2)}</span>
     </li>`; }).join("") : `<li class="empty">${ui.rows.length ? "No tracks match the filter." : "No tracks."}</li>`;
   for (const li of $("tracks").querySelectorAll("li[data-id]")) {
     li.onclick = () => openTrack(li.dataset.id);
+    bindDrag(li);
   }
+}
+
+// Drag and drop: a row dropped on the top half of another goes before it, else after it. The
+// move is relative to that row, so it works from a filtered tab too; it writes order.json.
+let dragged = null;
+
+function dropSide(li, e) {
+  const box = li.getBoundingClientRect();
+  return e.clientY < box.top + box.height / 2 ? "before" : "after";
+}
+
+function clearDropMarks() {
+  for (const el of $("tracks").querySelectorAll(".drop-before, .drop-after, .dragging")) {
+    el.classList.remove("drop-before", "drop-after", "dragging");
+  }
+}
+
+function bindDrag(li) {
+  li.ondragstart = (e) => {
+    dragged = li.dataset.id;
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", dragged);
+    li.classList.add("dragging");
+  };
+  li.ondragend = () => { dragged = null; clearDropMarks(); };
+  li.ondragover = (e) => {
+    if (!dragged || dragged === li.dataset.id) return;
+    e.preventDefault();
+    const side = dropSide(li, e);
+    li.classList.toggle("drop-before", side === "before");
+    li.classList.toggle("drop-after", side === "after");
+  };
+  li.ondragleave = () => li.classList.remove("drop-before", "drop-after");
+  li.ondrop = async (e) => {
+    e.preventDefault();
+    const id = dragged;
+    const side = dropSide(li, e);
+    clearDropMarks();
+    if (!id || id === li.dataset.id) return;
+    await api(`tracks/${encodeURIComponent(id)}/move`, { [side]: li.dataset.id });
+    await loadTracks();
+  };
 }
 
 // Lower case without accents, so "pokemon" finds "Pokémon".
@@ -301,13 +344,15 @@ function renderDetail() {
     ? `<p class="facts">Rejected: ${d.decision.reject.map(esc).join(", ")} <button id="clear">Clear decision</button></p>`
     : d.decision.accept.length ? '<p><button id="clear">Clear decision</button></p>' : "";
   $("detail").innerHTML = `
-    <h2>${esc(d.title)}</h2>
+    <h2 id="title-line">${esc(d.title)}${d.renamed ? ' <span class="hand-games" title="A title override in overrides.json">renamed by hand</span>' : ""}
+      <button id="rename" title="Writes a title override; the track's current videos are kept as accepted ones">Rename</button></h2>
     <div class="facts">
       ${gamesEditor(d)}
       · ${esc(d.category)} · ${minutes(d.durationMs)} · <span class="status-${d.status}">${d.status}</span>
       · <code>${esc(d.id)}</code>
     </div>
     <div class="facts">${d.origins.map(esc).join("<br>")}</div>
+    <textarea id="note" class="note" rows="2" placeholder="Note (also plays in X, a remix of Y…): saved on leaving the box or Ctrl+Enter">${esc(d.note ?? "")}</textarea>
     ${d.status === "excluded"
       ? '<p class="removed">Removed from the catalog (<code>exclude</code> override); it leaves this list at the next Rebuild. <button id="restore">Restore</button></p>'
       : '<p><button id="remove" title="Leave this track out of the catalog: writes exclude: true">Remove track</button></p>'}
@@ -349,12 +394,44 @@ function bindDetail(shown) {
   on("#all-games", () => setGames(ui.state.families.find((f) => f.id === d.family).games.map((g) => g.id)));
   on("#reset-games", () => setGames(null));
   on(".play", (el) => play(el.parentElement, shown[el.parentElement.dataset.index]));
+  on("#rename", startRename);
+  $("note").onblur = saveNote;
+  $("note").onkeydown = (e) => { if (e.key === "Enter" && e.ctrlKey) { e.preventDefault(); $("note").blur(); } };
   on("#search", search);
   on("#lookup", lookup);
   $("query").onkeydown = (e) => { if (e.key === "Enter") search(); };
   for (const id of ["paste", "start", "end"]) {
     $(id).onkeydown = (e) => { if (e.key === "Enter") lookup(); };
   }
+}
+
+// Renaming: the title becomes an input; Enter writes a title override, Escape cancels.
+function startRename() {
+  const line = $("title-line");
+  line.innerHTML = `<input class="wide" id="new-title" value="${esc(ui.detail.title)}">`;
+  const input = $("new-title");
+  input.focus();
+  input.select();
+  input.onkeydown = async (e) => {
+    if (e.key === "Escape") renderDetail();
+    if (e.key !== "Enter") return;
+    try {
+      ui.detail = await api(`tracks/${encodeURIComponent(ui.trackId)}/title`, { title: input.value });
+    } catch {
+      return; // the message says why; the input stays for another try
+    }
+    renderDetail();
+    await Promise.all([loadState(), loadTracks()]);
+  };
+}
+
+// The note saves when it changed; a blank note clears it.
+async function saveNote() {
+  const text = $("note").value;
+  if (text.trim() === (ui.detail.note ?? "")) return;
+  ui.detail = await api(`tracks/${encodeURIComponent(ui.trackId)}/note`, { note: text });
+  $("note").value = ui.detail.note ?? "";
+  await loadTracks(); // the row's note mark
 }
 
 async function search() {
