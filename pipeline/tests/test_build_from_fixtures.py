@@ -73,7 +73,7 @@ def test_draft_with_sources_is_a_valid_manifest() -> None:
     data = json.loads(draft().model_dump_json())
     for track in data["tracks"]:
         track["sources"] = [{"type": "stream", "videoId": "XXXXXXXXXXX"}]
-        del track["durationMs"], track["origins"], track["listedGames"]
+        del track["durationMs"], track["origins"], track["listedGames"], track["listOrder"]
     result = parse(json.dumps({"schemaVersion": 1, **data}))
     assert isinstance(result, Valid), result
 
