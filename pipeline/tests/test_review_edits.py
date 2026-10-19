@@ -6,19 +6,28 @@ committed files stay in the canonical format is test_jsonfmt's job.
 """
 
 import difflib
+import json
 from pathlib import Path
 from typing import Any
 
 import pytest
 
-from vgmixr_pipeline.catalog.config import load_games, load_overrides
-from vgmixr_pipeline.catalog.jsonfmt import format_games, format_overrides, games_families
+from vgmixr_pipeline.catalog.config import load_games, load_order, load_overrides
+from vgmixr_pipeline.catalog.jsonfmt import (
+    format_games,
+    format_order,
+    format_overrides,
+    games_families,
+)
 from vgmixr_pipeline.catalog.review.edits import (
     EditError,
     add_playlist,
     remove_playlist,
+    rename,
     set_exclude,
     set_games,
+    set_note,
+    set_order,
     set_streams,
 )
 
@@ -367,3 +376,112 @@ def test_removing_with_a_stale_index_is_refused(games: Path) -> None:
     with pytest.raises(EditError):
         remove_playlist(games, 99, RSE_LIST)
     assert games.read_bytes() == before
+
+
+# Renaming and notes
+
+
+def test_a_rename_writes_the_title_and_pinned_streams_in_one_edit_before_the_note(
+    overrides: Path,
+) -> None:
+    pinned = {"accept": [{"videoId": "ID2Iv5HP-0I"}, {"videoId": "cnzggrebNS0"}]}
+    rename(overrides, "rse-drought", "Drought (Ruby)", pinned, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == [
+        f'-    "rse-drought": {{ "games": ["ruby"], "note": "{DROUGHT_NOTE}" }},',
+        '+    "rse-drought": { "games": ["ruby"], "title": "Drought (Ruby)", '
+        '"streams": { "accept": [ { "videoId": "ID2Iv5HP-0I" }, { "videoId": "cnzggrebNS0" } ] },',
+        f'+                     "note": "{DROUGHT_NOTE}" }},',
+    ]
+
+
+def test_a_rename_without_videos_to_pin_writes_only_the_title(overrides: Path) -> None:
+    rename(overrides, "rse-littleroot-town", "Littleroot", None, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == ['+    "rse-littleroot-town": { "title": "Littleroot" },']
+
+
+@pytest.mark.parametrize(
+    ("title", "streams"), [("", None), ("Two\nlines", None), ("Ok", {"accept": [{"videoId": "x"}]})]
+)
+def test_an_invalid_rename_writes_nothing(
+    overrides: Path, title: str, streams: dict[str, Any] | None
+) -> None:
+    with pytest.raises(EditError):
+        rename(overrides, "rse-littleroot-town", title, streams, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == []
+
+
+def test_a_note_replaces_the_old_one_and_stays_last(overrides: Path) -> None:
+    set_note(overrides, "rse-drought", "Also plays in Emerald's Sky Pillar", TRACK_IDS, FAMILIES)
+    assert changes(overrides) == [
+        f'-    "rse-drought": {{ "games": ["ruby"], "note": "{DROUGHT_NOTE}" }},',
+        '+    "rse-drought": { "games": ["ruby"], "note": "Also plays in Emerald\'s Sky Pillar" },',
+    ]
+
+
+def test_a_note_on_a_track_without_an_override_adds_one(overrides: Path) -> None:
+    set_note(overrides, "rse-route-101", "A remix of Route 1", TRACK_IDS, FAMILIES)
+    assert changes(overrides) == ['+    "rse-route-101": { "note": "A remix of Route 1" },']
+    set_note(overrides, "rse-route-101", None, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == []
+
+
+def test_clearing_a_note_keeps_the_rest_of_the_override(overrides: Path) -> None:
+    set_note(overrides, "rse-drought", None, TRACK_IDS, FAMILIES)
+    assert changes(overrides) == [
+        f'-    "rse-drought": {{ "games": ["ruby"], "note": "{DROUGHT_NOTE}" }},',
+        '+    "rse-drought": { "games": ["ruby"] },',
+    ]
+
+
+def test_a_note_on_an_unknown_track_is_refused(overrides: Path) -> None:
+    with pytest.raises(EditError):
+        set_note(overrides, "rse-no-such-track", "x", TRACK_IDS, FAMILIES)
+    assert changes(overrides) == []
+
+
+# Track order
+
+ORDER_TEXT = format_order({"rby": ["rby-route-1", "rby-pallet-town"], "hgss": ["hgss-route-29"]})
+
+
+@pytest.fixture
+def order(tmp_path: Path) -> Path:
+    path = tmp_path / "order.json"
+    path.write_text(ORDER_TEXT, encoding="utf-8", newline="\n")
+    return path
+
+
+def test_setting_a_familys_order_rewrites_only_its_list(order: Path) -> None:
+    set_order(order, "rby", ["rby-pallet-town", "rby-route-1"], FAMILIES)
+    assert diff(ORDER_TEXT, order) == [
+        '-    "rby-route-1",',
+        '-    "rby-pallet-town"',
+        '+    "rby-pallet-town",',
+        '+    "rby-route-1"',
+    ]
+
+
+def test_a_new_familys_order_goes_in_family_order(order: Path) -> None:
+    set_order(order, "rse", ["rse-route-101", "rse-littleroot-town"], FAMILIES)
+    assert list(json.loads(order.read_text(encoding="utf-8"))) == ["rby", "rse", "hgss"]
+    assert order.read_text(encoding="utf-8") == format_order(
+        {"rby": ["rby-route-1", "rby-pallet-town"],
+         "rse": ["rse-route-101", "rse-littleroot-town"],
+         "hgss": ["hgss-route-29"]}
+    )  # fmt: skip
+
+
+def test_a_missing_order_file_is_created(tmp_path: Path) -> None:
+    path = tmp_path / "order.json"
+    set_order(path, "rse", ["rse-route-101"], FAMILIES)
+    assert load_order(path).root == {"rse": ["rse-route-101"]}
+
+
+@pytest.mark.parametrize(
+    ("family", "ids"), [("rby", ["rby-route-1", "rby-route-1"]), ("nope", ["nope-x"]), ("rby", [])]
+)
+def test_an_invalid_order_writes_nothing(order: Path, family: str, ids: list[str]) -> None:
+    with pytest.raises(EditError):
+        set_order(order, family, ids, FAMILIES)
+    assert order.read_text(encoding="utf-8") == ORDER_TEXT
+    assert not list(order.parent.glob("*.tmp"))
