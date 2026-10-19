@@ -116,3 +116,20 @@ def test_a_tracks_games_can_be_set(base: str) -> None:
     assert call(url, {"games": ["omega-ruby"]})[0] == 400
     status, detail = call(url, {"games": None})
     assert (status, detail["gamesOverride"]) == (200, False)
+
+
+def test_a_track_can_be_moved(base: str) -> None:
+    url = f"{base}/api/tracks/rse-abandoned-ship/move"
+    status, moved = call(url, {"before": "rse-littleroot-town"})
+    assert (status, moved["order"][0]) == (200, "rse-abandoned-ship")
+    assert call(url, {"before": 3})[0] == 400
+
+
+def test_a_track_can_be_renamed_and_noted(base: str) -> None:
+    url = f"{base}/api/tracks/rse-route-101"
+    status, detail = call(f"{url}/title", {"title": "Route 101 (Day)"})
+    assert (status, detail["title"], detail["renamed"]) == (200, "Route 101 (Day)", True)
+    assert call(f"{url}/title", {"title": None})[0] == 400
+    status, detail = call(f"{url}/note", {"note": "Also in Emerald"})
+    assert (status, detail["note"]) == (200, "Also in Emerald")
+    assert call(f"{url}/note", {"note": 5})[0] == 400
