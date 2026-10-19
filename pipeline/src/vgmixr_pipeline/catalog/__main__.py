@@ -18,7 +18,13 @@ from pathlib import Path
 
 from vgmixr_pipeline.catalog.build import BuildError, build_draft
 from vgmixr_pipeline.catalog.bulbapedia import Bulbapedia
-from vgmixr_pipeline.catalog.config import DATA_DIR, load_durations, load_games, load_overrides
+from vgmixr_pipeline.catalog.config import (
+    DATA_DIR,
+    load_durations,
+    load_games,
+    load_order,
+    load_overrides,
+)
 from vgmixr_pipeline.catalog.manifest_out import write_manifest
 from vgmixr_pipeline.catalog.match import candidates_json, match_tracks
 from vgmixr_pipeline.catalog.report import family_report, match_report, match_summary, summary
@@ -50,7 +56,12 @@ def main(argv: list[str] | None = None) -> int:
     generated_at = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     try:
         draft, result = build_draft(
-            games, load_overrides(), bulbapedia.wikitext, generated_at, load_durations()
+            games,
+            load_overrides(),
+            bulbapedia.wikitext,
+            generated_at,
+            load_durations(),
+            order=load_order(),
         )
     except BuildError as e:
         print("Build failed:", *e.errors, sep="\n  ", file=sys.stderr)

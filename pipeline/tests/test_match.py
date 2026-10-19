@@ -363,3 +363,15 @@ def test_a_track_that_is_not_merged_is_still_auto_matched() -> None:
     videos = FakeVideos({RS_LIST: entries("Opening Movie", duration_ms=120_000)})
     result = run(draft(track("Opening Movie", 0, duration_ms=120_000)), videos, search=False)
     assert ids(result["rse-opening-movie"]) == [vid(1)]
+
+
+def test_position_comes_from_the_track_list_order_not_the_hand_set_order() -> None:
+    def positions(*tracks: DraftTrack) -> dict[str, float | None]:
+        matches = run(draft(*tracks), FakeVideos({RS_LIST: entries("Littleroot Town")}))
+        return {i: m.facts.position if m.facts else None for i, m in matches.items()}
+
+    listed = [track("Littleroot Town", 0), track("Route 101", 1), track("Route 102", 2)]
+    moved = [t.model_copy(update={"listOrder": t.order, "order": 2 - t.order}) for t in listed]
+    assert positions(*moved) == positions(*listed) == {
+        "rse-littleroot-town": 0.0, "rse-route-101": 0.5, "rse-route-102": 1.0
+    }  # fmt: skip

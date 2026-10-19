@@ -17,9 +17,11 @@ from vgmixr_pipeline.catalog.config import (
     Durations,
     GamesFile,
     Overrides,
+    TrackOrder,
     TrackOverride,
 )
 from vgmixr_pipeline.catalog.jingles import is_jingle
+from vgmixr_pipeline.catalog.order import ordered
 from vgmixr_pipeline.catalog.slug import track_id
 from vgmixr_pipeline.catalog.tracklist import parse_disc, parse_duration, parse_tsv_disc
 from vgmixr_pipeline.manifest.models import Game, Source
@@ -46,6 +48,7 @@ class DraftTrack(BaseModel):
     games: list[str] | None
     title: str
     category: str
+    # The hand-set order (order.json), else the track-list position.
     order: int
     sources: list[Source]
     durationMs: int | None
@@ -53,6 +56,9 @@ class DraftTrack(BaseModel):
     # The games its track lists give it (an extra's own games), before any `games` override; None
     # is every game of the family. A draft written before this field existed doesn't set it.
     listedGames: list[str] | None = None
+    # The position in the family's track lists, which playlists follow, so matching scores by it
+    # whatever the hand-set order is. A draft written before this field existed doesn't set it.
+    listOrder: int | None = None
 
 
 @dataclass(frozen=True)
@@ -97,10 +103,11 @@ def build_draft(
     generated_at: str,
     durations: Durations | None = None,
     read_file: Callable[[str], str] = _read_data_file,
+    order: TrackOrder | None = None,
 ) -> tuple[Draft, BuildResult]:
     """Reads each tracklist's disc from `wikitext(page)` or `read_file(file)`; builds the draft.
 
-    `durations` fills in track lengths that a page leaves blank.
+    `durations` fills in track lengths that a page leaves blank; `order` is the hand-set order.
     """
     durations = durations or Durations()
     occurrences = []
@@ -126,7 +133,7 @@ def build_draft(
             occurrences.append(Occurrence(tracklist.family, games, title, duration, origin))
     if errors:
         raise BuildError(errors)
-    result = build_tracks(games_file.games, occurrences, overrides)
+    result = build_tracks(games_file.games, occurrences, overrides, order)
     return Draft(generatedAt=generated_at, games=games_file.games, tracks=result.tracks), result
 
 
@@ -152,7 +159,10 @@ class _Track:
 
 
 def build_tracks(
-    games: list[Game], occurrences: list[Occurrence], overrides: Overrides
+    games: list[Game],
+    occurrences: list[Occurrence],
+    overrides: Overrides,
+    order: TrackOrder | None = None,
 ) -> BuildResult:
     family_games: dict[str, list[str]] = {}
     for game in games:
@@ -173,6 +183,8 @@ def build_tracks(
     for key in overrides.tracks:
         if key not in known_ids:
             errors.append(f"override {key}: no such track")
+    hand_order = order.root if order is not None else {}
+    _check_order(hand_order, tracks, family_games, errors)
 
     kept: list[_Track] = []
     excluded: list[Excluded] = []
@@ -190,7 +202,7 @@ def build_tracks(
             kept.append(track)
     if errors:
         raise BuildError(errors)
-    return BuildResult(_draft(kept, family_games), excluded)
+    return BuildResult(_draft(kept, family_games, hand_order), excluded)
 
 
 def _group(
@@ -334,9 +346,28 @@ def _check_games(id_: str, games: list[str], family: list[str], errors: list[str
         errors.append(f"{id_}: games {games} must be distinct games of its family {family}")
 
 
-def _draft(tracks: list[_Track], family_games: dict[str, list[str]]) -> list[DraftTrack]:
+def _check_order(
+    order: dict[str, list[str]],
+    tracks: dict[str, _Track],
+    family_games: dict[str, list[str]],
+    errors: list[str],
+) -> None:
+    """Each listed id must be a track of its family; an excluded track may stay listed."""
+    for family, ids in order.items():
+        if family not in family_games:
+            errors.append(f"order {family}: no such family")
+            continue
+        for id_ in ids:
+            if id_ not in tracks or tracks[id_].family != family:
+                errors.append(f"order {family}: {id_} is not a track of the family")
+
+
+def _draft(
+    tracks: list[_Track], family_games: dict[str, list[str]], order: dict[str, list[str]]
+) -> list[DraftTrack]:
     """Tracks grouped by family (in order of first appearance), generated ones in occurrence
-    order with consecutive `order`s, then extras."""
+    order with consecutive `listOrder`s, then extras. `order` is the hand-set order where the
+    family has one, else the same."""
     by_family: dict[str, list[_Track]] = {}
     for track in tracks:
         by_family.setdefault(track.family, []).append(track)
@@ -344,8 +375,13 @@ def _draft(tracks: list[_Track], family_games: dict[str, list[str]]) -> list[Dra
     for family, members in by_family.items():
         generated = [t for t in members if not t.is_extra]
         extras = [t for t in members if t.is_extra]
-        for order, track in enumerate([*generated, *extras]):
+        listed = [*generated, *extras]
+        hand = {
+            id_: i for i, id_ in enumerate(ordered([t.id for t in listed], order.get(family, [])))
+        }
+        for position, track in enumerate(listed):
             all_games = family_games[family]
+            list_order = track.explicit_order if track.explicit_order is not None else position
             drafts.append(
                 DraftTrack(
                     id=track.id,
@@ -353,11 +389,12 @@ def _draft(tracks: list[_Track], family_games: dict[str, list[str]]) -> list[Dra
                     games=_in_order(track.games, all_games),
                     title=track.title,
                     category=track.category or guess_category(track.title),
-                    order=track.explicit_order if track.explicit_order is not None else order,
+                    order=hand[track.id] if family in order else list_order,
                     sources=track.sources,
                     durationMs=_duration(track),
                     origins=[o.origin for o in track.occurrences],
                     listedGames=_in_order(track.listed_games, all_games),
+                    listOrder=list_order,
                 )
             )
     return drafts

@@ -7,7 +7,14 @@ from vgmixr_pipeline.catalog.build import (
     Occurrence,
     build_tracks,
 )
-from vgmixr_pipeline.catalog.config import Extra, Overrides, Part, Split, TrackOverride
+from vgmixr_pipeline.catalog.config import (
+    Extra,
+    Overrides,
+    Part,
+    Split,
+    TrackOrder,
+    TrackOverride,
+)
 from vgmixr_pipeline.manifest.models import Game, LocalSource
 
 GAMES = [
@@ -315,3 +322,75 @@ def test_bad_parts_are_errors(override: TrackOverride, error: str) -> None:
     with pytest.raises(BuildError) as raised:
         build([occ("Route 1"), occ("Route 2 (Spring/Summer)")], overrides)
     assert any(error in e for e in raised.value.errors), raised.value.errors
+
+
+def ordered_build(
+    occurrences: list[Occurrence], order: dict[str, list[str]], overrides: Overrides | None = None
+) -> BuildResult:
+    return build_tracks(GAMES, occurrences, overrides or Overrides(), TrackOrder(order))
+
+
+def by_order(result: BuildResult, family: str) -> list[str]:
+    return [t.id for t in sorted(result.tracks, key=lambda t: t.order) if t.family == family]
+
+
+def test_a_hand_order_sets_order_and_list_order_stays_the_track_list_position() -> None:
+    result = ordered_build(
+        [occ("Route 1"), occ("Route 2"), occ("Pikachu's Beach", Y)],
+        {"rby": ["rby-route-1", "rby-pikachus-beach", "rby-route-2"]},
+    )
+    assert [(t.id, t.order, t.listOrder) for t in result.tracks] == [
+        ("rby-route-1", 0, 0),
+        ("rby-route-2", 2, 1),
+        ("rby-pikachus-beach", 1, 2),
+    ]
+
+
+def test_without_a_hand_order_order_is_the_list_order() -> None:
+    result = ordered_build([occ("Route 1"), occ("Arceus", family="pla")], {})
+    assert [(t.order, t.listOrder) for t in result.tracks] == [(0, 0), (0, 0)]
+
+
+def test_an_unlisted_track_goes_after_its_listed_predecessor() -> None:
+    overrides = Overrides(
+        tracks={
+            "rby-title-screen": TrackOverride(
+                split={"rby-title-screen-yellow": Split(games=["yellow"])}
+            )
+        }
+    )
+    occurrences = [occ("Title Screen", RB), occ("Route 1"), occ("Title Screen", Y)]
+    result = ordered_build(occurrences, {"rby": ["rby-route-1", "rby-title-screen"]}, overrides)
+    assert by_order(result, "rby") == ["rby-route-1", "rby-title-screen", "rby-title-screen-yellow"]
+
+
+def test_an_excluded_track_may_stay_in_the_order() -> None:
+    overrides = Overrides(tracks={"rby-route-2": TrackOverride(exclude=True)})
+    result = ordered_build(
+        [occ("Route 1"), occ("Route 2"), occ("Route 3")],
+        {"rby": ["rby-route-3", "rby-route-2", "rby-route-1"]},
+        overrides,
+    )
+    assert by_order(result, "rby") == ["rby-route-3", "rby-route-1"]
+    assert [t.order for t in result.tracks] == [1, 0]
+
+
+@pytest.mark.parametrize(
+    ("order", "error"),
+    [
+        ({"rby": ["rby-route-1", "rby-gone"]}, "rby-gone"),
+        ({"rby": ["pla-arceus"]}, "pla-arceus"),
+        ({"nope": ["rby-route-1"]}, "nope"),
+    ],
+)
+def test_an_order_naming_no_track_of_its_family_is_an_error(
+    order: dict[str, list[str]], error: str
+) -> None:
+    with pytest.raises(BuildError) as raised:
+        ordered_build([occ("Route 1"), occ("Arceus", family="pla")], order)
+    assert any(error in e for e in raised.value.errors), raised.value.errors
+
+
+def test_an_order_lists_each_track_once() -> None:
+    with pytest.raises(ValueError, match="twice"):
+        TrackOrder({"rby": ["rby-route-1", "rby-route-1"]})

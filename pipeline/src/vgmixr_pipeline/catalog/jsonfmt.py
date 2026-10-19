@@ -71,6 +71,20 @@ def format_overrides(data: dict[str, Any], families: list[str], width: int = WID
     )
 
 
+def format_order(data: dict[str, list[str]]) -> str:
+    """order.json: one track id per line, so moving a track is a two-line diff; a blank line
+    between families. Families stay in the order given (the review tool keeps games-file order)."""
+    if not data:
+        return "{}\n"
+    families = [
+        f"  {_compact(family)}: [\n" + ",\n".join(f"    {_compact(i)}" for i in ids) + "\n  ]"
+        if ids
+        else f"  {_compact(family)}: []"
+        for family, ids in data.items()
+    ]
+    return "{\n" + ",\n\n".join(families) + "\n}\n"
+
+
 def format_data(data: Any, collections: dict[Path_, Collection]) -> str:
     return _value(data, (), 0, collections) + "\n"
 
@@ -146,10 +160,13 @@ def _rewrite(path: Path, text: str) -> None:
 
 def main() -> None:
     games_path, overrides_path = DATA_DIR / "games.json", DATA_DIR / "overrides.json"
+    order_path = DATA_DIR / "order.json"
     games = json.loads(games_path.read_text(encoding="utf-8"))
     overrides = json.loads(overrides_path.read_text(encoding="utf-8"))
     _rewrite(games_path, format_games(games))
     _rewrite(overrides_path, format_overrides(overrides, games_families(games)))
+    if order_path.exists():
+        _rewrite(order_path, format_order(json.loads(order_path.read_text(encoding="utf-8"))))
 
 
 if __name__ == "__main__":
