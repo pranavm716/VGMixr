@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-18T22:18:00Z",
+  "generatedAt": "2026-10-19T04:22:09Z",
   "games": [
     {
       "id": "red",
@@ -26945,6 +26945,1050 @@
         {
           "type": "stream",
           "videoId": "bhs3dnFv-FA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-welcome-to-paldea",
+      "family": "sv",
+      "title": "Welcome to Paldea",
+      "category": "other",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "7a_BW6_q8P0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-cabo-poco",
+      "family": "sv",
+      "title": "Cabo Poco",
+      "category": "other",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "OtysN7ivOJw",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "2mF4a4XIARY",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-nemona",
+      "family": "sv",
+      "title": "Battle! (Nemona)",
+      "category": "battle",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MsZxkZChp_M",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "sv-poco-path",
+      "family": "sv",
+      "title": "Poco Path",
+      "category": "other",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "RKqbbnMv50c",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-wild-pokemon",
+      "family": "sv",
+      "title": "Battle! (Wild Pokémon)",
+      "category": "battle",
+      "order": 8,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SUQFZXruEIk",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "sv-going-through-the-inlet-grotto",
+      "family": "sv",
+      "title": "Going through the Inlet Grotto",
+      "category": "other",
+      "order": 10,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "hDujVzuUDgo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-in-the-grotto",
+      "family": "sv",
+      "title": "Battle in the Grotto",
+      "category": "other",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ajaxmS_ZjEY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-arven",
+      "family": "sv",
+      "title": "Battle! (Arven)",
+      "category": "battle",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "OKVqXJ2_trw",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "sv-south-province",
+      "family": "sv",
+      "title": "South Province",
+      "category": "route",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nsiK1Jy-6Nw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-south-province-wild-pokemon",
+      "family": "sv",
+      "title": "Battle! (South Province Wild Pokémon)",
+      "category": "battle",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QMmMklQVl4k",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-pokemon-center",
+      "family": "sv",
+      "title": "Pokémon Center",
+      "category": "town",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Ppshz4RPhgE",
+          "startMs": 0,
+          "confidence": 0.94
+        },
+        {
+          "type": "stream",
+          "videoId": "tsmGpfOxse4",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-los-platos",
+      "family": "sv",
+      "title": "Los Platos",
+      "category": "other",
+      "order": 18,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jNmLg408lpI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-a-stroll-through-the-south-province",
+      "family": "sv",
+      "title": "A Stroll through the South Province",
+      "category": "route",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "C-LwUH6kx24",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-mesagoza",
+      "family": "sv",
+      "title": "Mesagoza",
+      "category": "other",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Np9CskbHsEs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-a-tune-at-mesagoza",
+      "family": "sv",
+      "title": "A Tune at Mesagoza",
+      "category": "other",
+      "order": 21,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3-CLvL43p1A",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-team-star",
+      "family": "sv",
+      "title": "Team Star",
+      "category": "other",
+      "order": 22,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wPXxct_vTyw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-team-star",
+      "family": "sv",
+      "title": "Battle! (Team Star)",
+      "category": "battle",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Vx6XsiT0Zas",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-professor-sada-professor-turo",
+      "family": "sv",
+      "title": "Professor Sada / Professor Turo",
+      "category": "other",
+      "order": 26,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ms3Qja133iA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-your-dorm-room",
+      "family": "sv",
+      "title": "Your Dorm Room",
+      "category": "other",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "J41h0iSmrgo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-trainers-eyes-meet-trainer",
+      "family": "sv",
+      "title": "Trainers' Eyes Meet (Trainer)",
+      "category": "battle",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ortQnJk09HM",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-trainer",
+      "family": "sv",
+      "title": "Battle! (Trainer)",
+      "category": "battle",
+      "order": 29,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "RfLad0IxzSU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "sv-victory-trainer",
+      "family": "sv",
+      "title": "Victory! (Trainer)",
+      "category": "battle",
+      "order": 30,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bokYCnBMAyA",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "sv-lets-make-a-sandwich",
+      "family": "sv",
+      "title": "Let's Make a Sandwich!",
+      "category": "other",
+      "order": 31,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "w65_zzhZFNY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-evolution",
+      "family": "sv",
+      "title": "Evolution",
+      "category": "event",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vdv5eEyTae8",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-and-victory-gym-leader",
+      "family": "sv",
+      "title": "Battle & Victory! (Gym Leader)",
+      "category": "other",
+      "order": 35,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QZTq2A2YL2I",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-west-province",
+      "family": "sv",
+      "title": "West Province",
+      "category": "route",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TSZXvGJOfug",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-west-province-wild-pokemon",
+      "family": "sv",
+      "title": "Battle! (West Province Wild Pokémon)",
+      "category": "battle",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YlGjQgfiDaY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-tera-raid-battle",
+      "family": "sv",
+      "title": "Tera Raid Battle",
+      "category": "other",
+      "order": 39,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YDtLEAbmSQE",
+          "startMs": 0,
+          "confidence": 0.96
+        },
+        {
+          "type": "stream",
+          "videoId": "wkj3ze0m4pA",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-victory-tera-raid-battle",
+      "family": "sv",
+      "title": "Victory! (Tera Raid Battle)",
+      "category": "battle",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BsswIQX0hzk",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "sv-cascarrafa",
+      "family": "sv",
+      "title": "Cascarrafa",
+      "category": "other",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "GWiZWMPVSFQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-titan",
+      "family": "sv",
+      "title": "Battle! (Titan)",
+      "category": "battle",
+      "order": 44,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nQLNJUesAgw",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "sv-a-stroll-through-the-west-province",
+      "family": "sv",
+      "title": "A Stroll through the West Province",
+      "category": "route",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_QRQhnG7lQs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-east-province",
+      "family": "sv",
+      "title": "East Province",
+      "category": "route",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tL3qAxo0Ck0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-east-province-wild-pokemon",
+      "family": "sv",
+      "title": "Battle! (East Province Wild Pokémon)",
+      "category": "battle",
+      "order": 51,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "slVgEEEr6lA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-artazon",
+      "family": "sv",
+      "title": "Artazon",
+      "category": "other",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UME0YmryGWI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-levincia",
+      "family": "sv",
+      "title": "Levincia",
+      "category": "other",
+      "order": 53,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5Z7nKhF_H6U",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-east-province-area-three",
+      "family": "sv",
+      "title": "East Province (Area Three)",
+      "category": "route",
+      "order": 55,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tL3qAxo0Ck0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-a-stroll-through-the-east-province",
+      "family": "sv",
+      "title": "A Stroll through the East Province",
+      "category": "route",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kQgnhQx4kf4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-star-barrage",
+      "family": "sv",
+      "title": "Star Barrage",
+      "category": "other",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SSx2bcSnvVo",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "sv-a-team-star-boss-appears",
+      "family": "sv",
+      "title": "A Team Star Boss Appears!",
+      "category": "event",
+      "order": 61,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SzuKv4QCBZ4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-team-star-boss",
+      "family": "sv",
+      "title": "Battle! (Team Star Boss)",
+      "category": "battle",
+      "order": 62,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MV2jrvIxxL4",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "sv-victory-team-star-boss",
+      "family": "sv",
+      "title": "Victory! (Team Star Boss)",
+      "category": "battle",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kpYnHy_FhiM",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "sv-montenevera",
+      "family": "sv",
+      "title": "Montenevera",
+      "category": "other",
+      "order": 67,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wGeX6xIYRG0",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-casseroya-lake",
+      "family": "sv",
+      "title": "Casseroya Lake",
+      "category": "other",
+      "order": 71,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wE29ZTtxRxA",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-alfornada",
+      "family": "sv",
+      "title": "Alfornada",
+      "category": "other",
+      "order": 74,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "uOtpUfPAtJI",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-the-pokemon-league",
+      "family": "sv",
+      "title": "The Pokémon League",
+      "category": "town",
+      "order": 77,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Dysp2itCC3I",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-elite-four",
+      "family": "sv",
+      "title": "Battle! (Elite Four)",
+      "category": "battle",
+      "order": 78,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HCbIOIUV-8c",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-champion-nemona",
+      "family": "sv",
+      "title": "Battle! (Champion Nemona)",
+      "category": "battle",
+      "order": 82,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8h8bJqg9-c8",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-director-clavell",
+      "family": "sv",
+      "title": "Battle! (Director Clavell)",
+      "category": "battle",
+      "order": 84,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HIKxX5fa6AM",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-clives-true-identity",
+      "family": "sv",
+      "title": "Clive's True Identity",
+      "category": "other",
+      "order": 85,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9NQLRIlgsk0",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-hasta-la-vistar",
+      "family": "sv",
+      "title": "Hasta la Vistar! ☆",
+      "category": "other",
+      "order": 87,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EMV0PC_Yk04",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-to-the-great-crater-of-paldea",
+      "family": "sv",
+      "title": "To the Great Crater of Paldea",
+      "category": "other",
+      "order": 90,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "z_8-8s_PvjQ",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-area-zero",
+      "family": "sv",
+      "title": "Area Zero",
+      "category": "other",
+      "order": 91,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "okWnbh4UqAg",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-mystery-gift",
+      "family": "sv",
+      "title": "Mystery Gift",
+      "category": "other",
+      "order": 107,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3Oky6YD4qEc",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-carmine",
+      "family": "sv",
+      "title": "Battle! (Carmine)",
+      "category": "battle",
+      "order": 113,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "cPks2kXuN0c",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-mossui-town",
+      "family": "sv",
+      "title": "Mossui Town",
+      "category": "town",
+      "order": 114,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "41mgqcaVPfU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-crystal-pool",
+      "family": "sv",
+      "title": "Crystal Pool",
+      "category": "other",
+      "order": 129,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gR6HgLF-7LU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-loyal-three",
+      "family": "sv",
+      "title": "Battle! (Loyal Three)",
+      "category": "battle",
+      "order": 133,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "y-onAMjxOWQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-ogerpon",
+      "family": "sv",
+      "title": "Battle! (Ogerpon)",
+      "category": "battle",
+      "order": 135,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "D60EM9alMBw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-blueberry-academy",
+      "family": "sv",
+      "title": "Blueberry Academy",
+      "category": "other",
+      "order": 140,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "n0Uii_u-kRQ",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "sv-terarium-savanna-biome",
+      "family": "sv",
+      "title": "Terarium (Savanna Biome)",
+      "category": "other",
+      "order": 143,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YcNd8sTEpvE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-terarium-coastal-biome",
+      "family": "sv",
+      "title": "Terarium (Coastal Biome)",
+      "category": "other",
+      "order": 145,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "n04vFniTA88",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-terarium-canyon-biome",
+      "family": "sv",
+      "title": "Terarium (Canyon Biome)",
+      "category": "other",
+      "order": 152,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6NED0guFulA",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-terarium-tera-pokemon",
+      "family": "sv",
+      "title": "Battle! (Terarium Tera Pokémon)",
+      "category": "battle",
+      "order": 153,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xhPE7M9Xz14",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-champion-kieran",
+      "family": "sv",
+      "title": "Battle! (Champion Kieran)",
+      "category": "battle",
+      "order": 161,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JdpAM-TMkJg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-area-zero-underdepths",
+      "family": "sv",
+      "title": "Area Zero Underdepths",
+      "category": "other",
+      "order": 164,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nV_jW08Ax0M",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "okWnbh4UqAg",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "sv-relic-song",
+      "family": "sv",
+      "title": "Relic Song",
+      "category": "other",
+      "order": 173,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "W_qkbqWd-O8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "sv-battle-pecharunt",
+      "family": "sv",
+      "title": "Battle! (Pecharunt)",
+      "category": "battle",
+      "order": 178,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tlkD-xHUQhc",
           "startMs": 0,
           "confidence": 1.0
         }

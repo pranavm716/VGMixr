@@ -132,6 +132,9 @@
       { "games": ["sword", "shield"], "playlist": "PLzXrrIvqJ7v7a7ZDWTkdMonVgwX3ZaV4a", "note": "The Crown Tundra" },
       { "games": ["brilliant-diamond", "shining-pearl"], "playlist": "PLRvV_E_y-grOlApuhXUBucApUo7A2ifbG" },
       { "games": ["pla"], "playlist": "PLDuK_JKMWsGj6Qj702A3b8q2TGU3hPXOR" },
+      { "games": ["scarlet", "violet"], "playlist": "PLzXrrIvqJ7v7CMnaH0hNFQQRFK_wZgIAu", "note": "Base game" },
+      { "games": ["scarlet", "violet"], "playlist": "PLP8odx5YHM7ZkxehseQjzdWy5-rgbvJwG", "note": "The Teal Mask" },
+      { "games": ["scarlet", "violet"], "playlist": "PLgyn_xiMXpwzKc-_Y6b4WEWsCgcBarJ6O", "note": "The Indigo Disk" },
       { "games": ["plza"], "playlist": "PL90nj2rNFfbcE2HR8S2TNT_h2DjM1nDGb" }
     ],
     "albums": [],
