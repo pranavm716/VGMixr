@@ -9,6 +9,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
+import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import kotlinx.coroutines.test.runTest
@@ -44,10 +45,12 @@ class FamilyViewModelTest {
     )
 
     private val repository = FakeCatalogRepository(catalog)
+    private val playback = FakePlaybackController()
 
     private fun viewModel(familyId: String) = FamilyViewModel(
         SavedStateHandle(mapOf("familyId" to familyId)),
         repository,
+        playback,
         main.dispatcher
     )
 
@@ -114,5 +117,12 @@ class FamilyViewModelTest {
 
             assertEquals(2, (awaitItem() as FamilyUiState.Loaded).trackCount)
         }
+    }
+
+    @Test
+    fun `tapping a track plays it`() {
+        viewModel("rse").onTrackClick("rse-b")
+
+        assertEquals(listOf(FakePlaybackController.Play(listOf("rse-b"), 0)), playback.calls)
     }
 }

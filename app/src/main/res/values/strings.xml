@@ -3,6 +3,9 @@
     <string name="games_empty">No games yet</string>
     <string name="family_not_found">This game isn\'t in the catalog</string>
     <string name="import_failed">Catalog update failed; showing the previous catalog</string>
+    <string name="playback_stopped_network">Playback stopped: no connection</string>
+    <string name="playback_stopped_bot_check">Playback stopped: YouTube asked to confirm you\'re not a bot. Try again later</string>
+    <string name="playback_stopped_extractor">Playback stopped: YouTube changed and the stream extractor needs an update</string>
 
     <plurals name="track_count">
         <item quantity="one">%d track</item>

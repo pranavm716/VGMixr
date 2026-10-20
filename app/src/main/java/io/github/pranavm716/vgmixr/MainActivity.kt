@@ -5,11 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toArgb
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.pranavm716.vgmixr.ui.AppScreen
 import io.github.pranavm716.vgmixr.ui.VGMixrApp
 import io.github.pranavm716.vgmixr.ui.family.FamilyTab
+import io.github.pranavm716.vgmixr.ui.messages.MessagesEffect
 import io.github.pranavm716.vgmixr.ui.theme.Background
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
@@ -21,9 +24,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge(statusBarStyle = bars, navigationBarStyle = bars)
         setContent {
             VGMixrTheme {
+                val snackbars = remember { SnackbarHostState() }
+                MessagesEffect(snackbars)
                 VGMixrApp(
                     screen = { destination, nav -> AppScreen(destination, nav) },
-                    familyScreen = { FamilyTab() }
+                    familyScreen = { FamilyTab() },
+                    snackbars = snackbars
                 )
             }
         }

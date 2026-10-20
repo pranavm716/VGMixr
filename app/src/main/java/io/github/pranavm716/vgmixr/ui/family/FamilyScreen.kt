@@ -43,12 +43,16 @@ private val LeadingGap = 16.dp
 @Composable
 fun FamilyTab(viewModel: FamilyViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    FamilyScreen(state)
+    FamilyScreen(state, onTrackClick = viewModel::onTrackClick)
 }
 
 /** A family's tracks, styled after Shuttle's album screen; the art tile stands in for "back". */
 @Composable
-fun FamilyScreen(state: FamilyUiState, modifier: Modifier = Modifier) {
+fun FamilyScreen(
+    state: FamilyUiState,
+    onTrackClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     when (state) {
         FamilyUiState.Loading -> Unit
 
@@ -57,8 +61,9 @@ fun FamilyScreen(state: FamilyUiState, modifier: Modifier = Modifier) {
         is FamilyUiState.Loaded -> Column(modifier.fillMaxSize()) {
             Header(state.name, state.trackCount)
             LazyColumn(Modifier.fillMaxSize()) {
-                // Played from in step 8; for now a tap only shows the ripple.
-                items(state.tracks, key = { it.id }) { TrackRow(it, onClick = {}) }
+                items(state.tracks, key = {
+                    it.id
+                }) { TrackRow(it, onClick = { onTrackClick(it.id) }) }
             }
         }
     }
@@ -153,7 +158,8 @@ private fun FamilyScreenPreview() {
                     TrackRowUi("b", 2, "Littleroot Town", emptyList()),
                     TrackRowUi("c", 10, "Battle! (Team Magma)", listOf(ruby))
                 )
-            )
+            ),
+            onTrackClick = {}
         )
     }
 }

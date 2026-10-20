@@ -9,6 +9,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.TrackFilter
 import io.github.pranavm716.vgmixr.domain.catalog.filter
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -35,6 +36,7 @@ data class TrackRowUi(val id: String, val number: Int, val title: String, val ch
 class FamilyViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     repository: CatalogRepository,
+    private val playback: PlaybackController,
     @DefaultDispatcher dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     // The FamilyRoute's argument, stored by type-safe navigation under its property name.
@@ -45,6 +47,8 @@ class FamilyViewModel @Inject constructor(
             .map { it.familyState(familyId) }
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FamilyUiState.Loading)
+
+    fun onTrackClick(trackId: String) = playback.play(listOf(trackId))
 }
 
 private fun Catalog.familyState(familyId: String): FamilyUiState {

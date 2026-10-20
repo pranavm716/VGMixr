@@ -13,8 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavBackStackEntry
@@ -39,7 +42,6 @@ import io.github.pranavm716.vgmixr.ui.navigation.Tab4Route
 import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
 import io.github.pranavm716.vgmixr.ui.navigation.VGMixrNavBar
 import io.github.pranavm716.vgmixr.ui.navigation.screenTag
-import io.github.pranavm716.vgmixr.ui.spike.SpikeScreen
 
 /** Draws a tab's root screen; the controller lets it open screens inside its tab. */
 typealias TabScreen = @Composable (TopLevelDestination, NavHostController) -> Unit
@@ -56,7 +58,8 @@ const val FAMILY_SCREEN_TAG = "screen-family"
 fun VGMixrApp(
     navController: NavHostController = rememberNavController(),
     screen: TabScreen = { destination, _ -> PlaceholderScreen(destination.label) },
-    familyScreen: @Composable () -> Unit = { PlaceholderScreen("Family") }
+    familyScreen: @Composable () -> Unit = { PlaceholderScreen("Family") },
+    snackbars: SnackbarHostState = remember { SnackbarHostState() }
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val selected = backStackEntry?.destination?.let { current ->
@@ -64,6 +67,7 @@ fun VGMixrApp(
     }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        snackbarHost = { SnackbarHost(snackbars) },
         bottomBar = {
             VGMixrNavBar(
                 selected = selected,
@@ -131,8 +135,6 @@ fun AppScreen(destination: TopLevelDestination, navController: NavHostController
     when (destination) {
         TopLevelDestination.GAMES ->
             GamesTab(onFamilyClick = { navController.navigate(FamilyRoute(it)) })
-
-        TopLevelDestination.TAB_2 -> SpikeScreen()
 
         else -> PlaceholderScreen(destination.label)
     }
