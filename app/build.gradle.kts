@@ -25,6 +25,9 @@ android {
 
     buildTypes {
         release {
+            // Sideloaded onto one phone only: the debug key lets release builds install like debug
+            // ones (and replace them without losing data).
+            signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
