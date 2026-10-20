@@ -46,6 +46,8 @@ android {
     }
     testOptions {
         unitTests.isIncludeAndroidResources = true
+        // Tests that ask YouTube for real run only with -Pvgmixr.live.
+        unitTests.all { it.systemProperty("vgmixr.live", project.hasProperty("vgmixr.live")) }
     }
     sourceSets {
         // Shared manifest fixtures, also loaded by the pipeline's tests.
