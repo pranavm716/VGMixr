@@ -4,7 +4,12 @@ import androidx.annotation.DrawableRes
 import io.github.pranavm716.vgmixr.R
 import kotlinx.serialization.Serializable
 
+/** The Games tab: the family list, and a family's tracks opened from it. */
+@Serializable data object GamesGraph
+
 @Serializable data object GamesRoute
+
+@Serializable data class FamilyRoute(val familyId: String)
 
 @Serializable data object Tab2Route
 
@@ -21,7 +26,7 @@ enum class TopLevelDestination(
     @param:DrawableRes val icon: Int,
     val route: Any
 ) {
-    GAMES("Games", R.drawable.ic_games, GamesRoute),
+    GAMES("Games", R.drawable.ic_games, GamesGraph),
     TAB_2("Tab 2", R.drawable.ic_tab_circle, Tab2Route),
     TAB_3("Tab 3", R.drawable.ic_tab_triangle, Tab3Route),
     TAB_4("Tab 4", R.drawable.ic_tab_square, Tab4Route);

@@ -36,10 +36,9 @@ import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
-fun GamesTab(viewModel: GamesViewModel = hiltViewModel()) {
+fun GamesTab(onFamilyClick: (String) -> Unit, viewModel: GamesViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    // Opening a family comes with its track screen; for now a tap only shows the ripple.
-    GamesScreen(state, onFamilyClick = {})
+    GamesScreen(state, onFamilyClick)
 }
 
 /** The Games tab: one row per family, styled after Shuttle's album list. */

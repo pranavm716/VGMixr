@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge(statusBarStyle = bars, navigationBarStyle = bars)
         setContent {
             VGMixrTheme {
-                VGMixrApp(screen = { AppScreen(it) })
+                VGMixrApp(screen = { destination, nav -> AppScreen(destination, nav) })
             }
         }
     }

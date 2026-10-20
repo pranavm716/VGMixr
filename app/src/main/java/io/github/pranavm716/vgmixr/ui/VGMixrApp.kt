@@ -17,8 +17,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import io.github.pranavm716.vgmixr.ui.family.FamilyTab
 import io.github.pranavm716.vgmixr.ui.games.GamesTab
+import io.github.pranavm716.vgmixr.ui.navigation.FamilyRoute
+import io.github.pranavm716.vgmixr.ui.navigation.GamesGraph
 import io.github.pranavm716.vgmixr.ui.navigation.GamesRoute
 import io.github.pranavm716.vgmixr.ui.navigation.Tab2Route
 import io.github.pranavm716.vgmixr.ui.navigation.Tab3Route
@@ -27,14 +31,17 @@ import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
 import io.github.pranavm716.vgmixr.ui.navigation.VGMixrNavBar
 import io.github.pranavm716.vgmixr.ui.navigation.screenTag
 
+/** Draws a tab's root screen; the controller lets it open screens inside its tab. */
+typealias TabScreen = @Composable (TopLevelDestination, NavHostController) -> Unit
+
 /**
- * The app shell: the tabs' screens above the navbar. [screen] draws a tab's content; it defaults
- * to placeholders so the shell runs without Hilt (tests), and MainActivity passes the real tabs.
+ * The app shell: the tabs' screens above the navbar. [screen] draws a tab's root; it defaults to
+ * placeholders so the shell runs without Hilt (tests), and MainActivity passes the real tabs.
  */
 @Composable
 fun VGMixrApp(
     navController: NavHostController = rememberNavController(),
-    screen: @Composable (TopLevelDestination) -> Unit = { PlaceholderScreen(it.label) }
+    screen: TabScreen = { destination, _ -> PlaceholderScreen(destination.label) }
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val selected = backStackEntry?.destination?.let { current ->
@@ -50,10 +57,13 @@ fun VGMixrApp(
             modifier = Modifier.padding(padding)
         ) {
             // One entry per tab; the bar's order comes from TopLevelDestination, not from here.
-            composable<GamesRoute> { Tab(TopLevelDestination.GAMES, screen) }
-            composable<Tab2Route> { Tab(TopLevelDestination.TAB_2, screen) }
-            composable<Tab3Route> { Tab(TopLevelDestination.TAB_3, screen) }
-            composable<Tab4Route> { Tab(TopLevelDestination.TAB_4, screen) }
+            navigation<GamesGraph>(startDestination = GamesRoute) {
+                composable<GamesRoute> { Tab(TopLevelDestination.GAMES, navController, screen) }
+                composable<FamilyRoute> { FamilyTab() }
+            }
+            composable<Tab2Route> { Tab(TopLevelDestination.TAB_2, navController, screen) }
+            composable<Tab3Route> { Tab(TopLevelDestination.TAB_3, navController, screen) }
+            composable<Tab4Route> { Tab(TopLevelDestination.TAB_4, navController, screen) }
         }
     }
 }
@@ -61,18 +71,21 @@ fun VGMixrApp(
 @Composable
 private fun Tab(
     destination: TopLevelDestination,
-    screen: @Composable (TopLevelDestination) -> Unit
+    navController: NavHostController,
+    screen: TabScreen
 ) {
     Box(Modifier.fillMaxSize().testTag(destination.screenTag)) {
-        screen(destination)
+        screen(destination, navController)
     }
 }
 
-/** The real content of each tab. */
+/** The real root screen of each tab. */
 @Composable
-fun AppScreen(destination: TopLevelDestination) {
+fun AppScreen(destination: TopLevelDestination, navController: NavHostController) {
     when (destination) {
-        TopLevelDestination.GAMES -> GamesTab()
+        TopLevelDestination.GAMES ->
+            GamesTab(onFamilyClick = { navController.navigate(FamilyRoute(it)) })
+
         else -> PlaceholderScreen(destination.label)
     }
 }
