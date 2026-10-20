@@ -1,8 +1,10 @@
 """Builds the draft catalog: Bulbapedia track rows plus hand overrides (docs/roadmap.md, step 16).
 
-Each Bulbapedia row is an occurrence of a title in a family. Occurrences with the same id
-(`<family>-<slug of title>`) are one track; overrides then merge, split, exclude, correct and add
-tracks. Every rule problem is collected and reported at once as a BuildError.
+Each Bulbapedia row is an occurrence of a title in a family. Occurrences with the same source key
+(`<family>-<slug of the source's title>`) are one track; overrides, keyed by it, then merge, split,
+exclude, correct and add tracks. A draft track's `id` is its source key; the manifest's id comes
+from its final title (step 19), so two kept tracks of a family may not share one. Every rule
+problem is collected and reported at once as a BuildError.
 """
 
 from collections.abc import Callable, Iterable
@@ -200,6 +202,7 @@ def build_tracks(
         else:
             _apply(track, override, family_games, errors)
             kept.append(track)
+    _check_catalog_ids(kept, errors)
     if errors:
         raise BuildError(errors)
     return BuildResult(_draft(kept, family_games, hand_order), excluded)
@@ -344,6 +347,18 @@ def _apply(
 def _check_games(id_: str, games: list[str], family: list[str], errors: list[str]) -> None:
     if not games or len(set(games)) != len(games) or not set(games) <= set(family):
         errors.append(f"{id_}: games {games} must be distinct games of its family {family}")
+
+
+def _check_catalog_ids(tracks: list[_Track], errors: list[str]) -> None:
+    """A track's catalog id (the manifest's) comes from its final title, so two kept tracks of a
+    family must not slug to the same one; excluded tracks never ship."""
+    by_id: dict[str, list[_Track]] = {}
+    for track in tracks:
+        by_id.setdefault(track_id(track.family, track.title), []).append(track)
+    for catalog_id, same in by_id.items():
+        if len(same) > 1:
+            names = " and ".join(f"{t.id} ({t.title!r})" for t in same)
+            errors.append(f"{names} both get catalog id {catalog_id}; give them distinct titles")
 
 
 def _check_order(

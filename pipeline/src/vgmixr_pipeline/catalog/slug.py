@@ -1,4 +1,5 @@
-"""Track ids: `<family>-<slug of title>`, frozen once published (docs/roadmap.md, step 16)."""
+"""Track ids: `<family>-<slug of title>`. Of the source's title, a source key (overrides, the review
+tool); of the final title, the catalog id the manifest ships (docs/roadmap.md, steps 16, 19)."""
 
 import re
 import unicodedata

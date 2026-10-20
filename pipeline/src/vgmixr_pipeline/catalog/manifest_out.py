@@ -1,7 +1,9 @@
-"""Writes catalog/manifest.json from the draft and its matches (docs/roadmap.md, step 17).
+"""Writes catalog/manifest.json from the draft and its matches (docs/roadmap.md, steps 17, 19).
 
-A track's own sources (local files, hand-written) come first, then its matched streams; a track
-left with no source is left out. The text is validated with the same parser the fixtures test, and
+A track's id is its catalog id, the family plus a slug of its final title; the draft's id is the
+source key, which only the pipeline sees (overrides, matches, the review tool). A track's own
+sources (local files, hand-written) come first, then its matched streams; a track left with no
+source is left out. The text is validated with the same parser the fixtures test, and
 only a valid manifest replaces the file. `generatedAt` is kept when nothing else changed, so a
 rerun neither shows a diff nor makes the app re-import.
 """
@@ -13,6 +15,7 @@ from typing import Any
 
 from vgmixr_pipeline.catalog.build import Draft
 from vgmixr_pipeline.catalog.match import Match
+from vgmixr_pipeline.catalog.slug import track_id
 from vgmixr_pipeline.manifest.models import Manifest, Track
 from vgmixr_pipeline.manifest.parse import SUPPORTED_SCHEMA_VERSION, Invalid, parse
 
@@ -25,7 +28,7 @@ def build_manifest(draft: Draft, matches: list[Match], generated_at: str) -> Man
         if sources:
             tracks.append(
                 Track(
-                    id=t.id,
+                    id=track_id(t.family, t.title),
                     family=t.family,
                     games=t.games,
                     title=t.title,

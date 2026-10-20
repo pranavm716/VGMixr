@@ -838,6 +838,15 @@ def test_a_bad_rename_is_refused(review: Review, tmp_path: Path, title: str, err
     assert path.read_bytes() == before
 
 
+def test_a_rename_to_another_tracks_catalog_id_is_refused(review: Review, tmp_path: Path) -> None:
+    path = tmp_path / "data" / "overrides.json"
+    before = path.read_bytes()
+    with pytest.raises(ReviewError) as raised:
+        review.rename("rse-littleroot-town", "Route-101!")
+    assert any("Route 101" in e for e in raised.value.errors), raised.value.errors
+    assert path.read_bytes() == before
+
+
 def test_a_note_is_written_shown_and_cleared(review: Review, tmp_path: Path) -> None:
     detail = review.set_note("rse-route-101", " Also plays\nin Emerald ")
     assert detail["note"] == "Also plays in Emerald"
