@@ -13,6 +13,8 @@ import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import io.github.pranavm716.vgmixr.ui.messages.UserMessage
+import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -47,11 +49,13 @@ class FamilyViewModelTest {
 
     private val repository = FakeCatalogRepository(catalog)
     private val playback = FakePlaybackController()
+    private val messages = UserMessages()
 
     private fun viewModel(familyId: String) = FamilyViewModel(
         SavedStateHandle(mapOf("familyId" to familyId)),
         repository,
         playback,
+        messages,
         main.dispatcher
     )
 
@@ -174,6 +178,16 @@ class FamilyViewModelTest {
                 PlayingRowUi("rse-a", index = 0, loading = true),
                 (awaitItem() as FamilyUiState.Loaded).playing
             )
+        }
+    }
+
+    @Test
+    fun `swiping a track queues it and says so`() = runTest {
+        messages.messages.test {
+            viewModel("rse").onQueueTrack("rse-c")
+
+            assertEquals(listOf(FakePlaybackController.AddToQueue(listOf("rse-c"))), playback.calls)
+            assertEquals(UserMessage.AddedToQueue(1), awaitItem())
         }
     }
 }

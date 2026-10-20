@@ -12,6 +12,8 @@ import io.github.pranavm716.vgmixr.domain.catalog.filter
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import io.github.pranavm716.vgmixr.ui.messages.UserMessage
+import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -49,6 +51,7 @@ class FamilyViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: CatalogRepository,
     private val playback: PlaybackController,
+    private val messages: UserMessages,
     @DefaultDispatcher dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     // The FamilyRoute's argument, stored by type-safe navigation under its property name.
@@ -68,6 +71,12 @@ class FamilyViewModel @Inject constructor(
             val index = ids.indexOf(trackId)
             if (index >= 0) playback.playFrom(ids, index)
         }
+    }
+
+    /** Adds one track to "Next in queue". */
+    fun onQueueTrack(trackId: String) {
+        playback.addToQueue(listOf(trackId))
+        messages.post(UserMessage.AddedToQueue(1))
     }
 }
 

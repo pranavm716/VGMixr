@@ -15,7 +15,8 @@ class MessagesViewModelTest {
     val main = MainDispatcherRule()
 
     private val playback = FakePlaybackController()
-    private val viewModel = MessagesViewModel(playback)
+    private val posted = UserMessages()
+    private val viewModel = MessagesViewModel(playback, posted)
 
     @Test
     fun `playback stopping by a failure shows why, once`() = runTest {
@@ -38,6 +39,15 @@ class MessagesViewModelTest {
             playback.state.value = PlaybackState(stoppedBy = ResolveFailure.BOT_CHECK)
 
             assertEquals(UserMessage.PlaybackStopped(ResolveFailure.BOT_CHECK), awaitItem())
+        }
+    }
+
+    @Test
+    fun `messages posted by screens show too`() = runTest {
+        viewModel.messages.test {
+            posted.post(UserMessage.AddedToQueue(107))
+
+            assertEquals(UserMessage.AddedToQueue(107), awaitItem())
         }
     }
 }

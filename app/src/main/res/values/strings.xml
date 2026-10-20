@@ -7,6 +7,13 @@
     <string name="playback_stopped_bot_check">Playback stopped: YouTube asked to confirm you\'re not a bot. Try again later</string>
     <string name="playback_stopped_extractor">Playback stopped: YouTube changed and the stream extractor needs an update</string>
 
+    <string name="add_to_queue">Add to queue</string>
+
+    <plurals name="added_to_queue">
+        <item quantity="one">Added to queue</item>
+        <item quantity="other">Added %d tracks to queue</item>
+    </plurals>
+
     <plurals name="track_count">
         <item quantity="one">%d track</item>
         <item quantity="other">%d tracks</item>

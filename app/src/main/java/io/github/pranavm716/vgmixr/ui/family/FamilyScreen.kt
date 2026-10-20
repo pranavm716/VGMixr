@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import kotlinx.coroutines.flow.first
@@ -56,7 +57,11 @@ private const val PLAYING_TINT = 0.12f
 @Composable
 fun FamilyTab(viewModel: FamilyViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    FamilyScreen(state, onTrackClick = viewModel::onTrackClick)
+    FamilyScreen(
+        state,
+        onTrackClick = viewModel::onTrackClick,
+        onQueueTrack = viewModel::onQueueTrack
+    )
 }
 
 /** A family's tracks, styled after Shuttle's album screen; the art tile stands in for "back". */
@@ -64,6 +69,7 @@ fun FamilyTab(viewModel: FamilyViewModel = hiltViewModel()) {
 fun FamilyScreen(
     state: FamilyUiState,
     onTrackClick: (String) -> Unit,
+    onQueueTrack: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -78,12 +84,14 @@ fun FamilyScreen(
             LazyColumn(Modifier.fillMaxSize(), state = listState) {
                 items(state.tracks, key = { it.id }) { track ->
                     val playing = state.playing?.takeIf { it.trackId == track.id }
-                    TrackRow(
-                        track,
-                        playing = playing != null,
-                        loading = playing?.loading == true,
-                        onClick = { onTrackClick(track.id) }
-                    )
+                    SwipeToQueue(onQueue = { onQueueTrack(track.id) }) {
+                        TrackRow(
+                            track,
+                            playing = playing != null,
+                            loading = playing?.loading == true,
+                            onClick = { onTrackClick(track.id) }
+                        )
+                    }
                 }
             }
         }
@@ -221,7 +229,8 @@ private fun FamilyScreenPreview() {
                 ),
                 playing = PlayingRowUi("b", index = 1, loading = true)
             ),
-            onTrackClick = {}
+            onTrackClick = {},
+            onQueueTrack = {}
         )
     }
 }

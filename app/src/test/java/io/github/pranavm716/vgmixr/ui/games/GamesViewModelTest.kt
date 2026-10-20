@@ -10,7 +10,10 @@ import io.github.pranavm716.vgmixr.domain.catalog.ImportError
 import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakeCatalogSync
+import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
+import io.github.pranavm716.vgmixr.ui.messages.UserMessage
+import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import java.time.Instant
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.runTest
@@ -36,8 +39,10 @@ class GamesViewModelTest {
 
     private val repository = FakeCatalogRepository(catalog)
     private val sync = FakeCatalogSync()
+    private val playback = FakePlaybackController()
+    private val messages = UserMessages()
 
-    private fun viewModel() = GamesViewModel(repository, sync, main.dispatcher)
+    private fun viewModel() = GamesViewModel(repository, sync, playback, messages, main.dispatcher)
 
     private fun loaded(vararg families: FamilySummary, importFailed: Boolean = false) =
         GamesUiState.Loaded(families.toList(), importFailed)
@@ -57,7 +62,7 @@ class GamesViewModelTest {
         val pending = object : io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository {
             override val catalog = MutableSharedFlow<Catalog>()
         }
-        GamesViewModel(pending, sync, main.dispatcher).uiState.test {
+        GamesViewModel(pending, sync, playback, messages, main.dispatcher).uiState.test {
             assertEquals(GamesUiState.Loading, awaitItem())
             pending.catalog.emit(Catalog(emptyList(), emptyList(), emptyList()))
             assertEquals(loaded(), awaitItem())
@@ -93,6 +98,19 @@ class GamesViewModelTest {
 
             sync.status.value = CatalogImportResult.Imported(Instant.EPOCH)
             expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `swiping a family queues all its tracks in family order and says how many`() = runTest {
+        messages.messages.test {
+            viewModel().onQueueFamily("rse")
+
+            assertEquals(
+                listOf(FakePlaybackController.AddToQueue(listOf("rse-a", "rse-b"))),
+                playback.calls
+            )
+            assertEquals(UserMessage.AddedToQueue(2), awaitItem())
         }
     }
 }

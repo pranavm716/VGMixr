@@ -8,15 +8,22 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogImportResult
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogSync
 import io.github.pranavm716.vgmixr.domain.catalog.FamilySummary
+import io.github.pranavm716.vgmixr.domain.catalog.TrackFilter
 import io.github.pranavm716.vgmixr.domain.catalog.familySummaries
+import io.github.pranavm716.vgmixr.domain.catalog.filter
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
+import io.github.pranavm716.vgmixr.ui.messages.UserMessage
+import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 sealed interface GamesUiState {
     data object Loading : GamesUiState
@@ -27,8 +34,10 @@ sealed interface GamesUiState {
 
 @HiltViewModel
 class GamesViewModel @Inject constructor(
-    repository: CatalogRepository,
+    private val repository: CatalogRepository,
     sync: CatalogSync,
+    private val playback: PlaybackController,
+    private val messages: UserMessages,
     @DefaultDispatcher dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     val uiState: StateFlow<GamesUiState> =
@@ -37,4 +46,16 @@ class GamesViewModel @Inject constructor(
             sync.status.map { it is CatalogImportResult.Failed }
         ) { families, importFailed -> GamesUiState.Loaded(families, importFailed) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GamesUiState.Loading)
+
+    /** Adds all of a family's tracks, in family order, to "Next in queue". */
+    fun onQueueFamily(familyId: String) {
+        viewModelScope.launch {
+            val ids = repository.catalog.first().filter(TrackFilter(family = familyId)).map {
+                it.id
+            }
+            if (ids.isEmpty()) return@launch
+            playback.addToQueue(ids)
+            messages.post(UserMessage.AddedToQueue(ids.size))
+        }
+    }
 }
