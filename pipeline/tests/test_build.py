@@ -355,7 +355,9 @@ def test_an_unlisted_track_goes_after_its_listed_predecessor() -> None:
     overrides = Overrides(
         tracks={
             "rby-title-screen": TrackOverride(
-                split={"rby-title-screen-yellow": Split(games=["yellow"])}
+                split={
+                    "rby-title-screen-yellow": Split(games=["yellow"], title="Title Screen (Yellow)")
+                }
             )
         }
     )
@@ -394,3 +396,33 @@ def test_an_order_naming_no_track_of_its_family_is_an_error(
 def test_an_order_lists_each_track_once() -> None:
     with pytest.raises(ValueError, match="twice"):
         TrackOrder({"rby": ["rby-route-1", "rby-route-1"]})
+
+
+def test_a_title_override_that_collides_with_another_title_is_an_error() -> None:
+    overrides = Overrides(tracks={"rby-route-2": TrackOverride(title="Route 1")})
+    with pytest.raises(BuildError) as raised:
+        build([occ("Route 1"), occ("Route 2")], overrides)
+    [error] = raised.value.errors
+    assert "rby-route-1" in error and "rby-route-2" in error
+
+
+def test_a_split_that_collides_with_another_title_is_an_error() -> None:
+    split = Split(games=["yellow"], title="Title Screen (Yellow)")
+    overrides = Overrides(
+        tracks={"rby-title-screen": TrackOverride(split={"rby-title-screen-y": split})}
+    )
+    occurrences = [occ("Title Screen", RB), occ("Title Screen", Y), occ("Title Screen (Yellow)")]
+    with pytest.raises(BuildError) as raised:
+        build(occurrences, overrides)
+    [error] = raised.value.errors
+    assert "rby-title-screen-y " in error and "rby-title-screen-yellow " in error
+
+
+def test_an_excluded_track_never_collides() -> None:
+    overrides = Overrides(
+        tracks={
+            "rby-route-1": TrackOverride(exclude=True),
+            "rby-route-2": TrackOverride(title="Route 1"),
+        }
+    )
+    assert ids(build([occ("Route 1"), occ("Route 2")], overrides)) == ["rby-route-2"]
