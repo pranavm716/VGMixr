@@ -3,7 +3,6 @@ package io.github.pranavm716.vgmixr.playback
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
@@ -22,9 +21,11 @@ import com.google.common.util.concurrent.SettableFuture
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.pranavm716.vgmixr.MainActivity
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
+import io.github.pranavm716.vgmixr.data.stream.describe
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.playback.FailoverAction
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
 import io.github.pranavm716.vgmixr.domain.playback.SourceFailure
@@ -56,6 +57,9 @@ class PlaybackService : MediaSessionService() {
     @Inject
     lateinit var resolver: CachingStreamResolver
 
+    @Inject
+    lateinit var diagnostics: PlaybackDiagnostics
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val catalog = MutableStateFlow<Catalog?>(null)
     private var session: MediaSession? = null
@@ -65,7 +69,7 @@ class PlaybackService : MediaSessionService() {
         scope.launch { catalogRepository.catalog.collect { catalog.value = it } }
 
         val http = DefaultHttpDataSource.Factory().setAllowCrossProtocolRedirects(true)
-        val streams = ResolvingDataSource.Factory(http, StreamUriResolver(resolver))
+        val streams = ResolvingDataSource.Factory(http, StreamUriResolver(resolver, diagnostics))
         val player = ExoPlayer.Builder(this)
             .setMediaSourceFactory(DefaultMediaSourceFactory(streams))
             .setAudioAttributes(
@@ -125,6 +129,19 @@ class PlaybackService : MediaSessionService() {
 
     private inner class Failover(private val player: Player, private val session: MediaSession) :
         Player.Listener {
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            val why = when (reason) {
+                Player.MEDIA_ITEM_TRANSITION_REASON_AUTO -> "previous ended"
+                Player.MEDIA_ITEM_TRANSITION_REASON_SEEK -> "seek or skip"
+                Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED -> "queue changed"
+                else -> "repeat"
+            }
+            diagnostics.log(
+                "now ${mediaItem?.mediaId} source ${mediaItem?.sourceIndex} " +
+                    "(#${player.currentMediaItemIndex} of ${player.mediaItemCount}, $why)"
+            )
+        }
+
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             if (isPlaying) session.setStoppedBy(null)
         }
@@ -133,11 +150,15 @@ class PlaybackService : MediaSessionService() {
             val item = player.currentMediaItem ?: return
             val catalog = catalog.value ?: return
             val failure = error.sourceFailure()
-            Log.w(TAG, "${item.mediaId} source ${item.sourceIndex}: $failure", error)
             if (failure == SourceFailure.ThisSource) item.videoId?.let(resolver::forget)
             val track = catalog.tracks.firstOrNull { it.id == item.mediaId }
             val sourceCount = track?.let { playableStreams(it.sources).size } ?: 0
-            when (val action = failover(failure, item.sourceIndex, sourceCount)) {
+            val action = failover(failure, item.sourceIndex, sourceCount)
+            diagnostics.log(
+                "error ${item.mediaId} source ${item.sourceIndex}/$sourceCount: " +
+                    "${error.errorCodeName} ${error.describe()} -> $failure, $action"
+            )
+            when (action) {
                 is FailoverAction.TrySource -> {
                     val next = catalog.itemFor(item.mediaId, action.index, item.isQueued)
                     player.replaceMediaItem(player.currentMediaItemIndex, next)
@@ -154,10 +175,6 @@ class PlaybackService : MediaSessionService() {
                 is FailoverAction.Stop -> session.setStoppedBy(action.failure)
             }
         }
-    }
-
-    private companion object {
-        const val TAG = "PlaybackService"
     }
 }
 

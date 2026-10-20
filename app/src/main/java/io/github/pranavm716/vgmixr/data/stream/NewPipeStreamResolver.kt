@@ -1,6 +1,7 @@
 package io.github.pranavm716.vgmixr.data.stream
 
 import io.github.pranavm716.vgmixr.di.IoDispatcher
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
 import io.github.pranavm716.vgmixr.domain.playback.StreamResolution
 import io.github.pranavm716.vgmixr.domain.playback.StreamResolver
@@ -19,19 +20,28 @@ import org.schabi.newpipe.extractor.exceptions.SignInConfirmNotBotException
 import org.schabi.newpipe.extractor.stream.StreamInfo
 
 @Singleton
-class NewPipeStreamResolver @Inject constructor(@IoDispatcher private val io: CoroutineDispatcher) :
-    StreamResolver {
+class NewPipeStreamResolver @Inject constructor(
+    @IoDispatcher private val io: CoroutineDispatcher,
+    private val diagnostics: PlaybackDiagnostics = PlaybackDiagnostics.NONE
+) : StreamResolver {
     init {
         NewPipe.init(OkHttpDownloader(youTubeClient()))
     }
 
     override suspend fun resolve(videoId: String): StreamResolution = withContext(io) {
+        val start = System.nanoTime()
         try {
             val info = StreamInfo.getInfo(ServiceList.YouTube, "$WATCH_URL$videoId")
             val stream = pickAudioStream(info.audioStreams)
+            val ms = (System.nanoTime() - start) / 1_000_000
             if (stream == null) {
+                diagnostics.log("resolve $videoId: no playable audio stream (${ms}ms)")
                 StreamResolution.Unavailable("no playable audio stream")
             } else {
+                diagnostics.log(
+                    "resolve $videoId: ${stream.format?.mimeType} ${stream.averageBitrate}kbps " +
+                        "(${ms}ms)"
+                )
                 StreamResolution.Resolved(
                     stream.content,
                     // Never null: the picker keeps only known formats.
@@ -42,7 +52,7 @@ class NewPipeStreamResolver @Inject constructor(@IoDispatcher private val io: Co
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            toResolution(e)
+            toResolution(e).also { diagnostics.log("resolve $videoId: $it from ${e.describe()}") }
         }
     }
 
@@ -63,3 +73,8 @@ fun toResolution(e: Exception): StreamResolution = when (e) {
 
     else -> StreamResolution.Failed(ResolveFailure.EXTRACTOR)
 }
+
+/** An exception and its causes, one line each joined by " <- ", for the diagnostics log. */
+fun Throwable.describe(): String = generateSequence(this) { it.cause }
+    .take(5)
+    .joinToString(" <- ") { "${it.javaClass.simpleName}: ${it.message}" }
