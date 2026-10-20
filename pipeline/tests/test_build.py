@@ -352,14 +352,9 @@ def test_without_a_hand_order_order_is_the_list_order() -> None:
 
 
 def test_an_unlisted_track_goes_after_its_listed_predecessor() -> None:
+    split = Split(games=["yellow"], title="Title Screen (Yellow)")
     overrides = Overrides(
-        tracks={
-            "rby-title-screen": TrackOverride(
-                split={
-                    "rby-title-screen-yellow": Split(games=["yellow"], title="Title Screen (Yellow)")
-                }
-            )
-        }
+        tracks={"rby-title-screen": TrackOverride(split={"rby-title-screen-yellow": split})}
     )
     occurrences = [occ("Title Screen", RB), occ("Route 1"), occ("Title Screen", Y)]
     result = ordered_build(occurrences, {"rby": ["rby-route-1", "rby-title-screen"]}, overrides)

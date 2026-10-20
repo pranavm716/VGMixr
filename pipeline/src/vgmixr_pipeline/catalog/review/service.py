@@ -21,6 +21,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
+from vgmixr_pipeline.catalog import slug
 from vgmixr_pipeline.catalog.build import Draft, DraftTrack
 from vgmixr_pipeline.catalog.config import (
     Playlist,
@@ -308,9 +309,11 @@ class Review:
             raise ReviewError(["a title can't be empty"])
         if title == track.title:
             raise ReviewError([f"the track is already titled {title!r}"])
+        # Titles that slug alike would give both tracks one catalog id, which fails the build.
+        catalog_id = slug.track_id(track.family, title)
         for other in self._draft.tracks:
             if other.family == track.family and other.id != track_id:
-                if other.title.casefold() == title.casefold():
+                if slug.track_id(other.family, other.title) == catalog_id:
                     raise ReviewError([f"{other.id} is already titled {other.title!r}"])
         decision = self._decision(track_id)
         pinned = [Slice(videoId=s.videoId, startMs=s.startMs, endMs=s.endMs)

@@ -1,8 +1,9 @@
 """Writes catalog/manifest.json from the draft and its matches (docs/roadmap.md, steps 17, 19).
 
 A track's id is its catalog id, the family plus a slug of its final title; the draft's id is the
-source key, which only the pipeline sees (overrides, matches, the review tool). A track's own sources (local files, hand-written) come first, then its matched streams; a track
-left with no source is left out. The text is validated with the same parser the fixtures test, and
+source key, which only the pipeline sees (overrides, matches, the review tool). A track's own
+sources (local files, hand-written) come first, then its matched streams; a track left with no
+source is left out. The text is validated with the same parser the fixtures test, and
 only a valid manifest replaces the file. `generatedAt` is kept when nothing else changed, so a
 rerun neither shows a diff nor makes the app re-import.
 """
