@@ -21,7 +21,8 @@ TONE = LocalSource(type="local", path="dev/test-tone.wav")
 
 
 def track(id_: str, family: str = "rse", sources: list[Any] | None = None, **kw: Any) -> DraftTrack:
-    fields: dict[str, Any] = {"games": None, "title": id_, "category": "route", "order": 0,
+    fields: dict[str, Any] = {"games": None, "title": id_.removeprefix(family + "-"),
+                              "category": "route", "order": 0,
                               "durationMs": 60_000, "origins": ["page / Disc 1 #1"]}  # fmt: skip
     return DraftTrack(id=id_, family=family, sources=sources or [], **(fields | kw))
 
@@ -68,6 +69,13 @@ def test_unmatched_tracks_are_left_out_and_hand_sources_kept() -> None:
     manifest = build_manifest(DRAFT, MATCHES, "2026-10-16T10:00:00Z")
     assert [t.id for t in manifest.tracks] == ["rse-route-101", "dev-test-tone"]
     assert manifest.tracks[1].sources == [TONE]
+
+
+def test_a_manifest_id_comes_from_the_final_title() -> None:
+    t = track("dppt-canalave-city", family="dppt", title="Canalave City (Day)")
+    draft = DRAFT.model_copy(update={"tracks": [t]})
+    manifest = build_manifest(draft, [match(t, stream("aaaaaaaaaaa"))], "2026-10-16T10:00:00Z")
+    assert [x.id for x in manifest.tracks] == ["dppt-canalave-city-day"]
 
 
 def test_local_sources_stay_in_front_of_streams() -> None:
