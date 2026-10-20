@@ -121,10 +121,13 @@ class FamilyViewModelTest {
     }
 
     @Test
-    fun `tapping a track plays it`() {
+    fun `tapping a track plays the family's list from it`() {
         viewModel("rse").onTrackClick("rse-b")
 
-        assertEquals(listOf(FakePlaybackController.Play(listOf("rse-b"), 0)), playback.calls)
+        assertEquals(
+            listOf(FakePlaybackController.PlayFrom(listOf("rse-a", "rse-b", "rse-c"), 1)),
+            playback.calls
+        )
     }
 
     @Test

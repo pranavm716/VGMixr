@@ -6,16 +6,20 @@ import kotlinx.coroutines.flow.StateFlow
 interface PlaybackController {
     val state: StateFlow<PlaybackState>
 
-    /** Replaces the queue with [trackIds] and plays from [startIndex]. */
-    fun play(trackIds: List<String>, startIndex: Int = 0)
+    /** Plays track [index] of [trackIds] (a tapped list); the user's queue plays after it. */
+    fun playFrom(trackIds: List<String>, index: Int)
+
+    /** Adds [trackIds] to the end of the user's queue ("Next in queue"). */
+    fun addToQueue(trackIds: List<String>)
 }
 
 /**
- * [trackId] is the current track, playing or paused. [isLoading] is true while it is about to play
+ * [queue] is the player's queue. [trackId] is the current track, playing or paused. [isLoading] is true while it is about to play
  * but waits for its stream. [stoppedBy] is set when a failure that affects every track stopped
  * playback.
  */
 data class PlaybackState(
+    val queue: PlayQueue = PlayQueue.EMPTY,
     val trackId: String? = null,
     val isPlaying: Boolean = false,
     val isLoading: Boolean = false,

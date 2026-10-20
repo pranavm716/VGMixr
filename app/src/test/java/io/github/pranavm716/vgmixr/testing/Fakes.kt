@@ -18,12 +18,18 @@ class FakeCatalogSync(initial: CatalogImportResult? = null) : CatalogSync {
 }
 
 class FakePlaybackController : PlaybackController {
-    data class Play(val trackIds: List<String>, val startIndex: Int)
+    data class PlayFrom(val trackIds: List<String>, val index: Int)
+
+    data class AddToQueue(val trackIds: List<String>)
 
     override val state = MutableStateFlow(PlaybackState())
     val calls = mutableListOf<Any>()
 
-    override fun play(trackIds: List<String>, startIndex: Int) {
-        calls += Play(trackIds, startIndex)
+    override fun playFrom(trackIds: List<String>, index: Int) {
+        calls += PlayFrom(trackIds, index)
+    }
+
+    override fun addToQueue(trackIds: List<String>) {
+        calls += AddToQueue(trackIds)
     }
 }

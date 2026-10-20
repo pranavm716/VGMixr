@@ -17,9 +17,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 sealed interface FamilyUiState {
     data object Loading : FamilyUiState
@@ -45,7 +47,7 @@ data class TrackRowUi(val id: String, val number: Int, val title: String, val ch
 @HiltViewModel
 class FamilyViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    repository: CatalogRepository,
+    private val repository: CatalogRepository,
     private val playback: PlaybackController,
     @DefaultDispatcher dispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -59,7 +61,14 @@ class FamilyViewModel @Inject constructor(
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FamilyUiState.Loading)
 
-    fun onTrackClick(trackId: String) = playback.play(listOf(trackId))
+    /** Plays the family's list from the tapped track, as shown. */
+    fun onTrackClick(trackId: String) {
+        viewModelScope.launch {
+            val ids = repository.catalog.first().familyTrackIds(familyId)
+            val index = ids.indexOf(trackId)
+            if (index >= 0) playback.playFrom(ids, index)
+        }
+    }
 }
 
 private fun FamilyUiState.withPlaying(playback: PlaybackState): FamilyUiState {
@@ -72,6 +81,9 @@ private fun FamilyUiState.withPlaying(playback: PlaybackState): FamilyUiState {
     }
     return copy(playing = playing)
 }
+
+private fun Catalog.familyTrackIds(familyId: String): List<String> =
+    filter(TrackFilter(family = familyId)).map { it.id }
 
 private fun Catalog.familyState(familyId: String): FamilyUiState {
     val family = families.firstOrNull { it.id == familyId } ?: return FamilyUiState.NotFound
