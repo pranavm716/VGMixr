@@ -39,6 +39,7 @@ import io.github.pranavm716.vgmixr.ui.navigation.Tab4Route
 import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
 import io.github.pranavm716.vgmixr.ui.navigation.VGMixrNavBar
 import io.github.pranavm716.vgmixr.ui.navigation.screenTag
+import io.github.pranavm716.vgmixr.ui.spike.SpikeScreen
 
 /** Draws a tab's root screen; the controller lets it open screens inside its tab. */
 typealias TabScreen = @Composable (TopLevelDestination, NavHostController) -> Unit
@@ -130,6 +131,8 @@ fun AppScreen(destination: TopLevelDestination, navController: NavHostController
     when (destination) {
         TopLevelDestination.GAMES ->
             GamesTab(onFamilyClick = { navController.navigate(FamilyRoute(it)) })
+
+        TopLevelDestination.TAB_2 -> SpikeScreen()
 
         else -> PlaceholderScreen(destination.label)
     }
