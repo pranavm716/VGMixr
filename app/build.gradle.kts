@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.newpipe.extractor)
+    implementation(libs.okhttp)
     implementation(libs.kotlinx.serialization.json)
     coreLibraryDesugaring(libs.desugar.jdk.libs.nio)
     ksp(libs.androidx.room.compiler)

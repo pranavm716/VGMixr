@@ -22,7 +22,7 @@ import org.schabi.newpipe.extractor.stream.StreamInfo
 class NewPipeStreamResolver @Inject constructor(@IoDispatcher private val io: CoroutineDispatcher) :
     StreamResolver {
     init {
-        NewPipe.init(HttpUrlConnectionDownloader())
+        NewPipe.init(OkHttpDownloader(youTubeClient()))
     }
 
     override suspend fun resolve(videoId: String): StreamResolution = withContext(io) {

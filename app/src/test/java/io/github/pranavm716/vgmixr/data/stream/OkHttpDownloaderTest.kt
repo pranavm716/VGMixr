@@ -3,6 +3,7 @@ package io.github.pranavm716.vgmixr.data.stream
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpServer
 import java.net.InetSocketAddress
+import okhttp3.OkHttpClient
 import org.junit.After
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
@@ -12,7 +13,7 @@ import org.junit.Test
 import org.schabi.newpipe.extractor.downloader.Request
 import org.schabi.newpipe.extractor.exceptions.ReCaptchaException
 
-class HttpUrlConnectionDownloaderTest {
+class OkHttpDownloaderTest {
     private lateinit var server: HttpServer
     private var received: Received? = null
     private var reply: (HttpExchange) -> Unit = { it.respond(200, "ok") }
@@ -23,7 +24,7 @@ class HttpUrlConnectionDownloaderTest {
         val body: ByteArray
     )
 
-    private val downloader = HttpUrlConnectionDownloader()
+    private val downloader = OkHttpDownloader(OkHttpClient())
     private val url get() = "http://127.0.0.1:${server.address.port}/path"
 
     @Before
