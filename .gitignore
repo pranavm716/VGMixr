@@ -84,6 +84,8 @@ roms/
 
 # Pipeline (Python)
 pipeline/out/
+# Cover sources, cropped by hand; only catalog/covers/ is committed
+pipeline/covers-in/
 __pycache__/
 *.pyc
 .venv/
