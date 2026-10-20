@@ -41,9 +41,9 @@ private val Threshold = IconInset + IconSize + IconInset
 
 /**
  * Swipe right on [content] to add it to the queue, as Spotify's "Add to queue". The row uncovers
- * the accent with a queue icon; once it has moved [Threshold], it calls [onQueue] (with a haptic
- * tick) and stops there, and on release it springs straight back. Also offered as an accessibility
- * action.
+ * the accent with a queue icon and stops once it has moved [Threshold], with a haptic tick.
+ * Letting go there calls [onQueue]; letting go short of it (or after dragging back) doesn't. Either
+ * way the row springs straight back. Also offered as an accessibility action.
  */
 @Composable
 fun SwipeToQueue(
@@ -54,14 +54,14 @@ fun SwipeToQueue(
     val thresholdPx = with(LocalDensity.current) { Threshold.toPx() }
     val haptics = LocalHapticFeedback.current
     var offset by remember { mutableFloatStateOf(0f) }
-    var queued by remember { mutableStateOf(false) }
+    var armed by remember { mutableStateOf(false) }
     val drag = rememberDraggableState { delta ->
         offset = (offset + delta).coerceIn(0f, thresholdPx)
-        if (!queued && offset >= thresholdPx) {
-            queued = true
+        val reached = offset >= thresholdPx
+        if (reached && !armed) {
             haptics.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
-            onQueue()
         }
+        armed = reached
     }
     val label = stringResource(R.string.add_to_queue)
     Box(
@@ -94,8 +94,11 @@ fun SwipeToQueue(
                 .draggable(
                     state = drag,
                     orientation = Orientation.Horizontal,
-                    onDragStarted = { queued = false },
-                    onDragStopped = { animate(offset, 0f) { value, _ -> offset = value } }
+                    onDragStopped = {
+                        if (armed) onQueue()
+                        armed = false
+                        animate(offset, 0f) { value, _ -> offset = value }
+                    }
                 )
                 .background(MaterialTheme.colorScheme.background)
         ) { content() }
