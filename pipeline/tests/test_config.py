@@ -80,7 +80,7 @@ def test_one_track_has_a_local_file_for_playback_development(overrides: Override
 
 def test_usum_extras_are_ultra_only(overrides: Overrides) -> None:
     usum = [e for e in overrides.extras if e.family == "sm"]
-    assert len(usum) == 52
+    assert len(usum) == 53
     for extra in usum:
         assert extra.games and set(extra.games) <= {"ultra-sun", "ultra-moon"}, extra
 
