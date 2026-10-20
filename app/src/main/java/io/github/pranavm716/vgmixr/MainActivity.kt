@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.toArgb
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.pranavm716.vgmixr.ui.AppScreen
 import io.github.pranavm716.vgmixr.ui.VGMixrApp
+import io.github.pranavm716.vgmixr.ui.family.FamilyTab
 import io.github.pranavm716.vgmixr.ui.theme.Background
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
@@ -20,7 +21,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge(statusBarStyle = bars, navigationBarStyle = bars)
         setContent {
             VGMixrTheme {
-                VGMixrApp(screen = { destination, nav -> AppScreen(destination, nav) })
+                VGMixrApp(
+                    screen = { destination, nav -> AppScreen(destination, nav) },
+                    familyScreen = { FamilyTab() }
+                )
             }
         }
     }
