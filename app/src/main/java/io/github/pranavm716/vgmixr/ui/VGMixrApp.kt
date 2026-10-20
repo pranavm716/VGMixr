@@ -1,0 +1,184 @@
+package io.github.pranavm716.vgmixr.ui
+
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
+import androidx.navigation.compose.rememberNavController
+import io.github.pranavm716.vgmixr.ui.games.GamesTab
+import io.github.pranavm716.vgmixr.ui.navigation.FamilyRoute
+import io.github.pranavm716.vgmixr.ui.navigation.GamesGraph
+import io.github.pranavm716.vgmixr.ui.navigation.GamesRoute
+import io.github.pranavm716.vgmixr.ui.navigation.Tab2Route
+import io.github.pranavm716.vgmixr.ui.navigation.Tab3Route
+import io.github.pranavm716.vgmixr.ui.navigation.Tab4Route
+import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
+import io.github.pranavm716.vgmixr.ui.navigation.VGMixrNavBar
+import io.github.pranavm716.vgmixr.ui.navigation.screenTag
+
+/** Draws a tab's root screen; the controller lets it open screens inside its tab. */
+typealias TabScreen = @Composable (TopLevelDestination, NavHostController) -> Unit
+
+/** Test tag of the family track screen. */
+const val FAMILY_SCREEN_TAG = "screen-family"
+
+/**
+ * The app shell: the tabs' screens above the navbar. [screen] draws a tab's root and
+ * [familyScreen] a family's tracks; both default to placeholders so the shell runs without Hilt
+ * (tests), and MainActivity passes the real screens.
+ */
+@Composable
+fun VGMixrApp(
+    navController: NavHostController = rememberNavController(),
+    screen: TabScreen = { destination, _ -> PlaceholderScreen(destination.label) },
+    familyScreen: @Composable () -> Unit = { PlaceholderScreen("Family") }
+) {
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val selected = backStackEntry?.destination?.let { current ->
+        TopLevelDestination.entries.firstOrNull { current.isIn(it) }
+    }
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            VGMixrNavBar(
+                selected = selected,
+                onSelect = { tab ->
+                    if (tab ==
+                        selected
+                    ) {
+                        navController.popToRoot(tab)
+                    } else {
+                        navController.navigateTo(tab)
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        NavHost(
+            navController = navController,
+            startDestination = TopLevelDestination.start.route,
+            modifier = Modifier.padding(padding),
+            enterTransition = { if (withinTab()) slideIn(SlideDirection.Start) else tabFadeIn },
+            exitTransition = {
+                if (withinTab()) slideOut(SlideDirection.Start, parallax = true) else tabFadeOut
+            },
+            popEnterTransition = {
+                if (withinTab()) slideIn(SlideDirection.End, parallax = true) else tabFadeIn
+            },
+            popExitTransition = { if (withinTab()) slideOut(SlideDirection.End) else tabFadeOut },
+            // The back gesture plays its own pair (by default the leaving screen shrinks and
+            // fades); use the same slide, which then follows the finger.
+            predictivePopEnterTransition = {
+                if (withinTab()) slideIn(SlideDirection.End, parallax = true) else tabFadeIn
+            },
+            predictivePopExitTransition = {
+                if (withinTab()) slideOut(SlideDirection.End) else tabFadeOut
+            }
+        ) {
+            // One entry per tab; the bar's order comes from TopLevelDestination, not from here.
+            navigation<GamesGraph>(startDestination = GamesRoute) {
+                composable<GamesRoute> { Tab(TopLevelDestination.GAMES, navController, screen) }
+                composable<FamilyRoute> {
+                    Box(Modifier.screen().testTag(FAMILY_SCREEN_TAG)) { familyScreen() }
+                }
+            }
+            composable<Tab2Route> { Tab(TopLevelDestination.TAB_2, navController, screen) }
+            composable<Tab3Route> { Tab(TopLevelDestination.TAB_3, navController, screen) }
+            composable<Tab4Route> { Tab(TopLevelDestination.TAB_4, navController, screen) }
+        }
+    }
+}
+
+@Composable
+private fun Tab(
+    destination: TopLevelDestination,
+    navController: NavHostController,
+    screen: TabScreen
+) {
+    Box(Modifier.screen().testTag(destination.screenTag)) {
+        screen(destination, navController)
+    }
+}
+
+/** The real root screen of each tab. */
+@Composable
+fun AppScreen(destination: TopLevelDestination, navController: NavHostController) {
+    when (destination) {
+        TopLevelDestination.GAMES ->
+            GamesTab(onFamilyClick = { navController.navigate(FamilyRoute(it)) })
+
+        else -> PlaceholderScreen(destination.label)
+    }
+}
+
+// Screens are opaque, so one sliding over another hides it.
+@Composable
+private fun Modifier.screen() = fillMaxSize().background(MaterialTheme.colorScheme.background)
+
+private const val SLIDE_MS = 400
+private const val FADE_MS = 150
+
+private val tabFadeIn = fadeIn(tween(FADE_MS))
+private val tabFadeOut = fadeOut(tween(FADE_MS))
+
+private fun NavDestination.tab(): TopLevelDestination? =
+    TopLevelDestination.entries.firstOrNull { isIn(it) }
+
+// Screens opened inside a tab slide like pages (the back gesture drags the top one off to the
+// right, revealing the one below); switching tabs only fades.
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.withinTab(): Boolean =
+    initialState.destination.tab() == targetState.destination.tab()
+
+// The screen underneath moves a quarter of the way, so it reads as being behind the moving one.
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.slideIn(
+    direction: SlideDirection,
+    parallax: Boolean = false
+): EnterTransition = slideIntoContainer(direction, tween(SLIDE_MS)) { if (parallax) it / 4 else it }
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.slideOut(
+    direction: SlideDirection,
+    parallax: Boolean = false
+): ExitTransition = slideOutOfContainer(direction, tween(SLIDE_MS)) { if (parallax) it / 4 else it }
+
+private fun NavDestination.isIn(destination: TopLevelDestination): Boolean =
+    hierarchy.any { it.hasRoute(destination.route::class) }
+
+// Switching tabs keeps one back stack per tab: leaving saves it, coming back restores it.
+private fun NavHostController.navigateTo(destination: TopLevelDestination) {
+    navigate(destination.route) {
+        popUpTo(graph.findStartDestination().id) { saveState = true }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
+
+// Tapping the selected tab goes back to its first screen.
+private fun NavHostController.popToRoot(destination: TopLevelDestination) {
+    val tab = graph.findNode(destination.route)
+    val root = if (tab is NavGraph) tab.findStartDestination() else tab
+    root?.let { popBackStack(it.id, inclusive = false) }
+}
