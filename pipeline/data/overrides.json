@@ -357,6 +357,8 @@
     "bw-trainers-eyes-meet-team-plasma-b2w2": { "streams": { "accept": [ { "videoId": "UNkKUzxSflo" } ] } },
     "bw-ns-castle-b2w2": { "streams": { "accept": [ { "videoId": "IpxqmStlBUM" } ] } },
     "bw-battle-ghetsis-b2w2": { "streams": { "accept": [ { "videoId": "ji4yuFU0F20" } ] } },
+    "bw-castelia-sewers": { "note": "Also plays in Virbank Complex" },
+    "bw-battle-champion-sinnoh-version": { "note": "Cynthia's battle theme - you can fight her outside of the PWT" },
 
     "xy-firing-the-ultimate-weapon-pokemon-x": { "games": ["x"], "note": "Version-specific cutscene" },
     "xy-firing-the-ultimate-weapon-pokemon-y": { "games": ["y"], "note": "Version-specific cutscene" },
@@ -701,6 +703,7 @@
     "bdsp-ramanas-park": { "exclude": true },
     "bdsp-mystery-zone": { "exclude": true },
     "bdsp-contest-dress-up": { "streams": { "accept": [ { "videoId": "cMf1_N0vTSA" } ] } },
+    "bdsp-battle-team-galactic-boss": { "title": "Battle! (Cyrus)", "streams": { "accept": [ { "videoId": "Yh28Q6PMtxI" } ] } },
 
     "pla-jubilife-village-beginning-medley": { "exclude": true, "note": "A medley of pieces Disc 2 lists one by one" },
     "pla-battle-noble-pokemon-medley": { "exclude": true, "note": "A medley of pieces Disc 2 lists one by one" },
