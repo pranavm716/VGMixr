@@ -8,6 +8,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Game
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
@@ -124,5 +125,52 @@ class FamilyViewModelTest {
         viewModel("rse").onTrackClick("rse-b")
 
         assertEquals(listOf(FakePlaybackController.Play(listOf("rse-b"), 0)), playback.calls)
+    }
+
+    @Test
+    fun `the playing track of this family is marked, so the list can show and scroll to it`() =
+        runTest {
+            playback.state.value = PlaybackState(trackId = "rse-b", isPlaying = true)
+
+            viewModel("rse").uiState.test {
+                assertEquals(
+                    PlayingRowUi("rse-b", index = 1, loading = false),
+                    (awaitItem() as FamilyUiState.Loaded).playing
+                )
+            }
+        }
+
+    @Test
+    fun `a playing track that is still loading says so`() = runTest {
+        playback.state.value = PlaybackState(trackId = "rse-c", isLoading = true)
+
+        viewModel("rse").uiState.test {
+            assertEquals(
+                PlayingRowUi("rse-c", index = 2, loading = true),
+                (awaitItem() as FamilyUiState.Loaded).playing
+            )
+        }
+    }
+
+    @Test
+    fun `a track of another family marks nothing here`() = runTest {
+        playback.state.value = PlaybackState(trackId = "xy-a", isPlaying = true)
+
+        viewModel("rse").uiState.test {
+            assertEquals(null, (awaitItem() as FamilyUiState.Loaded).playing)
+        }
+    }
+
+    @Test
+    fun `the mark follows playback`() = runTest {
+        viewModel("rse").uiState.test {
+            assertEquals(null, (awaitItem() as FamilyUiState.Loaded).playing)
+            playback.state.value = PlaybackState(trackId = "rse-a", isLoading = true)
+
+            assertEquals(
+                PlayingRowUi("rse-a", index = 0, loading = true),
+                (awaitItem() as FamilyUiState.Loaded).playing
+            )
+        }
     }
 }

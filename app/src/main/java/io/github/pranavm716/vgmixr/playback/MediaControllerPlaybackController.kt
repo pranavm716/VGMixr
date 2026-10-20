@@ -67,6 +67,8 @@ class MediaControllerPlaybackController @Inject constructor(@ApplicationContext 
         _state.value = PlaybackState(
             trackId = controller.currentMediaItem?.mediaId,
             isPlaying = controller.isPlaying,
+            isLoading = controller.playWhenReady &&
+                controller.playbackState == Player.STATE_BUFFERING,
             stoppedBy = controller.sessionExtras.getString(STOPPED_BY)?.let(ResolveFailure::valueOf)
         )
     }

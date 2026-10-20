@@ -13,14 +13,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -34,11 +43,15 @@ import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
+import kotlinx.coroutines.flow.first
 
 // The header's art tile and the track numbers share one leading column, so their centers line up.
 private val StartPadding = 16.dp
 private val LeadingColumn = 40.dp
 private val LeadingGap = 16.dp
+
+// The playing row's tint: the accent over the background, faint as in Shuttle.
+private const val PLAYING_TINT = 0.12f
 
 @Composable
 fun FamilyTab(viewModel: FamilyViewModel = hiltViewModel()) {
@@ -60,10 +73,18 @@ fun FamilyScreen(
 
         is FamilyUiState.Loaded -> Column(modifier.fillMaxSize()) {
             Header(state.name, state.trackCount)
-            LazyColumn(Modifier.fillMaxSize()) {
-                items(state.tracks, key = {
-                    it.id
-                }) { TrackRow(it, onClick = { onTrackClick(it.id) }) }
+            val listState = rememberLazyListState()
+            ScrollToPlayingOnce(listState, state.playing)
+            LazyColumn(Modifier.fillMaxSize(), state = listState) {
+                items(state.tracks, key = { it.id }) { track ->
+                    val playing = state.playing?.takeIf { it.trackId == track.id }
+                    TrackRow(
+                        track,
+                        playing = playing != null,
+                        loading = playing?.loading == true,
+                        onClick = { onTrackClick(track.id) }
+                    )
+                }
             }
         }
     }
@@ -98,25 +119,65 @@ private fun Header(name: String, trackCount: Int) {
     }
 }
 
-/** One track: its number in the list, its title and, unless it plays in every game, its games. */
+/**
+ * Opening a family whose track is playing shows that track mid-screen, once: coming back to the
+ * screen keeps where the user scrolled.
+ */
 @Composable
-fun TrackRow(track: TrackRowUi, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun ScrollToPlayingOnce(listState: LazyListState, playing: PlayingRowUi?) {
+    var done by rememberSaveable { mutableStateOf(false) }
+    val rowPx = with(LocalDensity.current) { TrackRowHeight.roundToPx() }
+    LaunchedEffect(Unit) {
+        if (done) return@LaunchedEffect
+        done = true
+        val index = playing?.index ?: return@LaunchedEffect
+        val viewport = snapshotFlow { listState.layoutInfo.viewportSize.height }.first { it > 0 }
+        listState.scrollToItem(index, scrollOffset = -(viewport - rowPx) / 2)
+    }
+}
+
+private val TrackRowHeight = 48.dp
+
+/**
+ * One track: its number in the list, its title and, unless it plays in every game, its games. The
+ * current track's row is tinted with the accent, as in Shuttle, and its number turns into a spinner
+ * while its stream loads.
+ */
+@Composable
+fun TrackRow(
+    track: TrackRowUi,
+    playing: Boolean,
+    loading: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val accent = MaterialTheme.colorScheme.primary
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(48.dp)
+            .height(TrackRowHeight)
+            .then(if (playing) Modifier.background(accent.copy(alpha = PLAYING_TINT)) else Modifier)
             .clickable(onClick = onClick)
             .padding(start = StartPadding, end = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            track.number.toString(),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-            modifier = Modifier.width(LeadingColumn)
-        )
+        Box(Modifier.width(LeadingColumn), contentAlignment = Alignment.Center) {
+            if (loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(18.dp),
+                    color = accent,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text(
+                    track.number.toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1
+                )
+            }
+        }
         Spacer(Modifier.width(LeadingGap))
         Text(
             track.title,
@@ -157,7 +218,8 @@ private fun FamilyScreenPreview() {
                     TrackRowUi("a", 1, "Opening Movie (Ruby & Sapphire)", listOf(ruby, sapphire)),
                     TrackRowUi("b", 2, "Littleroot Town", emptyList()),
                     TrackRowUi("c", 10, "Battle! (Team Magma)", listOf(ruby))
-                )
+                ),
+                playing = PlayingRowUi("b", index = 1, loading = true)
             ),
             onTrackClick = {}
         )
