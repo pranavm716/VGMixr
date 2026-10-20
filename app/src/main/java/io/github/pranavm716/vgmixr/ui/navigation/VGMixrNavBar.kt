@@ -51,7 +51,7 @@ fun VGMixrNavBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .windowInsetsPadding(NavigationBarDefaults.windowInsets)
-                .height(80.dp)
+                .height(68.dp)
                 .selectableGroup()
         ) {
             TopLevelDestination.entries.forEach { destination ->

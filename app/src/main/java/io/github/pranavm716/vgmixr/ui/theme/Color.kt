@@ -12,3 +12,6 @@ val TextPrimary = Color(0xFFE6E6E6)
 val TextSecondary = Color(0xFFA6A6A6)
 val Inactive = Color(0xFF8A8A8A)
 val Divider = Color(0xFF2A2A2A)
+
+/** The art tile shown until a family has a cover. */
+val ArtPlaceholder = Color(0xFF202020)

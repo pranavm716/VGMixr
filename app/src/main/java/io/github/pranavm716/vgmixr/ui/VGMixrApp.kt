@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import io.github.pranavm716.vgmixr.ui.games.GamesTab
 import io.github.pranavm716.vgmixr.ui.navigation.GamesRoute
 import io.github.pranavm716.vgmixr.ui.navigation.Tab2Route
 import io.github.pranavm716.vgmixr.ui.navigation.Tab3Route
@@ -26,9 +27,15 @@ import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
 import io.github.pranavm716.vgmixr.ui.navigation.VGMixrNavBar
 import io.github.pranavm716.vgmixr.ui.navigation.screenTag
 
-/** The app shell: the tabs' screens above the navbar. */
+/**
+ * The app shell: the tabs' screens above the navbar. [screen] draws a tab's content; it defaults
+ * to placeholders so the shell runs without Hilt (tests), and MainActivity passes the real tabs.
+ */
 @Composable
-fun VGMixrApp(navController: NavHostController = rememberNavController()) {
+fun VGMixrApp(
+    navController: NavHostController = rememberNavController(),
+    screen: @Composable (TopLevelDestination) -> Unit = { PlaceholderScreen(it.label) }
+) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val selected = backStackEntry?.destination?.let { current ->
         TopLevelDestination.entries.firstOrNull { current.isIn(it) }
@@ -43,18 +50,30 @@ fun VGMixrApp(navController: NavHostController = rememberNavController()) {
             modifier = Modifier.padding(padding)
         ) {
             // One entry per tab; the bar's order comes from TopLevelDestination, not from here.
-            composable<GamesRoute> { Tab(TopLevelDestination.GAMES) }
-            composable<Tab2Route> { Tab(TopLevelDestination.TAB_2) }
-            composable<Tab3Route> { Tab(TopLevelDestination.TAB_3) }
-            composable<Tab4Route> { Tab(TopLevelDestination.TAB_4) }
+            composable<GamesRoute> { Tab(TopLevelDestination.GAMES, screen) }
+            composable<Tab2Route> { Tab(TopLevelDestination.TAB_2, screen) }
+            composable<Tab3Route> { Tab(TopLevelDestination.TAB_3, screen) }
+            composable<Tab4Route> { Tab(TopLevelDestination.TAB_4, screen) }
         }
     }
 }
 
 @Composable
-private fun Tab(destination: TopLevelDestination) {
+private fun Tab(
+    destination: TopLevelDestination,
+    screen: @Composable (TopLevelDestination) -> Unit
+) {
     Box(Modifier.fillMaxSize().testTag(destination.screenTag)) {
-        PlaceholderScreen(destination.label)
+        screen(destination)
+    }
+}
+
+/** The real content of each tab. */
+@Composable
+fun AppScreen(destination: TopLevelDestination) {
+    when (destination) {
+        TopLevelDestination.GAMES -> GamesTab()
+        else -> PlaceholderScreen(destination.label)
     }
 }
 
