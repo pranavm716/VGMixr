@@ -81,7 +81,7 @@ private fun Header(name: String, trackCount: Int) {
             Text(
                 name,
                 style = MaterialTheme.typography.titleLarge,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
