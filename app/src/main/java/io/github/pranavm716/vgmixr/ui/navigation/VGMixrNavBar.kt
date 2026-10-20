@@ -34,7 +34,7 @@ fun VGMixrNavBar(
                 icon = {
                     Icon(painterResource(destination.icon), contentDescription = destination.label)
                 },
-                label = { Text(destination.label) },
+                label = { Text(destination.label, style = MaterialTheme.typography.labelLarge) },
                 alwaysShowLabel = false,
                 colors = colors,
                 modifier = Modifier.testTag(destination.navItemTag)

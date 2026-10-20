@@ -31,7 +31,7 @@ fun PlaceholderScreen(title: String, modifier: Modifier = Modifier) {
 fun ScreenHeader(title: String, modifier: Modifier = Modifier) {
     Text(
         title,
-        style = MaterialTheme.typography.headlineMedium,
-        modifier = modifier.padding(start = 20.dp, top = 24.dp, end = 20.dp, bottom = 16.dp)
+        style = MaterialTheme.typography.headlineSmall,
+        modifier = modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp)
     )
 }
