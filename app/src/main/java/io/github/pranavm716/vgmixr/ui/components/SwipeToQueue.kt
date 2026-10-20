@@ -1,34 +1,49 @@
 package io.github.pranavm716.vgmixr.ui.components
 
+import androidx.compose.animation.core.animate
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import io.github.pranavm716.vgmixr.R
-import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
+
+private val IconInset = 24.dp
+private val IconSize = 24.dp
+
+// The row queues once its left edge is as far past the icon as the icon is from the screen edge.
+private val Threshold = IconInset + IconSize + IconInset
 
 /**
- * Swipe right on [content] to add it to the queue, as Spotify's "Add to queue": past the threshold
- * the row calls [onQueue] and springs back instead of being dismissed. A queue icon behind the row
- * turns the accent past the threshold, with a haptic tick. Also offered as an accessibility action.
+ * Swipe right on [content] to add it to the queue, as Spotify's "Add to queue". The row uncovers
+ * the accent with a queue icon; once it has moved [Threshold], it calls [onQueue] (with a haptic
+ * tick) and stops there, and on release it springs straight back. Also offered as an accessibility
+ * action.
  */
 @Composable
 fun SwipeToQueue(
@@ -36,48 +51,53 @@ fun SwipeToQueue(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    val state = rememberSwipeToDismissBoxState(positionalThreshold = { it * THRESHOLD })
-    val scope = rememberCoroutineScope()
+    val thresholdPx = with(LocalDensity.current) { Threshold.toPx() }
     val haptics = LocalHapticFeedback.current
-    val armed = state.targetValue == SwipeToDismissBoxValue.StartToEnd
-    LaunchedEffect(armed) {
-        if (armed) haptics.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+    var offset by remember { mutableFloatStateOf(0f) }
+    var queued by remember { mutableStateOf(false) }
+    val drag = rememberDraggableState { delta ->
+        offset = (offset + delta).coerceIn(0f, thresholdPx)
+        if (!queued && offset >= thresholdPx) {
+            queued = true
+            haptics.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+            onQueue()
+        }
     }
     val label = stringResource(R.string.add_to_queue)
-    SwipeToDismissBox(
-        state = state,
-        modifier = modifier.semantics {
+    Box(
+        modifier.semantics {
             customActions = listOf(
                 CustomAccessibilityAction(label) {
                     onQueue()
                     true
                 }
             )
-        },
-        enableDismissFromEndToStart = false,
-        onDismiss = {
-            onQueue()
-            scope.launch { state.reset() }
-        },
-        backgroundContent = {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
+        }
+    ) {
+        if (offset > 0f) {
+            Box(
+                Modifier.matchParentSize().background(MaterialTheme.colorScheme.primary),
+                contentAlignment = Alignment.CenterStart
+            ) {
                 Icon(
                     painterResource(R.drawable.ic_queue_add),
                     contentDescription = null,
-                    tint = if (armed) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.outline
-                    },
-                    modifier = Modifier.padding(start = 24.dp)
+                    tint = Color.White,
+                    modifier = Modifier.padding(start = IconInset).size(IconSize)
                 )
             }
         }
-    ) {
-        // Opaque, so the row hides the icon until it moves.
-        Box(Modifier.background(MaterialTheme.colorScheme.background)) { content() }
+        // Opaque, so the row covers the accent until it moves.
+        Box(
+            Modifier
+                .offset { IntOffset(offset.roundToInt(), 0) }
+                .draggable(
+                    state = drag,
+                    orientation = Orientation.Horizontal,
+                    onDragStarted = { queued = false },
+                    onDragStopped = { animate(offset, 0f) { value, _ -> offset = value } }
+                )
+                .background(MaterialTheme.colorScheme.background)
+        ) { content() }
     }
 }
-
-// How far the row moves, as a share of its width, before letting go adds it.
-private const val THRESHOLD = 0.3f
