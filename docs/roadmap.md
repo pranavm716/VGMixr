@@ -1,6 +1,6 @@
 # VGMixr roadmap
 
-One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go directly to `main`. From step 1 on, each step gets its own branch, is test-first, ends green, and is merged into `main`. Check a step off when it is merged.
+One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go directly to `main`. From step 1 on, each step gets its own branch, is test-first, ends green, and is merged into `main`. Check a step off on its own branch, as the last commit before the merge, so `main` never shows a merged step unchecked.
 
 ## Phase 0: manual setup (not a Claude Code session)
 - [x] Create the Android project (Empty Activity, Compose, Kotlin), run it once, commit.
@@ -80,7 +80,7 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
     - Every track is matched, also one with a local file. A `local` override puts hand-copied files in front of a track's streams. The seed's test tone is gone: Route 101 (RSE) has a local file, its stream's audio downloaded with yt-dlp as m4a, copied by hand to `files/music/rse/route-101.m4a`.
     - The first real manifest (B1) covers the six families with playlists so far (519 tracks); the rest are listed as unmatched until their playlists are added. `--cached-only` builds from cached YouTube responses without any request.
     - The manifest is written only if it validates, and keeps its `generatedAt` when nothing else changed, so a rerun shows no diff and the app doesn't re-import.
-18. [ ] Review tool: hand-set track order, renaming and notes. Today a track's `order` is its position in the family's track lists in games.json order, so tracks from a later list sit at the bottom: Yellow's (LGPE album), Emerald's and Platinum's (B2W2's Disc 4), USUM's hand-written extras, HGSS's GB Sounds versions. No source can say where they go (an album lists only its own game), so the user sets the order.
+18. [x] Review tool: hand-set track order, renaming and notes. Today a track's `order` is its position in the family's track lists in games.json order, so tracks from a later list sit at the bottom: Yellow's (LGPE album), Emerald's and Platinum's (B2W2's Disc 4), USUM's hand-written extras, HGSS's GB Sounds versions. No source can say where they go (an album lists only its own game), so the user sets the order.
     - Drag and drop tracks in the review tool's track list to reorder a family; each move writes at once to a committed file under `pipeline/data/`, through the same validated canonical write, and the next build uses it.
     - Every tab (Review, Unmatched, Matched, All) lists tracks in the family's order, instead of needs-review first, then unmatched, then matched.
     - Storage: one ordered id list per family, one id per line (a move is a two-line diff), in the canonical format. A drag rewrites the list. A track missing from the list (a new track list, a split) goes right after the listed track that precedes it in track-list order. An id that's no longer a track fails the build, naming it, as a stale override does. The ids are source keys, like the overrides', so step 19 doesn't touch the file. Relative `after` placements were the alternative: sparse, but a drag becomes rules that are hard to read back.
