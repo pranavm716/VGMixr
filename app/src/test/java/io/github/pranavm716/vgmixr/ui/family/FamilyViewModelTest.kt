@@ -8,9 +8,13 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Game
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
+import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import io.github.pranavm716.vgmixr.ui.messages.UserMessage
+import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -44,10 +48,14 @@ class FamilyViewModelTest {
     )
 
     private val repository = FakeCatalogRepository(catalog)
+    private val playback = FakePlaybackController()
+    private val messages = UserMessages()
 
     private fun viewModel(familyId: String) = FamilyViewModel(
         SavedStateHandle(mapOf("familyId" to familyId)),
         repository,
+        playback,
+        messages,
         main.dispatcher
     )
 
@@ -113,6 +121,73 @@ class FamilyViewModelTest {
             repository.catalog.value = catalog.copy(tracks = catalog.tracks.drop(1))
 
             assertEquals(2, (awaitItem() as FamilyUiState.Loaded).trackCount)
+        }
+    }
+
+    @Test
+    fun `tapping a track plays the family's list from it`() {
+        viewModel("rse").onTrackClick("rse-b")
+
+        assertEquals(
+            listOf(FakePlaybackController.PlayFrom(listOf("rse-a", "rse-b", "rse-c"), 1)),
+            playback.calls
+        )
+    }
+
+    @Test
+    fun `the playing track of this family is marked, so the list can show and scroll to it`() =
+        runTest {
+            playback.state.value = PlaybackState(trackId = "rse-b", isPlaying = true)
+
+            viewModel("rse").uiState.test {
+                assertEquals(
+                    PlayingRowUi("rse-b", index = 1, loading = false),
+                    (awaitItem() as FamilyUiState.Loaded).playing
+                )
+            }
+        }
+
+    @Test
+    fun `a playing track that is still loading says so`() = runTest {
+        playback.state.value = PlaybackState(trackId = "rse-c", isLoading = true)
+
+        viewModel("rse").uiState.test {
+            assertEquals(
+                PlayingRowUi("rse-c", index = 2, loading = true),
+                (awaitItem() as FamilyUiState.Loaded).playing
+            )
+        }
+    }
+
+    @Test
+    fun `a track of another family marks nothing here`() = runTest {
+        playback.state.value = PlaybackState(trackId = "xy-a", isPlaying = true)
+
+        viewModel("rse").uiState.test {
+            assertEquals(null, (awaitItem() as FamilyUiState.Loaded).playing)
+        }
+    }
+
+    @Test
+    fun `the mark follows playback`() = runTest {
+        viewModel("rse").uiState.test {
+            assertEquals(null, (awaitItem() as FamilyUiState.Loaded).playing)
+            playback.state.value = PlaybackState(trackId = "rse-a", isLoading = true)
+
+            assertEquals(
+                PlayingRowUi("rse-a", index = 0, loading = true),
+                (awaitItem() as FamilyUiState.Loaded).playing
+            )
+        }
+    }
+
+    @Test
+    fun `swiping a track queues it and says so`() = runTest {
+        messages.messages.test {
+            viewModel("rse").onQueueTrack("rse-c")
+
+            assertEquals(listOf(FakePlaybackController.AddToQueue(listOf("rse-c"))), playback.calls)
+            assertEquals(UserMessage.AddedToQueue(1), awaitItem())
         }
     }
 }

@@ -38,12 +38,16 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // NewPipe Extractor uses java.nio APIs that Android has only from API 33.
+        isCoreLibraryDesugaringEnabled = true
     }
     buildFeatures {
         compose = true
     }
     testOptions {
         unitTests.isIncludeAndroidResources = true
+        // Tests that ask YouTube for real run only with -Pvgmixr.live.
+        unitTests.all { it.systemProperty("vgmixr.live", project.hasProperty("vgmixr.live")) }
     }
     sourceSets {
         // Shared manifest fixtures, also loaded by the pipeline's tests.
@@ -73,7 +77,12 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.session)
+    implementation(libs.newpipe.extractor)
+    implementation(libs.okhttp)
     implementation(libs.kotlinx.serialization.json)
+    coreLibraryDesugaring(libs.desugar.jdk.libs.nio)
     ksp(libs.androidx.room.compiler)
     ksp(libs.hilt.compiler)
     testImplementation(platform(libs.androidx.compose.bom))

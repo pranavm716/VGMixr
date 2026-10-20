@@ -32,13 +32,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.catalog.FamilySummary
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
+import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
 fun GamesTab(onFamilyClick: (String) -> Unit, viewModel: GamesViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    GamesScreen(state, onFamilyClick)
+    GamesScreen(state, onFamilyClick, onQueueFamily = viewModel::onQueueFamily)
 }
 
 /** The Games tab: one row per family, styled after Shuttle's album list. */
@@ -46,6 +47,7 @@ fun GamesTab(onFamilyClick: (String) -> Unit, viewModel: GamesViewModel = hiltVi
 fun GamesScreen(
     state: GamesUiState,
     onFamilyClick: (String) -> Unit,
+    onQueueFamily: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier.fillMaxSize()) {
@@ -60,7 +62,9 @@ fun GamesScreen(
                 } else {
                     LazyColumn(Modifier.fillMaxSize()) {
                         items(state.families, key = { it.id }) { family ->
-                            FamilyRow(family, onClick = { onFamilyClick(family.id) })
+                            SwipeToQueue(onQueue = { onQueueFamily(family.id) }) {
+                                FamilyRow(family, onClick = { onFamilyClick(family.id) })
+                            }
                         }
                     }
                 }
@@ -137,7 +141,8 @@ private fun GamesScreenPreview() {
                 ),
                 importFailed = true
             ),
-            onFamilyClick = {}
+            onFamilyClick = {},
+            onQueueFamily = {}
         )
     }
 }
