@@ -75,6 +75,76 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
         }
     }
 
+    /**
+     * Jumping to entry [index] from the queue screen. Into "Next in queue": the queued tracks
+     * before it are dropped. Into "Next from": the waiting queue moves right after it, as
+     * Spotify's does, and the tracks skipped become history for "previous". Either way it plays.
+     */
+    fun jumpTo(index: Int): List<QueueEdit> {
+        if (index == current || index !in entries.indices) return emptyList()
+        val queueStart = current + 1
+        val queueEnd = queueStart + upNext.size
+        return when {
+            index < current -> listOf(QueueEdit.Seek(index))
+
+            index < queueEnd -> buildList {
+                if (index > queueStart) add(QueueEdit.Remove(queueStart, index))
+                add(QueueEdit.Seek(queueStart))
+            }
+
+            else -> {
+                // With the queue block taken out, the target sits upNext.size earlier.
+                val target = index - upNext.size
+                buildList {
+                    if (upNext.isNotEmpty()) add(QueueEdit.Move(queueStart, queueEnd, target + 1))
+                    add(QueueEdit.Seek(target))
+                }
+            }
+        }
+    }
+
+    /** Removes entry [index] if it waits in "Next in queue"; anything else stays. */
+    fun remove(index: Int): List<QueueEdit> =
+        if (index in current + 1 until current + 1 + upNext.size) {
+            listOf(QueueEdit.Remove(index, index + 1))
+        } else {
+            emptyList()
+        }
+
+    /** Empties "Next in queue"; the current track keeps playing. */
+    fun clearQueue(): List<QueueEdit> = if (upNext.isEmpty()) {
+        emptyList()
+    } else {
+        listOf(QueueEdit.Remove(current + 1, current + 1 + upNext.size))
+    }
+
+    /** The queue after [edits], applied in order as the player applies them. */
+    fun applying(edits: List<QueueEdit>): PlayQueue = edits.fold(this) { queue, edit ->
+        queue.applying(edit)
+    }
+
+    private fun applying(edit: QueueEdit): PlayQueue {
+        // Tracks the current entry by marking it, so moves and removals can't lose it.
+        val marked = entries.mapIndexed { i, entry -> entry to (i == current) }
+        val result: List<Pair<QueueEntry, Boolean>> = when (edit) {
+            is QueueEdit.Replace -> return PlayQueue(edit.entries, edit.startIndex)
+
+            is QueueEdit.Seek -> return copy(current = edit.index)
+
+            is QueueEdit.Insert ->
+                marked.take(edit.index) + edit.entries.map { it to false } + marked.drop(edit.index)
+
+            is QueueEdit.Remove -> marked.take(edit.from) + marked.drop(edit.to)
+
+            is QueueEdit.Move -> {
+                val moving = marked.subList(edit.from, edit.to)
+                val rest = marked.take(edit.from) + marked.drop(edit.to)
+                rest.take(edit.newIndex) + moving + rest.drop(edit.newIndex)
+            }
+        }
+        return PlayQueue(result.map { it.first }, result.indexOfFirst { it.second })
+    }
+
     companion object {
         val EMPTY = PlayQueue(emptyList(), current = -1)
     }
@@ -87,4 +157,13 @@ sealed interface QueueEdit {
 
     /** Insert [entries] at [index] without interrupting playback. */
     data class Insert(val index: Int, val entries: List<QueueEntry>) : QueueEdit
+
+    /** Move entries [from] until [to] so the first lands at [newIndex] of the list without them. */
+    data class Move(val from: Int, val to: Int, val newIndex: Int) : QueueEdit
+
+    /** Remove entries [from] until [to]. */
+    data class Remove(val from: Int, val to: Int) : QueueEdit
+
+    /** Play entry [index] from its start. */
+    data class Seek(val index: Int) : QueueEdit
 }

@@ -27,6 +27,15 @@ interface PlaybackController {
     /** Moves within the current track; 0 is its start, also for a slice of an album video. */
     fun seekTo(positionMs: Long)
 
+    /** Plays queue entry [index], by the queue screen's rules (see [PlayQueue.jumpTo]). */
+    fun jumpTo(index: Int)
+
+    /** Removes queue entry [index] if it waits in "Next in queue". */
+    fun removeFromQueue(index: Int)
+
+    /** Empties "Next in queue". */
+    fun clearQueue()
+
     /** The current track's position, a few times a second while collected. */
     val progress: Flow<PlaybackProgress>
 }

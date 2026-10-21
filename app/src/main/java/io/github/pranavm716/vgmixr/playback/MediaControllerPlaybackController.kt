@@ -88,6 +88,12 @@ class MediaControllerPlaybackController @Inject constructor(@ApplicationContext 
 
     override fun seekTo(positionMs: Long) = withController { it.seekTo(positionMs) }
 
+    override fun jumpTo(index: Int) = withController { it.apply(it.queue().jumpTo(index)) }
+
+    override fun removeFromQueue(index: Int) = withController { it.apply(it.queue().remove(index)) }
+
+    override fun clearQueue() = withController { it.apply(it.queue().clearQueue()) }
+
     override val progress: Flow<PlaybackProgress> = flow {
         val controller = controller.await()
         while (true) {
@@ -126,8 +132,19 @@ private fun Player.apply(edit: QueueEdit) {
         }
 
         is QueueEdit.Insert -> addMediaItems(edit.index, edit.entries.map(::queueRequest))
+
+        is QueueEdit.Move -> moveMediaItems(edit.from, edit.to, edit.newIndex)
+
+        is QueueEdit.Remove -> removeMediaItems(edit.from, edit.to)
+
+        is QueueEdit.Seek -> {
+            seekTo(edit.index, 0)
+            playFromHere()
+        }
     }
 }
+
+private fun Player.apply(edits: List<QueueEdit>) = edits.forEach { apply(it) }
 
 private const val PROGRESS_INTERVAL_MS = 250L
 
