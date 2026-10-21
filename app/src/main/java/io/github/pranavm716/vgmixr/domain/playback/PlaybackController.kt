@@ -15,9 +15,10 @@ interface PlaybackController {
 
     fun togglePlayPause()
 
+    /** Plays the next queue item, also when paused. */
     fun skipToNext()
 
-    /** Goes to the previous queue item, never restarting the current one. */
+    /** Plays the previous queue item (never restarting the current one), also when paused. */
     fun skipToPrevious()
 
     /** The current track's position, a few times a second while collected. */

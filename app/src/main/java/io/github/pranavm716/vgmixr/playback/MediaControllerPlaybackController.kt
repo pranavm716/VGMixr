@@ -76,9 +76,15 @@ class MediaControllerPlaybackController @Inject constructor(@ApplicationContext 
         }
     }
 
-    override fun skipToNext() = withController { it.seekToNextMediaItem() }
+    override fun skipToNext() = withController {
+        it.seekToNextMediaItem()
+        it.playFromHere()
+    }
 
-    override fun skipToPrevious() = withController { it.seekToPreviousMediaItem() }
+    override fun skipToPrevious() = withController {
+        it.seekToPreviousMediaItem()
+        it.playFromHere()
+    }
 
     override val progress: Flow<PlaybackProgress> = flow {
         val controller = controller.await()
@@ -127,3 +133,9 @@ private suspend fun ListenableFuture<MediaController>.await(): MediaController =
     suspendCancellableCoroutine { continuation ->
         addListener({ continuation.resume(get()) }, Runnable::run)
     }
+
+/** Skipping always plays the new track, also from pause or after playback stopped. */
+private fun Player.playFromHere() {
+    if (playbackState == Player.STATE_IDLE) prepare()
+    play()
+}
