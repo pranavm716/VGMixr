@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,6 +39,7 @@ import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueueOrRemove
 import io.github.pranavm716.vgmixr.ui.components.SwipeToRemove
 import io.github.pranavm716.vgmixr.ui.player.label
+import kotlinx.coroutines.launch
 
 /**
  * The queue, Spotify's two tiers: now playing, "Next in queue" (swipe left to remove a track, or
@@ -46,6 +49,13 @@ import io.github.pranavm716.vgmixr.ui.player.label
 @Composable
 fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    // Playing a track from the list brings the list back to the top, where it now plays.
+    val jump: (Int) -> Unit = { index ->
+        viewModel.onJump(index)
+        scope.launch { listState.animateScrollToItem(0) }
+    }
     Column(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars)) {
         Row(
             Modifier.fillMaxWidth().height(66.dp).padding(horizontal = 4.dp),
@@ -60,7 +70,7 @@ fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.queue), style = MaterialTheme.typography.headlineSmall)
         }
-        LazyColumn(Modifier.fillMaxSize()) {
+        LazyColumn(Modifier.fillMaxSize(), state = listState) {
             state.nowPlaying?.let { row ->
                 section(R.string.now_playing)
                 item(key = "now-${row.index}") {
@@ -77,7 +87,7 @@ fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()
                 }
                 items(state.upNext, key = { "upnext-${it.index}-${it.trackId}" }) { row ->
                     SwipeToRemove(onRemove = { viewModel.onRemove(row.index) }) {
-                        QueueRow(row, current = false, onClick = { viewModel.onJump(row.index) })
+                        QueueRow(row, current = false, onClick = { jump(row.index) })
                     }
                 }
             }
@@ -93,7 +103,7 @@ fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()
                         onQueue = { viewModel.onQueue(row.index) },
                         onRemove = { viewModel.onRemove(row.index) }
                     ) {
-                        QueueRow(row, current = false, onClick = { viewModel.onJump(row.index) })
+                        QueueRow(row, current = false, onClick = { jump(row.index) })
                     }
                 }
             }

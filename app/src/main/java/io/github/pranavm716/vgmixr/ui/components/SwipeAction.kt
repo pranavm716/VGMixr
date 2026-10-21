@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import io.github.pranavm716.vgmixr.R
 import kotlin.math.roundToInt
+import kotlinx.coroutines.delay
 
 private val IconInset = 24.dp
 private val IconSize = 24.dp
@@ -41,7 +44,12 @@ private val IconSize = 24.dp
 private val Threshold = IconInset + IconSize + IconInset
 
 /** A swipe side: the icon the row uncovers, its accessibility label, and its action. */
-private class Side(@param:DrawableRes val icon: Int, val label: String, val onAction: () -> Unit)
+private class Side(
+    @param:DrawableRes val icon: Int,
+    val label: String,
+    val onAction: () -> Unit,
+    val exits: Boolean = false
+)
 
 /** Swipe right on [content] to add it to the queue, as Spotify's "Add to queue". */
 @Composable
@@ -64,7 +72,12 @@ fun SwipeToRemove(
     content: @Composable () -> Unit
 ) = SwipeAction(
     start = null,
-    end = Side(R.drawable.ic_delete, stringResource(R.string.remove_from_queue), onRemove),
+    end = Side(
+        R.drawable.ic_delete,
+        stringResource(R.string.remove_from_queue),
+        onRemove,
+        exits = true
+    ),
     modifier = modifier,
     content = content
 )
@@ -78,7 +91,12 @@ fun SwipeToQueueOrRemove(
     content: @Composable () -> Unit
 ) = SwipeAction(
     start = Side(R.drawable.ic_queue_add, stringResource(R.string.add_to_queue), onQueue),
-    end = Side(R.drawable.ic_delete, stringResource(R.string.remove_from_queue), onRemove),
+    end = Side(
+        R.drawable.ic_delete,
+        stringResource(R.string.remove_from_queue),
+        onRemove,
+        exits = true
+    ),
     modifier = modifier,
     content = content
 )
@@ -111,8 +129,9 @@ private fun SwipeAction(
         armed = reached
     }
     val sides = listOfNotNull(start, end)
+    var width by remember { mutableIntStateOf(0) }
     Box(
-        modifier.semantics {
+        modifier.onSizeChanged { width = it.width }.semantics {
             customActions = sides.map { side ->
                 CustomAccessibilityAction(side.label) {
                     side.onAction()
@@ -149,12 +168,25 @@ private fun SwipeAction(
                     state = drag,
                     orientation = Orientation.Horizontal,
                     onDragStopped = {
-                        if (armed) (if (offset > 0f) start else end)?.onAction?.invoke()
+                        val side = if (armed) (if (offset > 0f) start else end) else null
                         armed = false
-                        animate(offset, 0f) { value, _ -> offset = value }
+                        if (side?.exits == true) {
+                            // A removal slides the row off its side before it goes, so it exits.
+                            val target = if (offset < 0f) -width.toFloat() else width.toFloat()
+                            animate(offset, target) { value, _ -> offset = value }
+                            side.onAction()
+                            // If the row is still here (nothing was removed), bring it back.
+                            delay(EXIT_RESET_MS)
+                            offset = 0f
+                        } else {
+                            side?.onAction?.invoke()
+                            animate(offset, 0f) { value, _ -> offset = value }
+                        }
                     }
                 )
                 .background(MaterialTheme.colorScheme.background)
         ) { content() }
     }
 }
+
+private const val EXIT_RESET_MS = 600L
