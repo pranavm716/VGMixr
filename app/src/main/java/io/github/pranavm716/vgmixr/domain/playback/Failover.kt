@@ -14,11 +14,20 @@ sealed interface SourceFailure {
     /** This source can't play (video gone, bad response, undecodable): others may. */
     data object ThisSource : SourceFailure
 
+    /**
+     * The stream server refused a URL that resolved (an HTTP error such as 403). YouTube does this
+     * now and then to a URL that works when looked up again.
+     */
+    data object Refused : SourceFailure
+
     /** Nothing can play right now (no network, bot check, extractor broken). */
     data class Everything(val failure: ResolveFailure) : SourceFailure
 }
 
 sealed interface FailoverAction {
+    /** Look the same source up again and play it once more. */
+    data object RetrySource : FailoverAction
+
     data class TrySource(val index: Int) : FailoverAction
 
     data object SkipTrack : FailoverAction
@@ -26,15 +35,24 @@ sealed interface FailoverAction {
     data class Stop(val failure: ResolveFailure) : FailoverAction
 }
 
-/** What to do when source [sourceIndex] of a track with [sourceCount] playable sources fails. */
-fun failover(failure: SourceFailure, sourceIndex: Int, sourceCount: Int): FailoverAction =
-    when (failure) {
-        is SourceFailure.Everything -> FailoverAction.Stop(failure.failure)
+/**
+ * What to do when source [sourceIndex] of a track with [sourceCount] playable sources fails;
+ * [retried] says whether this was already the retry of a refused source.
+ */
+fun failover(
+    failure: SourceFailure,
+    sourceIndex: Int,
+    sourceCount: Int,
+    retried: Boolean = false
+): FailoverAction = when (failure) {
+    is SourceFailure.Everything -> FailoverAction.Stop(failure.failure)
 
-        SourceFailure.ThisSource ->
-            if (sourceIndex + 1 < sourceCount) {
-                FailoverAction.TrySource(sourceIndex + 1)
-            } else {
-                FailoverAction.SkipTrack
-            }
-    }
+    SourceFailure.Refused if !retried -> FailoverAction.RetrySource
+
+    SourceFailure.ThisSource, SourceFailure.Refused ->
+        if (sourceIndex + 1 < sourceCount) {
+            FailoverAction.TrySource(sourceIndex + 1)
+        } else {
+            FailoverAction.SkipTrack
+        }
+}

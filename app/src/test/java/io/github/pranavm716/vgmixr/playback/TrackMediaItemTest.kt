@@ -87,4 +87,13 @@ class TrackMediaItemTest {
         assertEquals(true, item.isQueued)
         assertEquals(false, trackMediaItem(track(listOf(slice)), "Scarlet / Violet").isQueued)
     }
+
+    @Test
+    fun `an item knows whether it is the retry of its source`() {
+        assertEquals(false, trackMediaItem(track(listOf(slice)), "Scarlet / Violet").retried)
+        assertEquals(
+            true,
+            trackMediaItem(track(listOf(slice)), "Scarlet / Violet", retried = true).retried
+        )
+    }
 }

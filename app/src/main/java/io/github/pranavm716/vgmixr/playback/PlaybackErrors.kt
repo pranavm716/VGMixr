@@ -13,6 +13,8 @@ fun PlaybackException.sourceFailure(): SourceFailure {
         }
     }
     return when (errorCode) {
+        PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS -> SourceFailure.Refused
+
         PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,
         PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT ->
             SourceFailure.Everything(ResolveFailure.NETWORK)

@@ -153,15 +153,23 @@ class PlaybackService : MediaSessionService() {
             val item = player.currentMediaItem ?: return
             val catalog = catalog.value ?: return
             val failure = error.sourceFailure()
-            if (failure == SourceFailure.ThisSource) item.videoId?.let(resolver::forget)
+            // A failed or refused URL is never reused: the next try looks the video up again.
+            if (failure !is SourceFailure.Everything) item.videoId?.let(resolver::forget)
             val track = catalog.tracks.firstOrNull { it.id == item.mediaId }
             val sourceCount = track?.let { playableStreams(it.sources).size } ?: 0
-            val action = failover(failure, item.sourceIndex, sourceCount)
+            val action = failover(failure, item.sourceIndex, sourceCount, item.retried)
             diagnostics.log(
                 "error ${item.mediaId} source ${item.sourceIndex}/$sourceCount: " +
                     "${error.errorCodeName} ${error.describe()} -> $failure, $action"
             )
             when (action) {
+                FailoverAction.RetrySource -> {
+                    val again = catalog.itemFor(item.mediaId, item.sourceIndex, item.isQueued, true)
+                    player.replaceMediaItem(player.currentMediaItemIndex, again)
+                    player.prepare()
+                    player.play()
+                }
+
                 is FailoverAction.TrySource -> {
                     val next = catalog.itemFor(item.mediaId, action.index, item.isQueued)
                     player.replaceMediaItem(player.currentMediaItemIndex, next)
@@ -186,13 +194,18 @@ private fun MediaSession.setStoppedBy(failure: ResolveFailure?) {
 }
 
 /** The item for [trackId]; a track gone from the catalog gets an item that is skipped. */
-private fun Catalog.itemFor(trackId: String, sourceIndex: Int = 0, queued: Boolean): MediaItem {
+private fun Catalog.itemFor(
+    trackId: String,
+    sourceIndex: Int = 0,
+    queued: Boolean,
+    retried: Boolean = false
+): MediaItem {
     val track = tracks.firstOrNull { it.id == trackId }
         ?: return queueRequest(
             QueueEntry(trackId, queued)
         ).buildUpon().setUri(NO_SOURCE_URI).build()
     val familyName = families.firstOrNull { it.id == track.familyId }?.name.orEmpty()
-    return trackMediaItem(track, familyName, sourceIndex, queued)
+    return trackMediaItem(track, familyName, sourceIndex, queued, retried)
 }
 
 private val MediaItem.videoId: String?

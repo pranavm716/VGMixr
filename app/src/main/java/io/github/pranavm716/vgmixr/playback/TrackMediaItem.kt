@@ -16,6 +16,7 @@ const val NO_SOURCE_URI = "vgmixr://none"
 
 private const val SOURCE_INDEX = "sourceIndex"
 private const val QUEUED = "queued"
+private const val RETRIED = "retried"
 
 /**
  * The player item for [track], playing its playable source number [sourceIndex]. [queued] marks a
@@ -25,7 +26,8 @@ fun trackMediaItem(
     track: CatalogTrack,
     familyName: String,
     sourceIndex: Int = 0,
-    queued: Boolean = false
+    queued: Boolean = false,
+    retried: Boolean = false
 ): MediaItem {
     val source = playableStreams(track.sources).getOrNull(sourceIndex)
     val clipping = MediaItem.ClippingConfiguration.Builder()
@@ -41,7 +43,12 @@ fun trackMediaItem(
             MediaMetadata.Builder()
                 .setTitle(track.title)
                 .setArtist(familyName)
-                .setExtras(Bundle().apply { putInt(SOURCE_INDEX, sourceIndex) })
+                .setExtras(
+                    Bundle().apply {
+                        putInt(SOURCE_INDEX, sourceIndex)
+                        putBoolean(RETRIED, retried)
+                    }
+                )
                 .build()
         )
         .build()
@@ -49,6 +56,9 @@ fun trackMediaItem(
 
 /** Which of its track's playable sources this item plays. */
 val MediaItem.sourceIndex: Int get() = mediaMetadata.extras?.getInt(SOURCE_INDEX) ?: 0
+
+/** Whether this item is the retry of a source the stream server refused. */
+val MediaItem.retried: Boolean get() = mediaMetadata.extras?.getBoolean(RETRIED) ?: false
 
 /**
  * What the app sends the player for a queue entry: only the track id and the queued flag. The
