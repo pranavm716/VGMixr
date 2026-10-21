@@ -103,9 +103,10 @@ fun SwipeToQueueOrRemove(
 
 /**
  * Swipe [content] right for [start] or left for [end] (either may be null). The row uncovers the
- * accent with that side icon and stops once it has moved [Threshold], with a haptic tick. Letting
- * go there runs the action; letting go short of it (or after dragging back) does not. Either way
- * the row springs straight back. Each action is also offered for accessibility.
+ * accent with that side's icon; past [Threshold] there is a haptic tick, and letting go runs the
+ * action (short of it, or after dragging back, nothing happens). A row that exits (remove) follows
+ * the finger as far as it goes and slides off on release; others stop at the threshold and spring
+ * back. Each action is also offered for accessibility.
  */
 @Composable
 private fun SwipeAction(
@@ -118,9 +119,20 @@ private fun SwipeAction(
     val haptics = LocalHapticFeedback.current
     var offset by remember { mutableFloatStateOf(0f) }
     var armed by remember { mutableStateOf(false) }
+    var width by remember { mutableIntStateOf(0) }
     val drag = rememberDraggableState { delta ->
-        val min = if (end != null) -thresholdPx else 0f
-        val max = if (start != null) thresholdPx else 0f
+        // A side whose row exits (remove) follows the finger as far as it goes; others stop at
+        // the threshold.
+        val min = when {
+            end == null -> 0f
+            end.exits -> -width.toFloat()
+            else -> -thresholdPx
+        }
+        val max = when {
+            start == null -> 0f
+            start.exits -> width.toFloat()
+            else -> thresholdPx
+        }
         offset = (offset + delta).coerceIn(min, max)
         val reached = kotlin.math.abs(offset) >= thresholdPx
         if (reached && !armed) {
@@ -129,7 +141,6 @@ private fun SwipeAction(
         armed = reached
     }
     val sides = listOfNotNull(start, end)
-    var width by remember { mutableIntStateOf(0) }
     Box(
         modifier.onSizeChanged { width = it.width }.semantics {
             customActions = sides.map { side ->
