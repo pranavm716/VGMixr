@@ -41,9 +41,12 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -52,6 +55,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -168,12 +172,18 @@ fun MiniPlayer(
             // the whole island, tint included, so a neighbour's colors slide in with it; the
             // button floats on top.
             Box(Modifier.fillMaxSize().clipToBounds()) {
-                state.previous?.let {
-                    TrackContent(it) { IntOffset((offset - widthPx).roundToInt(), 0) }
-                }
-                TrackContent(state.track) { IntOffset(offset.roundToInt(), 0) }
-                state.next?.let {
-                    TrackContent(it) { IntOffset((offset + widthPx).roundToInt(), 0) }
+                val tracks = listOfNotNull(
+                    state.previous?.let { it to -1 },
+                    state.track to 0,
+                    state.next?.let { it to 1 }
+                )
+                fun slot(side: Int) = IntOffset((offset + side * widthPx).roundToInt(), 0)
+                // The tints slide whole, under everything.
+                tracks.forEach { (track, side) -> TrackTint(track) { slot(side) } }
+                // The tiles and text slide too, but fade out just before the button, which stays
+                // put, so nothing passes under it.
+                Box(Modifier.fillMaxSize().fadeOutBefore(ButtonWidth, FadeWidth)) {
+                    tracks.forEach { (track, side) -> TrackContent(track) { slot(side) } }
                 }
                 Box(Modifier.align(Alignment.CenterEnd).padding(end = 4.dp)) {
                     PlayPauseButton(state.isPlaying, state.isLoading, onPlayPause)
@@ -184,14 +194,23 @@ fun MiniPlayer(
 }
 
 @Composable
+private fun TrackTint(track: MiniTrackUi, offset: () -> IntOffset) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .offset { offset() }
+            .background(gameTint(track.chips))
+    )
+}
+
+@Composable
 private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
     Row(
         Modifier
             .fillMaxSize()
             .offset { offset() }
-            .background(gameTint(track.chips))
             // Room on the right for the play/pause button floating above.
-            .padding(start = 16.dp, end = 56.dp),
+            .padding(start = 16.dp, end = ButtonWidth),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ArtTile(44.dp)
@@ -246,6 +265,26 @@ private fun PlayPauseButton(isPlaying: Boolean, isLoading: Boolean, onClick: () 
         }
     }
 }
+
+// The play/pause button's slot at the right edge, and the fade in front of it.
+private val ButtonWidth = 56.dp
+private val FadeWidth = 24.dp
+
+/** Fades the content out over [fade] just left of the [end] strip at the right edge. */
+private fun Modifier.fadeOutBefore(end: Dp, fade: Dp) = this
+    .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+    .drawWithContent {
+        drawContent()
+        val stop = size.width - end.toPx()
+        drawRect(
+            Brush.horizontalGradient(
+                listOf(Color.Black, Color.Transparent),
+                startX = stop - fade.toPx(),
+                endX = stop
+            ),
+            blendMode = BlendMode.DstIn
+        )
+    }
 
 /**
  * The track's games' colors, faintly: one game gives a flat tint, several a left-to-right gradient
