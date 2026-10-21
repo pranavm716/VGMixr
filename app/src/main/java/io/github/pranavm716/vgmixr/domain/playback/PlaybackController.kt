@@ -1,5 +1,6 @@
 package io.github.pranavm716.vgmixr.domain.playback
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 /** The app's player. Implemented with Media3; UI and ViewModels only see this interface. */
@@ -11,7 +12,20 @@ interface PlaybackController {
 
     /** Adds [trackIds] to the end of the user's queue ("Next in queue"). */
     fun addToQueue(trackIds: List<String>)
+
+    fun togglePlayPause()
+
+    fun skipToNext()
+
+    /** Goes to the previous queue item, never restarting the current one. */
+    fun skipToPrevious()
+
+    /** The current track's position, a few times a second while collected. */
+    val progress: Flow<PlaybackProgress>
 }
+
+/** [durationMs] is null until known; a slice of an album video reports the slice's length. */
+data class PlaybackProgress(val positionMs: Long, val durationMs: Long?)
 
 /**
  * [queue] is the player's queue. [trackId] is the current track, playing or paused. [isLoading] is true while it is about to play
