@@ -5,6 +5,7 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
 
@@ -15,18 +16,18 @@ const val STREAM_URI_PREFIX = "vgmixr://stream/"
 const val NO_SOURCE_URI = "vgmixr://none"
 
 private const val SOURCE_INDEX = "sourceIndex"
-private const val QUEUED = "queued"
+private const val CONTEXT = "context"
 private const val RETRIED = "retried"
 
 /**
- * The player item for [track], playing its playable source number [sourceIndex]. [queued] marks a
- * track the user added to the queue.
+ * The player item for [track], playing its playable source number [sourceIndex]; [context] is where
+ * it plays from, by default the track's own family.
  */
 fun trackMediaItem(
     track: CatalogTrack,
     familyName: String,
     sourceIndex: Int = 0,
-    queued: Boolean = false,
+    context: QueueContext = QueueContext.Family(track.familyId),
     retried: Boolean = false
 ): MediaItem {
     val source = playableStreams(track.sources).getOrNull(sourceIndex)
@@ -38,7 +39,7 @@ fun trackMediaItem(
         .setMediaId(track.id)
         .setUri(source?.let { STREAM_URI_PREFIX + it.videoId } ?: NO_SOURCE_URI)
         .setClippingConfiguration(clipping)
-        .setRequestMetadata(queuedRequest(queued))
+        .setRequestMetadata(contextRequest(context))
         .setMediaMetadata(
             MediaMetadata.Builder()
                 .setTitle(track.title)
@@ -61,20 +62,25 @@ val MediaItem.sourceIndex: Int get() = mediaMetadata.extras?.getInt(SOURCE_INDEX
 val MediaItem.retried: Boolean get() = mediaMetadata.extras?.getBoolean(RETRIED) ?: false
 
 /**
- * What the app sends the player for a queue entry: only the track id and the queued flag. The
- * service builds the playable item from the catalog. The flag rides in the request metadata, which
- * crosses from controller to session (a URI does not).
+ * What the app sends the player for a queue entry: only the track id and where it plays from. The
+ * service builds the playable item from the catalog. The context rides in the request metadata,
+ * which crosses from controller to session (a URI does not).
  */
 fun queueRequest(entry: QueueEntry): MediaItem = MediaItem.Builder()
     .setMediaId(entry.trackId)
-    .setRequestMetadata(queuedRequest(entry.queued))
+    .setRequestMetadata(contextRequest(entry.context))
     .build()
 
-private fun queuedRequest(queued: Boolean) = MediaItem.RequestMetadata.Builder()
-    .setExtras(Bundle().apply { putBoolean(QUEUED, queued) })
+private fun contextRequest(context: QueueContext) = MediaItem.RequestMetadata.Builder()
+    .setExtras(Bundle().apply { putString(CONTEXT, context.key) })
     .build()
+
+/** Where this item plays from; an item without one counts as added to the queue. */
+val MediaItem.context: QueueContext
+    get() = requestMetadata.extras?.getString(CONTEXT)?.let(QueueContext::fromKey)
+        ?: QueueContext.Queue
 
 /** Whether the user added this item to the queue. */
-val MediaItem.isQueued: Boolean get() = requestMetadata.extras?.getBoolean(QUEUED) ?: false
+val MediaItem.isQueued: Boolean get() = context == QueueContext.Queue
 
-fun MediaItem.queueEntry(): QueueEntry = QueueEntry(mediaId, isQueued)
+fun MediaItem.queueEntry(): QueueEntry = QueueEntry(mediaId, context)

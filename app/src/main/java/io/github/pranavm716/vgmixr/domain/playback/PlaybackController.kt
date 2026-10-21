@@ -7,8 +7,11 @@ import kotlinx.coroutines.flow.StateFlow
 interface PlaybackController {
     val state: StateFlow<PlaybackState>
 
-    /** Plays track [index] of [trackIds] (a tapped list); the user's queue plays after it. */
-    fun playFrom(trackIds: List<String>, index: Int)
+    /**
+     * Plays track [index] of [trackIds], a list tapped in [context]; the user's queue plays after
+     * it.
+     */
+    fun playFrom(trackIds: List<String>, index: Int, context: QueueContext)
 
     /** Adds [trackIds] to the end of the user's queue ("Next in queue"). */
     fun addToQueue(trackIds: List<String>)

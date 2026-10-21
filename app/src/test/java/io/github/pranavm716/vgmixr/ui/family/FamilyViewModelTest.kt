@@ -9,6 +9,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
@@ -129,7 +130,13 @@ class FamilyViewModelTest {
         viewModel("rse").onTrackClick("rse-b")
 
         assertEquals(
-            listOf(FakePlaybackController.PlayFrom(listOf("rse-a", "rse-b", "rse-c"), 1)),
+            listOf(
+                FakePlaybackController.PlayFrom(
+                    listOf("rse-a", "rse-b", "rse-c"),
+                    1,
+                    QueueContext.Family("rse")
+                )
+            ),
             playback.calls
         )
     }

@@ -7,6 +7,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogSync
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeCatalogRepository(initial: Catalog = Catalog(emptyList(), emptyList(), emptyList())) :
@@ -19,7 +20,7 @@ class FakeCatalogSync(initial: CatalogImportResult? = null) : CatalogSync {
 }
 
 class FakePlaybackController : PlaybackController {
-    data class PlayFrom(val trackIds: List<String>, val index: Int)
+    data class PlayFrom(val trackIds: List<String>, val index: Int, val context: QueueContext)
 
     data class AddToQueue(val trackIds: List<String>)
 
@@ -45,8 +46,8 @@ class FakePlaybackController : PlaybackController {
         calls += SkipToPrevious
     }
 
-    override fun playFrom(trackIds: List<String>, index: Int) {
-        calls += PlayFrom(trackIds, index)
+    override fun playFrom(trackIds: List<String>, index: Int, context: QueueContext) {
+        calls += PlayFrom(trackIds, index, context)
     }
 
     override fun addToQueue(trackIds: List<String>) {

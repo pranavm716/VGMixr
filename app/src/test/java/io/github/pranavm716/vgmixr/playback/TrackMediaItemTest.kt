@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Source
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -71,18 +72,19 @@ class TrackMediaItemTest {
     }
 
     @Test
-    fun `a queue entry crosses to the service and back with its queued flag`() {
-        listOf(true, false).forEach { queued ->
-            val request = queueRequest(QueueEntry("rse-route-101", queued))
+    fun `a queue entry crosses to the service and back with where it plays from`() {
+        listOf(QueueContext.Queue, QueueContext.Family("rse")).forEach { context ->
+            val request = queueRequest(QueueEntry("rse-route-101", context))
             val crossed = MediaItem.fromBundle(request.toBundle())
 
-            assertEquals(QueueEntry("rse-route-101", queued), crossed.queueEntry())
+            assertEquals(QueueEntry("rse-route-101", context), crossed.queueEntry())
         }
     }
 
     @Test
     fun `the playable item keeps the queued flag, also on a later source`() {
-        val item = trackMediaItem(track(listOf(slice, whole)), "Scarlet / Violet", 1, queued = true)
+        val item =
+            trackMediaItem(track(listOf(slice, whole)), "Scarlet / Violet", 1, QueueContext.Queue)
 
         assertEquals(true, item.isQueued)
         assertEquals(false, trackMediaItem(track(listOf(slice)), "Scarlet / Violet").isQueued)

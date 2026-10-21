@@ -26,6 +26,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.playback.FailoverAction
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
 import io.github.pranavm716.vgmixr.domain.playback.SourceFailure
@@ -122,7 +123,7 @@ class PlaybackService : MediaSessionService() {
                 val catalog = catalog.filterNotNull().first()
                 mediaSession.setStoppedBy(null)
                 items.set(
-                    mediaItems.map { catalog.itemFor(it.mediaId, queued = it.isQueued) }
+                    mediaItems.map { catalog.itemFor(it.mediaId, context = it.context) }
                         .toMutableList()
                 )
             }
@@ -164,14 +165,14 @@ class PlaybackService : MediaSessionService() {
             )
             when (action) {
                 FailoverAction.RetrySource -> {
-                    val again = catalog.itemFor(item.mediaId, item.sourceIndex, item.isQueued, true)
+                    val again = catalog.itemFor(item.mediaId, item.sourceIndex, item.context, true)
                     player.replaceMediaItem(player.currentMediaItemIndex, again)
                     player.prepare()
                     player.play()
                 }
 
                 is FailoverAction.TrySource -> {
-                    val next = catalog.itemFor(item.mediaId, action.index, item.isQueued)
+                    val next = catalog.itemFor(item.mediaId, action.index, item.context)
                     player.replaceMediaItem(player.currentMediaItemIndex, next)
                     player.prepare()
                     player.play()
@@ -197,15 +198,15 @@ private fun MediaSession.setStoppedBy(failure: ResolveFailure?) {
 private fun Catalog.itemFor(
     trackId: String,
     sourceIndex: Int = 0,
-    queued: Boolean,
+    context: QueueContext,
     retried: Boolean = false
 ): MediaItem {
     val track = tracks.firstOrNull { it.id == trackId }
         ?: return queueRequest(
-            QueueEntry(trackId, queued)
+            QueueEntry(trackId, context)
         ).buildUpon().setUri(NO_SOURCE_URI).build()
     val familyName = families.firstOrNull { it.id == track.familyId }?.name.orEmpty()
-    return trackMediaItem(track, familyName, sourceIndex, queued, retried)
+    return trackMediaItem(track, familyName, sourceIndex, context, retried)
 }
 
 private val MediaItem.videoId: String?

@@ -4,15 +4,17 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class PlayQueueTest {
-    private fun context(vararg ids: String) = ids.map { QueueEntry(it, queued = false) }
+    private val rse = QueueContext.Family("rse")
 
-    private fun queued(vararg ids: String) = ids.map { QueueEntry(it, queued = true) }
+    private fun context(vararg ids: String) = ids.map { QueueEntry(it, rse) }
+
+    private fun queued(vararg ids: String) = ids.map { QueueEntry(it, QueueContext.Queue) }
 
     private val family = listOf("a", "b", "c", "d")
 
     @Test
     fun `tapping a track plays it, with the family before it for previous and after it for next`() {
-        val edit = PlayQueue.EMPTY.playFrom(family, index = 2)
+        val edit = PlayQueue.EMPTY.playFrom(family, rse, index = 2)
 
         assertEquals(QueueEdit.Replace(context("a", "b", "c", "d"), startIndex = 2), edit)
     }
@@ -21,7 +23,7 @@ class PlayQueueTest {
     fun `tapping keeps the tracks waiting in the queue, right after the tapped one`() {
         val queue = PlayQueue(context("x") + queued("q1", "q2") + context("y"), current = 0)
 
-        val edit = queue.playFrom(family, index = 1)
+        val edit = queue.playFrom(family, rse, index = 1)
 
         assertEquals(
             QueueEdit.Replace(context("a", "b") + queued("q1", "q2") + context("c", "d"), 1),
@@ -33,7 +35,7 @@ class PlayQueueTest {
     fun `queued tracks already played, or playing, are dropped by a tap`() {
         val queue = PlayQueue(queued("done") + queued("now") + queued("next"), current = 1)
 
-        val edit = queue.playFrom(family, index = 0)
+        val edit = queue.playFrom(family, rse, index = 0)
 
         assertEquals(
             QueueEdit.Replace(context("a") + queued("next") + context("b", "c", "d"), 0),
@@ -90,5 +92,30 @@ class PlayQueueTest {
 
         assertEquals(queued("q1", "q2"), queue.upNext)
         assertEquals(context("c", "d"), queue.nextFromContext)
+    }
+
+    @Test
+    fun `a tapped track remembers the family it was tapped in, and a swiped-in one the queue`() {
+        val queue = PlayQueue(queued("q1"), current = 0)
+
+        val edit = queue.playFrom(listOf("x"), QueueContext.Family("frlg"), index = 0)
+
+        assertEquals(
+            QueueEdit.Replace(
+                listOf(QueueEntry("x", QueueContext.Family("frlg"))) + queued("q1").drop(1),
+                0
+            ),
+            edit
+        )
+        assertEquals(true, QueueEntry("q", QueueContext.Queue).queued)
+        assertEquals(false, QueueEntry("x", QueueContext.Family("frlg")).queued)
+    }
+
+    @Test
+    fun `a context survives being written as a key and read back`() {
+        listOf(QueueContext.Queue, QueueContext.Family("rse")).forEach {
+            assertEquals(it, QueueContext.fromKey(it.key))
+        }
+        assertEquals(null, QueueContext.fromKey("nonsense"))
     }
 }

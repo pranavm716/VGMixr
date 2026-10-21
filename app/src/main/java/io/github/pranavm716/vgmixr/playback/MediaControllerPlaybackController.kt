@@ -14,6 +14,7 @@ import io.github.pranavm716.vgmixr.domain.playback.PlayQueue
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEdit
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
 import javax.inject.Inject
@@ -59,9 +60,8 @@ class MediaControllerPlaybackController @Inject constructor(@ApplicationContext 
         }
     }
 
-    override fun playFrom(trackIds: List<String>, index: Int) = withController {
-        it.apply(it.queue().playFrom(trackIds, index))
-    }
+    override fun playFrom(trackIds: List<String>, index: Int, context: QueueContext) =
+        withController { it.apply(it.queue().playFrom(trackIds, context, index)) }
 
     override fun addToQueue(trackIds: List<String>) = withController {
         it.apply(it.queue().add(trackIds, hasEnded = it.playbackState == Player.STATE_ENDED))

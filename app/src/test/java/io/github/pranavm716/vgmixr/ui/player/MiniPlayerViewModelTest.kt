@@ -9,6 +9,7 @@ import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.playback.PlayQueue
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
@@ -55,7 +56,7 @@ class MiniPlayerViewModelTest {
     private val viewModel by lazy { MiniPlayerViewModel(FakeCatalogRepository(catalog), playback) }
 
     private fun queue(vararg ids: String, current: Int) =
-        PlayQueue(ids.map { QueueEntry(it, queued = false) }, current)
+        PlayQueue(ids.map { QueueEntry(it, QueueContext.Family("rse")) }, current)
 
     private fun chip(shortName: String) = ChipUi(shortName, "#336699")
 

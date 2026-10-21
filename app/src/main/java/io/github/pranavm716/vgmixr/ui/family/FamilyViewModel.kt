@@ -11,6 +11,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.TrackFilter
 import io.github.pranavm716.vgmixr.domain.catalog.filter
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
@@ -69,7 +70,7 @@ class FamilyViewModel @Inject constructor(
         viewModelScope.launch {
             val ids = repository.catalog.first().familyTrackIds(familyId)
             val index = ids.indexOf(trackId)
-            if (index >= 0) playback.playFrom(ids, index)
+            if (index >= 0) playback.playFrom(ids, index, QueueContext.Family(familyId))
         }
     }
 
