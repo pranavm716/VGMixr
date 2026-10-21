@@ -24,6 +24,9 @@ interface PlaybackController {
     /** Plays the previous queue item (never restarting the current one), also when paused. */
     fun skipToPrevious()
 
+    /** Moves within the current track; 0 is its start, also for a slice of an album video. */
+    fun seekTo(positionMs: Long)
+
     /** The current track's position, a few times a second while collected. */
     val progress: Flow<PlaybackProgress>
 }

@@ -86,6 +86,8 @@ class MediaControllerPlaybackController @Inject constructor(@ApplicationContext 
         it.playFromHere()
     }
 
+    override fun seekTo(positionMs: Long) = withController { it.seekTo(positionMs) }
+
     override val progress: Flow<PlaybackProgress> = flow {
         val controller = controller.await()
         while (true) {

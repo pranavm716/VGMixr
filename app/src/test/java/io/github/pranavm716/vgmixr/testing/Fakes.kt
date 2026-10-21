@@ -30,6 +30,8 @@ class FakePlaybackController : PlaybackController {
 
     data object SkipToPrevious
 
+    data class SeekTo(val positionMs: Long)
+
     override val state = MutableStateFlow(PlaybackState())
     override val progress = MutableStateFlow(PlaybackProgress(positionMs = 0, durationMs = null))
     val calls = mutableListOf<Any>()
@@ -44,6 +46,10 @@ class FakePlaybackController : PlaybackController {
 
     override fun skipToPrevious() {
         calls += SkipToPrevious
+    }
+
+    override fun seekTo(positionMs: Long) {
+        calls += SeekTo(positionMs)
     }
 
     override fun playFrom(trackIds: List<String>, index: Int, context: QueueContext) {
