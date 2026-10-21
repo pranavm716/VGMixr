@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -29,8 +31,10 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onSizeChanged
@@ -50,6 +54,8 @@ import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import kotlin.math.roundToInt
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 
 /** The mini player for the current track, or nothing while no track is loaded. */
 @Composable
@@ -104,8 +110,8 @@ fun MiniPlayer(
             Modifier
                 .fillMaxWidth()
                 .height(64.dp)
-                .onSizeChanged { widthPx = it.width }
-                .clickable(onClick = onOpen)
+                // No ripple on the body; only play/pause has one.
+                .clickable(interactionSource = null, indication = null, onClick = onOpen)
                 .draggable(
                     state = swipeUp,
                     orientation = Orientation.Vertical,
@@ -120,37 +126,46 @@ fun MiniPlayer(
                     orientation = Orientation.Horizontal,
                     onDragStopped = { velocity ->
                         val width = widthPx.toFloat()
+                        val before = current.track.trackId
                         val towardNext = offset < -width / 3 || velocity < -FLING_VELOCITY
                         val towardPrevious = offset > width / 3 || velocity > FLING_VELOCITY
-                        when {
-                            towardNext && current.hasNext -> {
-                                animate(offset, -width) { value, _ -> offset = value }
-                                onNext()
-                                animate(width, 0f) { value, _ -> offset = value }
+                        val skip = when {
+                            towardNext && current.next != null -> -width to onNext
+                            towardPrevious && current.previous != null -> width to onPrevious
+                            else -> null
+                        }
+                        if (skip == null) {
+                            animate(offset, 0f) { value, _ -> offset = value }
+                        } else {
+                            // The neighbour slides fully in, then becomes the current track in
+                            // place once the player has switched (or after a second regardless).
+                            animate(offset, skip.first) { value, _ -> offset = value }
+                            skip.second()
+                            withTimeoutOrNull(1_000) {
+                                snapshotFlow { current.track.trackId }.first { it != before }
                             }
-
-                            towardPrevious && current.hasPrevious -> {
-                                animate(offset, width) { value, _ -> offset = value }
-                                onPrevious()
-                                animate(-width, 0f) { value, _ -> offset = value }
-                            }
-
-                            else -> animate(offset, 0f) { value, _ -> offset = value }
+                            offset = 0f
                         }
                     }
                 )
-                .padding(start = 16.dp, end = 4.dp),
+                .padding(end = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
+            // The current track, with its neighbours just out of view on either side.
+            Box(
                 Modifier
                     .weight(1f)
-                    .offset { IntOffset(offset.roundToInt(), 0) },
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxHeight()
+                    .clipToBounds()
+                    .onSizeChanged { widthPx = it.width }
             ) {
-                ArtTile(44.dp)
-                Spacer(Modifier.width(14.dp))
-                TrackText(state)
+                state.previous?.let {
+                    TrackContent(it) { IntOffset((offset - widthPx).roundToInt(), 0) }
+                }
+                TrackContent(state.track) { IntOffset(offset.roundToInt(), 0) }
+                state.next?.let {
+                    TrackContent(it) { IntOffset((offset + widthPx).roundToInt(), 0) }
+                }
             }
             PlayPauseButton(state.isPlaying, state.isLoading, onPlayPause)
         }
@@ -158,7 +173,22 @@ fun MiniPlayer(
 }
 
 @Composable
-private fun TrackText(state: MiniPlayerUiState.Visible) {
+private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
+    Row(
+        Modifier
+            .fillMaxSize()
+            .offset { offset() }
+            .padding(start = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ArtTile(44.dp)
+        Spacer(Modifier.width(14.dp))
+        TrackText(track)
+    }
+}
+
+@Composable
+private fun TrackText(state: MiniTrackUi) {
     Column {
         Text(
             state.title,
@@ -225,15 +255,17 @@ private fun MiniPlayerPreview() {
     VGMixrTheme {
         MiniPlayer(
             MiniPlayerUiState.Visible(
-                trackId = "rse-route-101",
-                familyId = "rse",
-                title = "Route 101",
-                chips = listOf(ChipUi("R", "#CD2236"), ChipUi("S", "#3D51A7")),
-                category = Category.ROUTE,
+                track = MiniTrackUi(
+                    "rse-route-101",
+                    "rse",
+                    "Route 101",
+                    listOf(ChipUi("R", "#CD2236"), ChipUi("S", "#3D51A7")),
+                    Category.ROUTE
+                ),
+                previous = null,
+                next = null,
                 isPlaying = true,
-                isLoading = false,
-                hasPrevious = true,
-                hasNext = true
+                isLoading = false
             ),
             progress = { 0.3f },
             onPlayPause = {},

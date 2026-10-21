@@ -60,12 +60,12 @@ fun NowPlayingPlaceholder(onClose: () -> Unit, viewModel: MiniPlayerViewModel = 
         (state as? MiniPlayerUiState.Visible)?.let {
             Spacer(Modifier.height(24.dp))
             Text(
-                it.title,
+                it.track.title,
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(8.dp))
-            GameChips(it.chips)
+            GameChips(it.track.chips)
         }
         Spacer(Modifier.height(32.dp))
         Text(

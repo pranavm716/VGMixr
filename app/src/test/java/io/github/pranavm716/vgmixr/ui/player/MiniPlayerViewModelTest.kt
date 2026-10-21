@@ -59,6 +59,11 @@ class MiniPlayerViewModelTest {
 
     private fun chip(shortName: String) = ChipUi(shortName, "#336699")
 
+    private val route101 =
+        MiniTrackUi("rse-a", "rse", "Route 101", listOf(chip("R"), chip("S")), Category.ROUTE)
+    private val magma =
+        MiniTrackUi("rse-b", "rse", "Battle! (Magma)", listOf(chip("R")), Category.BATTLE)
+
     @Test
     fun `hidden while nothing is loaded`() = runTest {
         viewModel.uiState.test {
@@ -67,33 +72,30 @@ class MiniPlayerViewModelTest {
     }
 
     @Test
-    fun `shows the current track with all its games' chips and its category`() = runTest {
-        playback.state.value = PlaybackState(
-            queue = queue("rse-a", "rse-b", current = 0),
-            trackId = "rse-a",
-            isPlaying = true
-        )
-
-        viewModel.uiState.test {
-            assertEquals(
-                MiniPlayerUiState.Visible(
-                    trackId = "rse-a",
-                    familyId = "rse",
-                    title = "Route 101",
-                    chips = listOf(chip("R"), chip("S")),
-                    category = Category.ROUTE,
-                    isPlaying = true,
-                    isLoading = false,
-                    hasPrevious = false,
-                    hasNext = true
-                ),
-                awaitItem()
+    fun `shows the current track with all its games' chips and its category, and the next one`() =
+        runTest {
+            playback.state.value = PlaybackState(
+                queue = queue("rse-a", "rse-b", current = 0),
+                trackId = "rse-a",
+                isPlaying = true
             )
+
+            viewModel.uiState.test {
+                assertEquals(
+                    MiniPlayerUiState.Visible(
+                        track = route101,
+                        previous = null,
+                        next = magma,
+                        isPlaying = true,
+                        isLoading = false
+                    ),
+                    awaitItem()
+                )
+            }
         }
-    }
 
     @Test
-    fun `a loading track says so, and the last one has no next`() = runTest {
+    fun `a loading track says so, and the last one has a previous but no next`() = runTest {
         playback.state.value = PlaybackState(
             queue = queue("rse-a", "rse-b", current = 1),
             trackId = "rse-b",
@@ -103,9 +105,9 @@ class MiniPlayerViewModelTest {
         viewModel.uiState.test {
             val state = awaitItem() as MiniPlayerUiState.Visible
             assertEquals(true, state.isLoading)
-            assertEquals(true, state.hasPrevious)
-            assertEquals(false, state.hasNext)
-            assertEquals(listOf(chip("R")), state.chips)
+            assertEquals(route101, state.previous)
+            assertEquals(null, state.next)
+            assertEquals(magma, state.track)
         }
     }
 

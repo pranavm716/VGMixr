@@ -20,19 +20,27 @@ import kotlinx.coroutines.flow.stateIn
 sealed interface MiniPlayerUiState {
     data object Hidden : MiniPlayerUiState
 
-    /** [chips] are all of the track's games, also when it plays in every game of its family. */
+    /**
+     * [previous] and [next] are the neighbouring queue items, drawn beside the bar while it is
+     * swiped; null at the queue's ends.
+     */
     data class Visible(
-        val trackId: String,
-        val familyId: String,
-        val title: String,
-        val chips: List<ChipUi>,
-        val category: Category,
+        val track: MiniTrackUi,
+        val previous: MiniTrackUi?,
+        val next: MiniTrackUi?,
         val isPlaying: Boolean,
-        val isLoading: Boolean,
-        val hasPrevious: Boolean,
-        val hasNext: Boolean
+        val isLoading: Boolean
     ) : MiniPlayerUiState
 }
+
+/** A track as the mini player shows it. [chips] are all of its games, also when it plays in every game. */
+data class MiniTrackUi(
+    val trackId: String,
+    val familyId: String,
+    val title: String,
+    val chips: List<ChipUi>,
+    val category: Category
+)
 
 @HiltViewModel
 class MiniPlayerViewModel @Inject constructor(
@@ -65,17 +73,24 @@ class MiniPlayerViewModel @Inject constructor(
 }
 
 private fun Catalog.miniPlayer(state: PlaybackState): MiniPlayerUiState {
-    val track = tracks.firstOrNull { it.id == state.trackId } ?: return MiniPlayerUiState.Hidden
+    val track = miniTrack(state.trackId) ?: return MiniPlayerUiState.Hidden
     val queue = state.queue
     return MiniPlayerUiState.Visible(
+        track = track,
+        previous = miniTrack(queue.entries.getOrNull(queue.current - 1)?.trackId),
+        next = miniTrack(queue.entries.getOrNull(queue.current + 1)?.trackId),
+        isPlaying = state.isPlaying,
+        isLoading = state.isLoading
+    )
+}
+
+private fun Catalog.miniTrack(trackId: String?): MiniTrackUi? {
+    val track = tracks.firstOrNull { it.id == trackId } ?: return null
+    return MiniTrackUi(
         trackId = track.id,
         familyId = track.familyId,
         title = track.title,
         chips = track.games.map { ChipUi(it.shortName, it.color) },
-        category = track.category,
-        isPlaying = state.isPlaying,
-        isLoading = state.isLoading,
-        hasPrevious = queue.current > 0,
-        hasNext = queue.current in 0 until queue.entries.lastIndex
+        category = track.category
     )
 }
