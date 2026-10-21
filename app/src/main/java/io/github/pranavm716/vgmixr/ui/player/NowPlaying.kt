@@ -292,7 +292,7 @@ private fun PlaybackProgress.fraction(): Float {
 }
 
 // The art takes most of the width, a little less than Shuttle's; the tint is gone 40% down.
-private const val ART_WIDTH = 0.82f
+private const val ART_WIDTH = 0.9f
 
 // How the free space splits around the info and controls: more above, so they sit lower.
 private const val INFO_PUSH = 1.4f
