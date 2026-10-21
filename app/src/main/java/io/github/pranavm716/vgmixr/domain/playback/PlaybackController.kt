@@ -30,7 +30,7 @@ interface PlaybackController {
     /** Plays queue entry [index], by the queue screen's rules (see [PlayQueue.jumpTo]). */
     fun jumpTo(index: Int)
 
-    /** Removes queue entry [index] if it waits in "Next in queue". */
+    /** Removes upcoming queue entry [index], from "Next in queue" or "Next from". */
     fun removeFromQueue(index: Int)
 
     /** Empties "Next in queue". */

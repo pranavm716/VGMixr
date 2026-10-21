@@ -103,13 +103,12 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
         }
     }
 
-    /** Removes entry [index] if it waits in "Next in queue"; anything else stays. */
-    fun remove(index: Int): List<QueueEdit> =
-        if (index in current + 1 until current + 1 + upNext.size) {
-            listOf(QueueEdit.Remove(index, index + 1))
-        } else {
-            emptyList()
-        }
+    /** Removes upcoming entry [index], in "Next in queue" or "Next from"; played ones stay. */
+    fun remove(index: Int): List<QueueEdit> = if (index in current + 1 until entries.size) {
+        listOf(QueueEdit.Remove(index, index + 1))
+    } else {
+        emptyList()
+    }
 
     /** Empties "Next in queue"; the current track keeps playing. */
     fun clearQueue(): List<QueueEdit> = if (upNext.isEmpty()) {

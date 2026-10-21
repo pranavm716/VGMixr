@@ -79,9 +79,17 @@ class QueueEditingTest {
     }
 
     @Test
-    fun `tracks outside the queue are not removed`() {
-        assertEquals(emptyList<QueueEdit>(), queue.remove(6))
+    fun `a track from the rest of the family can be removed`() {
+        val after = queue.applying(queue.remove(6))
+
+        assertEquals(listOf("h", "c", "q1", "q2", "q3", "x", "z"), after.ids())
+        assertEquals("c", after.currentId())
+    }
+
+    @Test
+    fun `the current track and the ones already played are not removed`() {
         assertEquals(emptyList<QueueEdit>(), queue.remove(1))
+        assertEquals(emptyList<QueueEdit>(), queue.remove(0))
     }
 
     @Test

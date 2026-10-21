@@ -10,6 +10,8 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import io.github.pranavm716.vgmixr.ui.messages.UserMessage
+import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +45,8 @@ data class QueueRowUi(
 @HiltViewModel
 class QueueViewModel @Inject constructor(
     repository: CatalogRepository,
-    private val playback: PlaybackController
+    private val playback: PlaybackController,
+    private val messages: UserMessages
 ) : ViewModel() {
     val uiState: StateFlow<QueueUiState> =
         combine(repository.catalog, playback.state) { catalog, state -> catalog.queue(state) }
@@ -52,6 +55,13 @@ class QueueViewModel @Inject constructor(
     fun onJump(index: Int) = playback.jumpTo(index)
 
     fun onRemove(index: Int) = playback.removeFromQueue(index)
+
+    /** Adds the track at [index] (from "Next from") to the end of "Next in queue". */
+    fun onQueue(index: Int) {
+        val trackId = playback.state.value.queue.entries.getOrNull(index)?.trackId ?: return
+        playback.addToQueue(listOf(trackId))
+        messages.post(UserMessage.AddedToQueue(1))
+    }
 
     fun onClear() = playback.clearQueue()
 }

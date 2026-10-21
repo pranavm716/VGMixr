@@ -14,6 +14,8 @@ import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import io.github.pranavm716.vgmixr.ui.messages.UserMessage
+import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -36,7 +38,10 @@ class QueueViewModelTest {
 
     private val rse = QueueContext.Family("rse")
     private val playback = FakePlaybackController()
-    private val viewModel by lazy { QueueViewModel(FakeCatalogRepository(catalog), playback) }
+    private val messages = UserMessages()
+    private val viewModel by lazy {
+        QueueViewModel(FakeCatalogRepository(catalog), playback, messages)
+    }
 
     private fun row(index: Int, id: String) =
         QueueRowUi(index, id, "Title $id", listOf(ChipUi("R", "#336699")), Category.ROUTE)
@@ -107,5 +112,20 @@ class QueueViewModelTest {
             ),
             playback.calls
         )
+    }
+
+    @Test
+    fun `swiping a track of the family right adds it to the queue and says so`() = runTest {
+        playback.state.value = state(listOf(QueueEntry("c", rse), QueueEntry("x", rse)), 0)
+
+        viewModel.uiState.test {
+            awaitItem()
+            messages.messages.test {
+                viewModel.onQueue(1)
+
+                assertEquals(UserMessage.AddedToQueue(1), awaitItem())
+            }
+            assertEquals(listOf(FakePlaybackController.AddToQueue(listOf("x"))), playback.calls)
+        }
     }
 }

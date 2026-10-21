@@ -40,6 +40,9 @@ private val IconSize = 24.dp
 // The row acts once its edge is as far past the icon as the icon is from the screen edge.
 private val Threshold = IconInset + IconSize + IconInset
 
+/** A swipe side: the icon the row uncovers, its accessibility label, and its action. */
+private class Side(@param:DrawableRes val icon: Int, val label: String, val onAction: () -> Unit)
+
 /** Swipe right on [content] to add it to the queue, as Spotify's "Add to queue". */
 @Composable
 fun SwipeToQueue(
@@ -47,41 +50,49 @@ fun SwipeToQueue(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) = SwipeAction(
-    icon = R.drawable.ic_queue_add,
-    label = stringResource(R.string.add_to_queue),
-    fromEnd = false,
-    onAction = onQueue,
+    start = Side(R.drawable.ic_queue_add, stringResource(R.string.add_to_queue), onQueue),
+    end = null,
     modifier = modifier,
     content = content
 )
 
-/** Swipe left on [content] to remove it from the queue, behind a trash can like Spotify's. */
+/** Swipe left on [content] to remove it from the queue, behind a trash can like Spotify. */
 @Composable
 fun SwipeToRemove(
     onRemove: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) = SwipeAction(
-    icon = R.drawable.ic_delete,
-    label = stringResource(R.string.remove_from_queue),
-    fromEnd = true,
-    onAction = onRemove,
+    start = null,
+    end = Side(R.drawable.ic_delete, stringResource(R.string.remove_from_queue), onRemove),
+    modifier = modifier,
+    content = content
+)
+
+/** Swipe right on [content] to add it to the queue, or left to remove it. */
+@Composable
+fun SwipeToQueueOrRemove(
+    onQueue: () -> Unit,
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) = SwipeAction(
+    start = Side(R.drawable.ic_queue_add, stringResource(R.string.add_to_queue), onQueue),
+    end = Side(R.drawable.ic_delete, stringResource(R.string.remove_from_queue), onRemove),
     modifier = modifier,
     content = content
 )
 
 /**
- * Swipe [content] sideways (right, or left when [fromEnd]) to act on it. The row uncovers the
- * accent with [icon] and stops once it has moved [Threshold], with a haptic tick. Letting go there
- * calls [onAction]; letting go short of it (or after dragging back) doesn't. Either way the row
- * springs straight back. Also offered as an accessibility action named [label].
+ * Swipe [content] right for [start] or left for [end] (either may be null). The row uncovers the
+ * accent with that side icon and stops once it has moved [Threshold], with a haptic tick. Letting
+ * go there runs the action; letting go short of it (or after dragging back) does not. Either way
+ * the row springs straight back. Each action is also offered for accessibility.
  */
 @Composable
 private fun SwipeAction(
-    @DrawableRes icon: Int,
-    label: String,
-    fromEnd: Boolean,
-    onAction: () -> Unit,
+    start: Side?,
+    end: Side?,
     modifier: Modifier,
     content: @Composable () -> Unit
 ) {
@@ -90,34 +101,38 @@ private fun SwipeAction(
     var offset by remember { mutableFloatStateOf(0f) }
     var armed by remember { mutableStateOf(false) }
     val drag = rememberDraggableState { delta ->
-        offset = if (fromEnd) {
-            (offset + delta).coerceIn(-thresholdPx, 0f)
-        } else {
-            (offset + delta).coerceIn(0f, thresholdPx)
-        }
+        val min = if (end != null) -thresholdPx else 0f
+        val max = if (start != null) thresholdPx else 0f
+        offset = (offset + delta).coerceIn(min, max)
         val reached = kotlin.math.abs(offset) >= thresholdPx
         if (reached && !armed) {
             haptics.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
         }
         armed = reached
     }
+    val sides = listOfNotNull(start, end)
     Box(
         modifier.semantics {
-            customActions = listOf(
-                CustomAccessibilityAction(label) {
-                    onAction()
+            customActions = sides.map { side ->
+                CustomAccessibilityAction(side.label) {
+                    side.onAction()
                     true
                 }
-            )
+            }
         }
     ) {
-        if (offset != 0f) {
+        val uncovered = when {
+            offset > 0f -> start
+            offset < 0f -> end
+            else -> null
+        }
+        if (uncovered != null) {
             Box(
                 Modifier.matchParentSize().background(MaterialTheme.colorScheme.primary),
-                contentAlignment = if (fromEnd) Alignment.CenterEnd else Alignment.CenterStart
+                contentAlignment = if (offset < 0f) Alignment.CenterEnd else Alignment.CenterStart
             ) {
                 Icon(
-                    painterResource(icon),
+                    painterResource(uncovered.icon),
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier
@@ -134,7 +149,7 @@ private fun SwipeAction(
                     state = drag,
                     orientation = Orientation.Horizontal,
                     onDragStopped = {
-                        if (armed) onAction()
+                        if (armed) (if (offset > 0f) start else end)?.onAction?.invoke()
                         armed = false
                         animate(offset, 0f) { value, _ -> offset = value }
                     }

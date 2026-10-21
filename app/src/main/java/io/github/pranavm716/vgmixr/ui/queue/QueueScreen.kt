@@ -34,12 +34,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.SwipeToQueueOrRemove
 import io.github.pranavm716.vgmixr.ui.components.SwipeToRemove
 import io.github.pranavm716.vgmixr.ui.player.label
 
 /**
  * The queue, Spotify's two tiers: now playing, "Next in queue" (swipe left to remove a track, or
- * clear them all) and "Next from" the family. Tapping a track plays it.
+ * clear them all) and "Next from" the family (swipe right to queue a track, left to remove
+ * it). Tapping a track plays it.
  */
 @Composable
 fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()) {
@@ -87,7 +89,12 @@ fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()
                     )
                 }
                 items(state.nextFrom, key = { "nextfrom-${it.index}-${it.trackId}" }) { row ->
-                    QueueRow(row, current = false, onClick = { viewModel.onJump(row.index) })
+                    SwipeToQueueOrRemove(
+                        onQueue = { viewModel.onQueue(row.index) },
+                        onRemove = { viewModel.onRemove(row.index) }
+                    ) {
+                        QueueRow(row, current = false, onClick = { viewModel.onJump(row.index) })
+                    }
                 }
             }
         }
