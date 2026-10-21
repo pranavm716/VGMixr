@@ -31,8 +31,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         nowPlayingOpen.value = savedInstanceState?.getBoolean(NOW_PLAYING_OPEN)
             ?: intent.opensNowPlaying()
-        val bars = SystemBarStyle.dark(Background.toArgb())
-        enableEdgeToEdge(statusBarStyle = bars, navigationBarStyle = bars)
+        // A transparent status bar, so now playing's game tint runs up behind it.
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(Background.toArgb())
+        )
         setContent {
             VGMixrTheme {
                 val snackbars = remember { SnackbarHostState() }

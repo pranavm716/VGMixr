@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -146,7 +147,7 @@ fun NowPlayingScreen(viewModel: NowPlayingViewModel = hiltViewModel()) {
     ) {
         Spacer(Modifier.height(16.dp))
         ArtTile(Modifier.fillMaxWidth(ART_WIDTH).aspectRatio(1f))
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.weight(INFO_PUSH))
         Text(
             visible.title,
             style = MaterialTheme.typography.headlineSmall,
@@ -166,7 +167,7 @@ fun NowPlayingScreen(viewModel: NowPlayingViewModel = hiltViewModel()) {
         SeekRow(viewModel)
         Spacer(Modifier.height(16.dp))
         Controls(visible.isPlaying, visible.isLoading, viewModel)
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.weight(2f - INFO_PUSH))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             // Opens the queue screen in a later commit; it does nothing yet.
             IconButton(onClick = {}) {
@@ -252,7 +253,9 @@ private fun Controls(isPlaying: Boolean, isLoading: Boolean, viewModel: NowPlayi
         Box(
             Modifier
                 .size(68.dp)
-                .background(MaterialTheme.colorScheme.primary, CircleShape)
+                // Clipped first, so the ripple stays inside the circle.
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary)
                 .clickable(onClick = viewModel::onPlayPause),
             contentAlignment = Alignment.Center
         ) {
@@ -288,6 +291,9 @@ private fun PlaybackProgress.fraction(): Float {
     return (positionMs.toFloat() / duration).coerceIn(0f, 1f)
 }
 
-// The art takes about three quarters of the width, as Spotify's; the tint is gone 40% down.
-private const val ART_WIDTH = 0.74f
+// The art takes most of the width, a little less than Shuttle's; the tint is gone 40% down.
+private const val ART_WIDTH = 0.82f
+
+// How the free space splits around the info and controls: more above, so they sit lower.
+private const val INFO_PUSH = 1.4f
 private const val TINT_FADE_END = 0.4f
