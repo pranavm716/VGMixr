@@ -7,7 +7,8 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - MVP: browse/filter tracks by game, family, generation, category (battle, route, town, dungeon, event, other); recently played; favorites; playback from remote streams; downloads/caching for offline use.
 - Right after MVP: local files from ROM rips become the first source on each track.
 - v2: seamless looping with a single global loop-cycle setting. Loop points are in the schema (on `local` sources) from day one.
-- v3+: related tracks, recommendations, fan remixes. Do NOT build these yet.
+- After downloads/cache: user-added YouTube tracks (mainly fan remixes), added by pasting a link (see `docs/roadmap.md`).
+- v3+: related tracks, recommendations. Do NOT build these yet.
 - Work is planned in `docs/roadmap.md`, one step per session. Do only the step you are asked to do.
 
 ## Commands
@@ -28,7 +29,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - DI: Hilt, constructor injection.
 - Media3 is used only behind the `PlaybackController` interface in `domain/`. UI and ViewModels never touch Media3 types.
 - Stream resolution (NewPipe Extractor) is used only behind the `StreamResolver` interface in `domain/`. No extractor types leak past `data/`.
-- Room is the source of truth. Favorites and PlayHistory (trackId, playedAt) are separate tables.
+- Room is the source of truth. Favorites is a built-in playlist (`Playlist`, `PlaylistEntry`); PlayHistory (trackId, playedAt) is its own table. Tracks the user adds from YouTube live in `UserTrack`, with `yt:<videoId>` ids that can't collide with catalog ids, and an optional `remixOf` catalog track id. All of this is user data in Room; the manifest stays pipeline-only.
 
 ## Catalog and manifest
 - The UI renders only from the Room catalog, never from live network lookups. Browsing and filtering must work offline.
@@ -41,7 +42,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - Track fields: id, family, optional `games` (subset of the family's games; omitted = all), title, category, order, sources, optional `replaces`. A track id is `<family>-<slug of its final title>`, computed when the pipeline writes the manifest; overrides and the review tool key tracks by their source key (the slug of the source's title) instead. Track ids are immutable from the first real deploy: favorites and history reference them.
 - One track entry per distinct piece of audio. Never duplicate shared tracks per game; use `games` for game-exclusive tracks.
 - Tracks in one family that share a name are told apart by their versions in parentheses, joined with "&": "Opening Movie (Ruby & Sapphire)" and "Opening Movie (Emerald)", "Title Screen (Black & White)" and "Title Screen (Black 2 & White 2)". Both sides get the qualifier.
-- Import rules (details in `docs/manifest.md`): validate fully before writing, upsert by id, never delete user data, retire tracks and games missing from a new manifest instead of deleting them (un-retire if they reappear), honor `replaces` by re-pointing favorites/history. A failed import keeps the existing catalog and shows a warning.
+- Import rules (details in `docs/manifest.md`): validate fully before writing, upsert by id, never delete user data, retire tracks and games missing from a new manifest instead of deleting them (un-retire if they reappear), honor `replaces` by re-pointing playlist entries (favorites included), history and `remixOf`. A failed import keeps the existing catalog and shows a warning.
 - Categories: battle, route, town, dungeon, event, other. Unknown values import as `other`.
 - Each track has an ordered `sources` list of `local` files, then `stream` candidates. The player tries local files (skipping missing ones), then a cached download of a stream source, then streams, and marks sources that exist but fail to play as broken. The cache is runtime state, never a manifest source. Unknown source types are a validation error; adding one bumps `schemaVersion`.
 - Runtime source state lives in Room, keyed by source identity, never by list index: local by `path`; stream broken flag by `videoId`; stream cache by `(videoId, startMs, endMs)`.
