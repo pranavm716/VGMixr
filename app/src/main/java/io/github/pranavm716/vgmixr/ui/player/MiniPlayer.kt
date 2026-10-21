@@ -65,7 +65,7 @@ import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
-import io.github.pranavm716.vgmixr.ui.components.chipColor
+import io.github.pranavm716.vgmixr.ui.components.tintColor
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.first
@@ -293,7 +293,7 @@ private fun Modifier.fadeOutBefore(end: Dp, fade: Dp) = this
  * through them (an RSE track runs red, blue, green).
  */
 private fun gameTint(chips: List<ChipUi>): Brush {
-    val colors = chips.map { chipColor(it.color).copy(alpha = GAME_TINT) }
+    val colors = chips.map { tintColor(it.color).copy(alpha = GAME_TINT) }
     return when (colors.size) {
         0 -> SolidColor(Color.Transparent)
         1 -> SolidColor(colors.single())

@@ -60,3 +60,25 @@ fun GameChips(chips: List<ChipUi>, modifier: Modifier = Modifier) {
         chips.forEach { GameChip(it) }
     }
 }
+
+/**
+ * A game's color for tinting: its hue and colorfulness (chroma) at a fixed middle lightness, so
+ * pale and dark games (White and Black 2) tint a gradient evenly instead of in light and dark
+ * bands, and a pale color like White 2's stays muted instead of turning into a strong red.
+ */
+fun tintColor(hex: String): Color {
+    val color = chipColor(hex)
+    val max = maxOf(color.red, color.green, color.blue)
+    val min = minOf(color.red, color.green, color.blue)
+    val chroma = max - min
+    if (chroma == 0f) return Color.hsl(0f, 0f, TINT_LIGHTNESS)
+    val hue = when (max) {
+        color.red -> 60 * (((color.green - color.blue) / chroma).mod(6f))
+        color.green -> 60 * ((color.blue - color.red) / chroma + 2)
+        else -> 60 * ((color.red - color.green) / chroma + 4)
+    }
+    // At middle lightness an HSL saturation equals the chroma it produces.
+    return Color.hsl(hue, chroma, TINT_LIGHTNESS)
+}
+
+private const val TINT_LIGHTNESS = 0.5f
