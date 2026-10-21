@@ -2,6 +2,7 @@ package io.github.pranavm716.vgmixr.ui.player
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.animate
+import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,13 +36,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -52,6 +61,7 @@ import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.chipColor
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.first
@@ -98,14 +108,17 @@ fun MiniPlayer(
     val swipe = rememberDraggableState { offset += it }
     val swipeUp = rememberDraggableState { lift += it }
 
-    Column(modifier.fillMaxWidth()) {
-        // The share played, in the accent; no track behind it and no seeking.
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(2.dp)
-                .drawBehind { drawRect(accent, size = Size(size.width * progress(), size.height)) }
-        )
+    val lineHeightPx = with(LocalDensity.current) { 2.dp.toPx() }
+    Box(
+        modifier
+            .fillMaxWidth()
+            // The share played, in the accent, drawn over the bar's top edge so it takes no
+            // height and the content stays centered; no track behind it and no seeking.
+            .drawWithContent {
+                drawContent()
+                drawRect(accent, size = Size(size.width * progress(), lineHeightPx))
+            }
+    ) {
         Row(
             Modifier
                 .fillMaxWidth()
@@ -148,17 +161,13 @@ fun MiniPlayer(
                         }
                     }
                 )
-                .padding(end = 4.dp),
+                .onSizeChanged { widthPx = it.width },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // The current track, with its neighbours just out of view on either side.
-            Box(
-                Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .clipToBounds()
-                    .onSizeChanged { widthPx = it.width }
-            ) {
+            // The current track, with its neighbours just out of view on either side. Each spans
+            // the whole island, tint included, so a neighbour's colors slide in with it; the
+            // button floats on top.
+            Box(Modifier.fillMaxSize().clipToBounds()) {
                 state.previous?.let {
                     TrackContent(it) { IntOffset((offset - widthPx).roundToInt(), 0) }
                 }
@@ -166,8 +175,10 @@ fun MiniPlayer(
                 state.next?.let {
                     TrackContent(it) { IntOffset((offset + widthPx).roundToInt(), 0) }
                 }
+                Box(Modifier.align(Alignment.CenterEnd).padding(end = 4.dp)) {
+                    PlayPauseButton(state.isPlaying, state.isLoading, onPlayPause)
+                }
             }
-            PlayPauseButton(state.isPlaying, state.isLoading, onPlayPause)
         }
     }
 }
@@ -178,7 +189,9 @@ private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
         Modifier
             .fillMaxSize()
             .offset { offset() }
-            .padding(start = 16.dp),
+            .background(gameTint(track.chips))
+            // Room on the right for the play/pause button floating above.
+            .padding(start = 16.dp, end = 56.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ArtTile(44.dp)
@@ -192,15 +205,17 @@ private fun TrackText(state: MiniTrackUi) {
     Column {
         Text(
             state.title,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleMedium.trimmed(),
             maxLines = 1,
             modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE)
         )
+        // The trim takes the room under the title's descenders too; give the chips some back.
+        Spacer(Modifier.height(4.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             GameChips(state.chips)
             Text(
                 " · " + stringResource(state.category.label),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium.trimmed(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -231,6 +246,30 @@ private fun PlayPauseButton(isPlaying: Boolean, isLoading: Boolean, onClick: () 
         }
     }
 }
+
+/**
+ * The track's games' colors, faintly: one game gives a flat tint, several a left-to-right gradient
+ * through them (an RSE track runs red, blue, green).
+ */
+private fun gameTint(chips: List<ChipUi>): Brush {
+    val colors = chips.map { chipColor(it.color).copy(alpha = GAME_TINT) }
+    return when (colors.size) {
+        0 -> SolidColor(Color.Transparent)
+        1 -> SolidColor(colors.single())
+        else -> Brush.horizontalGradient(colors)
+    }
+}
+
+private const val GAME_TINT = 0.25f
+
+// Open Sans leaves room above its letters, so a text line sits optically low; trimming the line box
+// to the glyphs centers the title and its second line on the bar.
+private fun TextStyle.trimmed() = copy(
+    lineHeightStyle = LineHeightStyle(
+        alignment = LineHeightStyle.Alignment.Center,
+        trim = LineHeightStyle.Trim.Both
+    )
+)
 
 @get:StringRes
 val Category.label: Int
