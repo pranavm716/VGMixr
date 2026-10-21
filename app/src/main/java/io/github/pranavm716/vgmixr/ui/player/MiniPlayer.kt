@@ -221,7 +221,9 @@ private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
 
 @Composable
 private fun TrackText(state: MiniTrackUi) {
-    Column {
+    // Measured on the phone: centered by layout, the letters and chips still sat 1.5dp low against
+    // the gaps under the progress line and above the bar's bottom edge.
+    Column(Modifier.offset(y = (-1.5).dp)) {
         Text(
             state.title,
             style = MaterialTheme.typography.titleMedium.trimmed(),
