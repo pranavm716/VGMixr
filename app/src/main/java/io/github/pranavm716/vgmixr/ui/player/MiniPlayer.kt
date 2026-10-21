@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -40,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
@@ -47,6 +49,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -71,11 +75,22 @@ import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 
-/** The mini player for the current track, or nothing while no track is loaded. */
+/**
+ * The mini player for the current track, or nothing while no track is loaded. It reports where it
+ * sits to [sheet], which grows out of it, and drives the sheet with upward drags.
+ */
 @Composable
-fun MiniPlayerBar(onOpenNowPlaying: () -> Unit, viewModel: MiniPlayerViewModel = hiltViewModel()) {
+fun MiniPlayerBar(
+    sheet: NowPlayingSheetState,
+    onOpenNowPlaying: () -> Unit,
+    viewModel: MiniPlayerViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val visible = state as? MiniPlayerUiState.Visible ?: return
+    val visible = state as? MiniPlayerUiState.Visible
+    if (visible == null) {
+        SideEffect { sheet.collapsedBounds = Rect.Zero }
+        return
+    }
     val progress by viewModel.progress.collectAsStateWithLifecycle()
     MiniPlayer(
         visible,
@@ -83,7 +98,29 @@ fun MiniPlayerBar(onOpenNowPlaying: () -> Unit, viewModel: MiniPlayerViewModel =
         onPlayPause = viewModel::onPlayPause,
         onNext = viewModel::onNext,
         onPrevious = viewModel::onPrevious,
-        onOpen = onOpenNowPlaying
+        onOpen = onOpenNowPlaying,
+        onLift = sheet::dragBy,
+        onLiftStopped = sheet::settle,
+        modifier = Modifier.onGloballyPositioned { sheet.collapsedBounds = it.boundsInRoot() }
+    )
+}
+
+/** The mini player's look at the top of the now-playing sheet, fading out as it opens. */
+@Composable
+fun MiniPlayerInSheet(viewModel: MiniPlayerViewModel = hiltViewModel()) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val visible = state as? MiniPlayerUiState.Visible ?: return
+    val progress by viewModel.progress.collectAsStateWithLifecycle()
+    MiniPlayer(
+        visible,
+        progress = { progress },
+        onPlayPause = viewModel::onPlayPause,
+        onNext = {},
+        onPrevious = {},
+        onOpen = {},
+        onLift = {},
+        onLiftStopped = {},
+        interactive = false
     )
 }
 
@@ -101,16 +138,17 @@ fun MiniPlayer(
     onNext: () -> Unit,
     onPrevious: () -> Unit,
     onOpen: () -> Unit,
-    modifier: Modifier = Modifier
+    onLift: (deltaPx: Float) -> Unit,
+    onLiftStopped: (velocity: Float) -> Unit,
+    modifier: Modifier = Modifier,
+    interactive: Boolean = true
 ) {
     val accent = MaterialTheme.colorScheme.primary
-    val openThresholdPx = with(LocalDensity.current) { OpenThreshold.toPx() }
     val current by rememberUpdatedState(state)
     var widthPx by remember { mutableIntStateOf(0) }
     var offset by remember { mutableFloatStateOf(0f) }
-    var lift by remember { mutableFloatStateOf(0f) }
     val swipe = rememberDraggableState { offset += it }
-    val swipeUp = rememberDraggableState { lift += it }
+    val lift = rememberDraggableState(onLift)
 
     val lineHeightPx = with(LocalDensity.current) { 2.dp.toPx() }
     Box(
@@ -128,19 +166,23 @@ fun MiniPlayer(
                 .fillMaxWidth()
                 .height(64.dp)
                 // No ripple on the body; only play/pause has one.
-                .clickable(interactionSource = null, indication = null, onClick = onOpen)
+                .clickable(
+                    interactionSource = null,
+                    indication = null,
+                    enabled = interactive,
+                    onClick = onOpen
+                )
+                // Up grows the bar into now playing, following the finger.
                 .draggable(
-                    state = swipeUp,
+                    state = lift,
                     orientation = Orientation.Vertical,
-                    onDragStarted = { lift = 0f },
-                    onDragStopped = { velocity ->
-                        if (lift < -openThresholdPx || velocity < -FLING_VELOCITY) onOpen()
-                        lift = 0f
-                    }
+                    enabled = interactive,
+                    onDragStopped = { onLiftStopped(it) }
                 )
                 .draggable(
                     state = swipe,
                     orientation = Orientation.Horizontal,
+                    enabled = interactive,
                     onDragStopped = { velocity ->
                         val width = widthPx.toFloat()
                         val before = current.track.trackId
@@ -323,9 +365,6 @@ val Category.label: Int
         Category.OTHER -> R.string.category_other
     }
 
-// How far up the mini player must be swiped to open now playing.
-private val OpenThreshold = 48.dp
-
 // A swipe this fast (px/s) counts even if it was short.
 private const val FLING_VELOCITY = 1500f
 
@@ -351,7 +390,9 @@ private fun MiniPlayerPreview() {
             onPlayPause = {},
             onNext = {},
             onPrevious = {},
-            onOpen = {}
+            onOpen = {},
+            onLift = {},
+            onLiftStopped = {}
         )
     }
 }

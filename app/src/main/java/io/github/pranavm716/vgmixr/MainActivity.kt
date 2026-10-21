@@ -16,6 +16,8 @@ import io.github.pranavm716.vgmixr.ui.VGMixrApp
 import io.github.pranavm716.vgmixr.ui.family.FamilyTab
 import io.github.pranavm716.vgmixr.ui.messages.MessagesEffect
 import io.github.pranavm716.vgmixr.ui.player.MiniPlayerBar
+import io.github.pranavm716.vgmixr.ui.player.MiniPlayerInSheet
+import io.github.pranavm716.vgmixr.ui.player.NowPlayingHeaderPlaceholder
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.Background
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -39,8 +41,10 @@ class MainActivity : ComponentActivity() {
                     screen = { destination, nav -> AppScreen(destination, nav) },
                     familyScreen = { onTrackPlayed -> FamilyTab(onTrackPlayed) },
                     snackbars = snackbars,
-                    miniPlayer = { open -> MiniPlayerBar(onOpenNowPlaying = open) },
-                    nowPlaying = { close -> NowPlayingPlaceholder(onClose = close) },
+                    miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },
+                    miniPlayerInSheet = { MiniPlayerInSheet() },
+                    nowPlayingHeader = { NowPlayingHeaderPlaceholder() },
+                    nowPlaying = { NowPlayingPlaceholder() },
                     nowPlayingOpen = nowPlayingOpen
                 )
             }

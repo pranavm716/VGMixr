@@ -22,13 +22,17 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
@@ -52,6 +56,8 @@ import io.github.pranavm716.vgmixr.ui.navigation.Tab4Route
 import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
 import io.github.pranavm716.vgmixr.ui.navigation.VGMixrNavBar
 import io.github.pranavm716.vgmixr.ui.navigation.screenTag
+import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheet
+import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheetState
 
 /** Draws a tab's root screen; the controller lets it open screens inside its tab. */
 typealias TabScreen = @Composable (TopLevelDestination, NavHostController) -> Unit
@@ -70,12 +76,21 @@ fun VGMixrApp(
     screen: TabScreen = { destination, _ -> PlaceholderScreen(destination.label) },
     familyScreen: @Composable (onTrackPlayed: () -> Unit) -> Unit = { PlaceholderScreen("Family") },
     snackbars: SnackbarHostState = remember { SnackbarHostState() },
-    miniPlayer: @Composable (onOpenNowPlaying: () -> Unit) -> Unit = {},
-    nowPlaying: @Composable (onClose: () -> Unit) -> Unit = { PlaceholderScreen("Now playing") },
+    miniPlayer: @Composable (
+        NowPlayingSheetState,
+        onOpenNowPlaying: () -> Unit
+    ) -> Unit = { _, _ -> },
+    miniPlayerInSheet: @Composable () -> Unit = {},
+    nowPlayingHeader: @Composable () -> Unit = {},
+    nowPlaying: @Composable () -> Unit = { PlaceholderScreen("Now playing") },
     nowPlayingOpen: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
 ) {
     val openNowPlaying = { nowPlayingOpen.value = true }
-    val closeNowPlaying = { nowPlayingOpen.value = false }
+    val scope = rememberCoroutineScope()
+    // The sheet grows out of the mini player; a drag that settles updates the open flag, and a
+    // change of the flag (a tap, a track, the notification, back) animates the sheet.
+    val sheet = remember { NowPlayingSheetState(scope) { nowPlayingOpen.value = it } }
+    LaunchedEffect(nowPlayingOpen.value) { sheet.animateTo(nowPlayingOpen.value) }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val selected = backStackEntry?.destination?.let { current ->
         TopLevelDestination.entries.firstOrNull { current.isIn(it) }
@@ -86,8 +101,14 @@ fun VGMixrApp(
             snackbarHost = { SnackbarHost(snackbars) },
             bottomBar = {
                 Column {
-                    miniPlayer(openNowPlaying)
+                    miniPlayer(sheet, openNowPlaying)
                     VGMixrNavBar(
+                        // Slides down out of view as now playing opens.
+                        modifier = Modifier
+                            .onSizeChanged { sheet.navBarHeightPx = it.height.toFloat() }
+                            .graphicsLayer {
+                                translationY = sheet.navBarHeightPx * sheet.expansion
+                            },
                         selected = selected,
                         onSelect = { tab ->
                             if (tab == selected) {
@@ -108,19 +129,13 @@ fun VGMixrApp(
                 Modifier.padding(padding)
             )
         }
-        // Now playing covers everything, the navbar included.
-        AnimatedVisibility(
-            visible = nowPlayingOpen.value,
-            enter = slideInVertically { it },
-            exit = slideOutVertically { it }
-        ) {
-            // A surface, so text gets the theme's colors outside the Scaffold. Its back handler
-            // is registered on opening, after the NavHost's, so back closes it first.
-            Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                BackHandler(onBack = closeNowPlaying)
-                nowPlaying(closeNowPlaying)
-            }
-        }
+        // Now playing grows out of the mini player over everything, the navbar included.
+        NowPlayingSheet(
+            sheet,
+            collapsed = miniPlayerInSheet,
+            header = nowPlayingHeader,
+            content = nowPlaying
+        )
     }
 }
 
