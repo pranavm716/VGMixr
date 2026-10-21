@@ -13,5 +13,11 @@ import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 /** A family's cover tile: square with rounded corners. A blank tile until families get covers. */
 @Composable
 fun ArtTile(size: Dp, modifier: Modifier = Modifier) {
-    Box(modifier.size(size).background(ArtPlaceholder, RoundedCornerShape(6.dp)))
+    ArtTile(modifier.size(size))
+}
+
+/** The tile at whatever size [modifier] gives it, such as now playing's large square. */
+@Composable
+fun ArtTile(modifier: Modifier) {
+    Box(modifier.background(ArtPlaceholder, RoundedCornerShape(6.dp)))
 }

@@ -81,7 +81,10 @@ fun VGMixrApp(
         onOpenNowPlaying: () -> Unit
     ) -> Unit = { _, _ -> },
     miniPlayerInSheet: @Composable () -> Unit = {},
-    nowPlayingHeader: @Composable () -> Unit = {},
+    nowPlayingHeader: @Composable (
+        onClose: () -> Unit,
+        onOpenFamily: (familyId: String) -> Unit
+    ) -> Unit = { _, _ -> },
     nowPlaying: @Composable () -> Unit = { PlaceholderScreen("Now playing") },
     nowPlayingOpen: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
 ) {
@@ -133,7 +136,19 @@ fun VGMixrApp(
         NowPlayingSheet(
             sheet,
             collapsed = miniPlayerInSheet,
-            header = nowPlayingHeader,
+            header = {
+                nowPlayingHeader(
+                    { nowPlayingOpen.value = false },
+                    { familyId ->
+                        // Closes the sheet and opens the family in the Games tab, replacing any
+                        // family already open there; it scrolls to the playing track on opening.
+                        nowPlayingOpen.value = false
+                        navController.navigate(FamilyRoute(familyId)) {
+                            popUpTo<GamesRoute>()
+                        }
+                    }
+                )
+            },
             content = nowPlaying
         )
     }

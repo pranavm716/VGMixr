@@ -334,7 +334,7 @@ private fun Modifier.fadeOutBefore(end: Dp, fade: Dp) = this
  * The track's games' colors, faintly: one game gives a flat tint, several a left-to-right gradient
  * through them (an RSE track runs red, blue, green).
  */
-private fun gameTint(chips: List<ChipUi>): Brush {
+internal fun gameTint(chips: List<ChipUi>): Brush {
     val colors = chips.map { tintColor(it.color).copy(alpha = GAME_TINT) }
     return when (colors.size) {
         0 -> SolidColor(Color.Transparent)
