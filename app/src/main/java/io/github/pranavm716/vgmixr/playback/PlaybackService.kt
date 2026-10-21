@@ -85,7 +85,10 @@ class PlaybackService : MediaSessionService() {
         val openApp = PendingIntent.getActivity(
             this,
             0,
-            Intent(this, MainActivity::class.java),
+            // Opens now playing; SINGLE_TOP hands it to the running activity (onNewIntent).
+            Intent(this, MainActivity::class.java)
+                .setAction(MainActivity.ACTION_OPEN_NOW_PLAYING)
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         val session = MediaSession.Builder(this, player)

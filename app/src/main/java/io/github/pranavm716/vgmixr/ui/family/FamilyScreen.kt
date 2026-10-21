@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
+import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
@@ -55,11 +56,14 @@ private val LeadingGap = 16.dp
 private const val PLAYING_TINT = 0.12f
 
 @Composable
-fun FamilyTab(viewModel: FamilyViewModel = hiltViewModel()) {
+fun FamilyTab(onTrackPlayed: () -> Unit, viewModel: FamilyViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     FamilyScreen(
         state,
-        onTrackClick = viewModel::onTrackClick,
+        onTrackClick = {
+            viewModel.onTrackClick(it)
+            onTrackPlayed()
+        },
         onQueueTrack = viewModel::onQueueTrack
     )
 }
@@ -104,12 +108,7 @@ private fun Header(name: String, trackCount: Int) {
         modifier = Modifier.padding(start = StartPadding, top = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // A blank tile until families get covers.
-        Box(
-            Modifier
-                .size(LeadingColumn)
-                .background(ArtPlaceholder, RoundedCornerShape(6.dp))
-        )
+        ArtTile(LeadingColumn)
         Spacer(Modifier.width(LeadingGap))
         Column {
             Text(

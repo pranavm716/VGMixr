@@ -1,23 +1,32 @@
 package io.github.pranavm716.vgmixr.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavBackStackEntry
@@ -58,63 +67,103 @@ const val FAMILY_SCREEN_TAG = "screen-family"
 fun VGMixrApp(
     navController: NavHostController = rememberNavController(),
     screen: TabScreen = { destination, _ -> PlaceholderScreen(destination.label) },
-    familyScreen: @Composable () -> Unit = { PlaceholderScreen("Family") },
-    snackbars: SnackbarHostState = remember { SnackbarHostState() }
+    familyScreen: @Composable (onTrackPlayed: () -> Unit) -> Unit = { PlaceholderScreen("Family") },
+    snackbars: SnackbarHostState = remember { SnackbarHostState() },
+    miniPlayer: @Composable (onOpenNowPlaying: () -> Unit) -> Unit = {},
+    nowPlaying: @Composable (onClose: () -> Unit) -> Unit = { PlaceholderScreen("Now playing") },
+    nowPlayingOpen: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
 ) {
+    val openNowPlaying = { nowPlayingOpen.value = true }
+    val closeNowPlaying = { nowPlayingOpen.value = false }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val selected = backStackEntry?.destination?.let { current ->
         TopLevelDestination.entries.firstOrNull { current.isIn(it) }
     }
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(snackbars) },
-        bottomBar = {
-            VGMixrNavBar(
-                selected = selected,
-                onSelect = { tab ->
-                    if (tab ==
-                        selected
-                    ) {
-                        navController.popToRoot(tab)
-                    } else {
-                        navController.navigateTo(tab)
-                    }
+    Box(Modifier.fillMaxSize()) {
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.background,
+            snackbarHost = { SnackbarHost(snackbars) },
+            bottomBar = {
+                Column {
+                    miniPlayer(openNowPlaying)
+                    VGMixrNavBar(
+                        selected = selected,
+                        onSelect = { tab ->
+                            if (tab == selected) {
+                                navController.popToRoot(tab)
+                            } else {
+                                navController.navigateTo(tab)
+                            }
+                        }
+                    )
                 }
+            }
+        ) { padding ->
+            AppNavHost(
+                navController,
+                screen,
+                familyScreen,
+                openNowPlaying,
+                Modifier.padding(padding)
             )
         }
-    ) { padding ->
-        NavHost(
-            navController = navController,
-            startDestination = TopLevelDestination.start.route,
-            modifier = Modifier.padding(padding),
-            enterTransition = { if (withinTab()) slideIn(SlideDirection.Start) else tabFadeIn },
-            exitTransition = {
-                if (withinTab()) slideOut(SlideDirection.Start, parallax = true) else tabFadeOut
-            },
-            popEnterTransition = {
-                if (withinTab()) slideIn(SlideDirection.End, parallax = true) else tabFadeIn
-            },
-            popExitTransition = { if (withinTab()) slideOut(SlideDirection.End) else tabFadeOut },
-            // The back gesture plays its own pair (by default the leaving screen shrinks and
-            // fades); use the same slide, which then follows the finger.
-            predictivePopEnterTransition = {
-                if (withinTab()) slideIn(SlideDirection.End, parallax = true) else tabFadeIn
-            },
-            predictivePopExitTransition = {
-                if (withinTab()) slideOut(SlideDirection.End) else tabFadeOut
-            }
+        // Now playing covers everything, the navbar included.
+        AnimatedVisibility(
+            visible = nowPlayingOpen.value,
+            enter = slideInVertically { it },
+            exit = slideOutVertically { it }
         ) {
-            // One entry per tab; the bar's order comes from TopLevelDestination, not from here.
-            navigation<GamesGraph>(startDestination = GamesRoute) {
-                composable<GamesRoute> { Tab(TopLevelDestination.GAMES, navController, screen) }
-                composable<FamilyRoute> {
-                    Box(Modifier.screen().testTag(FAMILY_SCREEN_TAG)) { familyScreen() }
+            // A surface, so text gets the theme's colors outside the Scaffold. Its back handler
+            // is registered on opening, after the NavHost's, so back closes it first.
+            Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                BackHandler(onBack = closeNowPlaying)
+                nowPlaying(closeNowPlaying)
+            }
+        }
+    }
+}
+
+@Composable
+private fun AppNavHost(
+    navController: NavHostController,
+    screen: TabScreen,
+    familyScreen: @Composable (onTrackPlayed: () -> Unit) -> Unit,
+    openNowPlaying: () -> Unit,
+    modifier: Modifier
+) {
+    NavHost(
+        navController = navController,
+        startDestination = TopLevelDestination.start.route,
+        modifier = modifier,
+        enterTransition = { if (withinTab()) slideIn(SlideDirection.Start) else tabFadeIn },
+        exitTransition = {
+            if (withinTab()) slideOut(SlideDirection.Start, parallax = true) else tabFadeOut
+        },
+        popEnterTransition = {
+            if (withinTab()) slideIn(SlideDirection.End, parallax = true) else tabFadeIn
+        },
+        popExitTransition = { if (withinTab()) slideOut(SlideDirection.End) else tabFadeOut },
+        // The back gesture plays its own pair (by default the leaving screen shrinks and
+        // fades); use the same slide, which then follows the finger.
+        predictivePopEnterTransition = {
+            if (withinTab()) slideIn(SlideDirection.End, parallax = true) else tabFadeIn
+        },
+        predictivePopExitTransition = {
+            if (withinTab()) slideOut(SlideDirection.End) else tabFadeOut
+        }
+    ) {
+        // One entry per tab; the bar's order comes from TopLevelDestination, not from here.
+        navigation<GamesGraph>(startDestination = GamesRoute) {
+            composable<GamesRoute> { Tab(TopLevelDestination.GAMES, navController, screen) }
+            composable<FamilyRoute> {
+                Box(Modifier.screen().testTag(FAMILY_SCREEN_TAG)) {
+                    familyScreen(openNowPlaying)
                 }
             }
-            composable<Tab2Route> { Tab(TopLevelDestination.TAB_2, navController, screen) }
-            composable<Tab3Route> { Tab(TopLevelDestination.TAB_3, navController, screen) }
-            composable<Tab4Route> { Tab(TopLevelDestination.TAB_4, navController, screen) }
         }
+        composable<Tab2Route> { Tab(TopLevelDestination.TAB_2, navController, screen) }
+        composable<Tab3Route> { Tab(TopLevelDestination.TAB_3, navController, screen) }
+        composable<Tab4Route> { Tab(TopLevelDestination.TAB_4, navController, screen) }
     }
 }
 
