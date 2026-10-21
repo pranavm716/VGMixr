@@ -115,11 +115,10 @@ fun NowPlayingHeader(
 
 /**
  * Now playing's body, Shuttle's look: the art, the title over its games and category, the seek
- * bar between the elapsed time and the length, and previous / play-pause / next. The queue
- * button comes later.
+ * bar between the elapsed time and the length, previous / play-pause / next, and the queue button.
  */
 @Composable
-fun NowPlayingScreen(viewModel: NowPlayingViewModel = hiltViewModel()) {
+fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = hiltViewModel()) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val visible = state as? NowPlayingUiState.Visible ?: return
     val background = MaterialTheme.colorScheme.background
@@ -169,8 +168,7 @@ fun NowPlayingScreen(viewModel: NowPlayingViewModel = hiltViewModel()) {
         Controls(visible.isPlaying, visible.isLoading, viewModel)
         Spacer(Modifier.weight(2f - INFO_PUSH))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            // Opens the queue screen in a later commit; it does nothing yet.
-            IconButton(onClick = {}) {
+            IconButton(onClick = onOpenQueue) {
                 Icon(
                     painterResource(R.drawable.ic_queue),
                     contentDescription = stringResource(R.string.queue)

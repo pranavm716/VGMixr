@@ -19,6 +19,7 @@ import io.github.pranavm716.vgmixr.ui.player.MiniPlayerBar
 import io.github.pranavm716.vgmixr.ui.player.MiniPlayerInSheet
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingHeader
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingScreen
+import io.github.pranavm716.vgmixr.ui.queue.QueueScreen
 import io.github.pranavm716.vgmixr.ui.theme.Background
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
@@ -47,7 +48,8 @@ class MainActivity : ComponentActivity() {
                     miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },
                     miniPlayerInSheet = { MiniPlayerInSheet() },
                     nowPlayingHeader = { close, openFamily -> NowPlayingHeader(close, openFamily) },
-                    nowPlaying = { NowPlayingScreen() },
+                    nowPlaying = { openQueue -> NowPlayingScreen(onOpenQueue = openQueue) },
+                    queue = { close -> QueueScreen(onClose = close) },
                     nowPlayingOpen = nowPlayingOpen
                 )
             }

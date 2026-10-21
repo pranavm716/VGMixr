@@ -9,7 +9,9 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -29,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -85,7 +88,10 @@ fun VGMixrApp(
         onClose: () -> Unit,
         onOpenFamily: (familyId: String) -> Unit
     ) -> Unit = { _, _ -> },
-    nowPlaying: @Composable () -> Unit = { PlaceholderScreen("Now playing") },
+    nowPlaying: @Composable (
+        onOpenQueue: () -> Unit
+    ) -> Unit = { PlaceholderScreen("Now playing") },
+    queue: @Composable (onClose: () -> Unit) -> Unit = { PlaceholderScreen("Queue") },
     nowPlayingOpen: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
 ) {
     val openNowPlaying = { nowPlayingOpen.value = true }
@@ -94,6 +100,9 @@ fun VGMixrApp(
     // change of the flag (a tap, a track, the notification, back) animates the sheet.
     val sheet = remember { NowPlayingSheetState(scope) { nowPlayingOpen.value = it } }
     LaunchedEffect(nowPlayingOpen.value) { sheet.animateTo(nowPlayingOpen.value) }
+    // The queue opens over now playing and closes with it.
+    var queueOpen by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(nowPlayingOpen.value) { if (!nowPlayingOpen.value) queueOpen = false }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val selected = backStackEntry?.destination?.let { current ->
         TopLevelDestination.entries.firstOrNull { current.isIn(it) }
@@ -149,8 +158,18 @@ fun VGMixrApp(
                     }
                 )
             },
-            content = nowPlaying
+            content = { nowPlaying { queueOpen = true } }
         )
+        AnimatedVisibility(
+            visible = queueOpen,
+            enter = slideInHorizontally { it },
+            exit = slideOutHorizontally { it }
+        ) {
+            Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                BackHandler { queueOpen = false }
+                queue { queueOpen = false }
+            }
+        }
     }
 }
 
