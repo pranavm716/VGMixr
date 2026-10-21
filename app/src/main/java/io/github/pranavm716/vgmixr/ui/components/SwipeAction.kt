@@ -1,5 +1,6 @@
 package io.github.pranavm716.vgmixr.ui.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -36,19 +37,52 @@ import kotlin.math.roundToInt
 private val IconInset = 24.dp
 private val IconSize = 24.dp
 
-// The row queues once its left edge is as far past the icon as the icon is from the screen edge.
+// The row acts once its edge is as far past the icon as the icon is from the screen edge.
 private val Threshold = IconInset + IconSize + IconInset
 
-/**
- * Swipe right on [content] to add it to the queue, as Spotify's "Add to queue". The row uncovers
- * the accent with a queue icon and stops once it has moved [Threshold], with a haptic tick.
- * Letting go there calls [onQueue]; letting go short of it (or after dragging back) doesn't. Either
- * way the row springs straight back. Also offered as an accessibility action.
- */
+/** Swipe right on [content] to add it to the queue, as Spotify's "Add to queue". */
 @Composable
 fun SwipeToQueue(
     onQueue: () -> Unit,
     modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) = SwipeAction(
+    icon = R.drawable.ic_queue_add,
+    label = stringResource(R.string.add_to_queue),
+    fromEnd = false,
+    onAction = onQueue,
+    modifier = modifier,
+    content = content
+)
+
+/** Swipe left on [content] to remove it from the queue, behind a trash can like Spotify's. */
+@Composable
+fun SwipeToRemove(
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) = SwipeAction(
+    icon = R.drawable.ic_delete,
+    label = stringResource(R.string.remove_from_queue),
+    fromEnd = true,
+    onAction = onRemove,
+    modifier = modifier,
+    content = content
+)
+
+/**
+ * Swipe [content] sideways (right, or left when [fromEnd]) to act on it. The row uncovers the
+ * accent with [icon] and stops once it has moved [Threshold], with a haptic tick. Letting go there
+ * calls [onAction]; letting go short of it (or after dragging back) doesn't. Either way the row
+ * springs straight back. Also offered as an accessibility action named [label].
+ */
+@Composable
+private fun SwipeAction(
+    @DrawableRes icon: Int,
+    label: String,
+    fromEnd: Boolean,
+    onAction: () -> Unit,
+    modifier: Modifier,
     content: @Composable () -> Unit
 ) {
     val thresholdPx = with(LocalDensity.current) { Threshold.toPx() }
@@ -56,34 +90,39 @@ fun SwipeToQueue(
     var offset by remember { mutableFloatStateOf(0f) }
     var armed by remember { mutableStateOf(false) }
     val drag = rememberDraggableState { delta ->
-        offset = (offset + delta).coerceIn(0f, thresholdPx)
-        val reached = offset >= thresholdPx
+        offset = if (fromEnd) {
+            (offset + delta).coerceIn(-thresholdPx, 0f)
+        } else {
+            (offset + delta).coerceIn(0f, thresholdPx)
+        }
+        val reached = kotlin.math.abs(offset) >= thresholdPx
         if (reached && !armed) {
             haptics.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
         }
         armed = reached
     }
-    val label = stringResource(R.string.add_to_queue)
     Box(
         modifier.semantics {
             customActions = listOf(
                 CustomAccessibilityAction(label) {
-                    onQueue()
+                    onAction()
                     true
                 }
             )
         }
     ) {
-        if (offset > 0f) {
+        if (offset != 0f) {
             Box(
                 Modifier.matchParentSize().background(MaterialTheme.colorScheme.primary),
-                contentAlignment = Alignment.CenterStart
+                contentAlignment = if (fromEnd) Alignment.CenterEnd else Alignment.CenterStart
             ) {
                 Icon(
-                    painterResource(R.drawable.ic_queue_add),
+                    painterResource(icon),
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.padding(start = IconInset).size(IconSize)
+                    modifier = Modifier
+                        .padding(start = IconInset, end = IconInset)
+                        .size(IconSize)
                 )
             }
         }
@@ -95,7 +134,7 @@ fun SwipeToQueue(
                     state = drag,
                     orientation = Orientation.Horizontal,
                     onDragStopped = {
-                        if (armed) onQueue()
+                        if (armed) onAction()
                         armed = false
                         animate(offset, 0f) { value, _ -> offset = value }
                     }

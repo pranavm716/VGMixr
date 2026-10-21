@@ -8,6 +8,11 @@
     <string name="playback_stopped_extractor">Playback stopped: YouTube changed and the stream extractor needs an update</string>
 
     <string name="add_to_queue">Add to queue</string>
+    <string name="remove_from_queue">Remove from queue</string>
+    <string name="clear_queue">Clear queue</string>
+    <string name="next_in_queue">Next in queue</string>
+    <string name="next_from">Next from %1$s</string>
+    <string name="back">Back</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>
     <string name="playing_from">Playing from</string>
