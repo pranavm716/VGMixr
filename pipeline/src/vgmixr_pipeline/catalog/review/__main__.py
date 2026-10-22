@@ -1,4 +1,7 @@
-"""The review tool: a local page for deciding the catalog's track list (docs/roadmap.md, step 17).
+"""The review tool: a local page for deciding the catalog's track list and fixing broken sources.
+
+Steps 17-18 (track review, playlists, order) and 10b (the Broken tab: the sources the app reported
+broken, docs/broken.md) in docs/roadmap.md.
 
 Reads pipeline/out/draft.json (run the builder first) and pipeline/data/, and writes decisions to
 pipeline/data/. Matching uses the YouTube cache only; searches and lookups from the page ask
@@ -13,7 +16,8 @@ import sys
 import time
 from pathlib import Path
 
-from vgmixr_pipeline.catalog.__main__ import OUT_DIR
+from vgmixr_pipeline.broken.recheck import AppChecks
+from vgmixr_pipeline.catalog.__main__ import MANIFEST, OUT_DIR
 from vgmixr_pipeline.catalog.config import DATA_DIR
 from vgmixr_pipeline.catalog.review.server import make_server
 from vgmixr_pipeline.catalog.review.service import Review
@@ -42,6 +46,8 @@ def main(argv: list[str] | None = None) -> int:
         cached=YouTube(cache, cached_only=True),
         live=YouTube(cache, delay=0),
         cached_only=args.cached_only,
+        manifest_path=MANIFEST,
+        app_checks=AppChecks(cache / "app-check"),
     )
     server = make_server(review, args.port)
     print(
