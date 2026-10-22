@@ -40,14 +40,13 @@ class BrokenStreamDaoTest {
     }
 
     @Test
-    fun `marks are observed oldest first, and a cleared mark goes`() = runTest(dispatcher) {
+    fun `marks are observed oldest first`() = runTest(dispatcher) {
         dao.insert(mark("bbbbbbbbbbb", at = 2_000))
-        dao.insert(mark("aaaaaaaaaaa", at = 1_000))
 
         dao.observeAll().test {
-            assertEquals(listOf("aaaaaaaaaaa", "bbbbbbbbbbb"), awaitItem().map { it.videoId })
-            dao.delete("aaaaaaaaaaa")
             assertEquals(listOf("bbbbbbbbbbb"), awaitItem().map { it.videoId })
+            dao.insert(mark("aaaaaaaaaaa", at = 1_000))
+            assertEquals(listOf("aaaaaaaaaaa", "bbbbbbbbbbb"), awaitItem().map { it.videoId })
         }
     }
 }

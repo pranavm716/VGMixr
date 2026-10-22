@@ -48,6 +48,9 @@ interface BrokenSources {
         detail: String?
     ): Boolean
 
-    /** Removes [videoId]'s mark, so the next play tries it again. */
-    suspend fun clear(videoId: String)
+    /**
+     * Clears the marks of [trackId]'s videos (Try again), so its next play tries them again. A
+     * video other tracks share is cleared for them too.
+     */
+    suspend fun clearTrack(trackId: String)
 }

@@ -110,7 +110,10 @@ class FakeBrokenSources(initial: Map<String, BrokenMark> = emptyMap()) : BrokenS
         return true
     }
 
-    override suspend fun clear(videoId: String) {
-        marks.value -= videoId
+    val cleared = mutableListOf<String>()
+
+    override suspend fun clearTrack(trackId: String) {
+        cleared += trackId
+        marks.value = marks.value.filterValues { it.trackId != trackId }
     }
 }

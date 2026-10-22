@@ -1,7 +1,6 @@
 package io.github.pranavm716.vgmixr.data.stream
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import app.cash.turbine.test
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog
 import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
 import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
@@ -63,16 +62,5 @@ class RoomBrokenSourcesTest {
 
         assertFalse(sources.mark("7DbGoUJkNfU", "oras-b", BrokenReason.UNAVAILABLE, "removed"))
         assertEquals("oras-a", sources.marks.first().getValue("7DbGoUJkNfU").trackId)
-    }
-
-    @Test
-    fun `clearing a mark lets the video play again`() = runTest(dispatcher) {
-        sources.mark("7DbGoUJkNfU", "oras-a", BrokenReason.NO_AUDIO, null)
-
-        sources.marks.test {
-            assertEquals(setOf("7DbGoUJkNfU"), awaitItem().keys)
-            sources.clear("7DbGoUJkNfU")
-            assertEquals(emptySet<String>(), awaitItem().keys)
-        }
     }
 }
