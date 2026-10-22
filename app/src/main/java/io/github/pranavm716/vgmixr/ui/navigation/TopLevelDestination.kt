@@ -11,7 +11,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable data class FamilyRoute(val familyId: String)
 
-@Serializable data object Tab2Route
+/** The Search tab. */
+@Serializable data object SearchRoute
 
 @Serializable data object Tab3Route
 
@@ -19,7 +20,7 @@ import kotlinx.serialization.Serializable
 
 /**
  * The navbar's tabs, in bar order. The first entry is the start tab, so moving a tab is moving
- * its line. Tabs 2-4 are placeholders until their content is decided.
+ * its line. Tabs 3 and 4 are placeholders until their content is built.
  */
 enum class TopLevelDestination(
     val label: String,
@@ -27,7 +28,7 @@ enum class TopLevelDestination(
     val route: Any
 ) {
     GAMES("Games", R.drawable.ic_games, GamesGraph),
-    TAB_2("Tab 2", R.drawable.ic_tab_circle, Tab2Route),
+    SEARCH("Search", R.drawable.ic_search, SearchRoute),
     TAB_3("Tab 3", R.drawable.ic_tab_triangle, Tab3Route),
     TAB_4("Tab 4", R.drawable.ic_tab_square, Tab4Route);
 

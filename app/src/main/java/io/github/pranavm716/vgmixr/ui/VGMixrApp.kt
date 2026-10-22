@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -59,7 +60,7 @@ import io.github.pranavm716.vgmixr.ui.games.GamesTab
 import io.github.pranavm716.vgmixr.ui.navigation.FamilyRoute
 import io.github.pranavm716.vgmixr.ui.navigation.GamesGraph
 import io.github.pranavm716.vgmixr.ui.navigation.GamesRoute
-import io.github.pranavm716.vgmixr.ui.navigation.Tab2Route
+import io.github.pranavm716.vgmixr.ui.navigation.SearchRoute
 import io.github.pranavm716.vgmixr.ui.navigation.Tab3Route
 import io.github.pranavm716.vgmixr.ui.navigation.Tab4Route
 import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
@@ -67,9 +68,13 @@ import io.github.pranavm716.vgmixr.ui.navigation.VGMixrNavBar
 import io.github.pranavm716.vgmixr.ui.navigation.screenTag
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheet
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheetState
+import io.github.pranavm716.vgmixr.ui.search.SearchTab
 
-/** Draws a tab's root screen; the controller lets it open screens inside its tab. */
-typealias TabScreen = @Composable (TopLevelDestination, NavHostController) -> Unit
+/**
+ * Draws a tab's root screen; the controller lets it open screens inside its tab. The count goes
+ * up each time the tab is tapped while already selected (the Search tab then focuses its field).
+ */
+typealias TabScreen = @Composable (TopLevelDestination, NavHostController, reselects: Int) -> Unit
 
 /** Test tag of the family track screen. */
 const val FAMILY_SCREEN_TAG = "screen-family"
@@ -82,7 +87,7 @@ const val FAMILY_SCREEN_TAG = "screen-family"
 @Composable
 fun VGMixrApp(
     navController: NavHostController = rememberNavController(),
-    screen: TabScreen = { destination, _ -> PlaceholderScreen(destination.label) },
+    screen: TabScreen = { destination, _, _ -> PlaceholderScreen(destination.label) },
     familyScreen: @Composable () -> Unit = { PlaceholderScreen("Family") },
     snackbars: SnackbarHostState = remember { SnackbarHostState() },
     miniPlayer: @Composable (
@@ -109,6 +114,7 @@ fun VGMixrApp(
     // The queue opens over now playing and closes with it.
     var queueOpen by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(nowPlayingOpen.value) { if (!nowPlayingOpen.value) queueOpen = false }
+    val reselects = remember { mutableStateMapOf<TopLevelDestination, Int>() }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val selected = backStackEntry?.destination?.let { current ->
         TopLevelDestination.entries.firstOrNull { current.isIn(it) }
@@ -140,6 +146,7 @@ fun VGMixrApp(
                         selected = selected,
                         onSelect = { tab ->
                             if (tab == selected) {
+                                reselects[tab] = (reselects[tab] ?: 0) + 1
                                 navController.popToRoot(tab)
                             } else {
                                 navController.navigateTo(tab)
@@ -153,6 +160,7 @@ fun VGMixrApp(
                 navController,
                 screen,
                 familyScreen,
+                { reselects[it] ?: 0 },
                 Modifier.padding(padding)
             )
         }
@@ -193,6 +201,7 @@ private fun AppNavHost(
     navController: NavHostController,
     screen: TabScreen,
     familyScreen: @Composable () -> Unit,
+    reselects: (TopLevelDestination) -> Int,
     modifier: Modifier
 ) {
     NavHost(
@@ -218,7 +227,9 @@ private fun AppNavHost(
     ) {
         // One entry per tab; the bar's order comes from TopLevelDestination, not from here.
         navigation<GamesGraph>(startDestination = GamesRoute) {
-            composable<GamesRoute> { Tab(TopLevelDestination.GAMES, navController, screen) }
+            composable<GamesRoute> {
+                Tab(TopLevelDestination.GAMES, navController, screen, reselects)
+            }
             // The family screen pads below the status bar itself, under its tinted header.
             composable<FamilyRoute> {
                 Box(Modifier.screen().testTag(FAMILY_SCREEN_TAG)) {
@@ -226,9 +237,11 @@ private fun AppNavHost(
                 }
             }
         }
-        composable<Tab2Route> { Tab(TopLevelDestination.TAB_2, navController, screen) }
-        composable<Tab3Route> { Tab(TopLevelDestination.TAB_3, navController, screen) }
-        composable<Tab4Route> { Tab(TopLevelDestination.TAB_4, navController, screen) }
+        composable<SearchRoute> {
+            Tab(TopLevelDestination.SEARCH, navController, screen, reselects)
+        }
+        composable<Tab3Route> { Tab(TopLevelDestination.TAB_3, navController, screen, reselects) }
+        composable<Tab4Route> { Tab(TopLevelDestination.TAB_4, navController, screen, reselects) }
     }
 }
 
@@ -236,19 +249,22 @@ private fun AppNavHost(
 private fun Tab(
     destination: TopLevelDestination,
     navController: NavHostController,
-    screen: TabScreen
+    screen: TabScreen,
+    reselects: (TopLevelDestination) -> Int
 ) {
     Box(Modifier.screen().statusBarsPadding().testTag(destination.screenTag)) {
-        screen(destination, navController)
+        screen(destination, navController, reselects(destination))
     }
 }
 
 /** The real root screen of each tab. */
 @Composable
-fun AppScreen(destination: TopLevelDestination, navController: NavHostController) {
+fun AppScreen(destination: TopLevelDestination, navController: NavHostController, reselects: Int) {
     when (destination) {
         TopLevelDestination.GAMES ->
             GamesTab(onFamilyClick = { navController.navigate(FamilyRoute(it)) })
+
+        TopLevelDestination.SEARCH -> SearchTab(reselects)
 
         else -> PlaceholderScreen(destination.label)
     }
