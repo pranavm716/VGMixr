@@ -118,7 +118,7 @@ fun NowPlayingHeader(
 /**
  * Now playing's body, Shuttle's look: the art, the title over its game chips, the seek
  * bar between the elapsed time and the length, previous / play-pause / next, and under them the
- * favorite heart (centered) with add to playlist and the queue button at the end.
+ * row of add to playlist (start), the favorite heart (centered) and the queue button (end).
  */
 @Composable
 fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = hiltViewModel()) {
@@ -186,20 +186,18 @@ fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = h
                     tint = Color.White
                 )
             }
-            Row(Modifier.align(Alignment.CenterEnd)) {
-                // Not wired yet: picking a playlist comes with the playlist page.
-                IconButton(onClick = {}) {
-                    Icon(
-                        painterResource(R.drawable.ic_add),
-                        contentDescription = stringResource(R.string.add_to_playlist)
-                    )
-                }
-                IconButton(onClick = onOpenQueue) {
-                    Icon(
-                        painterResource(R.drawable.ic_queue),
-                        contentDescription = stringResource(R.string.queue)
-                    )
-                }
+            // Not wired yet: picking a playlist comes with the playlist page.
+            IconButton(onClick = {}, Modifier.align(Alignment.CenterStart)) {
+                Icon(
+                    painterResource(R.drawable.ic_add),
+                    contentDescription = stringResource(R.string.add_to_playlist)
+                )
+            }
+            IconButton(onClick = onOpenQueue, Modifier.align(Alignment.CenterEnd)) {
+                Icon(
+                    painterResource(R.drawable.ic_queue),
+                    contentDescription = stringResource(R.string.queue)
+                )
             }
         }
         Spacer(Modifier.height(8.dp))
