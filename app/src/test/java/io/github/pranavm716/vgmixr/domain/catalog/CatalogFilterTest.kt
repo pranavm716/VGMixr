@@ -1,7 +1,6 @@
 package io.github.pranavm716.vgmixr.domain.catalog
 
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.model.Source
 import org.junit.Assert.assertEquals
@@ -15,12 +14,11 @@ class CatalogFilterTest {
     private val botw = game("botw", familyId = "botw", generation = null)
     private val rse = listOf(ruby, sapphire, emerald)
 
-    private val shared = track("rse-route-101", "rse", rse, category = Category.ROUTE, order = 1)
-    private val rubyOnly = track("rse-ruby-only", "rse", listOf(ruby), Category.TOWN, order = 2)
-    private val sapphireOnly =
-        track("rse-sapphire-only", "rse", listOf(sapphire), Category.BATTLE, order = 3)
-    private val plaTrack = track("pla-village", "pla", listOf(pla), Category.TOWN, order = 0)
-    private val botwTrack = track("botw-field", "botw", listOf(botw), Category.ROUTE, order = 0)
+    private val shared = track("rse-route-101", "rse", rse, order = 1)
+    private val rubyOnly = track("rse-ruby-only", "rse", listOf(ruby), order = 2)
+    private val sapphireOnly = track("rse-sapphire-only", "rse", listOf(sapphire), order = 3)
+    private val plaTrack = track("pla-village", "pla", listOf(pla), order = 0)
+    private val botwTrack = track("botw-field", "botw", listOf(botw), order = 0)
 
     private val catalog = Catalog(
         games = rse + pla + botw,
@@ -66,33 +64,18 @@ class CatalogFilterTest {
     }
 
     @Test
-    fun `category filter matches the track's category`() {
-        assertEquals(
-            listOf(rubyOnly, plaTrack),
-            catalog.filter(TrackFilter(category = Category.TOWN))
-        )
-    }
-
-    @Test
     fun `filters combine with AND`() {
         assertEquals(
-            listOf(rubyOnly),
-            catalog.filter(TrackFilter(game = "ruby", category = Category.TOWN))
+            listOf(shared, rubyOnly),
+            catalog.filter(TrackFilter(game = "ruby", generation = 3))
         )
         assertEquals(
             emptyList<CatalogTrack>(),
             catalog.filter(TrackFilter(family = "pla", generation = 3))
         )
         assertEquals(
-            listOf(sapphireOnly),
-            catalog.filter(
-                TrackFilter(
-                    game = "sapphire",
-                    family = "rse",
-                    generation = 3,
-                    category = Category.BATTLE
-                )
-            )
+            listOf(shared, sapphireOnly),
+            catalog.filter(TrackFilter(game = "sapphire", family = "rse", generation = 3))
         )
     }
 
@@ -108,13 +91,12 @@ class CatalogFilterTest {
     }
 
     @Test
-    fun `filter options list games, families, generations and categories`() {
+    fun `filter options list games, families and generations`() {
         val options = catalog.filterOptions()
 
         assertEquals(catalog.games, options.games)
         assertEquals(catalog.families, options.families)
         assertEquals(listOf(3, 8), options.generations)
-        assertEquals(Category.entries, options.categories)
     }
 
     @Test
@@ -137,7 +119,6 @@ class CatalogFilterTest {
         id: String,
         familyId: String,
         games: List<Game>,
-        category: Category = Category.ROUTE,
         order: Int = 0,
         title: String = id
     ) = CatalogTrack(
@@ -145,7 +126,6 @@ class CatalogFilterTest {
         familyId = familyId,
         games = games,
         title = title,
-        category = category,
         order = order,
         sources = listOf(Source.Stream("AAAAAAAAAAA", 0, null))
     )

@@ -24,13 +24,11 @@ data class GameEntity(
     val retired: Boolean
 )
 
-/** [category] is a [io.github.pranavm716.vgmixr.domain.model.Category] name. */
 @Entity(tableName = "tracks", indices = [Index("familyId")])
 data class TrackEntity(
     @PrimaryKey val id: String,
     val familyId: String,
     val title: String,
-    val category: String,
     // `order` is an SQL keyword.
     @ColumnInfo(name = "sortOrder") val order: Int,
     val retired: Boolean

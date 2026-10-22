@@ -1,6 +1,5 @@
 package io.github.pranavm716.vgmixr.domain.catalog
 
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.model.Source
 
@@ -23,7 +22,6 @@ data class CatalogTrack(
     val familyId: String,
     val games: List<Game>,
     val title: String,
-    val category: Category,
     val order: Int,
     val sources: List<Source>
 )

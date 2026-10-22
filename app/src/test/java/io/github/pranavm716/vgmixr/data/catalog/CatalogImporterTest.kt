@@ -64,7 +64,7 @@ class CatalogImporterTest {
             catalogDao.game("sapphire")
         )
         assertEquals(
-            TrackEntity("rse-route-101", "rse", "rse-route-101", "ROUTE", 0, false),
+            TrackEntity("rse-route-101", "rse", "rse-route-101", 0, false),
             catalogDao.track("rse-route-101")
         )
         assertEquals(
@@ -180,7 +180,6 @@ class CatalogImporterTest {
             listOf("ruby", "sapphire", "emerald"),
             catalogDao.gamesInFamily("rse").map { it.id }
         )
-        assertEquals("OTHER", catalogDao.track("rse-weather-institute")?.category)
         assertEquals(2, catalogDao.sources("botw-hyrule-field").size)
     }
 

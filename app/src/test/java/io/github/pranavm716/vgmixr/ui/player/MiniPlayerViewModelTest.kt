@@ -5,7 +5,6 @@ import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.playback.PlayQueue
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
@@ -36,7 +35,6 @@ class MiniPlayerViewModelTest {
                 "rse",
                 listOf(ruby, sapphire),
                 "Route 101",
-                Category.ROUTE,
                 0,
                 emptyList()
             ),
@@ -45,7 +43,6 @@ class MiniPlayerViewModelTest {
                 "rse",
                 listOf(ruby),
                 "Battle! (Magma)",
-                Category.BATTLE,
                 1,
                 emptyList()
             )

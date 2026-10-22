@@ -4,7 +4,6 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Source
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
@@ -19,7 +18,6 @@ class TrackMediaItemTest {
         familyId = "sv",
         games = emptyList(),
         title = "Across the Skies of Paldea",
-        category = Category.OTHER,
         order = 1,
         sources = sources
     )

@@ -52,6 +52,10 @@ android {
     sourceSets {
         // Shared manifest fixtures, also loaded by the pipeline's tests.
         getByName("test").resources.srcDir("../docs/fixtures")
+        // Room's exported schemas, which the migration tests' MigrationTestHelper reads as assets.
+        // Robolectric sees only the variant's merged assets (test assets are ignored), so they go
+        // into debug builds; release builds don't carry them.
+        getByName("debug").assets.srcDir("$projectDir/schemas")
         // The catalog the pipeline writes, bundled as assets/manifest.json.
         getByName("main").assets.srcDir("../catalog")
     }
@@ -90,6 +94,7 @@ dependencies {
     testImplementation(libs.androidx.junit)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.room.testing)
     testImplementation(libs.robolectric)
     testImplementation(libs.turbine)
     androidTestImplementation(platform(libs.androidx.compose.bom))

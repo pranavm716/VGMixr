@@ -3,7 +3,6 @@ package io.github.pranavm716.vgmixr.data.catalog
 import io.github.pranavm716.vgmixr.data.db.UserDataDao
 import io.github.pranavm716.vgmixr.data.db.VGMixrDatabase
 import io.github.pranavm716.vgmixr.domain.manifest.ManifestParseResult
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.model.Manifest
 import io.github.pranavm716.vgmixr.domain.model.Source
@@ -37,7 +36,6 @@ object TestCatalog {
         familyId: String = "rse",
         games: List<String>? = null,
         title: String = id,
-        category: Category = Category.ROUTE,
         order: Int = 0,
         sources: List<Source> = listOf(Source.Stream("AAAAAAAAAAA", 0, null)),
         replaces: List<String> = emptyList()
@@ -46,7 +44,6 @@ object TestCatalog {
         familyId = familyId,
         games = games,
         title = title,
-        category = category,
         order = order,
         sources = sources,
         replaces = replaces
