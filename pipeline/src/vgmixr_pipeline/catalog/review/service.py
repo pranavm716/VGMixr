@@ -209,6 +209,8 @@ class Review:
         taken = {(s.videoId, s.startMs, s.endMs) for s in match.streams}
         return {
             "id": track.id,
+            # The id the manifest (and the app's reports) will give it, from today's title.
+            "catalogId": slug.track_id(track.family, track.title),
             "family": track.family,
             "title": track.title,
             "order": track.order,

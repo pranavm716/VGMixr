@@ -220,7 +220,7 @@ dialog pre { white-space: pre-wrap; max-height: 60vh; overflow: auto; }
 
 /* Playlists */
 #modes { display: flex; gap: 4px; padding: 8px; position: sticky; top: 0; background: var(--bg); border-bottom: 1px solid var(--line); }
-#modes button { flex: 1; }
+#modes button { flex: 1; padding: 3px 6px; white-space: nowrap; }
 #modes button.selected { background: var(--selected); border-color: var(--accent); }
 .badge.ok { color: var(--muted); }
 #gaps { padding: 8px 12px; }
@@ -270,3 +270,29 @@ textarea.note {
   padding: 4px 6px;
   resize: vertical;
 }
+
+/* Broken: the videos the app reported, and how the app sees a video now */
+#modes .count { display: inline-block; min-width: 18px; padding: 0 5px; border-radius: 9px; font-size: 11px; background: var(--line); color: var(--text); }
+#modes .count.open { background: var(--bad); color: #fff; }
+#brokenlist { padding: 8px 0; }
+#brokenlist h3 { margin: 12px 12px 4px; font-size: 13px; color: var(--muted); text-transform: uppercase; }
+#brokenlist > p { margin: 8px 12px; }
+.bhead { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 0 12px 4px; }
+.bhead button { white-space: nowrap; }
+.reports { list-style: none; margin: 0; padding: 0; }
+.reports li { padding: 6px 12px; border-bottom: 1px solid var(--line); cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
+.reports li.selected { background: var(--selected); }
+.reports li.fixed .rtitle { color: var(--muted); }
+.reports .line { color: var(--muted); font-size: 12px; }
+.chip.unknown { border: 1px solid var(--line); color: var(--muted); }
+.verdict { font-size: 12px; border-radius: 4px; padding: 0 5px; border: 1px solid currentColor; white-space: nowrap; }
+.verdict.bad { color: var(--bad); }
+.verdict.good { color: var(--good); }
+.verdict.none { color: var(--muted); border-style: dashed; }
+.badge-reported { display: inline-block; margin-right: 6px; padding: 0 6px; border-radius: 4px; font-size: 12px; background: var(--bad); color: #fff; vertical-align: 1px; }
+.reported { margin: 8px 0; padding: 6px 10px; border-left: 3px solid var(--bad); background: var(--panel); }
+.reported .hint, .hint { color: var(--muted); font-size: 12px; }
+.older { color: var(--warn); }
+.good { color: var(--good); }
+button.app-check { font-size: 12px; padding: 0 6px; }
+#detail a.track { color: inherit; cursor: pointer; text-decoration: underline; }

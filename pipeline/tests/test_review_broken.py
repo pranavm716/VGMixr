@@ -338,3 +338,10 @@ def test_candidates_show_their_cached_checks(review: Review, probe: FakeProbe) -
 
     assert detail["candidates"][0]["videoId"] == vid(2)
     assert detail["checks"][vid(2)]["verdict"] == "plays"
+
+
+def test_a_track_names_its_catalog_id_the_one_reports_use(review: Review) -> None:
+    review.rename("rse-route-101", "Route 101 (Day)")
+
+    assert review.track("rse-littleroot-town")["catalogId"] == "rse-littleroot-town"
+    assert review.track("rse-route-101")["catalogId"] == "rse-route-101-day"
