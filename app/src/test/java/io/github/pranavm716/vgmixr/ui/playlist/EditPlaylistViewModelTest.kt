@@ -70,6 +70,20 @@ class EditPlaylistViewModelTest {
     private val chipS = ChipUi("S", "#336699")
 
     @Test
+    fun `the title has the playlist's name from the start, before the playlist loads`() {
+        val opened = EditPlaylistViewModel(
+            SavedStateHandle(mapOf("playlistId" to 7L, "playlistName" to "Hype")),
+            FakeCatalogRepository(catalog),
+            FakePlaylistRepository(),
+            FakePlayHistory(),
+            TestCatalog.clock,
+            main.dispatcher
+        )
+
+        assertEquals("Hype", opened.uiState.value.playlistName)
+    }
+
+    @Test
     fun `an empty field lists the playlist's tracks, newest first, all checked`() = runTest {
         playlists.contents.value = mapOf(
             7L to Playlist(7, "Hype", false, listOf("rse-route-102", "rse-gone", "rse-littleroot"))

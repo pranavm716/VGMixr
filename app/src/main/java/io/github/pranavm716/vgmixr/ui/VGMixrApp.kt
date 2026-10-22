@@ -100,7 +100,7 @@ fun VGMixrApp(
     navController: NavHostController = rememberNavController(),
     screen: TabScreen = { destination, _, _ -> PlaceholderScreen(destination.label) },
     familyScreen: @Composable () -> Unit = { PlaceholderScreen("Family") },
-    playlistScreen: @Composable (onEditPlaylist: () -> Unit) -> Unit = {
+    playlistScreen: @Composable (onEditPlaylist: (name: String) -> Unit) -> Unit = {
         PlaceholderScreen("Playlist")
     },
     editPlaylistScreen: @Composable (
@@ -240,7 +240,7 @@ private fun AppNavHost(
     navController: NavHostController,
     screen: TabScreen,
     familyScreen: @Composable () -> Unit,
-    playlistScreen: @Composable (onEditPlaylist: () -> Unit) -> Unit,
+    playlistScreen: @Composable (onEditPlaylist: (name: String) -> Unit) -> Unit,
     editPlaylistScreen: @Composable (onBack: () -> Unit) -> Unit,
     reselects: (TopLevelDestination) -> Int,
     modifier: Modifier
@@ -299,7 +299,9 @@ private fun AppNavHost(
             composable<PlaylistRoute> { entry ->
                 val playlistId = entry.toRoute<PlaylistRoute>().playlistId
                 Box(Modifier.screen().testTag(PLAYLIST_SCREEN_TAG)) {
-                    playlistScreen { navController.navigate(EditPlaylistRoute(playlistId)) }
+                    playlistScreen { name ->
+                        navController.navigate(EditPlaylistRoute(playlistId, name))
+                    }
                 }
             }
             // Slides in over the playlist like any screen inside a tab; pads itself too.

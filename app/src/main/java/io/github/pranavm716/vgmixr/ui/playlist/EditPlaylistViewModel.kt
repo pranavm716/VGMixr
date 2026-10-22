@@ -65,6 +65,10 @@ class EditPlaylistViewModel @Inject constructor(
     // The EditPlaylistRoute's argument, stored by type-safe navigation under its property name.
     private val playlistId: Long = checkNotNull(savedStateHandle["playlistId"])
 
+    // The name the playlist page already showed, so the title is whole on the first frame instead
+    // of waiting for the playlist to load.
+    private val openedName: String = savedStateHandle["playlistName"] ?: ""
+
     private val query = MutableStateFlow("")
 
     // As in the Search tab: searched once typing pauses, an emptied field clears at once.
@@ -92,12 +96,16 @@ class EditPlaylistViewModel @Inject constructor(
                 matches.tracks
             }
             EditPlaylistUiState(
-                playlistName = playlist?.name.orEmpty(),
+                playlistName = playlist?.name ?: openedName,
                 results = tracks.map { it.toRow(it.id in added) },
                 noResults = matches.query.isNotBlank() && matches.tracks.isEmpty()
             )
         }.flowOn(dispatcher)
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), EditPlaylistUiState())
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                EditPlaylistUiState(playlistName = openedName)
+            )
 
     fun onQueryChange(query: String) {
         this.query.value = query
