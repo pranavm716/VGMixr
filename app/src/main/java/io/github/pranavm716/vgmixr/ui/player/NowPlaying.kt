@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -79,41 +80,52 @@ fun NowPlayingHeader(
                 contentDescription = stringResource(R.string.close_now_playing)
             )
         }
-        Column(
-            Modifier
-                .weight(1f)
-                .then(
-                    if (playingFrom != null && playingFrom != PlayingFromUi.Queue) {
-                        Modifier.clickable { onOpenPlayingFrom(playingFrom) }
-                    } else {
-                        Modifier
-                    }
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (playingFrom != null) {
-                Text(
-                    stringResource(R.string.playing_from),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1
-                )
-                Text(
-                    when (playingFrom) {
-                        is PlayingFromUi.Family -> playingFrom.name
-                        is PlayingFromUi.Playlist -> playingFrom.name
-                        PlayingFromUi.Queue -> stringResource(R.string.playing_from_queue)
-                    },
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+        // The tap target is as wide as the text and as tall as the header, with no ripple.
+        Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.Center) {
+            Column(
+                Modifier
+                    .fillMaxHeight()
+                    .then(
+                        if (playingFrom != null && playingFrom != PlayingFromUi.Queue) {
+                            Modifier.clickable(interactionSource = null, indication = null) {
+                                onOpenPlayingFrom(playingFrom)
+                            }
+                        } else {
+                            Modifier
+                        }
+                    ),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                PlayingFromText(playingFrom)
             }
         }
         // Balances the chevron, so the context sits in the middle.
         Spacer(Modifier.width(48.dp))
     }
+}
+
+/** "Playing from" over the family's or playlist's name, or "Queue". */
+@Composable
+private fun PlayingFromText(playingFrom: PlayingFromUi?) {
+    if (playingFrom == null) return
+    Text(
+        stringResource(R.string.playing_from),
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1
+    )
+    Text(
+        when (playingFrom) {
+            is PlayingFromUi.Family -> playingFrom.name
+            is PlayingFromUi.Playlist -> playingFrom.name
+            PlayingFromUi.Queue -> stringResource(R.string.playing_from_queue)
+        },
+        style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.Bold,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
 }
 
 /**

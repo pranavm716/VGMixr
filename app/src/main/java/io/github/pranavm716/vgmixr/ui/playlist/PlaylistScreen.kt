@@ -81,11 +81,7 @@ fun PlaylistScreen(
                 }
             )
             if (state.rows.isEmpty()) {
-                Message(
-                    stringResource(
-                        if (state.isFavorites) R.string.favorites_empty else R.string.playlist_empty
-                    )
-                )
+                Message(stringResource(R.string.playlist_empty))
             }
             val listState = rememberLazyListState()
             ScrollToPlayingOnce(listState, state.playingIndex, TileRowHeight)
