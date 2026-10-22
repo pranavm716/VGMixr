@@ -44,6 +44,8 @@ import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
+import io.github.pranavm716.vgmixr.ui.components.UnplayableIcon
+import io.github.pranavm716.vgmixr.ui.components.unplayable
 import io.github.pranavm716.vgmixr.ui.player.gameTint
 import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -155,7 +157,7 @@ private val TrackRowHeight = 48.dp
 /**
  * One track: its number in the list, its title and, unless it plays in every game, its games. The
  * current track's row is tinted with the accent, as in Shuttle, and its number turns into a spinner
- * while its stream loads.
+ * while its stream loads. A track whose sources are all broken is greyed, with a mark at its end.
  */
 @Composable
 fun TrackRow(
@@ -175,7 +177,8 @@ fun TrackRow(
             .padding(start = StartPadding, end = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(Modifier.width(LeadingColumn), contentAlignment = Alignment.Center) {
+        val faint = Modifier.unplayable(track.unplayable)
+        Box(Modifier.width(LeadingColumn).then(faint), contentAlignment = Alignment.Center) {
             if (loading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(18.dp),
@@ -198,11 +201,15 @@ fun TrackRow(
             style = MaterialTheme.typography.titleMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f).then(faint)
         )
         if (track.chips.isNotEmpty()) {
             Spacer(Modifier.width(8.dp))
-            GameChips(track.chips)
+            Box(faint) { GameChips(track.chips) }
+        }
+        if (track.unplayable) {
+            Spacer(Modifier.width(12.dp))
+            UnplayableIcon()
         }
     }
 }
