@@ -14,14 +14,14 @@ The app marks a `stream` source's video broken when it is dead for the app, keep
 
 A mark is per video, so it covers every slice of it. A marked source is skipped from then on, without asking YouTube, and a track whose sources are all marked is skipped at once. Marking a video that is already marked keeps the first mark.
 
-The app tells the user with a snackbar when a source fails for the first time (not when a marked one is skipped again). A track whose sources are all marked is greyed in the family list and the queue; tapping it plays nothing and shows the reason, with Try again.
+The app tells the user with a snackbar when a source fails for the first time (not when a marked one is skipped again). A track whose sources are all marked is greyed in the family list and the queue: tapping it plays nothing and shows the reason, with Try again; it can't be swiped to the queue, and a tap on another track plays the family list without it.
 
 Neither marked reason is retried by the player's load-error policy, so a dead track moves on in about a second. A refused URL isn't retried as is either: the app's own retry looks the video up again first.
 
 ## What clears a mark
 
 - An import of a newer catalog in which no stream source of an active (not retired) track uses the video any more.
-- Try again, on the snackbar a tap on a greyed track shows. It clears the marks of that track's videos (for every track sharing them); the next tap tries YouTube again.
+- Try again, on the snackbar a tap on a greyed track shows. It looks the track's marked videos up again, the way the player does, and clears the mark of each one that now resolves (for every track sharing it). A track un-greys only then ("… can play again"); one still dead keeps its marks and shows the "can't play" snackbar again, and without a connection nothing changes ("Couldn't check … right now").
 
 Nothing else: marks don't expire.
 
