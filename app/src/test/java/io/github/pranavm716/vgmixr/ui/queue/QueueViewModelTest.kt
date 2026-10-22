@@ -44,7 +44,7 @@ class QueueViewModelTest {
     }
 
     private fun row(index: Int, id: String) =
-        QueueRowUi(index, id, "Title $id", listOf(ChipUi("R", "#336699")), Category.ROUTE)
+        QueueRowUi(index, id, "Title $id", listOf(ChipUi("R", "#336699")))
 
     private fun state(entries: List<QueueEntry>, current: Int) = PlaybackState(
         queue = PlayQueue(entries, current),

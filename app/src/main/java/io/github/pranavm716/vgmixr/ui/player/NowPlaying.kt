@@ -114,7 +114,7 @@ fun NowPlayingHeader(
 }
 
 /**
- * Now playing's body, Shuttle's look: the art, the title over its games and category, the seek
+ * Now playing's body, Shuttle's look: the art, the title over its game chips, the seek
  * bar between the elapsed time and the length, previous / play-pause / next, and the queue button.
  */
 @Composable
@@ -156,12 +156,6 @@ fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = h
         )
         Spacer(Modifier.height(12.dp))
         GameChips(visible.chips)
-        Spacer(Modifier.height(10.dp))
-        Text(
-            stringResource(visible.category.label),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
         Spacer(Modifier.height(24.dp))
         SeekRow(viewModel)
         Spacer(Modifier.height(16.dp))

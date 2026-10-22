@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
@@ -38,8 +37,7 @@ data class MiniTrackUi(
     val trackId: String,
     val familyId: String,
     val title: String,
-    val chips: List<ChipUi>,
-    val category: Category
+    val chips: List<ChipUi>
 )
 
 @HiltViewModel
@@ -90,7 +88,6 @@ private fun Catalog.miniTrack(trackId: String?): MiniTrackUi? {
         trackId = track.id,
         familyId = track.familyId,
         title = track.title,
-        chips = track.games.map { ChipUi(it.shortName, it.color) },
-        category = track.category
+        chips = track.games.map { ChipUi(it.shortName, it.color) }
     )
 }

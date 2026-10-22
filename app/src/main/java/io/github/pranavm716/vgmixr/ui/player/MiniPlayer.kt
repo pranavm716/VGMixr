@@ -1,6 +1,5 @@
 package io.github.pranavm716.vgmixr.ui.player
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.core.animate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
@@ -57,7 +56,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineHeightStyle
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -65,7 +63,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
@@ -126,7 +123,7 @@ fun MiniPlayerInSheet(viewModel: MiniPlayerViewModel = hiltViewModel()) {
 
 /**
  * Shuttle's mini player: a progress line along the top, the family's tile, the title (scrolling
- * when too long) over the track's games and category, and play/pause, which spins while the track
+ * when too long) over the track's game chips, and play/pause, which spins while the track
  * loads. Swipe left for the next track and right for the previous one; swipe up or tap to open now
  * playing.
  */
@@ -274,16 +271,7 @@ private fun TrackText(state: MiniTrackUi) {
         )
         // The trim takes the room under the title's descenders too; give the chips some back.
         Spacer(Modifier.height(4.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            GameChips(state.chips)
-            Text(
-                " · " + stringResource(state.category.label),
-                style = MaterialTheme.typography.bodyMedium.trimmed(),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+        GameChips(state.chips)
     }
 }
 
@@ -354,17 +342,6 @@ private fun TextStyle.trimmed() = copy(
     )
 )
 
-@get:StringRes
-val Category.label: Int
-    get() = when (this) {
-        Category.BATTLE -> R.string.category_battle
-        Category.ROUTE -> R.string.category_route
-        Category.TOWN -> R.string.category_town
-        Category.DUNGEON -> R.string.category_dungeon
-        Category.EVENT -> R.string.category_event
-        Category.OTHER -> R.string.category_other
-    }
-
 // A swipe this fast (px/s) counts even if it was short.
 private const val FLING_VELOCITY = 1500f
 
@@ -378,8 +355,7 @@ private fun MiniPlayerPreview() {
                     "rse-route-101",
                     "rse",
                     "Route 101",
-                    listOf(ChipUi("R", "#CD2236"), ChipUi("S", "#3D51A7")),
-                    Category.ROUTE
+                    listOf(ChipUi("R", "#CD2236"), ChipUi("S", "#3D51A7"))
                 ),
                 previous = null,
                 next = null,

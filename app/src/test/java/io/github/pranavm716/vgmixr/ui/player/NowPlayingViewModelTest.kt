@@ -54,7 +54,7 @@ class NowPlayingViewModelTest {
     )
 
     @Test
-    fun `shows the track, its games and category, and the family it plays from`() = runTest {
+    fun `shows the track, its games, and the family it plays from`() = runTest {
         playback.state.value = playing(QueueContext.Family("rse"))
 
         viewModel.uiState.test {
@@ -62,7 +62,6 @@ class NowPlayingViewModelTest {
                 NowPlayingUiState.Visible(
                     title = "Route 101",
                     chips = listOf(ChipUi("R", "#336699"), ChipUi("S", "#336699")),
-                    category = Category.ROUTE,
                     playingFrom = PlayingFromUi.Family("rse", "Ruby / Sapphire"),
                     isPlaying = true,
                     isLoading = false
