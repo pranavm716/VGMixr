@@ -173,6 +173,39 @@ class RoomPlaylistRepositoryTest {
         )
     }
 
+    @Test
+    fun `a track goes into a playlist and comes out again, without touching Favorites`() =
+        runTest(dispatcher) {
+            val hype = repository.createPlaylist("Hype")
+            repository.setFavorite("rse-route-101", true)
+
+            repository.setInPlaylist(hype, "rse-route-101", true)
+            repository.setInPlaylist(hype, "frlg-pallet-town", true)
+            assertEquals(
+                setOf("rse-route-101", "frlg-pallet-town"),
+                repository.playlist(hype).first()?.trackIds?.toSet()
+            )
+
+            repository.setInPlaylist(hype, "rse-route-101", false)
+            assertEquals(listOf("frlg-pallet-town"), repository.playlist(hype).first()?.trackIds)
+            assertEquals(setOf("rse-route-101"), repository.favorites.first())
+        }
+
+    @Test
+    fun `adding a track a playlist already has keeps when it was first added`() =
+        runTest(dispatcher) {
+            val hype = repository.createPlaylist("Hype")
+            repository.setInPlaylist(hype, "rse-route-101", true)
+            clock.instant = Instant.ofEpochMilli(5_000)
+
+            repository.setInPlaylist(hype, "rse-route-101", true)
+
+            assertEquals(
+                listOf(Instant.ofEpochMilli(1_000)),
+                dao.playlistEntries(hype).map { it.addedAt }
+            )
+        }
+
     private class MutableClock(var instant: Instant) : Clock() {
         override fun instant(): Instant = instant
 

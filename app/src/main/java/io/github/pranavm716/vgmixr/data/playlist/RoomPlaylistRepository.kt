@@ -39,13 +39,16 @@ class RoomPlaylistRepository @Inject constructor(
     override suspend fun createPlaylist(name: String): Long =
         dao.insertPlaylist(PlaylistEntity(name = name.trim(), createdAt = clock.instant()))
 
-    override suspend fun setFavorite(trackId: String, favorite: Boolean) {
-        if (favorite) {
+    override suspend fun setFavorite(trackId: String, favorite: Boolean) =
+        setInPlaylist(FAVORITES_PLAYLIST_ID, trackId, favorite)
+
+    override suspend fun setInPlaylist(playlistId: Long, trackId: String, inPlaylist: Boolean) {
+        if (inPlaylist) {
             dao.insertPlaylistEntryIfAbsent(
-                PlaylistEntryEntity(FAVORITES_PLAYLIST_ID, trackId, clock.instant())
+                PlaylistEntryEntity(playlistId, trackId, clock.instant())
             )
         } else {
-            dao.removeFromPlaylist(FAVORITES_PLAYLIST_ID, trackId)
+            dao.removeFromPlaylist(playlistId, trackId)
         }
     }
 }

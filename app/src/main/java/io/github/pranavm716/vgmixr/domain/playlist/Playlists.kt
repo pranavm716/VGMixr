@@ -32,6 +32,12 @@ interface PlaylistRepository {
     /** Adds [trackId] to Favorites or takes it out; adding a favorite again changes nothing. */
     suspend fun setFavorite(trackId: String, favorite: Boolean)
 
+    /**
+     * Adds [trackId] to playlist [playlistId] or takes it out; adding a track it has changes
+     * nothing, so it keeps when it was first added.
+     */
+    suspend fun setInPlaylist(playlistId: Long, trackId: String, inPlaylist: Boolean)
+
     /** Makes an empty playlist named [name] (trimmed) and returns its id. */
     suspend fun createPlaylist(name: String): Long
 }

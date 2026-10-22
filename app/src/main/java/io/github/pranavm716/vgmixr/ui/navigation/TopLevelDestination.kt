@@ -26,6 +26,9 @@ import kotlinx.serialization.Serializable
 /** A playlist's tracks. [fromNowPlaying] opens it at once, as [FamilyRoute]'s does. */
 @Serializable data class PlaylistRoute(val playlistId: Long, val fromNowPlaying: Boolean = false)
 
+/** "Add to <playlist>": search for tracks to add to playlist [playlistId]. */
+@Serializable data class AddTracksRoute(val playlistId: Long)
+
 @Serializable data object Tab4Route
 
 /**

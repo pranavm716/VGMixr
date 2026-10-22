@@ -8,12 +8,15 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,12 +36,13 @@ import io.github.pranavm716.vgmixr.ui.playlists.PlaylistArt
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
-fun PlaylistTab(viewModel: PlaylistViewModel = hiltViewModel()) {
+fun PlaylistTab(onAddTracks: () -> Unit, viewModel: PlaylistViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     PlaylistScreen(
         state,
         onTrackClick = viewModel::onTrackClick,
-        onQueueTrack = viewModel::onQueueTrack
+        onQueueTrack = viewModel::onQueueTrack,
+        onAddTracks = onAddTracks
     )
 }
 
@@ -51,6 +55,7 @@ fun PlaylistScreen(
     state: PlaylistUiState,
     onTrackClick: (String) -> Unit,
     onQueueTrack: (String) -> Unit,
+    onAddTracks: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -65,7 +70,15 @@ fun PlaylistScreen(
                 state.name,
                 state.trackCount,
                 art = { PlaylistArt(state.isFavorites, RowTileSize) },
-                gap = RowTileGap
+                gap = RowTileGap,
+                action = {
+                    IconButton(onClick = onAddTracks) {
+                        Icon(
+                            painterResource(R.drawable.ic_add),
+                            contentDescription = stringResource(R.string.add_tracks)
+                        )
+                    }
+                }
             )
             if (state.rows.isEmpty()) {
                 Message(
@@ -129,7 +142,8 @@ private fun PlaylistScreenPreview() {
                 playingIndex = 0
             ),
             onTrackClick = {},
-            onQueueTrack = {}
+            onQueueTrack = {},
+            onAddTracks = {}
         )
     }
 }

@@ -160,6 +160,18 @@ class FakePlaylistRepository(
         favorites.value = if (favorite) favorites.value + trackId else favorites.value - trackId
     }
 
+    /** Adds to the front (newest first) or removes from [contents]' playlist [playlistId]. */
+    override suspend fun setInPlaylist(playlistId: Long, trackId: String, inPlaylist: Boolean) {
+        val playlist = contents.value[playlistId] ?: return
+        val others = playlist.trackIds - trackId
+        val ids = when {
+            !inPlaylist -> others
+            trackId in playlist.trackIds -> playlist.trackIds
+            else -> listOf(trackId) + others
+        }
+        contents.value += playlistId to playlist.copy(trackIds = ids)
+    }
+
     /** The names passed to [createPlaylist], in order; new ids count up from 100. */
     val created = mutableListOf<String>()
 

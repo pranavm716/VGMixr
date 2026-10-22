@@ -58,6 +58,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import io.github.pranavm716.vgmixr.ui.games.GamesTab
+import io.github.pranavm716.vgmixr.ui.navigation.AddTracksRoute
 import io.github.pranavm716.vgmixr.ui.navigation.FamilyRoute
 import io.github.pranavm716.vgmixr.ui.navigation.GamesGraph
 import io.github.pranavm716.vgmixr.ui.navigation.GamesRoute
@@ -90,7 +91,8 @@ const val PLAYLIST_SCREEN_TAG = "screen-playlist"
 
 /**
  * The app shell: the tabs' screens above the navbar. [screen] draws a tab's root,
- * [familyScreen] a family's tracks and [playlistScreen] a playlist's; all default to placeholders
+ * [familyScreen] a family's tracks, [playlistScreen] a playlist's (its plus opens
+ * [addTracksScreen]); all default to placeholders
  * so the shell runs without Hilt (tests), and MainActivity passes the real screens.
  */
 @Composable
@@ -98,7 +100,10 @@ fun VGMixrApp(
     navController: NavHostController = rememberNavController(),
     screen: TabScreen = { destination, _, _ -> PlaceholderScreen(destination.label) },
     familyScreen: @Composable () -> Unit = { PlaceholderScreen("Family") },
-    playlistScreen: @Composable () -> Unit = { PlaceholderScreen("Playlist") },
+    playlistScreen: @Composable (onAddTracks: () -> Unit) -> Unit = {
+        PlaceholderScreen("Playlist")
+    },
+    addTracksScreen: @Composable (onBack: () -> Unit) -> Unit = { PlaceholderScreen("Add tracks") },
     snackbars: SnackbarHostState = remember { SnackbarHostState() },
     miniPlayer: @Composable (
         NowPlayingSheetState,
@@ -176,6 +181,7 @@ fun VGMixrApp(
                 screen,
                 familyScreen,
                 playlistScreen,
+                addTracksScreen,
                 { reselects[it] ?: 0 },
                 Modifier.padding(padding)
             )
@@ -232,7 +238,8 @@ private fun AppNavHost(
     navController: NavHostController,
     screen: TabScreen,
     familyScreen: @Composable () -> Unit,
-    playlistScreen: @Composable () -> Unit,
+    playlistScreen: @Composable (onAddTracks: () -> Unit) -> Unit,
+    addTracksScreen: @Composable (onBack: () -> Unit) -> Unit,
     reselects: (TopLevelDestination) -> Int,
     modifier: Modifier
 ) {
@@ -287,9 +294,16 @@ private fun AppNavHost(
                 Tab(TopLevelDestination.PLAYLISTS, navController, screen, reselects)
             }
             // Pads below the status bar itself, as the family screen does.
-            composable<PlaylistRoute> {
+            composable<PlaylistRoute> { entry ->
+                val playlistId = entry.toRoute<PlaylistRoute>().playlistId
                 Box(Modifier.screen().testTag(PLAYLIST_SCREEN_TAG)) {
-                    playlistScreen()
+                    playlistScreen { navController.navigate(AddTracksRoute(playlistId)) }
+                }
+            }
+            // Slides in over the playlist like any screen inside a tab; pads itself too.
+            composable<AddTracksRoute> {
+                Box(Modifier.screen()) {
+                    addTracksScreen { navController.popBackStack() }
                 }
             }
         }

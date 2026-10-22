@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.first
 /**
  * A family's or playlist's page header: its [art], then its name over its track count, [gap]
  * apart so the name lines up with the rows below. A [background] (a family's game colors) runs up
- * behind the status bar; without one the page's own shows.
+ * behind the status bar; without one the page's own shows. An [action] (a button) ends the row.
  */
 @Composable
 fun CollectionHeader(
@@ -38,19 +38,22 @@ fun CollectionHeader(
     trackCount: Int,
     art: @Composable () -> Unit,
     gap: Dp,
-    background: Brush? = null
+    background: Brush? = null,
+    action: (@Composable () -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .then(if (background != null) Modifier.background(background) else Modifier)
             .statusBarsPadding()
-            .padding(16.dp),
+            // A button keeps its own touch padding, so it sits closer to the edge.
+            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+            .padding(end = if (action != null) 4.dp else 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         art()
         Spacer(Modifier.width(gap))
-        Column {
+        Column(Modifier.weight(1f)) {
             Text(
                 name,
                 style = MaterialTheme.typography.titleLarge,
@@ -63,6 +66,7 @@ fun CollectionHeader(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+        action?.invoke()
     }
 }
 
