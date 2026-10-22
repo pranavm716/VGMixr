@@ -24,14 +24,21 @@ import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.describe
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
+import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
+import io.github.pranavm716.vgmixr.domain.playback.FailedSource
 import io.github.pranavm716.vgmixr.domain.playback.FailoverAction
+import io.github.pranavm716.vgmixr.domain.playback.NewMark
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
 import io.github.pranavm716.vgmixr.domain.playback.SourceFailure
-import io.github.pranavm716.vgmixr.domain.playback.failover
+import io.github.pranavm716.vgmixr.domain.playback.SourceReport
+import io.github.pranavm716.vgmixr.domain.playback.onSourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
+import io.github.pranavm716.vgmixr.domain.playback.startReport
+import java.time.Clock
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +54,8 @@ const val STOPPED_BY = "stoppedBy"
 
 /**
  * Plays in the background with a media notification. Queue items arrive as bare track ids and
- * become stream items from the catalog here; a failing source moves on to the next one.
+ * become stream items from the catalog here; a failing source moves on to the next one. A video
+ * that is dead for the app is marked broken and skipped from then on.
  */
 @OptIn(UnstableApi::class)
 @AndroidEntryPoint
@@ -61,16 +69,28 @@ class PlaybackService : MediaSessionService() {
     @Inject
     lateinit var diagnostics: PlaybackDiagnostics
 
+    @Inject
+    lateinit var brokenSources: BrokenSources
+
+    @Inject
+    lateinit var clock: Clock
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val catalog = MutableStateFlow<Catalog?>(null)
+    private val marks = MutableStateFlow<Map<String, BrokenMark>>(emptyMap())
     private var session: MediaSession? = null
 
     override fun onCreate() {
         super.onCreate()
         scope.launch { catalogRepository.catalog.collect { catalog.value = it } }
+        scope.launch { brokenSources.marks.collect { marks.value = it } }
 
         val http = DefaultHttpDataSource.Factory().setAllowCrossProtocolRedirects(true)
-        val streams = ResolvingDataSource.Factory(http, StreamUriResolver(resolver, diagnostics))
+        // The resolver runs on the loading thread; a StateFlow's value is safe to read there.
+        val streams = ResolvingDataSource.Factory(
+            http,
+            StreamUriResolver(resolver, diagnostics) { marks.value[it] }
+        )
         val player = ExoPlayer.Builder(this)
             .setMediaSourceFactory(
                 DefaultMediaSourceFactory(streams)
@@ -126,7 +146,7 @@ class PlaybackService : MediaSessionService() {
                 val catalog = catalog.filterNotNull().first()
                 mediaSession.setStoppedBy(null)
                 items.set(
-                    mediaItems.map { catalog.itemFor(it.mediaId, context = it.context) }
+                    mediaItems.map { catalog.startItem(it.mediaId, it.context, marks.value) }
                         .toMutableList()
                 )
             }
@@ -160,22 +180,52 @@ class PlaybackService : MediaSessionService() {
             // A failed or refused URL is never reused: the next try looks the video up again.
             if (failure !is SourceFailure.Everything) item.videoId?.let(resolver::forget)
             val track = catalog.tracks.firstOrNull { it.id == item.mediaId }
-            val sourceCount = track?.let { playableStreams(it.sources).size } ?: 0
-            val action = failover(failure, item.sourceIndex, sourceCount, item.retried)
+            val streams = track?.let { playableStreams(it.sources) }.orEmpty()
+            val failed = FailedSource(
+                trackId = item.mediaId,
+                sourceIndex = item.sourceIndex,
+                videoId = item.videoId,
+                retried = item.retried,
+                report = item.sourceReport
+            )
+            val outcome = onSourceFailure(
+                failure,
+                failed,
+                streams,
+                marks.value,
+                clock.instant(),
+                error.errorCodeName
+            )
+            val action = outcome.action
             diagnostics.log(
-                "error ${item.mediaId} source ${item.sourceIndex}/$sourceCount: " +
+                "error ${item.mediaId} source ${item.sourceIndex}/${streams.size}: " +
                     "${error.errorCodeName} ${error.describe()} -> $failure, $action"
             )
+            outcome.mark?.let { mark(it, item.mediaId) }
+            outcome.event?.toCommand()?.let { (command, args) ->
+                session.broadcastCustomCommand(command, args)
+            }
             when (action) {
                 FailoverAction.RetrySource -> {
-                    val again = catalog.itemFor(item.mediaId, item.sourceIndex, item.context, true)
+                    val again = catalog.itemFor(
+                        item.mediaId,
+                        item.context,
+                        item.sourceIndex,
+                        outcome.report,
+                        retried = true
+                    )
                     player.replaceMediaItem(player.currentMediaItemIndex, again)
                     player.prepare()
                     player.play()
                 }
 
                 is FailoverAction.TrySource -> {
-                    val next = catalog.itemFor(item.mediaId, action.index, item.context)
+                    val next = catalog.itemFor(
+                        item.mediaId,
+                        item.context,
+                        action.index,
+                        outcome.report
+                    )
                     player.replaceMediaItem(player.currentMediaItemIndex, next)
                     player.prepare()
                     player.play()
@@ -190,6 +240,25 @@ class PlaybackService : MediaSessionService() {
                 is FailoverAction.Stop -> session.setStoppedBy(action.failure)
             }
         }
+
+        /**
+         * Skips [mark]'s video at once, before the write to Room lands, so items opened meanwhile
+         * never ask YouTube for it again; Room's copy replaces this one when it arrives.
+         */
+        private fun mark(mark: NewMark, trackId: String) {
+            marks.value += mark.videoId to BrokenMark(
+                mark.videoId,
+                trackId,
+                mark.reason,
+                mark.detail,
+                clock.instant(),
+                null
+            )
+            scope.launch {
+                brokenSources.mark(mark.videoId, trackId, mark.reason, mark.detail)
+                diagnostics.log("mark ${mark.videoId} broken: ${mark.reason.key} ($trackId)")
+            }
+        }
     }
 }
 
@@ -197,11 +266,31 @@ private fun MediaSession.setStoppedBy(failure: ResolveFailure?) {
     sessionExtras = Bundle().apply { failure?.let { putString(STOPPED_BY, it.name) } }
 }
 
-/** The item for [trackId]; a track gone from the catalog gets an item that is skipped. */
+/**
+ * The item a queued [trackId] starts as: its first source whose video isn't in [marks]. A track
+ * with every source marked gets an item that is skipped.
+ */
+private fun Catalog.startItem(
+    trackId: String,
+    context: QueueContext,
+    marks: Map<String, BrokenMark>
+): MediaItem {
+    val streams = tracks.firstOrNull { it.id == trackId }
+        ?.let { playableStreams(it.sources) }
+        .orEmpty()
+    val report = startReport(streams, marks)
+    return itemFor(trackId, context, report.playing ?: streams.size, report)
+}
+
+/**
+ * The item for [trackId] playing source [sourceIndex] (none past the last one, so it is
+ * skipped); a track gone from the catalog gets an item that is skipped.
+ */
 private fun Catalog.itemFor(
     trackId: String,
-    sourceIndex: Int = 0,
     context: QueueContext,
+    sourceIndex: Int,
+    report: SourceReport,
     retried: Boolean = false
 ): MediaItem {
     val track = tracks.firstOrNull { it.id == trackId }
@@ -209,7 +298,7 @@ private fun Catalog.itemFor(
             QueueEntry(trackId, context)
         ).buildUpon().setUri(NO_SOURCE_URI).build()
     val familyName = families.firstOrNull { it.id == track.familyId }?.name.orEmpty()
-    return trackMediaItem(track, familyName, sourceIndex, context, retried)
+    return trackMediaItem(track, familyName, sourceIndex, context, retried, report)
 }
 
 private val MediaItem.videoId: String?

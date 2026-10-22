@@ -44,6 +44,9 @@ interface PlaybackController {
 
     /** The current track's position, a few times a second while collected. */
     val progress: Flow<PlaybackProgress>
+
+    /** Things the user hears about once, as they happen, such as a source failing. */
+    val events: Flow<PlaybackEvent>
 }
 
 /** [durationMs] is null until known; a slice of an album video reports the slice's length. */
@@ -52,12 +55,14 @@ data class PlaybackProgress(val positionMs: Long, val durationMs: Long?)
 /**
  * [queue] is the player's queue. [trackId] is the current track, playing or paused. [isLoading] is true while it is about to play
  * but waits for its stream. [stoppedBy] is set when a failure that affects every track stopped
- * playback.
+ * playback. [source] says which of the current track's sources plays and why earlier ones were
+ * skipped.
  */
 data class PlaybackState(
     val queue: PlayQueue = PlayQueue.EMPTY,
     val trackId: String? = null,
     val isPlaying: Boolean = false,
     val isLoading: Boolean = false,
-    val stoppedBy: ResolveFailure? = null
+    val stoppedBy: ResolveFailure? = null,
+    val source: SourceReport? = null
 )

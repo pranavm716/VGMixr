@@ -8,10 +8,12 @@ import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackEvent
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import java.time.Instant
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeCatalogRepository(initial: Catalog = Catalog(emptyList(), emptyList(), emptyList())) :
@@ -46,6 +48,7 @@ class FakePlaybackController : PlaybackController {
 
     override val state = MutableStateFlow(PlaybackState())
     override val progress = MutableStateFlow(PlaybackProgress(positionMs = 0, durationMs = null))
+    override val events = MutableSharedFlow<PlaybackEvent>(extraBufferCapacity = 16)
     val calls = mutableListOf<Any>()
 
     override fun togglePlayPause() {

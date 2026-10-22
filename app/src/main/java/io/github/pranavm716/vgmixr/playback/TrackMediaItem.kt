@@ -5,9 +5,13 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
+import io.github.pranavm716.vgmixr.domain.playback.SkipReason
+import io.github.pranavm716.vgmixr.domain.playback.SourceReport
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
+import java.time.Instant
 
 /** A stream's URI in the player: resolved to a YouTube URL only when the player opens it. */
 const val STREAM_URI_PREFIX = "vgmixr://stream/"
@@ -18,17 +22,22 @@ const val NO_SOURCE_URI = "vgmixr://none"
 private const val SOURCE_INDEX = "sourceIndex"
 private const val CONTEXT = "context"
 private const val RETRIED = "retried"
+private const val PLAYING = "playing"
+private const val SKIPPED = "skipped"
 
 /**
  * The player item for [track], playing its playable source number [sourceIndex]; [context] is where
- * it plays from, by default the track's own family.
+ * it plays from, by default the track's own family. [report] says why earlier sources were skipped
+ * (by default none were); a [sourceIndex] past the last source plays nothing, so the track is
+ * skipped.
  */
 fun trackMediaItem(
     track: CatalogTrack,
     familyName: String,
     sourceIndex: Int = 0,
     context: QueueContext = QueueContext.Family(track.familyId),
-    retried: Boolean = false
+    retried: Boolean = false,
+    report: SourceReport = SourceReport(sourceIndex, emptyMap())
 ): MediaItem {
     val source = playableStreams(track.sources).getOrNull(sourceIndex)
     val clipping = MediaItem.ClippingConfiguration.Builder()
@@ -48,6 +57,8 @@ fun trackMediaItem(
                     Bundle().apply {
                         putInt(SOURCE_INDEX, sourceIndex)
                         putBoolean(RETRIED, retried)
+                        putInt(PLAYING, report.playing ?: NONE)
+                        putStringArrayList(SKIPPED, ArrayList(report.skipped.map(::encodeSkip)))
                     }
                 )
                 .build()
@@ -57,6 +68,49 @@ fun trackMediaItem(
 
 /** Which of its track's playable sources this item plays. */
 val MediaItem.sourceIndex: Int get() = mediaMetadata.extras?.getInt(SOURCE_INDEX) ?: 0
+
+/** Which source this item plays and why the earlier ones were skipped. */
+val MediaItem.sourceReport: SourceReport
+    get() {
+        val extras = mediaMetadata.extras ?: return SourceReport(0, emptyMap())
+        return SourceReport(
+            playing = extras.getInt(PLAYING, NONE).takeIf { it != NONE },
+            skipped = extras.getStringArrayList(SKIPPED).orEmpty()
+                .mapNotNull(::decodeSkip)
+                .toMap()
+        )
+    }
+
+private const val NONE = -1
+
+/** One skip as `index|kind|…`, since extras cross processes as plain values. */
+private fun encodeSkip(skip: Map.Entry<Int, SkipReason>): String {
+    val (index, reason) = skip
+    return when (reason) {
+        is SkipReason.Broken -> "$index|broken|${reason.reason.key}|${reason.since.toEpochMilli()}"
+        SkipReason.Refused -> "$index|refused"
+        is SkipReason.Failed -> "$index|failed|${reason.error}"
+    }
+}
+
+private fun decodeSkip(text: String): Pair<Int, SkipReason>? {
+    val parts = text.split("|")
+    val index = parts.getOrNull(0)?.toIntOrNull() ?: return null
+    val reason = when (parts.getOrNull(1)) {
+        "broken" -> {
+            val broken = parts.getOrNull(2)?.let(BrokenReason::fromKey) ?: return null
+            val since = parts.getOrNull(3)?.toLongOrNull() ?: return null
+            SkipReason.Broken(broken, Instant.ofEpochMilli(since))
+        }
+
+        "refused" -> SkipReason.Refused
+
+        "failed" -> SkipReason.Failed(parts.drop(2).joinToString("|"))
+
+        else -> return null
+    }
+    return index to reason
+}
 
 /** Whether this item is the retry of a source the stream server refused. */
 val MediaItem.retried: Boolean get() = mediaMetadata.extras?.getBoolean(RETRIED) ?: false
