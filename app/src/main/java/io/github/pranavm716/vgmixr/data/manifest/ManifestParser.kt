@@ -52,7 +52,7 @@ class ManifestParser @Inject constructor() {
     private fun invalid(error: ManifestError) = ManifestParseResult.Invalid(listOf(error))
 
     private companion object {
-        const val SUPPORTED_SCHEMA_VERSION = 1
+        const val SUPPORTED_SCHEMA_VERSION = 2
     }
 }
 

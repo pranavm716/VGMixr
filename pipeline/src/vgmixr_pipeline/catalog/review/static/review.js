@@ -397,7 +397,7 @@ function renderDetail() {
       <button id="rename" title="Writes a title override; the track's current videos are kept as accepted ones">Rename</button></h2>
     <div class="facts">
       ${gamesEditor(d)}
-      · ${esc(d.category)} · ${minutes(d.durationMs)} · <span class="status-${d.status}">${d.status}</span>
+      · ${minutes(d.durationMs)} · <span class="status-${d.status}">${d.status}</span>
       · <code>${esc(d.id)}</code>
     </div>
     <div class="facts">${d.origins.map(esc).join("<br>")}</div>

@@ -85,8 +85,6 @@ class Track(_Model):
     # None (omitted) means all of the family's games; empty is a validation error.
     games: list[str] | None = None
     title: str
-    # Kept as written; the app imports unknown values as `other`.
-    category: str
     order: int
     sources: list[Source]
     replaces: list[str] = []

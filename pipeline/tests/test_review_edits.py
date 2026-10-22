@@ -80,12 +80,12 @@ GAMES: dict[str, Any] = {
 FAMILIES = games_families(GAMES)
 OVERRIDES: dict[str, Any] = {
     "tracks": {
-        "rby-pokemon-tower": {"category": "dungeon"},
+        "rby-pokemon-tower": {"note": "Lavender Town's tower"},
         "gsc-clair": {"games": ["crystal"]},
         "rse-drought": {"games": ["ruby"], "note": DROUGHT_NOTE},
         "rse-cable-car": {"exclude": False, "note": "Short, but music, not a jingle"},
         "frlg-sevii-islands": {"games": ["firered", "leafgreen"]},
-        "hgss-kanto-route": {"category": "route"},
+        "hgss-kanto-route": {"note": "Plays on most Kanto routes"},
     },
     "extras": [],
 }  # fmt: skip

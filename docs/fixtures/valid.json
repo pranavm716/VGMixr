@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "generatedAt": "2026-10-14T08:00:00Z",
   "games": [
     { "id": "ruby", "name": "Ruby", "shortName": "R", "color": "#C8372D",
@@ -22,7 +22,6 @@
       "id": "rse-route-101",
       "family": "rse",
       "title": "Route 101",
-      "category": "route",
       "order": 12,
       "sources": [
         { "type": "local", "path": "rse/012.flac",
@@ -35,7 +34,6 @@
       "family": "rse",
       "games": ["ruby"],
       "title": "Drought",
-      "category": "event",
       "order": 90,
       "sources": [
         { "type": "stream", "videoId": "YYYYYYYYYYY", "startMs": 0, "endMs": null, "confidence": 0 }
@@ -46,7 +44,6 @@
       "family": "rse",
       "games": ["ruby", "emerald"],
       "title": "Weather Institute",
-      "category": "cutscene",
       "order": 40,
       "sources": [
         { "type": "stream", "videoId": "Ab-cd_EF012", "startMs": 120000, "endMs": 245500, "confidence": 0.5 },
@@ -58,7 +55,6 @@
       "id": "pla-example-theme",
       "family": "pla",
       "title": "Example Theme",
-      "category": "town",
       "order": 0,
       "sources": [
         { "type": "stream", "videoId": "WWWWWWWWWWW" }
@@ -68,7 +64,6 @@
       "id": "botw-hyrule-field",
       "family": "botw",
       "title": "Hyrule Field",
-      "category": "other",
       "order": 3,
       "sources": [
         { "type": "local", "path": "botw/field/hyrule-field.ogg" },
@@ -80,7 +75,6 @@
       "id": "rb-pallet-town",
       "family": "rb",
       "title": "Pallet Town",
-      "category": "town",
       "order": 1,
       "sources": [
         { "type": "local", "path": "rb/pallet.flac" },

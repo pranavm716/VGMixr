@@ -21,8 +21,7 @@ TONE = LocalSource(type="local", path="dev/test-tone.wav")
 
 
 def track(id_: str, family: str = "rse", sources: list[Any] | None = None, **kw: Any) -> DraftTrack:
-    fields: dict[str, Any] = {"games": None, "title": id_.removeprefix(family + "-"),
-                              "category": "route", "order": 0,
+    fields: dict[str, Any] = {"games": None, "title": id_.removeprefix(family + "-"), "order": 0,
                               "durationMs": 60_000, "origins": ["page / Disc 1 #1"]}  # fmt: skip
     return DraftTrack(id=id_, family=family, sources=sources or [], **(fields | kw))
 
@@ -42,7 +41,7 @@ DRAFT = Draft(
     tracks=[
         track("rse-route-101", games=["ruby"]),
         track("rse-route-102", order=1),
-        track("dev-test-tone", family="dev", sources=[TONE], category="other", order=999),
+        track("dev-test-tone", family="dev", sources=[TONE], order=999),
     ],
 )
 MATCHES = [
@@ -55,14 +54,12 @@ MATCHES = [
 def test_tracks_get_their_streams_and_lose_draft_only_fields() -> None:
     manifest = build_manifest(DRAFT, MATCHES, "2026-10-16T10:00:00Z")
     route = manifest.tracks[0]
-    assert (route.id, route.games, route.category, route.order) == (
-        "rse-route-101", ["ruby"], "route", 0
-    )  # fmt: skip
+    assert (route.id, route.games, route.order) == ("rse-route-101", ["ruby"], 0)
     assert [s.videoId for s in route.sources if isinstance(s, StreamSource)] == [
         "aaaaaaaaaaa",
         "bbbbbbbbbbb",
     ]
-    assert manifest.schemaVersion == 1
+    assert manifest.schemaVersion == 2
 
 
 def test_unmatched_tracks_are_left_out_and_hand_sources_kept() -> None:

@@ -49,7 +49,7 @@ def track(
     from vgmixr_pipeline.catalog.slug import track_id
 
     return DraftTrack(id=track_id(family, title), family=family, games=games, title=title,
-                      category="other", order=order, sources=sources or [],
+                      order=order, sources=sources or [],
                       durationMs=duration_ms, origins=[])  # fmt: skip
 
 

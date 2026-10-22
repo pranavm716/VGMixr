@@ -92,7 +92,7 @@ def test_non_object_json_is_malformed(text: str) -> None:
     assert codes(parse(text)) == [ErrorCode.MALFORMED]
 
 
-@pytest.mark.parametrize("version", [0, 2, 100])
+@pytest.mark.parametrize("version", [0, 1, 100])
 def test_unsupported_schema_version_wins_over_a_malformed_body(version: int) -> None:
     result = parse(json.dumps({"schemaVersion": version}))
     assert codes(result) == [ErrorCode.SCHEMA_VERSION_UNSUPPORTED]
@@ -147,15 +147,9 @@ def test_patterns_match_the_whole_string(patch: Patch, code: ErrorCode) -> None:
     assert codes(parse_patched(patch)) == [code]
 
 
-def test_category_is_kept_as_written() -> None:
-    result = parse_patched(lambda m: track(m).update(category="Route"))
-    assert isinstance(result, Valid)
-    assert result.manifest.tracks[0].category == "Route"
-
-
 def test_tracks_accept_already_parsed_sources() -> None:
     """The catalog builder copies parsed sources into new models."""
     local = LocalSource(type="local", path="pla/test-tone.wav")
     stream = StreamSource(type="stream", videoId="XXXXXXXXXXX")
-    built = Track(id="t", family="f", title="T", category="other", order=0, sources=[local, stream])
+    built = Track(id="t", family="f", title="T", order=0, sources=[local, stream])
     assert built.sources == [local, stream]

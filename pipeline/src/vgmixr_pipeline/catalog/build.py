@@ -13,7 +13,6 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
-from vgmixr_pipeline.catalog.category import guess_category
 from vgmixr_pipeline.catalog.config import (
     DATA_DIR,
     Durations,
@@ -49,7 +48,6 @@ class DraftTrack(BaseModel):
     family: str
     games: list[str] | None
     title: str
-    category: str
     # The hand-set order (order.json), else the track-list position.
     order: int
     sources: list[Source]
@@ -149,7 +147,6 @@ class _Track:
     occurrences: list[Occurrence] = field(default_factory=list)
     games: set[str] = field(default_factory=set)
     explicit_order: int | None = None
-    category: str | None = None
     sources: list[Source] = field(default_factory=list)
     is_extra: bool = False
     # An extra's own length; generated tracks take theirs from their occurrences.
@@ -318,7 +315,6 @@ def _extras(
         track = _Track(id_, extra.family, extra.title, is_extra=True)
         track.games = set(extra.games or family_games[extra.family])
         track.explicit_order = extra.order
-        track.category = extra.category
         track.sources = list(extra.sources)
         track.duration_ms = parse_duration(extra.duration) if extra.duration else None
         if extra.games is not None:
@@ -335,8 +331,6 @@ def _apply(
 ) -> None:
     if override.title is not None:
         track.title = override.title
-    if override.category is not None:
-        track.category = override.category
     track.listed_games = set(track.games)
     if override.games is not None:
         _check_games(track.id, override.games, family_games[track.family], errors)
@@ -403,7 +397,6 @@ def _draft(
                     family=family,
                     games=_in_order(track.games, all_games),
                     title=track.title,
-                    category=track.category or guess_category(track.title),
                     order=hand[track.id] if family in order else list_order,
                     sources=track.sources,
                     durationMs=_duration(track),

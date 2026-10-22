@@ -19,7 +19,7 @@ def track(manifest: Manifest, track_id: str) -> Track:
 
 
 def test_parses_top_level_fields(manifest: Manifest) -> None:
-    assert manifest.schemaVersion == 1
+    assert manifest.schemaVersion == 2
     assert manifest.generated_at() == datetime(2026, 10, 14, 8, 0, tzinfo=UTC)
     game_ids = [g.id for g in manifest.games]
     assert game_ids == ["ruby", "sapphire", "emerald", "pla", "botw", "red", "blue"]
@@ -69,7 +69,5 @@ def test_parses_track_fields(manifest: Manifest) -> None:
     institute = track(manifest, "rse-weather-institute")
     assert institute.games == ["ruby", "emerald"]
     assert institute.replaces == ["rse-weather-lab"]
-    # Kept as written; mapping unknown categories to `other` is the app's import rule.
-    assert institute.category == "cutscene"
     route = track(manifest, "rse-route-101")
     assert (route.games, route.replaces, route.order) == (None, [], 12)

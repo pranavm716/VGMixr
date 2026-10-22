@@ -88,8 +88,6 @@ def test_usum_extras_are_ultra_only(overrides: Overrides) -> None:
 def test_override_fields_are_strict() -> None:
     with pytest.raises(ValidationError):
         Overrides.model_validate_json('{"tracks": {"rse-x": {"categry": "town"}}}')
-    with pytest.raises(ValidationError):
-        Overrides.model_validate_json('{"tracks": {"rse-x": {"category": "boss"}}}')
 
 
 def test_durations_are_for_listed_tracklists(games: GamesFile) -> None:

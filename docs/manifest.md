@@ -1,4 +1,4 @@
-# Manifest schema (v1)
+# Manifest schema
 
 The manifest is the only boundary between the pipeline (`pipeline/`) and the app. The pipeline writes `catalog/manifest.json`; the app validates it and imports it into Room. It holds static catalog facts only. Runtime state (favorites, play history, cache, broken-source flags) lives in Room, never here.
 
@@ -14,7 +14,7 @@ Example data is illustrative, not verified against the real games.
 
 ```json
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "generatedAt": "2026-10-13T08:00:00Z",
   "games": [
     { "id": "ruby", "name": "Ruby", "shortName": "R", "color": "#C8372D",
@@ -31,7 +31,6 @@ Example data is illustrative, not verified against the real games.
       "id": "rse-route-101",
       "family": "rse",
       "title": "Route 101",
-      "category": "route",
       "order": 12,
       "sources": [
         { "type": "local", "path": "rse/012.flac",
@@ -44,7 +43,6 @@ Example data is illustrative, not verified against the real games.
       "family": "rse",
       "games": ["ruby"],
       "title": "Drought",
-      "category": "event",
       "order": 90,
       "sources": [
         { "type": "stream", "videoId": "YYYYYYYYYYY", "startMs": 0, "endMs": null, "confidence": 0.88 }
@@ -55,7 +53,6 @@ Example data is illustrative, not verified against the real games.
       "family": "rse",
       "games": ["sapphire"],
       "title": "Heavy Rain",
-      "category": "event",
       "order": 91,
       "sources": [
         { "type": "stream", "videoId": "ZZZZZZZZZZZ", "startMs": 0, "endMs": null, "confidence": 0.85 }
@@ -65,7 +62,6 @@ Example data is illustrative, not verified against the real games.
       "id": "pla-example-theme",
       "family": "pla",
       "title": "Example Theme",
-      "category": "town",
       "order": 1,
       "sources": [
         { "type": "stream", "videoId": "WWWWWWWWWWW", "startMs": 0, "endMs": null }
@@ -79,7 +75,7 @@ Example data is illustrative, not verified against the real games.
 
 | Field | Type | Rules |
 |---|---|---|
-| `schemaVersion` | int | Required. App rejects any version it doesn't support. |
+| `schemaVersion` | int | Required. Currently `2` (version 1 tracks had a `category`). App rejects any version it doesn't support. |
 | `generatedAt` | string | Required. ISO-8601 UTC. Also used by the app to decide whether to re-import (see Import rules). |
 | `games` | Game[] | Required. |
 | `tracks` | Track[] | Required. |
@@ -122,7 +118,6 @@ The app derives chip text color from `color` for contrast, so the manifest doesn
 | `family` | string | Required. Must match a family id: a `family` slug used by at least one game, or the id of a standalone game. |
 | `games` | string[] | Optional. Non-empty, no duplicates, each entry must be the id of a game in the track's family. Omitted means the track exists in all of the family's games. |
 | `title` | string | Non-empty. |
-| `category` | string | One of `battle`, `route`, `town`, `dungeon`, `event`, `other`. Unknown values import as `other` (not an error). |
 | `order` | int | >= 0. Position within the family; the app sorts by `order`, then `title`. |
 | `sources` | Source[] | Required. At least one. Array order is priority. No two sources with the same identity (see Source). |
 | `replaces` | string[] | Optional. Old track ids this track supersedes (see below and Import rules). |
@@ -147,7 +142,6 @@ The app derives chip text color from `color` for contrast, so the manifest doesn
   - **Game**: matches tracks whose chip games include the game, i.e. whose family contains the game and whose `games` is omitted or includes it (selecting Ruby shows RSE shared tracks plus Ruby exclusives, not Heavy Rain).
   - **Family**: uses the derived family.
   - **Generation**: matches tracks with a chip game of that `generation`. Games without a `generation` never match, and the UI shows this filter only when at least one game has a generation.
-  - **Category**: uses `category`.
 - Track lists sort by family (in the manifest order of its first game), then `order`, then `title`.
 
 ## Source
@@ -183,7 +177,7 @@ Optional object on `local` sources only. Loop points describe that exact file, s
 | `introEnd` | int | Sample where the loop body starts. `>= 0`. |
 | `loopEnd` | int | Sample where playback wraps back to `introEnd`. `> introEnd`. |
 
-All three fields are required when `loop` is present. Unused until v2 looping, but parsed, validated and tested from v1. How many times a track loops is a single global app setting, not a manifest field.
+All three fields are required when `loop` is present. Unused until v2 looping, but parsed, validated and tested already. How many times a track loops is a single global app setting, not a manifest field.
 
 ## Import rules
 
@@ -231,7 +225,7 @@ Sources
 - `loop` on a `stream` source
 - Invalid `loop` (`sampleRate <= 0`, `introEnd < 0`, or `introEnd >= loopEnd`)
 
-## Planned, not in v1
+## Planned, not in the schema yet
 
 - `franchise`: optional slug on games, for when a second franchise (e.g. Zelda) is added. It would be the top-level UI grouping dimension, and games in a family would have to share it. Adding it is non-breaking, so don't build it yet.
 

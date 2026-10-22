@@ -17,7 +17,6 @@ Besides the ordinary cases, it covers values a validator must accept:
 | `local` source with `loop` | `rse-route-101`, `botw-hyrule-field` |
 | `local` source without `loop` | `botw-hyrule-field`, `rb-pallet-town` |
 | Track with only `local` sources | `botw-hyrule-field` |
-| Unknown `category` (imports as `other`) | `rse-weather-institute` (`cutscene`) |
 | `games` omitted, single game, and multi-game subset | `rse-route-101`, `rse-drought`, `rse-weather-institute` |
 | Valid `replaces` | `rse-weather-institute` |
 | Same `videoId` in two sources with different slices | `rse-weather-institute` |
@@ -72,8 +71,8 @@ One file per condition, named `<field>-<variant>.json`, where `<field>` is the p
 | File | Code | Defect |
 |---|---|---|
 | `syntax-error.json` | `malformed` | Not valid JSON (unclosed brace) |
-| `schemaVersion-string.json` | `malformed` | `schemaVersion` is `"1"`, a string |
-| `schemaVersion-unsupported.json` | `schema-version-unsupported` | `schemaVersion` is `2` |
+| `schemaVersion-string.json` | `malformed` | `schemaVersion` is `"2"`, a string |
+| `schemaVersion-unsupported.json` | `schema-version-unsupported` | `schemaVersion` is `1`, an older version |
 | `generatedAt-offset.json` | `generated-at-invalid` | `generatedAt` is `2026-10-14T10:00:00+02:00`: ISO-8601, but not UTC |
 | `generatedAt-not-iso.json` | `generated-at-invalid` | `generatedAt` is `14/10/2026` |
 | `games.id-duplicate.json` | `game-id-duplicate` | Two games with id `ruby` |
