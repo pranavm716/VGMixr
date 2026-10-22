@@ -10,17 +10,25 @@ Playlists: the page ranks families by their gaps, searches YouTube for playlists
 by rematching its families with it added (or removed), from the cache only. A playlist is fetched
 once, live, and then read from the cache; adding it writes games.json and rematches its families.
 Hand decisions stay first whatever the playlists are, since matching puts them first.
+
+Broken: the videos the app reported (the pulled broken.json, read on every request), joined to
+the draft's tracks, with each video's re-check the way the app sees it (vgmixr_pipeline.broken.
+recheck). Re-checks are cached and asked only on request, spaced like the other live calls.
 """
 
+import json
 import subprocess
 import sys
 import time
 from collections.abc import Callable
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from pydantic import ValidationError
 
+from vgmixr_pipeline.broken import BrokenMark, read_pulled
+from vgmixr_pipeline.broken.recheck import AppCheck, AppChecks
 from vgmixr_pipeline.catalog import slug
 from vgmixr_pipeline.catalog.build import Draft, DraftTrack
 from vgmixr_pipeline.catalog.config import (
@@ -86,9 +94,13 @@ class Review:
         sleep: Callable[[float], Any] = time.sleep,
         rebuild: Rebuild = run_builder,
         cached_only: bool = False,
+        manifest_path: Path | None = None,
+        app_checks: AppChecks | None = None,
     ) -> None:
         self._data_dir = data_dir
         self._out_dir = out_dir
+        self._manifest_path = manifest_path
+        self._app_checks = app_checks
         self._cached = cached
         self._live = None if cached_only else live
         self._clock = clock
@@ -118,6 +130,22 @@ class Review:
         )
         self._tracks = {t.id: t for t in self._draft.tracks}
         self._matches = {m.track_id: m for m in self._match(None)}
+        self._load_manifest()
+
+    def _load_manifest(self) -> None:
+        """The manifest's generatedAt and stream videos, for the Broken tab; None without one."""
+        self._manifest_at: datetime | None = None
+        self._manifest_videos: set[str] | None = None
+        if self._manifest_path is None:
+            return
+        try:
+            data = json.loads(self._manifest_path.read_text(encoding="utf-8"))
+            self._manifest_at = datetime.fromisoformat(data["generatedAt"])
+            self._manifest_videos = {
+                s["videoId"] for t in data["tracks"] for s in t["sources"] if "videoId" in s
+            }
+        except (OSError, ValueError, KeyError, TypeError):
+            self._manifest_at = self._manifest_videos = None
 
     def _overridden(self, track: DraftTrack) -> DraftTrack:
         """Title and games overrides apply at once, as the next build would apply them. Without a
@@ -498,6 +526,107 @@ class Review:
         self._blocked_until = None
         return self._youtube_mode()
 
+    # Broken
+
+    def broken(self) -> dict[str, Any]:
+        """The app's reports, those whose video a draft track still uses first, newest first."""
+        pulled = read_pulled(self._out_dir)
+        marks = sorted(pulled.broken.marks if pulled.broken else [],
+                       key=lambda m: m.marked_at, reverse=True)  # fmt: skip
+        catalog_ids = self._catalog_ids()
+        reports = sorted(
+            (self._report(m, catalog_ids) for m in marks), key=lambda r: r["status"] != "needs-fix"
+        )
+        return {
+            "pulled": {
+                "exists": pulled.broken is not None or pulled.error is not None,
+                "at": _iso(pulled.pulled_at),
+                "error": pulled.error,
+            },
+            "manifestGeneratedAt": _iso(self._manifest_at),
+            "reports": reports,
+            "youtube": self._youtube_mode(),
+        }
+
+    def _catalog_ids(self) -> dict[str, str]:
+        """Catalog ids (the manifest's, the app's) to source keys: from the titles as built, which
+        the phone has, and from today's titles, so a rename in this session still resolves."""
+
+        def ids(tracks: Any) -> dict[str, str]:
+            return {slug.track_id(t.family, t.title): t.id for t in tracks}
+
+        return {**ids(self._tracks.values()), **ids(self._built.values())}
+
+    def _report(self, mark: BrokenMark, catalog_ids: dict[str, str]) -> dict[str, Any]:
+        used_by = self._tracks_using(mark.video_id)
+        guess = self._family_of(mark.track_id)
+        key = catalog_ids.get(mark.track_id)
+        track = (
+            self._tracks[key]
+            if key is not None
+            # A track renamed since: the one using the reported video, in its family if possible.
+            else next((t for t in used_by if t.family == guess), next(iter(used_by), None))
+        )
+        sources = self._matches[track.id].streams if track is not None else []
+        return {
+            "trackId": mark.track_id,
+            "videoId": mark.video_id,
+            "reason": mark.reason,
+            "detail": mark.detail,
+            "markedAt": _iso(mark.marked_at),
+            "catalogGeneratedAt": _iso(mark.catalog_generated_at),
+            "olderCatalog": None
+            if self._manifest_at is None
+            else mark.catalog_generated_at != self._manifest_at,
+            "track": _ref(track) if track is not None else None,
+            "family": track.family if track is not None else guess,
+            "status": "needs-fix" if used_by else "fixed",
+            "inManifest": None
+            if self._manifest_videos is None
+            else mark.video_id in self._manifest_videos,
+            "usedBy": [_ref(t) for t in used_by],
+            "check": self._check_json(mark.video_id),
+            "sources": [
+                {
+                    "videoId": s.videoId,
+                    "startMs": s.startMs,
+                    "endMs": s.endMs,
+                    "check": self._check_json(s.videoId),
+                }
+                for s in sources
+            ],  # fmt: skip
+        }
+
+    def _tracks_using(self, video_id: str) -> list[DraftTrack]:
+        """The draft's tracks (not removed) whose sources, as matched today, use the video."""
+        return [
+            t
+            for t in self._draft.tracks
+            if self._status(t.id) != "excluded"
+            and any(
+                getattr(s, "videoId", None) == video_id
+                for s in [*t.sources, *self._matches[t.id].streams]
+            )
+        ]
+
+    def _family_of(self, catalog_id: str) -> str | None:
+        """The family a catalog id starts with (the longest, should one family's id prefix
+        another's)."""
+        families = [f for f in self._families if catalog_id.startswith(f + "-")]
+        return max(families, key=len, default=None)
+
+    def _cached_check(self, video_id: str) -> AppCheck | None:
+        if self._app_checks is None:
+            return None
+        try:
+            return self._app_checks.cached(video_id)
+        except ValueError:  # not a video id
+            return None
+
+    def _check_json(self, video_id: str) -> dict[str, Any] | None:
+        check = self._cached_check(video_id)
+        return check.model_dump(mode="json", by_alias=True) if check is not None else None
+
     # Helpers
 
     def _ask[T](self, call: Callable[[Videos], T]) -> tuple[T, str | None]:
@@ -816,3 +945,12 @@ def _differs(before: Match, after: Match) -> bool:
         return [(s.videoId, s.startMs, s.endMs) for s in match.streams]
 
     return before.status != after.status or sources(before) != sources(after)
+
+
+def _ref(track: DraftTrack) -> dict[str, Any]:
+    return {"id": track.id, "family": track.family, "title": track.title}
+
+
+def _iso(at: datetime | None) -> str | None:
+    """UTC times as the app writes them, with a Z."""
+    return None if at is None else at.isoformat().replace("+00:00", "Z")
