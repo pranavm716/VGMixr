@@ -4,7 +4,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 
 ## Scope
 - Personal app with a single user (the developer), who does all setup by hand once. Prefer fixed configuration over pickers, onboarding or settings screens. In-app warnings and dev-facing debug/cataloging UI are welcome when cheap and useful.
-- MVP: browse/filter tracks by game, family, generation; recently played; favorites; playback from remote streams; downloads/caching for offline use.
+- MVP: browse/filter tracks by game, family, generation; search; play history (for search ranking and caching); favorites; playback from remote streams; downloads/caching for offline use.
 - Right after MVP: local files from ROM rips become the first source on each track.
 - v2: seamless looping with a single global loop-cycle setting. Loop points are in the schema (on `local` sources) from day one.
 - After downloads/cache: user-added YouTube tracks (mainly fan remixes), added by pasting a link (see `docs/roadmap.md`).
