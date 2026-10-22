@@ -118,4 +118,10 @@ class PlayQueueTest {
         }
         assertEquals(null, QueueContext.fromKey("nonsense"))
     }
+
+    @Test
+    fun `a playlist context survives being written as a key and read back`() {
+        assertEquals(QueueContext.Playlist(7), QueueContext.fromKey(QueueContext.Playlist(7).key))
+        assertEquals(null, QueueContext.fromKey("playlist:abc"))
+    }
 }

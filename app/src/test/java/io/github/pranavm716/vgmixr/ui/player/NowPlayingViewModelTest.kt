@@ -10,6 +10,7 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.FakePlaylistRepository
@@ -43,7 +44,9 @@ class NowPlayingViewModelTest {
     )
 
     private val playback = FakePlaybackController()
-    private val playlists = FakePlaylistRepository()
+    private val playlists = FakePlaylistRepository(
+        initialPlaylists = listOf(PlaylistSummary(1, "Favorites", 1, isFavorites = true))
+    )
     private val viewModel by lazy {
         NowPlayingViewModel(FakeCatalogRepository(catalog), playback, playlists)
     }
@@ -81,6 +84,18 @@ class NowPlayingViewModelTest {
             val state = awaitItem() as NowPlayingUiState.Visible
             assertEquals(PlayingFromUi.Queue, state.playingFrom)
             assertEquals(true, state.isLoading)
+        }
+    }
+
+    @Test
+    fun `a track tapped in a playlist plays from it`() = runTest {
+        playback.state.value = playing(QueueContext.Playlist(1))
+
+        viewModel.uiState.test {
+            assertEquals(
+                PlayingFromUi.Playlist(1, "Favorites"),
+                (awaitItem() as NowPlayingUiState.Visible).playingFrom
+            )
         }
     }
 

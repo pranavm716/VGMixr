@@ -10,6 +10,7 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,6 +38,9 @@ sealed interface PlayingFromUi {
     /** Tapped in a family's list; the header opens it. */
     data class Family(val familyId: String, val name: String) : PlayingFromUi
 
+    /** Tapped in a playlist; the header opens it. */
+    data class Playlist(val playlistId: Long, val name: String) : PlayingFromUi
+
     /** Added with swipe to queue. */
     data object Queue : PlayingFromUi
 }
@@ -51,8 +55,11 @@ class NowPlayingViewModel @Inject constructor(
         combine(
             repository.catalog,
             playback.state,
-            playlists.favorites
-        ) { catalog, state, favorites -> catalog.nowPlaying(state, favorites) }
+            playlists.favorites,
+            playlists.playlists
+        ) { catalog, state, favorites, playlists ->
+            catalog.nowPlaying(state, favorites, playlists)
+        }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
@@ -84,7 +91,11 @@ class NowPlayingViewModel @Inject constructor(
     }
 }
 
-private fun Catalog.nowPlaying(state: PlaybackState, favorites: Set<String>): NowPlayingUiState {
+private fun Catalog.nowPlaying(
+    state: PlaybackState,
+    favorites: Set<String>,
+    playlists: List<PlaylistSummary>
+): NowPlayingUiState {
     val track = tracks.firstOrNull { it.id == state.trackId } ?: return NowPlayingUiState.Hidden
     val context = state.queue.entries.getOrNull(state.queue.current)?.context
         ?: QueueContext.Family(track.familyId)
@@ -92,6 +103,11 @@ private fun Catalog.nowPlaying(state: PlaybackState, favorites: Set<String>): No
         is QueueContext.Family -> PlayingFromUi.Family(
             context.familyId,
             families.firstOrNull { it.id == context.familyId }?.name.orEmpty()
+        )
+
+        is QueueContext.Playlist -> PlayingFromUi.Playlist(
+            context.playlistId,
+            playlists.firstOrNull { it.id == context.playlistId }?.name.orEmpty()
         )
 
         QueueContext.Queue -> PlayingFromUi.Queue
