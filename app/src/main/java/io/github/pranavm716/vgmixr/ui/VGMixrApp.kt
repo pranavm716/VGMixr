@@ -56,6 +56,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import io.github.pranavm716.vgmixr.ui.games.GamesTab
 import io.github.pranavm716.vgmixr.ui.navigation.FamilyRoute
 import io.github.pranavm716.vgmixr.ui.navigation.GamesGraph
@@ -72,7 +73,8 @@ import io.github.pranavm716.vgmixr.ui.search.SearchTab
 
 /**
  * Draws a tab's root screen; the controller lets it open screens inside its tab. The count goes
- * up each time the tab is tapped while already selected (the Search tab then focuses its field).
+ * up each time the tab is tapped while its root screen shows (Games then scrolls to the top, Search
+ * focuses its field).
  */
 typealias TabScreen = @Composable (TopLevelDestination, NavHostController, reselects: Int) -> Unit
 
@@ -146,8 +148,13 @@ fun VGMixrApp(
                         selected = selected,
                         onSelect = { tab ->
                             if (tab == selected) {
-                                reselects[tab] = (reselects[tab] ?: 0) + 1
-                                navController.popToRoot(tab)
+                                // Inside a tab, a tap goes back to its first screen; on that
+                                // screen, the screen reacts (scrolls to the top, focuses search).
+                                if (navController.isAtRoot(tab)) {
+                                    reselects[tab] = (reselects[tab] ?: 0) + 1
+                                } else {
+                                    navController.popToRoot(tab)
+                                }
                             } else {
                                 navController.navigateTo(tab)
                             }
@@ -175,7 +182,7 @@ fun VGMixrApp(
                         // Closes the sheet and opens the family in the Games tab, replacing any
                         // family already open there; it scrolls to the playing track on opening.
                         nowPlayingOpen.value = false
-                        navController.navigate(FamilyRoute(familyId)) {
+                        navController.navigate(FamilyRoute(familyId, fromNowPlaying = true)) {
                             popUpTo<GamesRoute>()
                         }
                     }
@@ -208,9 +215,19 @@ private fun AppNavHost(
         navController = navController,
         startDestination = TopLevelDestination.start.route,
         modifier = modifier,
-        enterTransition = { if (withinTab()) slideIn(SlideDirection.Start) else tabFadeIn },
+        enterTransition = {
+            when {
+                targetState.opensAtOnce() -> EnterTransition.None
+                withinTab() -> slideIn(SlideDirection.Start)
+                else -> tabFadeIn
+            }
+        },
         exitTransition = {
-            if (withinTab()) slideOut(SlideDirection.Start, parallax = true) else tabFadeOut
+            when {
+                targetState.opensAtOnce() -> ExitTransition.None
+                withinTab() -> slideOut(SlideDirection.Start, parallax = true)
+                else -> tabFadeOut
+            }
         },
         popEnterTransition = {
             if (withinTab()) slideIn(SlideDirection.End, parallax = true) else tabFadeIn
@@ -262,7 +279,7 @@ private fun Tab(
 fun AppScreen(destination: TopLevelDestination, navController: NavHostController, reselects: Int) {
     when (destination) {
         TopLevelDestination.GAMES ->
-            GamesTab(onFamilyClick = { navController.navigate(FamilyRoute(it)) })
+            GamesTab(onFamilyClick = { navController.navigate(FamilyRoute(it)) }, reselects)
 
         TopLevelDestination.SEARCH -> SearchTab(reselects)
 
@@ -279,6 +296,11 @@ private const val FADE_MS = 150
 
 private val tabFadeIn = fadeIn(tween(FADE_MS))
 private val tabFadeOut = fadeOut(tween(FADE_MS))
+
+// A family opened from now playing shows at once under the collapsing sheet; leaving it slides as
+// usual.
+private fun NavBackStackEntry.opensAtOnce(): Boolean =
+    destination.hasRoute<FamilyRoute>() && toRoute<FamilyRoute>().fromNowPlaying
 
 private fun NavDestination.tab(): TopLevelDestination? =
     TopLevelDestination.entries.firstOrNull { isIn(it) }
@@ -313,7 +335,13 @@ private fun NavHostController.navigateTo(destination: TopLevelDestination) {
 
 // Tapping the selected tab goes back to its first screen.
 private fun NavHostController.popToRoot(destination: TopLevelDestination) {
+    rootOf(destination)?.let { popBackStack(it.id, inclusive = false) }
+}
+
+private fun NavHostController.isAtRoot(destination: TopLevelDestination): Boolean =
+    currentDestination?.id != null && currentDestination?.id == rootOf(destination)?.id
+
+private fun NavHostController.rootOf(destination: TopLevelDestination): NavDestination? {
     val tab = graph.findNode(destination.route)
-    val root = if (tab is NavGraph) tab.findStartDestination() else tab
-    root?.let { popBackStack(it.id, inclusive = false) }
+    return if (tab is NavGraph) tab.findStartDestination() else tab
 }
