@@ -46,6 +46,8 @@ class FakePlaybackController : PlaybackController {
 
     data object ClearQueue
 
+    data class TryAgain(val trackId: String)
+
     override val state = MutableStateFlow(PlaybackState())
     override val progress = MutableStateFlow(PlaybackProgress(positionMs = 0, durationMs = null))
     override val events = MutableSharedFlow<PlaybackEvent>(extraBufferCapacity = 16)
@@ -81,6 +83,10 @@ class FakePlaybackController : PlaybackController {
 
     override fun clearQueue() {
         calls += ClearQueue
+    }
+
+    override fun tryAgain(trackId: String) {
+        calls += TryAgain(trackId)
     }
 
     override fun playFrom(trackIds: List<String>, index: Int, context: QueueContext) {

@@ -6,6 +6,13 @@
     <string name="playback_stopped_network">Playback stopped: no connection</string>
     <string name="playback_stopped_bot_check">Playback stopped: YouTube asked to confirm you\'re not a bot. Try again later</string>
     <string name="playback_stopped_extractor">Playback stopped: YouTube changed and the stream extractor needs an update</string>
+    <string name="source_failed_skipped_no_audio">Skipped %s: YouTube won\'t give the app its audio</string>
+    <string name="source_failed_skipped_unavailable">Skipped %s: its video is unavailable</string>
+    <string name="source_failed_skipped">Skipped %s: its stream didn\'t play</string>
+    <string name="source_failed_other_upload">Playing another upload of %s: the first one didn\'t play</string>
+    <string name="track_unplayable_no_audio">%s can\'t play: YouTube won\'t give the app its audio</string>
+    <string name="track_unplayable_unavailable">%s can\'t play: its video is unavailable</string>
+    <string name="try_again">Try again</string>
 
     <string name="add_to_queue">Add to queue</string>
     <string name="remove_from_queue">Remove from queue</string>

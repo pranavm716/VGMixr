@@ -42,6 +42,12 @@ interface PlaybackController {
     /** Empties "Next in queue". */
     fun clearQueue()
 
+    /**
+     * Clears the broken marks of [trackId]'s sources (Try again), so its next play tries them
+     * again.
+     */
+    fun tryAgain(trackId: String)
+
     /** The current track's position, a few times a second while collected. */
     val progress: Flow<PlaybackProgress>
 
