@@ -72,7 +72,10 @@ class PlaybackService : MediaSessionService() {
         val http = DefaultHttpDataSource.Factory().setAllowCrossProtocolRedirects(true)
         val streams = ResolvingDataSource.Factory(http, StreamUriResolver(resolver, diagnostics))
         val player = ExoPlayer.Builder(this)
-            .setMediaSourceFactory(DefaultMediaSourceFactory(streams))
+            .setMediaSourceFactory(
+                DefaultMediaSourceFactory(streams)
+                    .setLoadErrorHandlingPolicy(FailFastLoadErrorPolicy())
+            )
             .setAudioAttributes(
                 AudioAttributes.Builder()
                     .setUsage(C.USAGE_MEDIA)
