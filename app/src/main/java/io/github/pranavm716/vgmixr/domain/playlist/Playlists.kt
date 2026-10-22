@@ -1,5 +1,6 @@
 package io.github.pranavm716.vgmixr.domain.playlist
 
+import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import kotlinx.coroutines.flow.Flow
 
 /** One row of the Playlists tab. [isFavorites]: the built-in Favorites playlist. */
@@ -30,4 +31,13 @@ interface PlaylistRepository {
 
     /** Adds [trackId] to Favorites or takes it out; adding a favorite again changes nothing. */
     suspend fun setFavorite(trackId: String, favorite: Boolean)
+}
+
+/**
+ * The playlist's tracks found in [catalog] that can play, in its order: what a tap plays and a
+ * swipe queues. Tracks no longer in the catalog and greyed tracks are left out.
+ */
+fun Playlist.playableTrackIds(catalog: Catalog): List<String> {
+    val tracks = catalog.tracks.associateBy { it.id }
+    return trackIds.filter { id -> tracks[id]?.let { it.unplayable == null } == true }
 }

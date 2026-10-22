@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">VGMixr</string>
     <string name="games_empty">No games yet</string>
+    <string name="playlist_not_found">This playlist doesn\'t exist</string>
+    <string name="playlist_empty">No tracks yet</string>
+    <string name="favorites_empty">Tap the heart in now playing to add tracks</string>
     <string name="family_not_found">This game isn\'t in the catalog</string>
     <string name="import_failed">Catalog update failed; showing the previous catalog</string>
     <string name="playback_stopped_network">Playback stopped: no connection</string>

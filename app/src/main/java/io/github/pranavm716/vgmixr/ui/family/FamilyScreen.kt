@@ -14,24 +14,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,14 +33,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import io.github.pranavm716.vgmixr.ui.components.CollectionHeader
 import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.ScrollToPlayingOnce
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.components.UnplayableIcon
 import io.github.pranavm716.vgmixr.ui.components.unplayable
 import io.github.pranavm716.vgmixr.ui.player.gameTint
-import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
-import kotlinx.coroutines.flow.first
 
 // The header's art tile and the track numbers share one leading column, so their centers line up.
 private val StartPadding = 16.dp
@@ -83,9 +74,16 @@ fun FamilyScreen(
         FamilyUiState.NotFound -> NotFound(modifier.statusBarsPadding())
 
         is FamilyUiState.Loaded -> Column(modifier.fillMaxSize()) {
-            Header(state.name, state.trackCount, state.games)
+            // Tinted with the family's games' colors, as the mini player is.
+            CollectionHeader(
+                state.name,
+                state.trackCount,
+                art = { ArtTile(LeadingColumn) },
+                gap = LeadingGap,
+                background = gameTint(state.games)
+            )
             val listState = rememberLazyListState()
-            ScrollToPlayingOnce(listState, state.playing)
+            ScrollToPlayingOnce(listState, state.playing?.index, TrackRowHeight)
             LazyColumn(Modifier.fillMaxSize(), state = listState) {
                 items(state.tracks, key = { it.id }) { track ->
                     val playing = state.playing?.takeIf { it.trackId == track.id }
@@ -106,55 +104,6 @@ fun FamilyScreen(
                 }
             }
         }
-    }
-}
-
-/**
- * The family's name and track count, tinted with its games' colors as the mini player is. The tint
- * runs up behind the status bar.
- */
-@Composable
-private fun Header(name: String, trackCount: Int, games: List<ChipUi>) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(gameTint(games))
-            .statusBarsPadding()
-            .padding(start = StartPadding, top = 16.dp, end = 16.dp, bottom = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        ArtTile(LeadingColumn)
-        Spacer(Modifier.width(LeadingGap))
-        Column {
-            Text(
-                name,
-                style = MaterialTheme.typography.titleLarge,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                pluralStringResource(R.plurals.track_count, trackCount, trackCount),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
-
-/**
- * Opening a family whose track is playing shows that track mid-screen, once: coming back to the
- * screen keeps where the user scrolled.
- */
-@Composable
-private fun ScrollToPlayingOnce(listState: LazyListState, playing: PlayingRowUi?) {
-    var done by rememberSaveable { mutableStateOf(false) }
-    val rowPx = with(LocalDensity.current) { TrackRowHeight.roundToPx() }
-    LaunchedEffect(Unit) {
-        if (done) return@LaunchedEffect
-        done = true
-        val index = playing?.index ?: return@LaunchedEffect
-        val viewport = snapshotFlow { listState.layoutInfo.viewportSize.height }.first { it > 0 }
-        listState.scrollToItem(index, scrollOffset = -(viewport - rowPx) / 2)
     }
 }
 

@@ -55,13 +55,13 @@ import io.github.pranavm716.vgmixr.ui.components.MarqueeText
 
 /**
  * Now playing's header, as Spotify's: a chevron that closes the sheet, and "Playing from" over
- * where the track plays from; tapping that opens the family. As tall as the mini player, which
- * cross-fades into it at the top of the sheet.
+ * where the track plays from; tapping that opens the family or playlist. As tall as the mini
+ * player, which cross-fades into it at the top of the sheet.
  */
 @Composable
 fun NowPlayingHeader(
     onClose: () -> Unit,
-    onOpenFamily: (familyId: String) -> Unit,
+    onOpenPlayingFrom: (PlayingFromUi) -> Unit,
     viewModel: NowPlayingViewModel = hiltViewModel()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -83,8 +83,8 @@ fun NowPlayingHeader(
             Modifier
                 .weight(1f)
                 .then(
-                    if (playingFrom is PlayingFromUi.Family) {
-                        Modifier.clickable { onOpenFamily(playingFrom.familyId) }
+                    if (playingFrom != null && playingFrom != PlayingFromUi.Queue) {
+                        Modifier.clickable { onOpenPlayingFrom(playingFrom) }
                     } else {
                         Modifier
                     }
@@ -101,6 +101,7 @@ fun NowPlayingHeader(
                 Text(
                     when (playingFrom) {
                         is PlayingFromUi.Family -> playingFrom.name
+                        is PlayingFromUi.Playlist -> playingFrom.name
                         PlayingFromUi.Queue -> stringResource(R.string.playing_from_queue)
                     },
                     style = MaterialTheme.typography.titleSmall,

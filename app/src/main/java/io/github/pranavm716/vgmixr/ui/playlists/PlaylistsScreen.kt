@@ -14,25 +14,38 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
-import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.CollectionRow
-import io.github.pranavm716.vgmixr.ui.components.FavoritesArt
 import io.github.pranavm716.vgmixr.ui.components.RowTileSize
 import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnReselect
+import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
-fun PlaylistsTab(reselects: Int, viewModel: PlaylistsViewModel = hiltViewModel()) {
+fun PlaylistsTab(
+    onPlaylistClick: (Long) -> Unit,
+    reselects: Int,
+    viewModel: PlaylistsViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
     ScrollToTopOnReselect(reselects, listState)
-    PlaylistsScreen(state, listState = listState)
+    PlaylistsScreen(
+        state,
+        onPlaylistClick,
+        onQueuePlaylist = viewModel::onQueuePlaylist,
+        listState = listState
+    )
 }
 
-/** The Playlists tab: Favorites, then the user's playlists, in rows like the Games tab's. */
+/**
+ * The Playlists tab: Favorites, then the user's playlists, in rows like the Games tab's. A swipe
+ * right queues a playlist's tracks, as it queues a family's.
+ */
 @Composable
 fun PlaylistsScreen(
     state: PlaylistsUiState,
+    onPlaylistClick: (Long) -> Unit,
+    onQueuePlaylist: (Long) -> Unit,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState()
 ) {
@@ -41,17 +54,14 @@ fun PlaylistsScreen(
         if (state is PlaylistsUiState.Loaded) {
             LazyColumn(Modifier.fillMaxSize(), state = listState) {
                 items(state.playlists, key = { it.id }) { playlist ->
-                    CollectionRow(
-                        playlist.name,
-                        playlist.trackCount,
-                        art = {
-                            if (playlist.isFavorites) {
-                                FavoritesArt(RowTileSize)
-                            } else {
-                                ArtTile(RowTileSize)
-                            }
-                        }
-                    )
+                    SwipeToQueue(onQueue = { onQueuePlaylist(playlist.id) }) {
+                        CollectionRow(
+                            playlist.name,
+                            playlist.trackCount,
+                            art = { PlaylistArt(playlist.isFavorites, RowTileSize) },
+                            onClick = { onPlaylistClick(playlist.id) }
+                        )
+                    }
                 }
             }
         }
@@ -69,7 +79,9 @@ private fun PlaylistsScreenPreview() {
                     PlaylistSummary(2, "Route themes", 1, isFavorites = false),
                     PlaylistSummary(3, "Battle!", 24, isFavorites = false)
                 )
-            )
+            ),
+            onPlaylistClick = {},
+            onQueuePlaylist = {}
         )
     }
 }
