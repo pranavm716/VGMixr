@@ -72,6 +72,16 @@ class FamilyViewModelTest {
     }
 
     @Test
+    fun `the header is tinted with the family's games in manifest order`() = runTest {
+        viewModel("rse").uiState.test {
+            assertEquals(
+                listOf(chip(ruby), chip(sapphire), chip(emerald)),
+                (awaitItem() as FamilyUiState.Loaded).games
+            )
+        }
+    }
+
+    @Test
     fun `tracks are numbered from 1 in family order`() = runTest {
         viewModel("rse").uiState.test {
             val tracks = (awaitItem() as FamilyUiState.Loaded).tracks

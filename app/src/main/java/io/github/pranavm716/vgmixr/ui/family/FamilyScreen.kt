@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -43,6 +44,7 @@ import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
+import io.github.pranavm716.vgmixr.ui.player.gameTint
 import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import kotlinx.coroutines.flow.first
@@ -79,10 +81,10 @@ fun FamilyScreen(
     when (state) {
         FamilyUiState.Loading -> Unit
 
-        FamilyUiState.NotFound -> NotFound(modifier)
+        FamilyUiState.NotFound -> NotFound(modifier.statusBarsPadding())
 
         is FamilyUiState.Loaded -> Column(modifier.fillMaxSize()) {
-            Header(state.name, state.trackCount)
+            Header(state.name, state.trackCount, state.games)
             val listState = rememberLazyListState()
             ScrollToPlayingOnce(listState, state.playing)
             LazyColumn(Modifier.fillMaxSize(), state = listState) {
@@ -102,10 +104,18 @@ fun FamilyScreen(
     }
 }
 
+/**
+ * The family's name and track count, tinted with its games' colors as the mini player is. The tint
+ * runs up behind the status bar.
+ */
 @Composable
-private fun Header(name: String, trackCount: Int) {
+private fun Header(name: String, trackCount: Int, games: List<ChipUi>) {
     Row(
-        modifier = Modifier.padding(start = StartPadding, top = 16.dp, end = 16.dp, bottom = 16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(gameTint(games))
+            .statusBarsPadding()
+            .padding(start = StartPadding, top = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ArtTile(LeadingColumn)
@@ -221,6 +231,7 @@ private fun FamilyScreenPreview() {
             FamilyUiState.Loaded(
                 name = "Ruby / Sapphire / Emerald",
                 trackCount = 3,
+                games = listOf(ruby, sapphire, ChipUi("E", "#009A44")),
                 tracks = listOf(
                     TrackRowUi("a", 1, "Opening Movie (Ruby & Sapphire)", listOf(ruby, sapphire)),
                     TrackRowUi("b", 2, "Littleroot Town", emptyList()),

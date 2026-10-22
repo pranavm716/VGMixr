@@ -16,10 +16,15 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -110,6 +115,11 @@ fun VGMixrApp(
     Box(Modifier.fillMaxSize()) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
+            // Screens reach up behind the status bar and pad themselves, so a screen's header can
+            // tint it.
+            contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(
+                WindowInsets.statusBars
+            ),
             snackbarHost = { SnackbarHost(snackbars) },
             bottomBar = {
                 Column {
@@ -205,6 +215,7 @@ private fun AppNavHost(
         // One entry per tab; the bar's order comes from TopLevelDestination, not from here.
         navigation<GamesGraph>(startDestination = GamesRoute) {
             composable<GamesRoute> { Tab(TopLevelDestination.GAMES, navController, screen) }
+            // The family screen pads below the status bar itself, under its tinted header.
             composable<FamilyRoute> {
                 Box(Modifier.screen().testTag(FAMILY_SCREEN_TAG)) {
                     familyScreen(openNowPlaying)
@@ -223,7 +234,7 @@ private fun Tab(
     navController: NavHostController,
     screen: TabScreen
 ) {
-    Box(Modifier.screen().testTag(destination.screenTag)) {
+    Box(Modifier.screen().statusBarsPadding().testTag(destination.screenTag)) {
         screen(destination, navController)
     }
 }
