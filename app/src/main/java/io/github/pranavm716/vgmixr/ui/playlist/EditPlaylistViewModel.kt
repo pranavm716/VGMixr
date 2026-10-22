@@ -33,9 +33,9 @@ import kotlinx.coroutines.launch
  * "Add to <playlist>": [results] are the search's matches, best first; [noResults] is set when a
  * typed query matches nothing. An empty field shows neither.
  */
-data class AddTracksUiState(
+data class EditPlaylistUiState(
     val playlistName: String = "",
-    val results: List<AddTrackRowUi> = emptyList(),
+    val results: List<EditPlaylistRowUi> = emptyList(),
     val noResults: Boolean = false
 )
 
@@ -43,7 +43,7 @@ data class AddTracksUiState(
  * A match as search lists it, with all of its game chips. [added]: the playlist has it, so its
  * button shows a check instead of a plus.
  */
-data class AddTrackRowUi(
+data class EditPlaylistRowUi(
     val id: String,
     val title: String,
     val chips: List<ChipUi>,
@@ -54,15 +54,15 @@ data class AddTrackRowUi(
 /** Finds tracks with the Search tab's search and adds them to (or takes them out of) a playlist. */
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
-class AddTracksViewModel @Inject constructor(
+class EditPlaylistViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    repository: CatalogRepository,
+    private val repository: CatalogRepository,
     private val playlists: PlaylistRepository,
     playHistory: PlayHistory,
     private val clock: Clock,
-    @DefaultDispatcher dispatcher: CoroutineDispatcher
+    @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    // The AddTracksRoute's argument, stored by type-safe navigation under its property name.
+    // The EditPlaylistRoute's argument, stored by type-safe navigation under its property name.
     private val playlistId: Long = checkNotNull(savedStateHandle["playlistId"])
 
     private val query = MutableStateFlow("")
@@ -75,15 +75,29 @@ class AddTracksViewModel @Inject constructor(
     ) { query, index, plays -> Matches(query, search(query, index, plays, clock.instant())) }
         .flowOn(dispatcher)
 
-    val uiState: StateFlow<AddTracksUiState> =
-        combine(matches, playlists.playlist(playlistId)) { matches, playlist ->
-            val added = playlist?.trackIds.orEmpty().toSet()
-            AddTracksUiState(
+    // An empty field lists the playlist's own tracks (newest first, all checked), so unchecking one
+    // takes its row away; a typed query lists the matches instead.
+    val uiState: StateFlow<EditPlaylistUiState> =
+        combine(matches, playlists.playlist(playlistId), repository.catalog) {
+                matches,
+                playlist,
+                catalog
+            ->
+            val ids = playlist?.trackIds.orEmpty()
+            val added = ids.toSet()
+            val tracks = if (matches.query.isBlank()) {
+                val byId = catalog.tracks.associateBy { it.id }
+                ids.mapNotNull { byId[it] }
+            } else {
+                matches.tracks
+            }
+            EditPlaylistUiState(
                 playlistName = playlist?.name.orEmpty(),
-                results = matches.tracks.map { it.toRow(it.id in added) },
+                results = tracks.map { it.toRow(it.id in added) },
                 noResults = matches.query.isNotBlank() && matches.tracks.isEmpty()
             )
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AddTracksUiState())
+        }.flowOn(dispatcher)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), EditPlaylistUiState())
 
     fun onQueryChange(query: String) {
         this.query.value = query
@@ -99,7 +113,7 @@ class AddTracksViewModel @Inject constructor(
 /** A search's [tracks] together with the [query] they answer. */
 private class Matches(val query: String, val tracks: List<CatalogTrack>)
 
-private fun CatalogTrack.toRow(added: Boolean) = AddTrackRowUi(
+private fun CatalogTrack.toRow(added: Boolean) = EditPlaylistRowUi(
     id = id,
     title = title,
     chips = games.map { ChipUi(it.shortName, it.color) },

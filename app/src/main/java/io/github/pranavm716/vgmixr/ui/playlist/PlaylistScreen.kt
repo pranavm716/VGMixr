@@ -36,13 +36,13 @@ import io.github.pranavm716.vgmixr.ui.playlists.PlaylistArt
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
-fun PlaylistTab(onAddTracks: () -> Unit, viewModel: PlaylistViewModel = hiltViewModel()) {
+fun PlaylistTab(onEditPlaylist: () -> Unit, viewModel: PlaylistViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     PlaylistScreen(
         state,
         onTrackClick = viewModel::onTrackClick,
         onQueueTrack = viewModel::onQueueTrack,
-        onAddTracks = onAddTracks
+        onEditPlaylist = onEditPlaylist
     )
 }
 
@@ -55,7 +55,7 @@ fun PlaylistScreen(
     state: PlaylistUiState,
     onTrackClick: (String) -> Unit,
     onQueueTrack: (String) -> Unit,
-    onAddTracks: () -> Unit,
+    onEditPlaylist: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -72,10 +72,10 @@ fun PlaylistScreen(
                 art = { PlaylistArt(state.isFavorites, RowTileSize) },
                 gap = RowTileGap,
                 action = {
-                    IconButton(onClick = onAddTracks) {
+                    IconButton(onClick = onEditPlaylist) {
                         Icon(
-                            painterResource(R.drawable.ic_add),
-                            contentDescription = stringResource(R.string.add_tracks)
+                            painterResource(R.drawable.ic_edit),
+                            contentDescription = stringResource(R.string.edit_playlist)
                         )
                     }
                 }
@@ -139,7 +139,7 @@ private fun PlaylistScreenPreview() {
             ),
             onTrackClick = {},
             onQueueTrack = {},
-            onAddTracks = {}
+            onEditPlaylist = {}
         )
     }
 }

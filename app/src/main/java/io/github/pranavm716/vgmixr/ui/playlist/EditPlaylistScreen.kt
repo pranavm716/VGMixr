@@ -17,7 +17,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,11 +46,11 @@ import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
-fun AddTracksTab(onBack: () -> Unit, viewModel: AddTracksViewModel = hiltViewModel()) {
+fun EditPlaylistTab(onBack: () -> Unit, viewModel: EditPlaylistViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     // The field's text is kept here, so typing never waits on the ViewModel.
     var query by rememberSaveable { mutableStateOf("") }
-    AddTracksScreen(
+    EditPlaylistScreen(
         state,
         query,
         onQueryChange = {
@@ -64,14 +63,15 @@ fun AddTracksTab(onBack: () -> Unit, viewModel: AddTracksViewModel = hiltViewMod
 }
 
 /**
- * "Add to <playlist>": the Search tab's field under a back arrow, and the matches as search lists
- * them, each ending in a plus that adds it to the playlist (a check once it's in; tapping the check
- * takes it out). Tapping a row itself does nothing, so nothing plays while picking. The keyboard
- * comes up on opening; dragging the results hides it.
+ * "Edit <playlist>": the Search tab's field under a back arrow. Under an empty field the playlist's
+ * own tracks, all checked, so unchecking one takes it out (and its row away); under a typed query
+ * the matches as search lists them, each ending in a plus that adds it (a check once it's in).
+ * Tapping a row itself does nothing, so nothing plays while editing. The keyboard comes up only
+ * when the field is tapped, so it doesn't cover the list; dragging the list hides it.
  */
 @Composable
-fun AddTracksScreen(
-    state: AddTracksUiState,
+fun EditPlaylistScreen(
+    state: EditPlaylistUiState,
     query: String,
     onQueryChange: (String) -> Unit,
     onToggle: (String) -> Unit,
@@ -80,10 +80,6 @@ fun AddTracksScreen(
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-        keyboard?.show()
-    }
     val hideKeyboard = {
         keyboard?.hide()
         focusManager.clearFocus()
@@ -101,7 +97,7 @@ fun AddTracksScreen(
             }
             Spacer(Modifier.width(8.dp))
             Text(
-                stringResource(R.string.add_to_playlist_title, state.playlistName),
+                stringResource(R.string.edit_playlist_title, state.playlistName),
                 style = MaterialTheme.typography.titleLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -170,16 +166,16 @@ private fun AddButton(added: Boolean, onClick: () -> Unit) {
 
 @Preview
 @Composable
-private fun AddTracksScreenPreview() {
+private fun EditPlaylistScreenPreview() {
     val ruby = ChipUi("R", "#CD2236")
     val sapphire = ChipUi("S", "#3D51A7")
     VGMixrTheme {
-        AddTracksScreen(
-            AddTracksUiState(
+        EditPlaylistScreen(
+            EditPlaylistUiState(
                 playlistName = "Hype",
                 results = listOf(
-                    AddTrackRowUi("a", "Route 101", listOf(ruby, sapphire), added = true),
-                    AddTrackRowUi("b", "Route 102", listOf(ruby))
+                    EditPlaylistRowUi("a", "Route 101", listOf(ruby, sapphire), added = true),
+                    EditPlaylistRowUi("b", "Route 102", listOf(ruby))
                 )
             ),
             query = "route",

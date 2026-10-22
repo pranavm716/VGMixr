@@ -27,7 +27,7 @@ import kotlinx.serialization.Serializable
 @Serializable data class PlaylistRoute(val playlistId: Long, val fromNowPlaying: Boolean = false)
 
 /** "Add to <playlist>": search for tracks to add to playlist [playlistId]. */
-@Serializable data class AddTracksRoute(val playlistId: Long)
+@Serializable data class EditPlaylistRoute(val playlistId: Long)
 
 @Serializable data object Tab4Route
 

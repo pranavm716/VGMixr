@@ -20,7 +20,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
-class AddTracksViewModelTest {
+class EditPlaylistViewModelTest {
     @get:Rule
     val main = MainDispatcherRule()
 
@@ -56,7 +56,7 @@ class AddTracksViewModelTest {
     }
 
     private val viewModel by lazy {
-        AddTracksViewModel(
+        EditPlaylistViewModel(
             SavedStateHandle(mapOf("playlistId" to 7L)),
             FakeCatalogRepository(catalog),
             playlists,
@@ -70,12 +70,52 @@ class AddTracksViewModelTest {
     private val chipS = ChipUi("S", "#336699")
 
     @Test
-    fun `an empty field shows the playlist's name and no tracks`() = runTest {
+    fun `an empty field lists the playlist's tracks, newest first, all checked`() = runTest {
+        playlists.contents.value = mapOf(
+            7L to Playlist(7, "Hype", false, listOf("rse-route-102", "rse-gone", "rse-littleroot"))
+        )
+
         viewModel.uiState.test {
             val state = awaitItem()
             assertEquals("Hype", state.playlistName)
-            assertEquals(emptyList<AddTrackRowUi>(), state.results)
+            assertEquals(
+                listOf(
+                    EditPlaylistRowUi("rse-route-102", "Route 102", listOf(chipR), added = true),
+                    EditPlaylistRowUi(
+                        "rse-littleroot",
+                        "Littleroot Town",
+                        listOf(chipR, chipS),
+                        added = true
+                    )
+                ),
+                state.results
+            )
             assertFalse(state.noResults)
+        }
+    }
+
+    @Test
+    fun `unchecking a track under an empty field takes its row away`() = runTest {
+        viewModel.uiState.test {
+            assertEquals(listOf("rse-route-102"), awaitItem().results.map { it.id })
+
+            viewModel.onToggle("rse-route-102")
+
+            assertEquals(emptyList<EditPlaylistRowUi>(), awaitItem().results)
+            assertEquals(emptyList<String>(), playlists.contents.value[7]?.trackIds)
+        }
+    }
+
+    @Test
+    fun `clearing the field goes back to the playlist's tracks`() = runTest {
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.onQueryChange("littleroot")
+            assertEquals(listOf("rse-littleroot"), awaitItem().results.map { it.id })
+
+            viewModel.onQueryChange("")
+
+            assertEquals(listOf("rse-route-102"), awaitItem().results.map { it.id })
         }
     }
 
@@ -88,8 +128,8 @@ class AddTracksViewModelTest {
 
                 assertEquals(
                     listOf(
-                        AddTrackRowUi("rse-route-101", "Route 101", listOf(chipR, chipS)),
-                        AddTrackRowUi("rse-route-102", "Route 102", listOf(chipR), added = true)
+                        EditPlaylistRowUi("rse-route-101", "Route 101", listOf(chipR, chipS)),
+                        EditPlaylistRowUi("rse-route-102", "Route 102", listOf(chipR), added = true)
                     ),
                     awaitItem().results
                 )

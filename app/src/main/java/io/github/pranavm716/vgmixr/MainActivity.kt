@@ -19,7 +19,7 @@ import io.github.pranavm716.vgmixr.ui.player.MiniPlayerBar
 import io.github.pranavm716.vgmixr.ui.player.MiniPlayerInSheet
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingHeader
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingScreen
-import io.github.pranavm716.vgmixr.ui.playlist.AddTracksTab
+import io.github.pranavm716.vgmixr.ui.playlist.EditPlaylistTab
 import io.github.pranavm716.vgmixr.ui.playlist.PlaylistTab
 import io.github.pranavm716.vgmixr.ui.queue.QueueScreen
 import io.github.pranavm716.vgmixr.ui.theme.Background
@@ -48,8 +48,8 @@ class MainActivity : ComponentActivity() {
                         AppScreen(destination, nav, reselects)
                     },
                     familyScreen = { FamilyTab() },
-                    playlistScreen = { addTracks -> PlaylistTab(onAddTracks = addTracks) },
-                    addTracksScreen = { back -> AddTracksTab(onBack = back) },
+                    playlistScreen = { edit -> PlaylistTab(onEditPlaylist = edit) },
+                    editPlaylistScreen = { back -> EditPlaylistTab(onBack = back) },
                     snackbars = snackbars,
                     miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },
                     miniPlayerInSheet = { MiniPlayerInSheet() },
