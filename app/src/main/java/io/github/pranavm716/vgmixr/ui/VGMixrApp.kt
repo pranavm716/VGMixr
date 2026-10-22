@@ -82,7 +82,7 @@ const val FAMILY_SCREEN_TAG = "screen-family"
 fun VGMixrApp(
     navController: NavHostController = rememberNavController(),
     screen: TabScreen = { destination, _ -> PlaceholderScreen(destination.label) },
-    familyScreen: @Composable (onTrackPlayed: () -> Unit) -> Unit = { PlaceholderScreen("Family") },
+    familyScreen: @Composable () -> Unit = { PlaceholderScreen("Family") },
     snackbars: SnackbarHostState = remember { SnackbarHostState() },
     miniPlayer: @Composable (
         NowPlayingSheetState,
@@ -147,7 +147,6 @@ fun VGMixrApp(
                 navController,
                 screen,
                 familyScreen,
-                openNowPlaying,
                 Modifier.padding(padding)
             )
         }
@@ -187,8 +186,7 @@ fun VGMixrApp(
 private fun AppNavHost(
     navController: NavHostController,
     screen: TabScreen,
-    familyScreen: @Composable (onTrackPlayed: () -> Unit) -> Unit,
-    openNowPlaying: () -> Unit,
+    familyScreen: @Composable () -> Unit,
     modifier: Modifier
 ) {
     NavHost(
@@ -218,7 +216,7 @@ private fun AppNavHost(
             // The family screen pads below the status bar itself, under its tinted header.
             composable<FamilyRoute> {
                 Box(Modifier.screen().testTag(FAMILY_SCREEN_TAG)) {
-                    familyScreen(openNowPlaying)
+                    familyScreen()
                 }
             }
         }

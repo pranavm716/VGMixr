@@ -58,14 +58,11 @@ private val LeadingGap = 16.dp
 private const val PLAYING_TINT = 0.12f
 
 @Composable
-fun FamilyTab(onTrackPlayed: () -> Unit, viewModel: FamilyViewModel = hiltViewModel()) {
+fun FamilyTab(viewModel: FamilyViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     FamilyScreen(
         state,
-        onTrackClick = {
-            viewModel.onTrackClick(it)
-            onTrackPlayed()
-        },
+        onTrackClick = viewModel::onTrackClick,
         onQueueTrack = viewModel::onQueueTrack
     )
 }

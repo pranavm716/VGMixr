@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                 MessagesEffect(snackbars)
                 VGMixrApp(
                     screen = { destination, nav -> AppScreen(destination, nav) },
-                    familyScreen = { onTrackPlayed -> FamilyTab(onTrackPlayed) },
+                    familyScreen = { FamilyTab() },
                     snackbars = snackbars,
                     miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },
                     miniPlayerInSheet = { MiniPlayerInSheet() },
