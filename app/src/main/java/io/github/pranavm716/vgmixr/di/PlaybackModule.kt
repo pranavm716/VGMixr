@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.github.pranavm716.vgmixr.data.diagnostics.BrokenMarksMirror
 import io.github.pranavm716.vgmixr.data.diagnostics.FileDiagnostics
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.NewPipeStreamResolver
@@ -18,6 +19,8 @@ import io.github.pranavm716.vgmixr.playback.MediaControllerPlaybackController
 import java.io.File
 import java.time.Clock
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -32,10 +35,21 @@ object PlaybackModule {
     fun providePlaybackDiagnostics(
         @ApplicationContext context: Context,
         clock: Clock
-    ): PlaybackDiagnostics {
-        val folder = context.getExternalFilesDir(null) ?: context.filesDir
-        return FileDiagnostics(File(folder, "playback.log"), clock)
-    }
+    ): PlaybackDiagnostics =
+        FileDiagnostics(File(diagnosticsFolder(context), "playback.log"), clock)
+
+    @Provides
+    @Singleton
+    fun provideBrokenMarksMirror(
+        @ApplicationContext context: Context,
+        sources: BrokenSources,
+        @ApplicationScope scope: CoroutineScope,
+        @IoDispatcher io: CoroutineDispatcher
+    ) = BrokenMarksMirror(File(diagnosticsFolder(context), "broken.json"), sources, scope, io)
+
+    /** The app's external files folder, which adb can read from a release build. */
+    private fun diagnosticsFolder(context: Context): File =
+        context.getExternalFilesDir(null) ?: context.filesDir
 
     @Provides
     fun provideStreamResolver(resolver: CachingStreamResolver): StreamResolver = resolver

@@ -4,10 +4,14 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogImportResult
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogSync
+import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
+import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
+import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import java.time.Instant
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeCatalogRepository(initial: Catalog = Catalog(emptyList(), emptyList(), emptyList())) :
@@ -82,5 +86,28 @@ class FakePlaybackController : PlaybackController {
 
     override fun addToQueue(trackIds: List<String>) {
         calls += AddToQueue(trackIds)
+    }
+}
+
+class FakeBrokenSources(initial: Map<String, BrokenMark> = emptyMap()) : BrokenSources {
+    override val marks = MutableStateFlow(initial)
+
+    val marked = mutableListOf<BrokenMark>()
+
+    override suspend fun mark(
+        videoId: String,
+        trackId: String,
+        reason: BrokenReason,
+        detail: String?
+    ): Boolean {
+        if (videoId in marks.value) return false
+        val mark = BrokenMark(videoId, trackId, reason, detail, Instant.EPOCH, null)
+        marked += mark
+        marks.value += videoId to mark
+        return true
+    }
+
+    override suspend fun clear(videoId: String) {
+        marks.value -= videoId
     }
 }
