@@ -5,7 +5,8 @@ import app.cash.turbine.test
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.manifest
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.track
-import io.github.pranavm716.vgmixr.data.db.FavoriteEntity
+import io.github.pranavm716.vgmixr.data.db.FAVORITES_PLAYLIST_ID
+import io.github.pranavm716.vgmixr.data.db.PlaylistEntryEntity
 import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.model.Loop
@@ -159,8 +160,12 @@ class RoomCatalogRepositoryTest {
         repository.catalog.test {
             awaitItem()
 
-            db.userDataDao().insertFavorite(
-                FavoriteEntity("rse-route-101", Instant.parse("2026-10-15T09:00:00Z"))
+            db.userDataDao().insertPlaylistEntry(
+                PlaylistEntryEntity(
+                    FAVORITES_PLAYLIST_ID,
+                    "rse-route-101",
+                    Instant.parse("2026-10-15T09:00:00Z")
+                )
             )
             advanceUntilIdle()
 

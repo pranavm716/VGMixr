@@ -47,13 +47,17 @@ class DaoTest {
 
     @Test
     fun `favorites and history round-trip`() = runTest(dispatcher) {
-        val favorite = FavoriteEntity("rse-route-101", Instant.ofEpochMilli(1_000))
-        userDataDao.insertFavorite(favorite)
+        val favorite = PlaylistEntryEntity(
+            FAVORITES_PLAYLIST_ID,
+            "rse-route-101",
+            Instant.ofEpochMilli(1_000)
+        )
+        userDataDao.insertPlaylistEntry(favorite)
         userDataDao.insertHistory(
             PlayHistoryEntity(trackId = "rse-route-101", playedAt = Instant.ofEpochMilli(2_000))
         )
 
-        assertEquals(favorite, userDataDao.favorite("rse-route-101"))
+        assertEquals(favorite, userDataDao.playlistEntry(FAVORITES_PLAYLIST_ID, "rse-route-101"))
         assertEquals(
             listOf(
                 PlayHistoryEntity(

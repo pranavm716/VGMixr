@@ -4,10 +4,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.manifest
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.track
-import io.github.pranavm716.vgmixr.data.db.FavoriteEntity
+import io.github.pranavm716.vgmixr.data.db.FAVORITES_PLAYLIST_ID
 import io.github.pranavm716.vgmixr.data.db.GameEntity
 import io.github.pranavm716.vgmixr.data.db.ImportStateEntity
 import io.github.pranavm716.vgmixr.data.db.PlayHistoryEntity
+import io.github.pranavm716.vgmixr.data.db.PlaylistEntity
+import io.github.pranavm716.vgmixr.data.db.PlaylistEntryEntity
 import io.github.pranavm716.vgmixr.data.db.SourceEntity
 import io.github.pranavm716.vgmixr.data.db.TrackEntity
 import io.github.pranavm716.vgmixr.data.db.UserDataDao
@@ -338,8 +340,8 @@ class CatalogImporterTest {
         )
 
         assertEquals(
-            listOf(FavoriteEntity("rse-weather-institute", Instant.ofEpochMilli(1_000))),
-            userDataDao.favorites()
+            listOf(favoriteEntry("rse-weather-institute", Instant.ofEpochMilli(1_000))),
+            favorites()
         )
     }
 
@@ -367,12 +369,42 @@ class CatalogImporterTest {
 
             assertEquals(
                 listOf(
-                    FavoriteEntity("rse-new-a", Instant.ofEpochMilli(1_000)),
-                    FavoriteEntity("rse-new-b", Instant.ofEpochMilli(3_000))
+                    favoriteEntry("rse-new-a", Instant.ofEpochMilli(1_000)),
+                    favoriteEntry("rse-new-b", Instant.ofEpochMilli(3_000))
                 ),
-                userDataDao.favorites()
+                favorites()
             )
         }
+
+    @Test
+    fun `replaces re-points entries in every playlist`() = runTest(dispatcher) {
+        importer.import(manifest(tracks = listOf(track("rse-weather-lab"))))
+        val mix = userDataDao.insertPlaylist(
+            PlaylistEntity(name = "Mix", createdAt = Instant.EPOCH)
+        )
+        favorite("rse-weather-lab", 1_000)
+        userDataDao.insertPlaylistEntry(
+            PlaylistEntryEntity(mix, "rse-weather-lab", Instant.ofEpochMilli(2_000))
+        )
+
+        importer.import(
+            manifest(
+                generatedAt = "2026-10-14T08:00:00Z",
+                tracks = listOf(
+                    track("rse-weather-institute", replaces = listOf("rse-weather-lab"))
+                )
+            )
+        )
+
+        assertEquals(
+            listOf(PlaylistEntryEntity(mix, "rse-weather-institute", Instant.ofEpochMilli(2_000))),
+            userDataDao.playlistEntries(mix)
+        )
+        assertEquals(
+            listOf(favoriteEntry("rse-weather-institute", Instant.ofEpochMilli(1_000))),
+            favorites()
+        )
+    }
 
     @Test
     fun `replaces leaves unrelated favorites and history untouched`() = runTest(dispatcher) {
@@ -392,7 +424,7 @@ class CatalogImporterTest {
 
         assertEquals(
             listOf("rse-retired-elsewhere", "rse-route-101"),
-            userDataDao.favorites().map { it.trackId }
+            favorites().map { it.trackId }
         )
         assertEquals(listOf("rse-route-101"), userDataDao.history().map { it.trackId })
     }
@@ -410,8 +442,8 @@ class CatalogImporterTest {
         )
 
         assertEquals(
-            listOf(FavoriteEntity("rse-route-101", Instant.ofEpochMilli(1_000))),
-            userDataDao.favorites()
+            listOf(favoriteEntry("rse-route-101", Instant.ofEpochMilli(1_000))),
+            favorites()
         )
         assertEquals(null, catalogDao.track("rse-never-existed"))
     }
@@ -483,7 +515,7 @@ class CatalogImporterTest {
             val state = importStateDao.get()
             // Throws after the catalog writes and the history re-point, while moving the favorite.
             val failingDao = object : UserDataDao by userDataDao {
-                override suspend fun upsertFavorite(favorite: FavoriteEntity) =
+                override suspend fun upsertPlaylistEntry(entry: PlaylistEntryEntity) =
                     throw IllegalStateException("disk full")
             }
 
@@ -510,13 +542,20 @@ class CatalogImporterTest {
             assertEquals(tracks, catalogDao.tracks())
             assertEquals(sources, catalogDao.sources("rse-route-101"))
             assertEquals(null, catalogDao.track("rse-weather-institute"))
-            assertEquals(listOf("rse-weather-lab"), userDataDao.favorites().map { it.trackId })
+            assertEquals(listOf("rse-weather-lab"), favorites().map { it.trackId })
             assertEquals(listOf("rse-weather-lab"), userDataDao.history().map { it.trackId })
             assertEquals(state, importStateDao.get())
         }
 
     private suspend fun favorite(trackId: String, addedAtMillis: Long) =
-        userDataDao.insertFavorite(FavoriteEntity(trackId, Instant.ofEpochMilli(addedAtMillis)))
+        userDataDao.insertPlaylistEntry(favoriteEntry(trackId, Instant.ofEpochMilli(addedAtMillis)))
+
+    private fun favoriteEntry(trackId: String, addedAt: Instant) =
+        PlaylistEntryEntity(FAVORITES_PLAYLIST_ID, trackId, addedAt)
+
+    /** Favorites' entries by track id. */
+    private suspend fun favorites() =
+        userDataDao.playlistEntries(FAVORITES_PLAYLIST_ID).sortedBy { it.trackId }
 
     private suspend fun history(trackId: String, playedAtMillis: Long) = userDataDao.insertHistory(
         PlayHistoryEntity(trackId = trackId, playedAt = Instant.ofEpochMilli(playedAtMillis))

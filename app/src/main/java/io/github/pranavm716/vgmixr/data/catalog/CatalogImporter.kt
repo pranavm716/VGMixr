@@ -2,7 +2,6 @@ package io.github.pranavm716.vgmixr.data.catalog
 
 import androidx.room.withTransaction
 import io.github.pranavm716.vgmixr.data.db.CatalogDao
-import io.github.pranavm716.vgmixr.data.db.FavoriteEntity
 import io.github.pranavm716.vgmixr.data.db.GameEntity
 import io.github.pranavm716.vgmixr.data.db.ImportStateDao
 import io.github.pranavm716.vgmixr.data.db.ImportStateEntity
@@ -85,18 +84,19 @@ class CatalogImporter @Inject constructor(
     }
 
     /**
-     * Re-points history and favorites from [oldId] to [newId]. If both are favorited they merge
-     * into one favorite with the earlier addedAt. Done in Kotlin rather than SQL because SQLite on
-     * API 26 (3.18) has no `ON CONFLICT DO UPDATE`.
+     * Re-points history and playlist entries (favorites included) from [oldId] to [newId]. If a
+     * playlist holds both, they merge into one entry with the earlier addedAt. Done in Kotlin
+     * rather than SQL because SQLite on API 26 (3.18) has no `ON CONFLICT DO UPDATE`.
      */
     private suspend fun migrateUserData(oldId: String, newId: String) {
         userDataDao.repointHistory(oldId, newId)
-        val old = userDataDao.favorite(oldId) ?: return
-        val new = userDataDao.favorite(newId)
-        userDataDao.deleteFavorite(old)
-        userDataDao.upsertFavorite(
-            FavoriteEntity(newId, minOf(old.addedAt, new?.addedAt ?: old.addedAt))
-        )
+        for (old in userDataDao.playlistEntriesOf(oldId)) {
+            val new = userDataDao.playlistEntry(old.playlistId, newId)
+            userDataDao.deletePlaylistEntry(old)
+            userDataDao.upsertPlaylistEntry(
+                old.copy(trackId = newId, addedAt = minOf(old.addedAt, new?.addedAt ?: old.addedAt))
+            )
+        }
     }
 }
 

@@ -10,6 +10,8 @@ import dagger.hilt.components.SingletonComponent
 import io.github.pranavm716.vgmixr.data.db.BrokenStreamDao
 import io.github.pranavm716.vgmixr.data.db.CatalogDao
 import io.github.pranavm716.vgmixr.data.db.ImportStateDao
+import io.github.pranavm716.vgmixr.data.db.MIGRATION_3_4
+import io.github.pranavm716.vgmixr.data.db.SeedFavorites
 import io.github.pranavm716.vgmixr.data.db.UserDataDao
 import io.github.pranavm716.vgmixr.data.db.VGMixrDatabase
 import javax.inject.Singleton
@@ -20,7 +22,10 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): VGMixrDatabase =
-        Room.databaseBuilder(context, VGMixrDatabase::class.java, "vgmixr.db").build()
+        Room.databaseBuilder(context, VGMixrDatabase::class.java, "vgmixr.db")
+            .addMigrations(MIGRATION_3_4)
+            .addCallback(SeedFavorites)
+            .build()
 
     @Provides
     fun provideCatalogDao(db: VGMixrDatabase): CatalogDao = db.catalogDao()

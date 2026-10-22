@@ -145,6 +145,49 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `3 to 4 moves favorites into the built-in Favorites playlist`() {
+        helper.createDatabase(3).use { db ->
+            db.execSQL("INSERT INTO favorites (trackId, addedAt) VALUES ('rse-drought', 111)")
+            db.execSQL("INSERT INTO favorites (trackId, addedAt) VALUES ('yt:abc', 222)")
+            db.execSQL("INSERT INTO play_history (trackId, playedAt) VALUES ('rse-drought', 333)")
+        }
+
+        helper.runMigrationsAndValidate(4, listOf(MIGRATION_3_4)).use { db ->
+            assertEquals(
+                listOf(listOf("1", "Favorites", "0")),
+                db.rows("SELECT id, name, createdAt FROM playlists")
+            )
+            assertEquals(
+                listOf(listOf("1", "rse-drought", "111"), listOf("1", "yt:abc", "222")),
+                db.rows(
+                    "SELECT playlistId, trackId, addedAt FROM playlist_entries ORDER BY trackId"
+                )
+            )
+            assertEquals(
+                emptyList<List<String?>>(),
+                db.rows("SELECT name FROM sqlite_master WHERE name = 'favorites'")
+            )
+            assertEquals(
+                listOf(listOf("rse-drought", "333")),
+                db.rows("SELECT trackId, playedAt FROM play_history")
+            )
+        }
+    }
+
+    @Test
+    fun `3 to 4 creates Favorites with no favorites to move`() {
+        helper.createDatabase(3).close()
+
+        helper.runMigrationsAndValidate(4, listOf(MIGRATION_3_4)).use { db ->
+            assertEquals(
+                listOf(listOf("1", "Favorites")),
+                db.rows("SELECT id, name FROM playlists")
+            )
+            assertEquals(emptyList<List<String?>>(), db.rows("SELECT * FROM playlist_entries"))
+        }
+    }
+
     private fun SQLiteConnection.rows(sql: String): List<List<String?>> = prepare(sql).use { row ->
         buildList {
             while (row.step()) {

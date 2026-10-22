@@ -81,10 +81,43 @@ data class SourceEntity(
     }
 }
 
-// User data has no foreign keys: it must outlive any catalog shape.
+// User data has no foreign keys into the catalog: it must outlive any catalog shape.
 
-@Entity(tableName = "favorites")
-data class FavoriteEntity(@PrimaryKey val trackId: String, val addedAt: Instant)
+/**
+ * A playlist. Favorites is built in: the row with [FAVORITES_PLAYLIST_ID], created with the
+ * database, which can't be renamed or deleted.
+ */
+@Entity(tableName = "playlists")
+data class PlaylistEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val name: String,
+    val createdAt: Instant
+)
+
+/** The built-in Favorites playlist's id. */
+const val FAVORITES_PLAYLIST_ID = 1L
+
+/**
+ * A track in a playlist, once per playlist. [trackId] is a catalog id or a user track's `yt:` id,
+ * with no foreign key, so entries outlive the catalog.
+ */
+@Entity(
+    tableName = "playlist_entries",
+    primaryKeys = ["playlistId", "trackId"],
+    indices = [Index("trackId")],
+    foreignKeys = [
+        ForeignKey(
+            entity = PlaylistEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["playlistId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
+data class PlaylistEntryEntity(val playlistId: Long, val trackId: String, val addedAt: Instant)
+
+/** A playlist with how many entries it has. */
+data class PlaylistCountRow(val id: Long, val name: String, val trackCount: Int)
 
 @Entity(tableName = "play_history", indices = [Index("trackId")])
 data class PlayHistoryEntity(
