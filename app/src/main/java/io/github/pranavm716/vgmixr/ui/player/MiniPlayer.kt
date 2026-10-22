@@ -65,6 +65,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import io.github.pranavm716.vgmixr.ui.components.GAME_TINT_ALPHA
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.RowTileGap
 import io.github.pranavm716.vgmixr.ui.components.RowTileSize
@@ -314,15 +315,13 @@ private fun Modifier.fadeOutBefore(end: Dp, fade: Dp) = this
  * through them (an RSE track runs red, blue, green).
  */
 internal fun gameTint(chips: List<ChipUi>): Brush {
-    val colors = chips.map { tintColor(it.color).copy(alpha = GAME_TINT) }
+    val colors = chips.map { tintColor(it.color).copy(alpha = GAME_TINT_ALPHA) }
     return when (colors.size) {
         0 -> SolidColor(Color.Transparent)
         1 -> SolidColor(colors.single())
         else -> Brush.horizontalGradient(colors)
     }
 }
-
-private const val GAME_TINT = 0.25f
 
 // Open Sans leaves room above its letters, so a text line sits optically low; trimming the line box
 // to the glyphs centers the title and its second line on the bar.

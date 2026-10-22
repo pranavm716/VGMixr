@@ -1,5 +1,6 @@
 package io.github.pranavm716.vgmixr.playback
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -21,14 +22,15 @@ private const val RETRIED = "retried"
 
 /**
  * The player item for [track], playing its playable source number [sourceIndex]; [context] is where
- * it plays from, by default the track's own family.
+ * it plays from, by default the track's own family. [artworkUri] is the media notification's art.
  */
 fun trackMediaItem(
     track: CatalogTrack,
     familyName: String,
     sourceIndex: Int = 0,
     context: QueueContext = QueueContext.Family(track.familyId),
-    retried: Boolean = false
+    retried: Boolean = false,
+    artworkUri: Uri? = null
 ): MediaItem {
     val source = playableStreams(track.sources).getOrNull(sourceIndex)
     val clipping = MediaItem.ClippingConfiguration.Builder()
@@ -44,6 +46,7 @@ fun trackMediaItem(
             MediaMetadata.Builder()
                 .setTitle(track.title)
                 .setArtist(familyName)
+                .setArtworkUri(artworkUri)
                 .setExtras(
                     Bundle().apply {
                         putInt(SOURCE_INDEX, sourceIndex)

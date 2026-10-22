@@ -39,6 +39,7 @@ import io.github.pranavm716.vgmixr.domain.playback.SourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.nextSource
 import io.github.pranavm716.vgmixr.domain.playback.onSourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
+import java.io.File
 import java.time.Clock
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -83,6 +84,7 @@ class PlaybackService : MediaSessionService() {
     lateinit var playHistory: PlayHistory
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val artwork by lazy { NotificationArtwork(File(cacheDir, "artwork")) }
     private val catalog = MutableStateFlow<Catalog?>(null)
     private val marks = MutableStateFlow<Map<String, BrokenMark>>(emptyMap())
     private var session: MediaSession? = null
@@ -156,7 +158,7 @@ class PlaybackService : MediaSessionService() {
                 val fresh = brokenSources.marks.first().also { marks.value = it }
                 mediaSession.setStoppedBy(null)
                 items.set(
-                    mediaItems.map { catalog.startItem(it.mediaId, it.context, fresh) }
+                    mediaItems.map { catalog.startItem(it.mediaId, it.context, fresh, artwork) }
                         .toMutableList()
                 )
             }
@@ -214,6 +216,7 @@ class PlaybackService : MediaSessionService() {
                         item.mediaId,
                         item.context,
                         item.sourceIndex,
+                        artwork,
                         retried = true
                     )
                     player.replaceMediaItem(player.currentMediaItemIndex, again)
@@ -222,7 +225,7 @@ class PlaybackService : MediaSessionService() {
                 }
 
                 is FailoverAction.TrySource -> {
-                    val next = catalog.itemFor(item.mediaId, item.context, action.index)
+                    val next = catalog.itemFor(item.mediaId, item.context, action.index, artwork)
                     player.replaceMediaItem(player.currentMediaItemIndex, next)
                     player.prepare()
                     player.play()
@@ -318,12 +321,13 @@ private fun MediaSession.setStoppedBy(failure: ResolveFailure?) {
 private fun Catalog.startItem(
     trackId: String,
     context: QueueContext,
-    marks: Map<String, BrokenMark>
+    marks: Map<String, BrokenMark>,
+    artwork: NotificationArtwork
 ): MediaItem {
     val streams = tracks.firstOrNull { it.id == trackId }
         ?.let { playableStreams(it.sources) }
         .orEmpty()
-    return itemFor(trackId, context, nextSource(streams, 0, marks.keys) ?: streams.size)
+    return itemFor(trackId, context, nextSource(streams, 0, marks.keys) ?: streams.size, artwork)
 }
 
 /**
@@ -334,6 +338,7 @@ private fun Catalog.itemFor(
     trackId: String,
     context: QueueContext,
     sourceIndex: Int,
+    artwork: NotificationArtwork,
     retried: Boolean = false
 ): MediaItem {
     val track = tracks.firstOrNull { it.id == trackId }
@@ -341,7 +346,8 @@ private fun Catalog.itemFor(
             QueueEntry(trackId, context)
         ).buildUpon().setUri(NO_SOURCE_URI).build()
     val familyName = families.firstOrNull { it.id == track.familyId }?.name.orEmpty()
-    return trackMediaItem(track, familyName, sourceIndex, context, retried)
+    val art = artwork.uriFor(track.games.map { it.color })
+    return trackMediaItem(track, familyName, sourceIndex, context, retried, art)
 }
 
 private val MediaItem.videoId: String?
