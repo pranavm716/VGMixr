@@ -7,7 +7,10 @@ import io.github.pranavm716.vgmixr.data.db.PlaylistEntity
 import io.github.pranavm716.vgmixr.data.db.PlaylistEntryEntity
 import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
+import java.time.Clock
 import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -20,7 +23,8 @@ class RoomPlaylistRepositoryTest {
     private val dispatcher = StandardTestDispatcher()
     private val db = inMemoryDatabase(dispatcher)
     private val dao = db.userDataDao()
-    private val repository = RoomPlaylistRepository(dao)
+    private val clock = MutableClock(Instant.ofEpochMilli(1_000))
+    private val repository = RoomPlaylistRepository(dao, clock)
 
     @After
     fun closeDb() = db.close()
@@ -55,6 +59,58 @@ class RoomPlaylistRepositoryTest {
                 awaitItem()
             )
         }
+    }
+
+    @Test
+    fun `favoriting adds the track to Favorites, unfavoriting takes it out`() =
+        runTest(dispatcher) {
+            repository.favorites.test {
+                assertEquals(emptySet<String>(), awaitItem())
+
+                repository.setFavorite("rse-route-101", true)
+                assertEquals(setOf("rse-route-101"), awaitItem())
+                assertEquals(
+                    listOf(
+                        PlaylistEntryEntity(
+                            FAVORITES_PLAYLIST_ID,
+                            "rse-route-101",
+                            Instant.ofEpochMilli(1_000)
+                        )
+                    ),
+                    dao.playlistEntries(FAVORITES_PLAYLIST_ID)
+                )
+
+                repository.setFavorite("rse-route-101", false)
+                assertEquals(emptySet<String>(), awaitItem())
+            }
+        }
+
+    @Test
+    fun `favoriting a favorite keeps when it was first added`() = runTest(dispatcher) {
+        repository.setFavorite("rse-route-101", true)
+        clock.instant = Instant.ofEpochMilli(5_000)
+
+        repository.setFavorite("rse-route-101", true)
+
+        assertEquals(
+            listOf(Instant.ofEpochMilli(1_000)),
+            dao.playlistEntries(FAVORITES_PLAYLIST_ID).map { it.addedAt }
+        )
+    }
+
+    @Test
+    fun `unfavoriting a track that isn't a favorite does nothing`() = runTest(dispatcher) {
+        repository.setFavorite("rse-route-101", false)
+
+        assertEquals(emptyList<PlaylistEntryEntity>(), dao.playlistEntries(FAVORITES_PLAYLIST_ID))
+    }
+
+    private class MutableClock(var instant: Instant) : Clock() {
+        override fun instant(): Instant = instant
+
+        override fun getZone(): ZoneId = ZoneOffset.UTC
+
+        override fun withZone(zone: ZoneId): Clock = this
     }
 
     private suspend fun entry(playlistId: Long, trackId: String) =

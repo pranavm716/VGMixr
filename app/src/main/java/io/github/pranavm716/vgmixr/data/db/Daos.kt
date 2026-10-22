@@ -98,6 +98,16 @@ interface UserDataDao {
     @Insert
     suspend fun insertPlaylistEntry(entry: PlaylistEntryEntity)
 
+    /** Adds [entry] unless its track is already in the playlist, which keeps its addedAt. */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertPlaylistEntryIfAbsent(entry: PlaylistEntryEntity)
+
+    @Query("DELETE FROM playlist_entries WHERE playlistId = :playlistId AND trackId = :trackId")
+    suspend fun removeFromPlaylist(playlistId: Long, trackId: String)
+
+    @Query("SELECT trackId FROM playlist_entries WHERE playlistId = :playlistId")
+    fun observePlaylistTrackIds(playlistId: Long): Flow<List<String>>
+
     @Upsert
     suspend fun upsertPlaylistEntry(entry: PlaylistEntryEntity)
 

@@ -15,6 +15,8 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.TryAgainResult
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import java.time.Instant
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -132,5 +134,15 @@ class FakeBrokenSources(initial: Map<String, BrokenMark> = emptyMap()) : BrokenS
 
     override suspend fun clear(videoId: String) {
         marks.value -= videoId
+    }
+}
+
+/** Playlists in memory; [favorites] holds the favorited track ids. */
+class FakePlaylistRepository(favorites: Set<String> = emptySet()) : PlaylistRepository {
+    override val playlists = MutableSharedFlow<List<PlaylistSummary>>(replay = 1)
+    override val favorites = MutableStateFlow(favorites)
+
+    override suspend fun setFavorite(trackId: String, favorite: Boolean) {
+        favorites.value = if (favorite) favorites.value + trackId else favorites.value - trackId
     }
 }
