@@ -41,6 +41,7 @@
         <item quantity="other">Added %d tracks to queue</item>
     </plurals>
 
+    <string name="track_count_none">No tracks</string>
     <plurals name="track_count">
         <item quantity="one">%d track</item>
         <item quantity="other">%d tracks</item>

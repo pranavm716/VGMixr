@@ -61,14 +61,15 @@ import io.github.pranavm716.vgmixr.ui.games.GamesTab
 import io.github.pranavm716.vgmixr.ui.navigation.FamilyRoute
 import io.github.pranavm716.vgmixr.ui.navigation.GamesGraph
 import io.github.pranavm716.vgmixr.ui.navigation.GamesRoute
+import io.github.pranavm716.vgmixr.ui.navigation.PlaylistsRoute
 import io.github.pranavm716.vgmixr.ui.navigation.SearchRoute
-import io.github.pranavm716.vgmixr.ui.navigation.Tab3Route
 import io.github.pranavm716.vgmixr.ui.navigation.Tab4Route
 import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
 import io.github.pranavm716.vgmixr.ui.navigation.VGMixrNavBar
 import io.github.pranavm716.vgmixr.ui.navigation.screenTag
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheet
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheetState
+import io.github.pranavm716.vgmixr.ui.playlists.PlaylistsTab
 import io.github.pranavm716.vgmixr.ui.search.SearchTab
 
 /**
@@ -257,7 +258,9 @@ private fun AppNavHost(
         composable<SearchRoute> {
             Tab(TopLevelDestination.SEARCH, navController, screen, reselects)
         }
-        composable<Tab3Route> { Tab(TopLevelDestination.TAB_3, navController, screen, reselects) }
+        composable<PlaylistsRoute> {
+            Tab(TopLevelDestination.PLAYLISTS, navController, screen, reselects)
+        }
         composable<Tab4Route> { Tab(TopLevelDestination.TAB_4, navController, screen, reselects) }
     }
 }
@@ -282,6 +285,8 @@ fun AppScreen(destination: TopLevelDestination, navController: NavHostController
             GamesTab(onFamilyClick = { navController.navigate(FamilyRoute(it)) }, reselects)
 
         TopLevelDestination.SEARCH -> SearchTab(reselects)
+
+        TopLevelDestination.PLAYLISTS -> PlaylistsTab(reselects)
 
         else -> PlaceholderScreen(destination.label)
     }
