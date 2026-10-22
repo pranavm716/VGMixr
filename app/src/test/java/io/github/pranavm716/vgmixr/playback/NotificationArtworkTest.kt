@@ -21,12 +21,12 @@ class NotificationArtworkTest {
     }
 
     @Test
-    fun `a game's color is the app's tint, a quarter strength over the background`() {
-        // Ruby #CD2236 tints to about #D52A3E at half lightness; a quarter of it over #111111.
+    fun `a game's color is its full-strength tint color`() {
+        // Ruby #CD2236 at half lightness, keeping its hue and chroma.
         val colors = artworkColors(listOf("#CD2236"))
 
         assertEquals(1, colors.size)
-        assertColor(0x42171C, colors.single())
+        assertColor(0xD52A3E, colors.single())
     }
 
     @Test

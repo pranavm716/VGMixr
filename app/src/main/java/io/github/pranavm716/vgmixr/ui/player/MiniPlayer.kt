@@ -65,7 +65,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
-import io.github.pranavm716.vgmixr.ui.components.GAME_TINT_ALPHA
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.RowTileGap
 import io.github.pranavm716.vgmixr.ui.components.RowTileSize
@@ -314,8 +313,9 @@ private fun Modifier.fadeOutBefore(end: Dp, fade: Dp) = this
  * The track's games' colors, faintly: one game gives a flat tint, several a left-to-right gradient
  * through them (an RSE track runs red, blue, green).
  */
+// Used by the mini player, the family header and now playing's fade.
 internal fun gameTint(chips: List<ChipUi>): Brush {
-    val colors = chips.map { tintColor(it.color).copy(alpha = GAME_TINT_ALPHA) }
+    val colors = chips.map { tintColor(it.color).copy(alpha = GAME_TINT) }
     return when (colors.size) {
         0 -> SolidColor(Color.Transparent)
         1 -> SolidColor(colors.single())
@@ -326,6 +326,8 @@ internal fun gameTint(chips: List<ChipUi>): Brush {
 // Open Sans leaves room above its letters, so a text line sits optically low; trimming the line box
 // to the glyphs centers the title and its second line on the bar.
 // A swipe this fast (px/s) counts even if it was short.
+private const val GAME_TINT = 0.25f
+
 private const val FLING_VELOCITY = 1500f
 
 @Preview

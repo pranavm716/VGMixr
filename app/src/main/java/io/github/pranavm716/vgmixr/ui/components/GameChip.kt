@@ -82,6 +82,3 @@ fun tintColor(hex: String): Color {
 }
 
 private const val TINT_LIGHTNESS = 0.5f
-
-/** How strongly a game's tint color shows over the background (mini player, notification art). */
-const val GAME_TINT_ALPHA = 0.25f
