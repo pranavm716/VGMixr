@@ -17,6 +17,8 @@ import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -136,6 +138,38 @@ class SearchViewModelTest {
             val state = awaitItem()
             assertEquals(emptyList<SearchRowUi>(), state.results)
             assertFalse(state.noResults)
+        }
+    }
+
+    @Test
+    fun `results wait until typing pauses`() = runTest {
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.onQueryChange("r")
+            advanceTimeBy(100)
+            viewModel.onQueryChange("ro")
+            advanceTimeBy(SEARCH_DELAY_MS - 1)
+            runCurrent()
+            expectNoEvents()
+
+            advanceTimeBy(1)
+            runCurrent()
+
+            assertEquals(4, expectMostRecentItem().results.size)
+        }
+    }
+
+    @Test
+    fun `clearing the field empties the results at once`() = runTest {
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.onQueryChange("route")
+            awaitItem()
+
+            viewModel.onQueryChange("")
+            runCurrent()
+
+            assertEquals(emptyList<SearchRowUi>(), expectMostRecentItem().results)
         }
     }
 

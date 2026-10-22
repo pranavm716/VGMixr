@@ -19,10 +19,12 @@ import java.time.Clock
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
@@ -52,7 +54,7 @@ data class SearchRowUi(
     val playing: Boolean = false
 )
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val repository: CatalogRepository,
@@ -64,9 +66,10 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
     private val query = MutableStateFlow("")
 
-    // Searched on every keystroke; a newer keystroke cancels a search still running.
+    // Searched once typing pauses, as Spotify does, so fast typing doesn't flash a list per
+    // letter; an emptied field clears at once. A newer query cancels a search still running.
     private val matches = combine(
-        query,
+        query.debounce { if (it.isBlank()) 0L else SEARCH_DELAY_MS },
         repository.catalog.map(::SearchIndex),
         playHistory.plays
     ) { query, index, plays -> Triple(query, index, plays) }
@@ -124,6 +127,9 @@ class SearchViewModel @Inject constructor(
         }
     }
 }
+
+/** How long typing must pause before the field is searched. */
+const val SEARCH_DELAY_MS = 150L
 
 /** A search's [tracks] together with the [query] they answer, so the two never disagree. */
 private class Matches(val query: String, val tracks: List<CatalogTrack>)
