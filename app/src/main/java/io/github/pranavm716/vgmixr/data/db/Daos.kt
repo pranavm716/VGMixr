@@ -105,6 +105,9 @@ interface UserDataDao {
     @Query("SELECT * FROM play_history ORDER BY id")
     suspend fun history(): List<PlayHistoryEntity>
 
+    @Query("SELECT * FROM play_history ORDER BY id")
+    fun observeHistory(): Flow<List<PlayHistoryEntity>>
+
     @Query("UPDATE play_history SET trackId = :newId WHERE trackId = :oldId")
     suspend fun repointHistory(oldId: String, newId: String)
 }

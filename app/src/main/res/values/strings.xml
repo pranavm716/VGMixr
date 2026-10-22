@@ -32,6 +32,9 @@
     <string name="queue">Queue</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
+    <string name="search_hint">Search</string>
+    <string name="clear_search">Clear search</string>
+    <string name="search_no_results">No tracks match “%1$s”</string>
 
     <plurals name="added_to_queue">
         <item quantity="one">Added to queue</item>

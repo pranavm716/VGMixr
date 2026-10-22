@@ -1,5 +1,6 @@
 package io.github.pranavm716.vgmixr.playback
 
+import android.net.Uri
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -95,5 +96,14 @@ class TrackMediaItemTest {
             true,
             trackMediaItem(track(listOf(slice)), "Scarlet / Violet", retried = true).retried
         )
+    }
+
+    @Test
+    fun `the item carries its notification artwork`() {
+        val art = Uri.parse("file:///cache/artwork/v1-ff42171c.png")
+
+        val item = trackMediaItem(track(listOf(slice)), "Scarlet / Violet", artworkUri = art)
+
+        assertEquals(art, item.mediaMetadata.artworkUri)
     }
 }

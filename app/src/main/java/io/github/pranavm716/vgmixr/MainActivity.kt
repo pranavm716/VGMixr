@@ -42,7 +42,9 @@ class MainActivity : ComponentActivity() {
                 val snackbars = remember { SnackbarHostState() }
                 MessagesEffect(snackbars)
                 VGMixrApp(
-                    screen = { destination, nav -> AppScreen(destination, nav) },
+                    screen = { destination, nav, reselects ->
+                        AppScreen(destination, nav, reselects)
+                    },
                     familyScreen = { FamilyTab() },
                     snackbars = snackbars,
                     miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },

@@ -4,6 +4,8 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogImportResult
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogSync
+import io.github.pranavm716.vgmixr.domain.history.Play
+import io.github.pranavm716.vgmixr.domain.history.PlayHistory
 import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
@@ -99,6 +101,14 @@ class FakePlaybackController : PlaybackController {
 
     override fun addToQueue(trackIds: List<String>) {
         calls += AddToQueue(trackIds)
+    }
+}
+
+class FakePlayHistory(initial: List<Play> = emptyList()) : PlayHistory {
+    override val plays = MutableStateFlow(initial)
+
+    override suspend fun record(trackId: String) {
+        plays.value += Play(trackId, Instant.EPOCH)
     }
 }
 

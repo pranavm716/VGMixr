@@ -9,6 +9,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.TrackFilter
 import io.github.pranavm716.vgmixr.domain.catalog.filter
+import io.github.pranavm716.vgmixr.domain.catalog.playableFamilyTrackIds
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
@@ -91,7 +92,7 @@ class FamilyViewModel @Inject constructor(
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
                 return@launch
             }
-            val ids = catalog.familyTrackIds(familyId)
+            val ids = catalog.playableFamilyTrackIds(familyId)
             val index = ids.indexOf(trackId)
             if (index >= 0) playback.playFrom(ids, index, QueueContext.Family(familyId))
         }
@@ -119,10 +120,6 @@ private fun FamilyUiState.withPlaying(playback: PlaybackState): FamilyUiState {
     }
     return copy(playing = playing)
 }
-
-/** What a tap plays: the family's list without its greyed tracks, which would only be skipped. */
-private fun Catalog.familyTrackIds(familyId: String): List<String> =
-    filter(TrackFilter(family = familyId)).filter { it.unplayable == null }.map { it.id }
 
 private fun Catalog.familyState(familyId: String): FamilyUiState {
     val family = families.firstOrNull { it.id == familyId } ?: return FamilyUiState.NotFound

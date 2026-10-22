@@ -30,7 +30,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - DI: Hilt, constructor injection.
 - Media3 is used only behind the `PlaybackController` interface in `domain/`. UI and ViewModels never touch Media3 types.
 - Stream resolution (NewPipe Extractor) is used only behind the `StreamResolver` interface in `domain/`. No extractor types leak past `data/`.
-- Room is the source of truth. Favorites is a built-in playlist (`Playlist`, `PlaylistEntry`); PlayHistory (trackId, playedAt) is its own table. Tracks the user adds from YouTube live in `UserTrack`, with `yt:<videoId>` ids that can't collide with catalog ids, and an optional `remixOf` catalog track id. All of this is user data in Room; the manifest stays pipeline-only.
+- Room is the source of truth. Favorites is a built-in playlist (`Playlist`, `PlaylistEntry`); PlayHistory (trackId, playedAt) is its own table, written only by the playback service once a track has played 10 s (`PlayCounter`). Tracks the user adds from YouTube live in `UserTrack`, with `yt:<videoId>` ids that can't collide with catalog ids, and an optional `remixOf` catalog track id. All of this is user data in Room; the manifest stays pipeline-only.
 
 ## Catalog and manifest
 - The UI renders only from the Room catalog, never from live network lookups. Browsing and filtering must work offline.
@@ -51,6 +51,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - Loop points (`loop`) are optional and only on `local` sources, since they describe one exact file. Loop cycle count is a global app setting.
 - Prefetch the next queued track; auto-cache favorites and recently played.
 - Deferred, do not build yet: an optional `franchise` field on games for multi-franchise grouping (see `docs/manifest.md`).
+- Adding a game or family (or a spin-off, or another franchise): follow the checklist in `docs/adding-games.md`, which lists the data files and every place in the code that knows about Pokémon.
 
 ## Testing (TDD)
 - Write the failing test first. Run it, confirm it fails for the right reason, then implement. Commit when green.

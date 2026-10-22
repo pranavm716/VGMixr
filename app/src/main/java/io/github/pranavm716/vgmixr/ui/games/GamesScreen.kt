@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,14 +35,29 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.catalog.FamilySummary
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
+import io.github.pranavm716.vgmixr.ui.components.RowTileGap
+import io.github.pranavm716.vgmixr.ui.components.RowTileSize
+import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnReselect
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
+import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
-fun GamesTab(onFamilyClick: (String) -> Unit, viewModel: GamesViewModel = hiltViewModel()) {
+fun GamesTab(
+    onFamilyClick: (String) -> Unit,
+    reselects: Int,
+    viewModel: GamesViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    GamesScreen(state, onFamilyClick, onQueueFamily = viewModel::onQueueFamily)
+    val listState = rememberLazyListState()
+    ScrollToTopOnReselect(reselects, listState)
+    GamesScreen(
+        state,
+        onFamilyClick,
+        onQueueFamily = viewModel::onQueueFamily,
+        listState = listState
+    )
 }
 
 /** The Games tab: one row per family, styled after Shuttle's album list. */
@@ -49,7 +66,8 @@ fun GamesScreen(
     state: GamesUiState,
     onFamilyClick: (String) -> Unit,
     onQueueFamily: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState()
 ) {
     Column(modifier.fillMaxSize()) {
         ScreenHeader("Games")
@@ -61,7 +79,7 @@ fun GamesScreen(
                 if (state.families.isEmpty()) {
                     Empty()
                 } else {
-                    LazyColumn(Modifier.fillMaxSize()) {
+                    LazyColumn(Modifier.fillMaxSize(), state = listState) {
                         items(state.families, key = { it.id }) { family ->
                             SwipeToQueue(onQueue = { onQueueFamily(family.id) }) {
                                 FamilyRow(family, onClick = { onFamilyClick(family.id) })
@@ -79,13 +97,13 @@ private fun FamilyRow(family: FamilySummary, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(TileRowHeight)
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ArtTile(44.dp)
-        Spacer(Modifier.width(14.dp))
+        ArtTile(RowTileSize)
+        Spacer(Modifier.width(RowTileGap))
         Column {
             Text(
                 family.name,

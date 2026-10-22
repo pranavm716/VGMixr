@@ -29,6 +29,13 @@ fun Catalog.filter(filter: TrackFilter): List<CatalogTrack> {
         )
 }
 
+/**
+ * What a tap on one of [familyId]'s tracks plays: the family's list without its greyed tracks,
+ * which would only be skipped.
+ */
+fun Catalog.playableFamilyTrackIds(familyId: String): List<String> =
+    filter(TrackFilter(family = familyId)).filter { it.unplayable == null }.map { it.id }
+
 private fun CatalogTrack.matches(filter: TrackFilter): Boolean =
     (filter.game == null || games.any { it.id == filter.game }) &&
         (filter.family == null || familyId == filter.family) &&

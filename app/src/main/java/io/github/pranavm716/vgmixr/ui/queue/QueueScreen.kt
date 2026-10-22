@@ -34,12 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
-import io.github.pranavm716.vgmixr.ui.components.ArtTile
-import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueueOrRemove
 import io.github.pranavm716.vgmixr.ui.components.SwipeToRemove
-import io.github.pranavm716.vgmixr.ui.components.UnplayableIcon
-import io.github.pranavm716.vgmixr.ui.components.unplayable
+import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
 import kotlinx.coroutines.launch
 
 /**
@@ -140,38 +137,6 @@ private fun SectionHeader(title: String, action: @Composable () -> Unit = {}) {
     }
 }
 
-/**
- * A queued track: its tile, title and game chips; the current one is tinted, and one whose sources
- * are all broken is greyed.
- */
 @Composable
-private fun QueueRow(row: QueueRowUi, current: Boolean, onClick: () -> Unit) {
-    val accent = MaterialTheme.colorScheme.primary
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .height(64.dp)
-            .then(if (current) Modifier.background(accent.copy(alpha = 0.12f)) else Modifier)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        val faint = Modifier.unplayable(row.unplayable)
-        ArtTile(44.dp, faint)
-        Spacer(Modifier.width(14.dp))
-        Column(Modifier.weight(1f).then(faint)) {
-            Text(
-                row.title,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(Modifier.height(4.dp))
-            GameChips(row.chips)
-        }
-        if (row.unplayable) {
-            Spacer(Modifier.width(12.dp))
-            UnplayableIcon()
-        }
-    }
-}
+private fun QueueRow(row: QueueRowUi, current: Boolean, onClick: () -> Unit) =
+    TrackTileRow(row.title, row.chips, row.unplayable, current, onClick)
