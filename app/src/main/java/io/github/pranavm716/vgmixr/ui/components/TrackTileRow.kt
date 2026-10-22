@@ -1,7 +1,6 @@
 package io.github.pranavm716.vgmixr.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +36,7 @@ val RowTileGap = 14.dp
  * A track's title over its game chips, placed so the gap between the two splits a [RowTileSize]
  * tile beside them in half: the title's line is trimmed to its letters, and the block sits 1.5dp
  * up, as measured on the phone for the mini player. [marquee] scrolls a long title instead of
- * cutting it short.
+ * cutting it short, fading its start edge while it moves.
  */
 @Composable
 fun TrackTitleChips(
@@ -47,13 +46,13 @@ fun TrackTitleChips(
     marquee: Boolean = false
 ) {
     Column(modifier.offset(y = (-1.5).dp)) {
-        Text(
-            title,
-            style = MaterialTheme.typography.titleMedium.trimmed(),
-            maxLines = 1,
-            overflow = if (marquee) TextOverflow.Clip else TextOverflow.Ellipsis,
-            modifier = if (marquee) Modifier.basicMarquee(iterations = Int.MAX_VALUE) else Modifier
-        )
+        val style = MaterialTheme.typography.titleMedium.trimmed()
+        if (marquee) {
+            // The mini player fades the end itself, before its button.
+            MarqueeText(title, style, fadeEnd = false)
+        } else {
+            Text(title, style = style, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
         // The trim takes the room under the title's descenders too; give the chips some back.
         Spacer(Modifier.height(4.dp))
         GameChips(chips)

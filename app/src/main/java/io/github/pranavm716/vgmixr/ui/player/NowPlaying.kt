@@ -51,6 +51,7 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.MarqueeText
 
 /**
  * Now playing's header, as Spotify's: a chevron that closes the sheet, and "Playing from" over
@@ -154,14 +155,11 @@ fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = h
             Modifier.offset(y = INFO_NUDGE),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
+            // A title too wide scrolls, fading at both edges.
+            MarqueeText(
                 visible.title,
                 style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                modifier = Modifier
-                    .padding(horizontal = SIDE_MARGIN)
-                    .basicMarquee(iterations = Int.MAX_VALUE)
+                modifier = Modifier.padding(horizontal = SIDE_MARGIN)
             )
             Spacer(Modifier.height(12.dp))
             GameChips(visible.chips)
