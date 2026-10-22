@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextMotion
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
@@ -65,7 +66,9 @@ fun MarqueeText(
         val fadePx = with(density) { FADE_WIDTH.toPx() }
         Text(
             text,
-            style = style,
+            // Moving text is drawn at fractional positions; the default snaps letters to whole
+            // pixels, which made the scroll step unevenly and shimmer.
+            style = style.copy(textMotion = TextMotion.Animated),
             maxLines = 1,
             softWrap = false,
             modifier = Modifier
