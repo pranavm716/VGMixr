@@ -105,6 +105,15 @@ interface UserDataDao {
     @Query("DELETE FROM playlist_entries WHERE playlistId = :playlistId AND trackId = :trackId")
     suspend fun removeFromPlaylist(playlistId: Long, trackId: String)
 
+    @Query("SELECT * FROM playlists WHERE id = :id")
+    fun observePlaylist(id: Long): Flow<PlaylistEntity?>
+
+    @Query(
+        "SELECT trackId FROM playlist_entries WHERE playlistId = :playlistId " +
+            "ORDER BY addedAt DESC, trackId"
+    )
+    fun observePlaylistTrackIdsNewestFirst(playlistId: Long): Flow<List<String>>
+
     @Query("SELECT trackId FROM playlist_entries WHERE playlistId = :playlistId")
     fun observePlaylistTrackIds(playlistId: Long): Flow<List<String>>
 

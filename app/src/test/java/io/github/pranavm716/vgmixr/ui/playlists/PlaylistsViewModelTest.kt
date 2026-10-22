@@ -13,7 +13,7 @@ class PlaylistsViewModelTest {
     @get:Rule
     val main = MainDispatcherRule()
 
-    private val repository = FakePlaylistRepository()
+    private val repository = FakePlaylistRepository(initialPlaylists = null)
 
     private val favorites = PlaylistSummary(1, "Favorites", 3, isFavorites = true)
     private val mix = PlaylistSummary(2, "Mix", 0, isFavorites = false)

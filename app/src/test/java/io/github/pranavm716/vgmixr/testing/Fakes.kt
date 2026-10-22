@@ -15,11 +15,14 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.TryAgainResult
+import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import java.time.Instant
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 
 class FakeCatalogRepository(initial: Catalog = Catalog(emptyList(), emptyList(), emptyList())) :
     CatalogRepository {
@@ -137,10 +140,21 @@ class FakeBrokenSources(initial: Map<String, BrokenMark> = emptyMap()) : BrokenS
     }
 }
 
-/** Playlists in memory; [favorites] holds the favorited track ids. */
-class FakePlaylistRepository(favorites: Set<String> = emptySet()) : PlaylistRepository {
-    override val playlists = MutableSharedFlow<List<PlaylistSummary>>(replay = 1)
+/**
+ * Playlists in memory: [playlists] starts with [initialPlaylists] (null: nothing until a test
+ * emits), [favorites] holds the favorited track ids, [contents] each playlist's page.
+ */
+class FakePlaylistRepository(
+    favorites: Set<String> = emptySet(),
+    initialPlaylists: List<PlaylistSummary>? = emptyList()
+) : PlaylistRepository {
+    override val playlists = MutableSharedFlow<List<PlaylistSummary>>(replay = 1).apply {
+        initialPlaylists?.let(::tryEmit)
+    }
     override val favorites = MutableStateFlow(favorites)
+    val contents = MutableStateFlow<Map<Long, Playlist>>(emptyMap())
+
+    override fun playlist(id: Long): Flow<Playlist?> = contents.map { it[id] }
 
     override suspend fun setFavorite(trackId: String, favorite: Boolean) {
         favorites.value = if (favorite) favorites.value + trackId else favorites.value - trackId

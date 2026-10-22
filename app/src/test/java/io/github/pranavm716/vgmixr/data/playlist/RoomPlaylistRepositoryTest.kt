@@ -6,6 +6,7 @@ import io.github.pranavm716.vgmixr.data.db.FAVORITES_PLAYLIST_ID
 import io.github.pranavm716.vgmixr.data.db.PlaylistEntity
 import io.github.pranavm716.vgmixr.data.db.PlaylistEntryEntity
 import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
+import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import java.time.Clock
 import java.time.Instant
@@ -103,6 +104,43 @@ class RoomPlaylistRepositoryTest {
         repository.setFavorite("rse-route-101", false)
 
         assertEquals(emptyList<PlaylistEntryEntity>(), dao.playlistEntries(FAVORITES_PLAYLIST_ID))
+    }
+
+    @Test
+    fun `a playlist lists its tracks newest first`() = runTest(dispatcher) {
+        repository.setFavorite("rse-route-101", true)
+        clock.instant = Instant.ofEpochMilli(2_000)
+        repository.setFavorite("frlg-pallet-town", true)
+
+        repository.playlist(FAVORITES_PLAYLIST_ID).test {
+            assertEquals(
+                Playlist(
+                    FAVORITES_PLAYLIST_ID,
+                    "Favorites",
+                    isFavorites = true,
+                    trackIds = listOf("frlg-pallet-town", "rse-route-101")
+                ),
+                awaitItem()
+            )
+        }
+    }
+
+    @Test
+    fun `a playlist follows a favorite added while it shows`() = runTest(dispatcher) {
+        repository.playlist(FAVORITES_PLAYLIST_ID).test {
+            assertEquals(emptyList<String>(), awaitItem()?.trackIds)
+
+            repository.setFavorite("rse-route-101", true)
+
+            assertEquals(listOf("rse-route-101"), awaitItem()?.trackIds)
+        }
+    }
+
+    @Test
+    fun `a playlist that doesn't exist is null`() = runTest(dispatcher) {
+        repository.playlist(42).test {
+            assertEquals(null, awaitItem())
+        }
     }
 
     private class MutableClock(var instant: Instant) : Clock() {

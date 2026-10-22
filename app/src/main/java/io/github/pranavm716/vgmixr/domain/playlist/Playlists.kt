@@ -10,9 +10,20 @@ data class PlaylistSummary(
     val isFavorites: Boolean
 )
 
+/** A playlist's page: its tracks, newest first. */
+data class Playlist(
+    val id: Long,
+    val name: String,
+    val isFavorites: Boolean,
+    val trackIds: List<String>
+)
+
 interface PlaylistRepository {
     /** Every playlist with its track count: Favorites first, then in order of creation. */
     val playlists: Flow<List<PlaylistSummary>>
+
+    /** Playlist [id] with its tracks, or null if there is none. */
+    fun playlist(id: Long): Flow<Playlist?>
 
     /** The ids of the tracks in Favorites. */
     val favorites: Flow<Set<String>>
