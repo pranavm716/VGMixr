@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -120,7 +121,12 @@ fun VGMixrApp(
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(
                 WindowInsets.statusBars
             ),
-            snackbarHost = { SnackbarHost(snackbars) },
+            // The action (Try again) in the app's accent rather than Material's inverse primary.
+            snackbarHost = {
+                SnackbarHost(snackbars) {
+                    Snackbar(it, actionColor = MaterialTheme.colorScheme.primary)
+                }
+            },
             bottomBar = {
                 Column {
                     miniPlayer(sheet, openNowPlaying)
