@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-22T03:39:13Z",
+  "generatedAt": "2026-10-22T09:48:37Z",
   "games": [
     {
       "id": "red",
@@ -16884,9 +16884,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "fY2pfwW2rto",
+          "videoId": "6bZCtUQ6Qdo",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -16952,9 +16952,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "laQuOCyWNWk",
+          "videoId": "bpCjYm-3tJU",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -16986,9 +16986,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "tzbcTVlB-R8",
+          "videoId": "bW_t-IVPe78",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -17052,9 +17052,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "RbfESXdb4Lk",
+          "videoId": "ixRXIRLnjh0",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -17122,9 +17122,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "QE1eTP8BP8M",
+          "videoId": "JMAYfEIwlTM",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -17150,9 +17150,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "Vhtd3fcwnGI",
+          "videoId": "4aQX3qrNbNQ",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -17226,9 +17226,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "8njyRJbV-c0",
+          "videoId": "IDeG6xvxG3E",
           "startMs": 0,
-          "confidence": 0.94
+          "confidence": 1.0
         }
       ]
     },
@@ -17314,9 +17314,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "ln2f7YhMXeA",
+          "videoId": "Lgdx93YTy4g",
           "startMs": 0,
-          "confidence": 0.91
+          "confidence": 1.0
         }
       ]
     },
@@ -17362,9 +17362,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "tBksVgsh9UU",
+          "videoId": "BM1xY0MYS4o",
           "startMs": 0,
-          "confidence": 0.93
+          "confidence": 1.0
         }
       ]
     },
@@ -17376,9 +17376,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "kHiUt8bxVCk",
+          "videoId": "tRs-IQgqSok",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -17568,9 +17568,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "vh6wfJyUN_k",
+          "videoId": "cVgZqeQKpPo",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 1.0
         }
       ]
     },
@@ -17596,9 +17596,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "AmZFofSYS-8",
+          "videoId": "Wd3EfvHIetU",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -17684,9 +17684,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "nZ5xrZKENhk",
+          "videoId": "GwMBpJsKiH4",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -17698,9 +17698,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "cGiHMx574B8",
+          "videoId": "ZNBnmP7M5Qc",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 1.0
         }
       ]
     },
@@ -18192,9 +18192,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "7yTWc-lFNdw",
+          "videoId": "tzqH1vYWlb4",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 1.0
         }
       ]
     },
@@ -18206,9 +18206,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "yXX8ve0wIK4",
+          "videoId": "xv6DkVNNM-s",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 1.0
         }
       ]
     },
@@ -18220,7 +18220,13 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "saDO1GcGnRs",
+          "videoId": "5V0kzLYkYTM",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "k-LL_DRUN6I",
           "startMs": 0,
           "confidence": 0.93
         }
@@ -18260,9 +18266,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "EvyLhC36PCg",
+          "videoId": "T360O361wEQ",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -18274,9 +18280,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "BxoKGb7ysCE",
+          "videoId": "Jiy1iszcmhw",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -18328,9 +18334,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "nZAkUTEyOhg",
+          "videoId": "iR3rxwnb31A",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -18365,12 +18371,6 @@
           "videoId": "9sX_54hHcEE",
           "startMs": 0,
           "confidence": 1.0
-        },
-        {
-          "type": "stream",
-          "videoId": "k1ltZEDN2Ns",
-          "startMs": 0,
-          "confidence": 0.96
         }
       ]
     },
@@ -18396,9 +18396,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "7DbGoUJkNfU",
+          "videoId": "GjltP8GISJE",
           "startMs": 0,
-          "confidence": 0.92
+          "confidence": 1.0
         }
       ]
     },
@@ -18424,7 +18424,7 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "yffGYzZoJ-s",
+          "videoId": "UDFWznA_L2k",
           "startMs": 0,
           "confidence": 1.0
         }
@@ -18632,7 +18632,7 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "5V0kzLYkYTM",
+          "videoId": "sRAKTQi-GL0",
           "startMs": 0,
           "confidence": 1.0
         }
@@ -18646,9 +18646,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "xhcBRoZyKM4",
+          "videoId": "TqvJe5ZNTFA",
           "startMs": 0,
-          "confidence": 0.99
+          "confidence": 1.0
         }
       ]
     },
@@ -18674,9 +18674,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "I8vqp7Edjqs",
+          "videoId": "UmSMOxDbY9U",
           "startMs": 0,
-          "confidence": 0.96
+          "confidence": 1.0
         }
       ]
     },
@@ -18786,9 +18786,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "4KqDeAoPrz0",
+          "videoId": "TIHgGUVmU6A",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -18854,9 +18854,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "2aDffpuLE3w",
+          "videoId": "azgwTS1ToBk",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },
@@ -18868,9 +18868,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "PzzTQ-gQFlw",
+          "videoId": "gpgXDJIIT8Y",
           "startMs": 0,
-          "confidence": 0.9
+          "confidence": 1.0
         }
       ]
     },

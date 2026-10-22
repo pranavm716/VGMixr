@@ -4,7 +4,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 
 ## Scope
 - Personal app with a single user (the developer), who does all setup by hand once. Prefer fixed configuration over pickers, onboarding or settings screens. In-app warnings and dev-facing debug/cataloging UI are welcome when cheap and useful.
-- MVP: browse/filter tracks by game, family, generation; recently played; favorites; playback from remote streams; downloads/caching for offline use.
+- MVP: browse/filter tracks by game, family, generation; search; play history (for search ranking and caching); favorites; playback from remote streams; downloads/caching for offline use.
 - Right after MVP: local files from ROM rips become the first source on each track.
 - v2: seamless looping with a single global loop-cycle setting. Loop points are in the schema (on `local` sources) from day one.
 - After downloads/cache: user-added YouTube tracks (mainly fan remixes), added by pasting a link (see `docs/roadmap.md`).
@@ -17,11 +17,11 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - Lint/format: `./gradlew lint`, `./gradlew spotlessCheck` / `spotlessApply` (Spotless with ktlint, added in roadmap step 1)
 - Pipeline tests: `cd pipeline && uv run pytest`; lint/format/types: `uv run ruff check .`, `uv run ruff format .`, `uv run mypy .` (the Stop hook and CI run these only if `pipeline/` exists)
 - Build the catalog (Bulbapedia track lists + YouTube + `pipeline/data/`): `cd pipeline && uv run python -m vgmixr_pipeline.catalog`. Writes `pipeline/out/draft.json`, `family-report.md`, `match-report.md` and `candidates.json`, then `catalog/manifest.json` if it validates. Responses are cached in `pipeline/out/bulbapedia/` and `pipeline/out/youtube/`; `--refresh` / `--refresh-youtube` refetch them, `--no-search` matches from playlists and albums only, `--cached-only` makes no YouTube requests.
-- Review tool (decide streams by hand, find and add playlists, drag tracks into order, rename tracks, write notes; writes `pipeline/data/`): `cd pipeline && uv run python -m vgmixr_pipeline.catalog.review` then open http://127.0.0.1:8765 (`--cached-only` never asks YouTube). Needs `pipeline/out/draft.json` from a catalog build.
+- Review tool (decide streams by hand, find and add playlists, drag tracks into order, rename tracks, write notes, fix the sources the app reported broken in its Broken tab; writes `pipeline/data/`): `cd pipeline && uv run python -m vgmixr_pipeline.catalog.review` then open http://127.0.0.1:8765 (`--cached-only` never asks YouTube). Needs `pipeline/out/draft.json` from a catalog build.
 - Rewrite the data files in their canonical format after hand edits: `cd pipeline && uv run python -m vgmixr_pipeline.catalog.jsonfmt` (a test fails otherwise)
 - Regenerate the invalid manifest fixtures after editing `pipeline/src/vgmixr_pipeline/fixtures/spec.py`: `cd pipeline && uv run python -m vgmixr_pipeline.fixtures.generate` (`--check` reports stale files without writing; check.sh runs it)
 - Family covers: put hand-cropped square images named `<family id>.<any image format>` in `pipeline/covers-in/` (gitignored), then `cd pipeline && uv run python -m vgmixr_pipeline.covers` writes `catalog/covers/<family>.webp` (512 px) and lists families still without one
-- Broken sources the app reported: `cd pipeline && uv run python -m vgmixr_pipeline.broken` pulls the phone's `broken.json` over adb into `pipeline/out/broken.json` and prints them per family (format and marking rules: `docs/broken.md`). The playback log sits next to it: `adb shell cat /sdcard/Android/data/io.github.pranavm716.vgmixr/files/playback.log`.
+- Broken sources the app reported: `cd pipeline && uv run python -m vgmixr_pipeline.broken` pulls the phone's `broken.json` over adb into `pipeline/out/broken.json` and prints them per family (format and marking rules: `docs/broken.md`). The review tool's Broken tab reads that file and re-checks each video the way the app sees it (yt-dlp's `visionos` client, NewPipe's), cached in `pipeline/out/youtube/app-check/`. The playback log sits next to it: `adb shell cat /sdcard/Android/data/io.github.pranavm716.vgmixr/files/playback.log`.
 - All checks live in `scripts/check.sh`, run by both the Stop hook (`.claude/settings.json`, with `--hook`) and CI (`.github/workflows/ci.yml`). Add new checks there only, as a named check (`scripts/check.sh NAME` runs one), plus a matching CI step.
 
 ## Architecture

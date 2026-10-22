@@ -10,6 +10,7 @@ from urllib.request import Request, urlopen
 
 import pytest
 from test_match import ORAS_LIST, vid
+from test_recheck import REFUSED_INFO, FakeProbe, checks
 from test_review_service import Clock, LiveVideos, make, make_playlists
 
 from vgmixr_pipeline.catalog.review.server import make_server
@@ -133,3 +134,29 @@ def test_a_track_can_be_renamed_and_noted(base: str) -> None:
     status, detail = call(f"{url}/note", {"note": "Also in Emerald"})
     assert (status, detail["note"]) == (200, "Also in Emerald")
     assert call(f"{url}/note", {"note": 5})[0] == 400
+
+
+def test_the_broken_tab_lists_reports_and_checks_a_video(tmp_path: Path) -> None:
+    probe = FakeProbe({vid(1): (REFUSED_INFO, ["This video is not available"])})
+    review = make(tmp_path, Clock(), LiveVideos(), app_checks=checks(tmp_path, probe))
+    mark = {"trackId": "rse-littleroot-town", "videoId": vid(1), "reason": "no-audio",
+            "markedAt": "2026-10-22T08:04:03Z"}  # fmt: skip
+    (tmp_path / "out" / "broken.json").write_text(json.dumps({"version": 1, "marks": [mark]}))
+    server = make_server(review, port=0)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{server.server_address[1]}"
+    try:
+        status, broken = call(f"{base}/api/broken")
+        assert status == 200
+        assert [r["videoId"] for r in broken["reports"]] == [vid(1)]
+        assert broken["reports"][0]["check"] is None
+
+        status, result = call(f"{base}/api/app-check", {"videoId": vid(1)})
+        assert (status, result["check"]["verdict"]) == (200, "refused")
+        assert call(f"{base}/api/broken")[1]["reports"][0]["check"]["verdict"] == "refused"
+
+        status, error = call(f"{base}/api/app-check", {"videoId": "nope"})
+        assert status == 400 and error["errors"]
+    finally:
+        server.shutdown()
+        server.server_close()

@@ -17,10 +17,16 @@ const ui = {
   detail: null,
   found: [], // search results and pasted videos for the open track
   players: [],
-  mode: "tracks", // or "playlists"
+  mode: "tracks", // or "playlists", "broken"
   coverage: null, // /api/playlists: families ranked by their gaps
   playlistSearch: null, // the family's playlist search: { query, results }
   preview: null, // { anchor, data }: shown under the control that asked for it
+  youtube: null, // the last YouTube mode: live, blocked or cached-only
+  checks: {}, // the open track's videos checked the way the app sees them, by video id
+  broken: null, // /api/broken: the app's reports
+  brokenFamily: null, // the Broken tab's family filter (null: every family)
+  report: null, // the selected report's key
+  checking: null, // "Checking 2/4…" while the unchecked reports are checked
 };
 
 const $ = (id) => document.getElementById(id);
@@ -49,6 +55,51 @@ function chip(game) {
   const lin = (c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
   const light = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b) > 0.179;
   return `<span class="chip" style="background:${game.color};color:${light ? "#000" : "#fff"}">${esc(game.shortName)}</span>`;
+}
+
+// A time as "2 h ago".
+function ago(iso) {
+  const minutes = Math.round((Date.now() - new Date(iso)) / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes} min ago`;
+  if (minutes < 48 * 60) return `${Math.round(minutes / 60)} h ago`;
+  return `${Math.round(minutes / 1440)} days ago`;
+}
+
+function when(iso) {
+  return new Date(iso).toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+}
+
+// How the app sees a video, from its last re-check (yt-dlp posing as NewPipe's client).
+const VERDICTS = {
+  refused: ["refused to the app, plays in a browser", "bad"],
+  gone: ["gone for everyone", "bad"],
+  plays: ["plays in the app now: Try again on the phone", "good"],
+};
+
+function verdictBadge(check, long = false) {
+  if (!check) return '<span class="verdict none" title="Not checked the way the app sees it yet">not checked</span>';
+  const [text, kind] = VERDICTS[check.verdict];
+  const short = { refused: "refused to the app", gone: "gone", plays: "plays in the app" }[check.verdict];
+  const detail = `${check.detail ? `YouTube: ${check.detail}. ` : ""}Checked ${ago(check.checkedAt)} as the app (${check.client}, yt-dlp ${check.ytDlp})`;
+  return `<span class="verdict ${kind}" title="${esc(detail)}">${esc(long ? text : short)}</span>`;
+}
+
+function canCheck() {
+  return ui.youtube?.mode === "live";
+}
+
+function checkButton(videoId, label = "App check") {
+  const why = canCheck() ? "Look the video up the way the app does (yt-dlp's visionOS client), now"
+    : "YouTube can't be asked now (cached-only or blocked)";
+  return `<button class="app-check" data-check="${esc(videoId)}" title="${why}" ${canCheck() ? "" : "disabled"}>${label}</button>`;
+}
+
+// Re-checks a video and keeps the result for the open track and the Broken tab.
+async function appCheck(videoId) {
+  const result = await api("app-check", { videoId });
+  if (result.check) ui.checks[videoId] = result.check;
+  return result;
 }
 
 function gamesById() {
@@ -86,6 +137,7 @@ async function loadState() {
 }
 
 function renderYoutube(youtube) {
+  ui.youtube = youtube;
   const el = $("youtube");
   el.classList.toggle("blocked", youtube.mode === "blocked");
   if (youtube.mode === "live") {
@@ -102,6 +154,7 @@ function renderYoutube(youtube) {
 function renderFamilies() {
   renderYoutube(ui.state.youtube);
   if (ui.mode === "playlists") return renderCoverage();
+  if (ui.mode === "broken") return renderBrokenFamilies();
   $("families").innerHTML = ui.state.families.map((f) => `
     <button data-family="${esc(f.id)}" class="${f.id === ui.family ? "selected" : ""}" title="${esc(f.name)}">
       <span>${f.games.map(chip).join("")}${f.playlists ? "" : ' <span class="badge">no playlist</span>'}</span>
@@ -253,7 +306,7 @@ function moveSelection(step) {
 // Track detail
 
 async function openTrack(id) {
-  if (id !== ui.trackId) ui.found = [];
+  if (id !== ui.trackId) { ui.found = []; ui.checks = {}; }
   ui.trackId = id;
   ui.detail = await api(`tracks/${encodeURIComponent(id)}`);
   history.replaceState(null, "", `#${encodeURIComponent(id)}`); // a refresh reopens this track
@@ -344,21 +397,24 @@ function card(candidate, index) {
     : auto ? '<span class="badge-auto">Auto</span>' : "";
   const range = candidate.startMs || candidate.endMs != null
     ? ` · ${stamp(candidate.startMs || 0)}–${candidate.endMs == null ? "end" : stamp(candidate.endMs)}` : "";
+  const reported = reportedVideo(candidate.videoId) ? '<span class="badge-reported" title="The app reported this video broken">reported</span>' : "";
   return `
     <div class="card ${hand >= 0 ? "hand" : auto ? "auto" : ""}">
       <div class="player" data-index="${index}">
         <img src="https://i.ytimg.com/vi/${esc(candidate.videoId)}/mqdefault.jpg" alt="">
         <button class="play" title="Play from the start of the slice">▶</button>
       </div>
-      <div class="ctitle">${badge}${esc(candidate.title ?? candidate.videoId)}</div>
+      <div class="ctitle">${badge}${reported}${esc(candidate.title ?? candidate.videoId)}</div>
       <div class="line">
         <span class="score ${verdict(candidate.score)}">${candidate.score == null ? "unscored" : candidate.score.toFixed(2)}</span>
         · ${esc(candidate.kind)} · ${esc(candidate.channel ?? "unknown channel")} · ${lengthLine(candidate)}${range}
       </div>
       <div class="line">${esc((candidate.reasons || []).join(", "))}</div>
+      <div class="line">App: ${verdictBadge(ui.checks[candidate.videoId])}</div>
       <div class="actions">
         <button class="primary" data-accept="${index}" ${hand >= 0 ? "disabled" : ""}>Accept</button>
         <button data-reject="${index}">Reject</button>
+        ${checkButton(candidate.videoId)}
         <a href="${watchUrl(candidate)}" target="_blank" rel="noreferrer">YouTube ↗</a>
       </div>
     </div>`;
@@ -369,6 +425,7 @@ function watchUrl(candidate) {
 }
 
 function renderDetail() {
+  Object.assign(ui.checks, ui.detail.checks); // the server's cached checks, after any decision
   destroyPlayers();
   const d = ui.detail;
   const games = gamesById();
@@ -387,6 +444,8 @@ function renderDetail() {
       ${hand ? "<strong>accepted</strong>" : `auto ${s.confidence.toFixed(2)}`}
       ${hand ? `<button data-up="${index}">↑</button><button data-down="${index}">↓</button>` : `<button data-keep="${i}">Keep</button>`}
       <button data-drop="${i}">${hand ? "Remove" : "Reject"}</button>
+      ${reportedVideo(s.videoId) ? '<span class="badge-reported">reported</span>' : ""}
+      ${verdictBadge(ui.checks[s.videoId])} ${checkButton(s.videoId, "Check")}
     </li>`;
   }).join("") : '<li class="empty">None: this track is left out of the manifest.</li>';
   const rejected = d.decision.reject.length
@@ -401,6 +460,12 @@ function renderDetail() {
       · <code>${esc(d.id)}</code>
     </div>
     <div class="facts">${d.origins.map(esc).join("<br>")}</div>
+    ${d.reported.map((r) => `<div class="reported">
+      The app reported <a href="https://www.youtube.com/watch?v=${encodeURIComponent(r.videoId)}" target="_blank" rel="noreferrer">${esc(r.videoId)}</a>
+      ${r.trackId === d.catalogId ? "" : `(on <code>${esc(r.trackId)}</code>)`}: ${esc(r.reason)}${r.detail ? ` (${esc(r.detail)})` : ""}, ${esc(when(r.markedAt))}.
+      ${verdictBadge(ui.checks[r.videoId] ?? r.check, true)}<br>
+      <span class="hint">Fix it here: reject it, accept another candidate (App check it first), search or paste a replacement, or add a playlist; then Rebuild.</span>
+    </div>`).join("")}
     <textarea id="note" class="note" rows="2" placeholder="Note (also plays in X, a remix of Y…): saved on leaving the box or Ctrl+Enter">${esc(d.note ?? "")}</textarea>
     ${d.status === "excluded"
       ? '<p class="removed">Removed from the catalog (<code>exclude</code> override); it leaves this list at the next Rebuild. <button id="restore">Restore</button></p>'
@@ -444,6 +509,15 @@ function bindDetail(shown) {
   on("#reset-games", () => setGames(null));
   on(".play", (el) => play(el.parentElement, shown[el.parentElement.dataset.index]));
   on("#rename", startRename);
+  on("[data-check]", async (el) => {
+    el.disabled = true;
+    el.textContent = "Checking…";
+    try {
+      await appCheck(el.dataset.check);
+    } finally {
+      renderDetail();
+    }
+  });
   $("note").onblur = saveNote;
   $("note").onkeydown = (e) => { if (e.key === "Enter" && e.ctrlKey) { e.preventDefault(); $("note").blur(); } };
   on("#search", search);
@@ -566,13 +640,18 @@ function destroyPlayers() {
 
 async function setMode(mode) {
   ui.mode = mode;
-  $("mode-tracks").classList.toggle("selected", mode === "tracks");
-  $("mode-playlists").classList.toggle("selected", mode === "playlists");
+  for (const m of ["tracks", "playlists", "broken"]) $(`mode-${m}`).classList.toggle("selected", mode === m);
   $("listhead").hidden = $("tracks").hidden = mode !== "tracks";
   $("gaps").hidden = mode !== "playlists";
+  $("brokenlist").hidden = mode !== "broken";
   if (mode === "playlists") {
     await loadCoverage();
     renderPlaylists();
+  } else if (mode === "broken") {
+    destroyPlayers();
+    await loadBroken();
+    ui.report ??= ui.broken.reports[0] && reportKey(ui.broken.reports[0]);
+    renderBroken();
   } else {
     renderFamilies();
     await loadTracks();
@@ -826,8 +905,160 @@ function previewAt(anchor) {
   </div>`;
 }
 
+// Broken: the videos the app reported (the pulled broken.json), each re-checked the way the app
+// sees it on request. Fixes go through the track view's tools, then Rebuild.
+
+function reportedVideo(videoId) {
+  return ui.detail?.reported?.some((r) => r.videoId === videoId);
+}
+
+const reportKey = (r) => `${r.videoId}|${r.trackId}`;
+
+async function loadBroken() {
+  ui.broken = await api("broken");
+  for (const r of ui.broken.reports) {
+    if (r.check) ui.checks[r.videoId] = r.check;
+    for (const s of r.sources) if (s.check) ui.checks[s.videoId] = s.check;
+  }
+  const open = ui.broken.reports.filter((r) => r.status === "needs-fix").length;
+  $("mode-broken").innerHTML = `Broken${ui.broken.reports.length ? ` <span class="count ${open ? "open" : ""}">${open || ui.broken.reports.length}</span>` : ""}`;
+  $("mode-broken").title = `${open} reported video${open === 1 ? "" : "s"} still a source, ${ui.broken.reports.length} reported in all`;
+}
+
+function familyChips(familyId) {
+  const family = ui.state.families.find((f) => f.id === familyId);
+  return family ? family.games.map(chip).join("") : `<span class="chip unknown">${esc(familyId ?? "?")}</span>`;
+}
+
+function renderBrokenFamilies() {
+  const reports = ui.broken.reports;
+  const families = [...new Set(reports.map((r) => r.family))];
+  const row = (id, label, list) => {
+    const open = list.filter((r) => r.status === "needs-fix").length;
+    return `<button data-bfamily="${esc(id ?? "")}" class="${ui.brokenFamily === id ? "selected" : ""}">
+      <span>${label}</span><span class="counts"><span class="r">${open}</span>·${list.length}</span></button>`;
+  };
+  $("families").innerHTML = reports.length
+    ? row(null, "Every family", reports) + families.map((f) => row(f, familyChips(f), reports.filter((r) => r.family === f))).join("")
+    : "";
+  for (const button of $("families").querySelectorAll("button")) {
+    button.onclick = () => { ui.brokenFamily = button.dataset.bfamily || null; renderBroken(); };
+  }
+}
+
+function brokenRows() {
+  return ui.broken.reports.filter((r) => ui.brokenFamily === null || r.family === ui.brokenFamily);
+}
+
+function renderBroken() {
+  history.replaceState(null, "", "#broken");
+  renderBrokenFamilies();
+  const b = ui.broken;
+  const pulled = b.pulled;
+  let head;
+  if (!pulled.exists) {
+    head = '<p class="empty">No broken.json pulled yet. With the phone on USB: <code>uv run python -m vgmixr_pipeline.broken</code>, then reload this page.</p>';
+  } else if (pulled.error) {
+    head = `<p class="bad">${esc(pulled.error)}</p>`;
+  } else if (!b.reports.length) {
+    head = `<p class="empty">The app reports no broken videos (pulled ${esc(when(pulled.at))}).</p>`;
+  } else {
+    const unchecked = [...new Set(b.reports.filter((r) => !ui.checks[r.videoId]).map((r) => r.videoId))];
+    head = `<div class="bhead">
+      <span class="facts">Pulled ${esc(when(pulled.at))} (${esc(ago(pulled.at))})</span>
+      <button id="check-unchecked" ${unchecked.length && canCheck() && !ui.checking ? "" : "disabled"}
+        title="${canCheck() ? "Look each unchecked video up the way the app does, 5 s apart" : "YouTube can't be asked now (cached-only or blocked)"}">${ui.checking ?? `Check all (${unchecked.length})`}</button>
+    </div>`;
+  }
+  const rows = brokenRows();
+  const group = (status, title) => {
+    const list = rows.filter((r) => r.status === status);
+    if (!list.length) return "";
+    return `<h3>${title} (${list.length})</h3><ol class="reports">${list.map((r) => `
+      <li data-report="${esc(reportKey(r))}" class="${reportKey(r) === ui.report ? "selected" : ""} ${r.status}">
+        <div class="rtitle">${familyChips(r.family)} ${esc(r.track?.title ?? r.trackId)}</div>
+        <div class="line"><code>${esc(r.videoId)}</code> · ${esc(r.reason)} · ${esc(ago(r.markedAt))}${r.olderCatalog ? ' · <span class="older">older catalog</span>' : ""}</div>
+        <div class="line">${verdictBadge(ui.checks[r.videoId], true)}</div>
+      </li>`).join("")}</ol>`;
+  };
+  $("brokenlist").innerHTML = head + group("needs-fix", "Needs a fix") + group("fixed", "Fixed in the draft");
+  for (const li of $("brokenlist").querySelectorAll("li[data-report]")) {
+    li.onclick = () => { ui.report = li.dataset.report; renderBroken(); };
+  }
+  if ($("check-unchecked")) $("check-unchecked").onclick = checkUnchecked;
+  renderReport();
+}
+
+function renderReport() {
+  const r = ui.broken.reports.find((x) => reportKey(x) === ui.report);
+  if (!r) {
+    $("detail").innerHTML = ui.broken.reports.length ? '<p class="empty">Pick a report.</p>' : "";
+    return;
+  }
+  const check = ui.checks[r.videoId];
+  const catalog = r.catalogGeneratedAt
+    ? `the catalog built ${esc(when(r.catalogGeneratedAt))}${r.olderCatalog ? ' <span class="older">older than today\'s manifest</span>' : ""}`
+    : '<span class="older">no catalog yet</span>';
+  const open = (t) => `<a class="track" data-open="${esc(t.id)}" data-family="${esc(t.family)}">${esc(t.title)}</a>`;
+  const state = r.status === "needs-fix"
+    ? `<p>Still a source of ${r.usedBy.map(open).join(", ")}. Fix it in the track: reject it, accept another candidate (App check it first), search or paste a replacement, or add a playlist; then Rebuild.</p>`
+    : `<p class="good">No draft track uses this video now. ${r.inManifest === false
+      ? "It's out of the manifest: the phone clears the mark when it imports the next APK's catalog."
+      : "Rebuild to drop it from the manifest; the phone clears the mark when it imports the next APK's catalog."}</p>`;
+  const sources = r.track ? (r.sources.length ? `<ol class="sources">${r.sources.map((s) => `<li>
+      <a href="${watchUrl(s)}" target="_blank" rel="noreferrer">${esc(s.videoId)}</a>
+      ${s.startMs || s.endMs != null ? `${stamp(s.startMs)}–${s.endMs == null ? "end" : stamp(s.endMs)}` : ""}
+      ${s.videoId === r.videoId ? '<span class="badge-reported">reported</span>' : ""}
+      ${verdictBadge(ui.checks[s.videoId])} ${checkButton(s.videoId, "Check")}</li>`).join("")}</ol>`
+    : '<p class="empty">None: a track without sources is left out of the manifest.</p>') : "";
+  $("detail").innerHTML = `
+    <h2>${familyChips(r.family)} ${esc(r.track?.title ?? r.trackId)}</h2>
+    <div class="facts"><code>${esc(r.trackId)}</code>${r.track ? "" : " · not a track in the draft"}</div>
+    <h3>Reported</h3>
+    <p><a href="https://www.youtube.com/watch?v=${encodeURIComponent(r.videoId)}" target="_blank" rel="noreferrer">${esc(r.videoId)} ↗</a>
+      · <strong>${esc(r.reason)}</strong>${r.detail ? ` (${esc(r.detail)})` : ""} · ${esc(when(r.markedAt))}, on ${catalog}</p>
+    <p>As the app sees it now: ${verdictBadge(check, true)}
+      ${check ? `<span class="facts">checked ${esc(ago(check.checkedAt))}${check.detail ? `, YouTube: “${esc(check.detail)}”` : ""}</span>` : ""}
+      ${checkButton(r.videoId, check ? "Re-check" : "Check")}</p>
+    ${state}
+    ${r.track ? `<p><button class="primary" data-open="${esc(r.track.id)}" data-family="${esc(r.track.family)}">Open track</button></p>` : ""}
+    ${r.track ? `<h3>Its sources today</h3>${sources}` : ""}`;
+  for (const el of $("detail").querySelectorAll("[data-open]")) {
+    // The All tab, since a reported track is usually matched.
+    el.onclick = () => { ui.family = el.dataset.family; ui.trackId = el.dataset.open; ui.status = "all"; setMode("tracks"); };
+  }
+  for (const el of $("detail").querySelectorAll("[data-check]")) {
+    el.onclick = async () => {
+      el.disabled = true;
+      el.textContent = "Checking…";
+      try {
+        await appCheck(el.dataset.check);
+      } finally {
+        renderBroken();
+      }
+    };
+  }
+}
+
+// One video at a time; the server spaces the requests and stops asking when YouTube blocks.
+async function checkUnchecked() {
+  const videos = [...new Set(ui.broken.reports.filter((r) => !ui.checks[r.videoId]).map((r) => r.videoId))];
+  try {
+    for (const [i, videoId] of videos.entries()) {
+      ui.checking = `Checking ${i + 1}/${videos.length}…`;
+      renderBroken();
+      const result = await appCheck(videoId);
+      if (result.notice) break;
+    }
+  } finally {
+    ui.checking = null;
+    renderBroken();
+  }
+}
+
 $("mode-tracks").onclick = () => setMode("tracks");
 $("mode-playlists").onclick = () => setMode("playlists");
+$("mode-broken").onclick = () => setMode("broken");
 
 // Rebuild and keys
 
@@ -840,9 +1071,12 @@ $("rebuild").onclick = async () => {
     $("output").querySelector("pre").textContent = (result.ok ? "" : "FAILED\n\n") + result.output;
     $("output").showModal();
     await loadState();
+    await loadBroken(); // a fix may have dropped a reported video
     if (ui.mode === "playlists") {
       await loadCoverage();
       renderPlaylists();
+    } else if (ui.mode === "broken") {
+      renderBroken();
     } else {
       await loadTracks();
       if (ui.trackId) await openTrack(ui.trackId);
@@ -871,6 +1105,11 @@ window.onYouTubeIframeAPIReady = () => {};
 (async () => {
   const linked = decodeURIComponent(location.hash.slice(1));
   await loadState();
+  await loadBroken(); // the Broken button's count
+  if (linked === "broken") {
+    await setMode("broken");
+    return;
+  }
   if (linked.startsWith("playlists/")) {
     const family = linked.slice("playlists/".length);
     if (ui.state.families.some((f) => f.id === family)) ui.family = family;

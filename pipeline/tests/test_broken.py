@@ -11,9 +11,11 @@ from pydantic import ValidationError
 from vgmixr_pipeline.broken import (
     REMOTE_PATH,
     BrokenFile,
+    Pulled,
     PullError,
     parse_broken,
     pull_broken,
+    read_pulled,
     summarize,
 )
 
@@ -127,3 +129,28 @@ def test_the_summary_counts_marks_by_family_and_reason() -> None:
         "  oras: 1 (no-audio 1)",
         "  not in the catalog: 1 (unavailable 1)",
     ]
+
+
+def test_reading_the_pulled_file(tmp_path: Path) -> None:
+    (tmp_path / "broken.json").write_text(FIXTURE, encoding="utf-8")
+
+    pulled = read_pulled(tmp_path)
+
+    assert pulled.error is None
+    assert pulled.broken == parse_broken(FIXTURE)
+    assert pulled.pulled_at is not None
+    assert abs((datetime.now(UTC) - pulled.pulled_at).total_seconds()) < 60
+
+
+def test_no_pulled_file_reads_as_nothing_pulled(tmp_path: Path) -> None:
+    assert read_pulled(tmp_path) == Pulled(broken=None, error=None, pulled_at=None)
+
+
+def test_an_invalid_pulled_file_says_why(tmp_path: Path) -> None:
+    (tmp_path / "broken.json").write_text('{"version": 2, "marks": []}', encoding="utf-8")
+
+    pulled = read_pulled(tmp_path)
+
+    assert pulled.broken is None
+    assert pulled.error is not None
+    assert "version" in pulled.error

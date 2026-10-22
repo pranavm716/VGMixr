@@ -69,6 +69,8 @@ class _Handler(BaseHTTPRequestHandler):
                     return r.track(track_id)
                 case ["playlists"]:
                     return r.playlists()
+                case ["broken"]:
+                    return r.broken()
         else:
             body = self._body()
             match parts:
@@ -103,6 +105,8 @@ class _Handler(BaseHTTPRequestHandler):
                     return r.preview_removal(_index(body), str(body.get("playlist") or ""))
                 case ["playlists", "remove"]:
                     return r.remove_playlist(_index(body), str(body.get("playlist") or ""))
+                case ["app-check"]:
+                    return r.app_check(_text(body, "videoId") or "")
                 case ["rebuild"]:
                     return r.rebuild()
                 case ["youtube", "retry"]:
