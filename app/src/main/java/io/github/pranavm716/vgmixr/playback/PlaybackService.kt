@@ -24,6 +24,8 @@ import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.describe
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.history.PlayCounter
+import io.github.pranavm716.vgmixr.domain.history.PlayHistory
 import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.FailedSource
@@ -41,11 +43,14 @@ import java.time.Clock
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 /** Session extra naming the [ResolveFailure] that stopped playback, if any. */
@@ -73,6 +78,9 @@ class PlaybackService : MediaSessionService() {
 
     @Inject
     lateinit var clock: Clock
+
+    @Inject
+    lateinit var playHistory: PlayHistory
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val catalog = MutableStateFlow<Catalog?>(null)
@@ -119,6 +127,7 @@ class PlaybackService : MediaSessionService() {
             .setSessionActivity(openApp)
             .build()
         player.addListener(Failover(player, session))
+        player.addListener(PlayRecording(player))
         this.session = session
     }
 
@@ -248,6 +257,54 @@ class PlaybackService : MediaSessionService() {
             }
         }
     }
+
+    /**
+     * Writes a play to the history when [PlayCounter] says a visit counts: the position is checked
+     * once a second while the player plays.
+     */
+    private inner class PlayRecording(private val player: Player) : Player.Listener {
+        private val counter = PlayCounter()
+        private var ticker: Job? = null
+
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) counter.onEnded()?.let(::record)
+            counter.onTransition(mediaItem?.mediaId, reason.toTransition())
+        }
+
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            if (playbackState == Player.STATE_ENDED) counter.onEnded()?.let(::record)
+        }
+
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            ticker?.cancel()
+            ticker = if (isPlaying) {
+                scope.launch {
+                    while (isActive) {
+                        counter.onPlaying(player.currentPosition)?.let(::record)
+                        delay(PLAY_CHECK_INTERVAL_MS)
+                    }
+                }
+            } else {
+                null
+            }
+        }
+
+        private fun record(trackId: String) {
+            scope.launch {
+                playHistory.record(trackId)
+                diagnostics.log("play $trackId")
+            }
+        }
+    }
+}
+
+private const val PLAY_CHECK_INTERVAL_MS = 1_000L
+
+private fun Int.toTransition(): PlayCounter.Transition = when (this) {
+    Player.MEDIA_ITEM_TRANSITION_REASON_AUTO -> PlayCounter.Transition.AUTO
+    Player.MEDIA_ITEM_TRANSITION_REASON_SEEK -> PlayCounter.Transition.SKIP
+    Player.MEDIA_ITEM_TRANSITION_REASON_REPEAT -> PlayCounter.Transition.REPEAT
+    else -> PlayCounter.Transition.QUEUE_CHANGED
 }
 
 private fun MediaSession.setStoppedBy(failure: ResolveFailure?) {
