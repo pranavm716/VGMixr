@@ -36,7 +36,7 @@ class NewPipeStreamResolver @Inject constructor(
             val ms = (System.nanoTime() - start) / 1_000_000
             if (stream == null) {
                 diagnostics.log("resolve $videoId: no playable audio stream (${ms}ms)")
-                StreamResolution.Unavailable("no playable audio stream")
+                StreamResolution.NoAudio
             } else {
                 diagnostics.log(
                     "resolve $videoId: ${stream.format?.mimeType} ${stream.averageBitrate}kbps " +
