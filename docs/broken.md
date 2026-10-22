@@ -1,6 +1,6 @@
 # Broken sources
 
-The app marks a `stream` source's video broken when it is dead for the app, keeps the marks in Room (table `broken_streams`, keyed by `videoId`) and mirrors them to `broken.json` for the PC. The review tool's Broken tab (roadmap step 10b) reads the pulled copy.
+The app marks a `stream` source's video broken when it is dead for the app, keeps the marks in Room (table `broken_streams`, keyed by `videoId`) and mirrors them to `broken.json` for the PC. The review tool's Broken tab (roadmap step 10b, [below](#the-review-tools-broken-tab)) reads the pulled copy.
 
 ## What marks a video
 
@@ -63,3 +63,26 @@ Example (also the shared fixture [`fixtures/broken.json`](fixtures/broken.json),
 | `detail` | string, optional | What the app saw, such as YouTube's unavailable message. Free text. |
 | `markedAt` | string | When the video was first found broken, ISO 8601 in UTC (`Instant.toString()`, with or without fractional seconds). |
 | `catalogGeneratedAt` | string, optional | The `generatedAt` of the catalog the app played from; missing if no catalog had been imported yet. Tells a mark on an old catalog from one on the current build. |
+
+## The review tool's Broken tab
+
+`uv run python -m vgmixr_pipeline.catalog.review`, then **Broken**. It reads `pipeline/out/broken.json` on every load (pull again, then reload the page), and says so when nothing was pulled yet or the file is invalid.
+
+**Re-check.** The tool's embedded player is a browser, so it plays videos YouTube refuses to the app. A re-check looks a video up the way the app does: yt-dlp's `visionos` player client sends the same client name, id and version as NewPipe's (`VISIONOS`, 101, 1.02), over IPv4 like the app (`vgmixr_pipeline.broken.recheck`). One metadata request gives:
+
+| Verdict | What yt-dlp sees | Shown as |
+|---|---|---|
+| `refused` | the watch page knows the video (its title, public or unlisted), but the client gets no audio ("This video is not available") | refused to the app, plays in a browser |
+| `gone` | YouTube doesn't know the video (no title, "Video unavailable", private) | gone for everyone |
+| `plays` | the client gets audio formats | plays in the app now: the mark is stale, Try again on the phone clears it |
+
+The bot check and network trouble are no verdict: nothing is cached, and a bot check pauses YouTube requests for 30 minutes as for searches. Results are cached in `pipeline/out/youtube/app-check/<videoId>.json` with when, the client and the yt-dlp version. Loading the tab or a track only reads that cache; YouTube is asked only on a click (Check on a report, source or candidate, or Check all for the unchecked reports), 5 seconds apart, and a click always asks again. With `--cached-only` the cached verdicts show and the buttons are off.
+
+**Reports and tracks.** A report names the catalog id the phone has (`<family>-<slug of the final title>`), while the tool keys tracks by source key. The tab finds the track by catalog id, from the titles as last built and then today's (a rename since), else as the draft track whose sources use the reported video. A report with neither shows the id alone. Reports fall in two groups:
+
+- **Needs a fix**: a draft track (not removed) still uses the video. Every such track is listed, since one album video can back many.
+- **Fixed in the draft**: no draft track uses it now. Until Rebuild it is still in `catalog/manifest.json`; after, the phone clears the mark when it imports the next APK's catalog.
+
+A report made on a catalog other than today's manifest is tagged "older catalog". Its mark still matters: the phone keeps it until a catalog drops the video.
+
+**Fixing.** Open track shows the track with the report above its sources, the reported video marked, and the check on every source and candidate. Fix it with the usual tools (reject, accept another candidate, search, paste a replacement, add a playlist), checking a replacement first so one refused upload isn't swapped for another (uploads from one channel are often refused alike), then Rebuild.
