@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-22T03:39:13Z",
+  "generatedAt": "2026-10-22T09:26:45Z",
   "games": [
     {
       "id": "red",
@@ -18206,9 +18206,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "yXX8ve0wIK4",
+          "videoId": "xv6DkVNNM-s",
           "startMs": 0,
-          "confidence": 0.98
+          "confidence": 1.0
         }
       ]
     },
@@ -18220,7 +18220,13 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "saDO1GcGnRs",
+          "videoId": "5V0kzLYkYTM",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "k-LL_DRUN6I",
           "startMs": 0,
           "confidence": 0.93
         }
@@ -18396,9 +18402,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "7DbGoUJkNfU",
+          "videoId": "GjltP8GISJE",
           "startMs": 0,
-          "confidence": 0.92
+          "confidence": 1.0
         }
       ]
     },
@@ -18424,7 +18430,7 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "yffGYzZoJ-s",
+          "videoId": "UDFWznA_L2k",
           "startMs": 0,
           "confidence": 1.0
         }
@@ -18632,7 +18638,7 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "5V0kzLYkYTM",
+          "videoId": "sRAKTQi-GL0",
           "startMs": 0,
           "confidence": 1.0
         }
