@@ -126,12 +126,8 @@ abstract class BrokenStreamDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract suspend fun insertOrIgnore(mark: BrokenStreamEntity): Long
 
-    /** Clears the marks of [trackId]'s stream videos, which other tracks may share. */
-    @Query(
-        "DELETE FROM broken_streams WHERE videoId IN (" +
-            "SELECT videoId FROM sources WHERE trackId = :trackId AND type = 'stream')"
-    )
-    abstract suspend fun deleteForTrack(trackId: String)
+    @Query("DELETE FROM broken_streams WHERE videoId = :videoId")
+    abstract suspend fun delete(videoId: String)
 
     @Query("SELECT * FROM broken_streams ORDER BY markedAt, videoId")
     abstract suspend fun all(): List<BrokenStreamEntity>

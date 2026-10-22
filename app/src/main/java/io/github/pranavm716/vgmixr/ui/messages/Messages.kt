@@ -9,12 +9,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalResources
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackEvent
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
+import io.github.pranavm716.vgmixr.domain.playback.TryAgainResult
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
@@ -46,6 +48,12 @@ sealed interface UserMessage {
     /** A tap on [title], whose sources are all broken (the first for [reason]); offers Try again. */
     data class TrackUnplayable(val trackId: String, val title: String, val reason: BrokenReason) :
         UserMessage
+
+    /** Try again found [title] working: it is no longer greyed. */
+    data class PlaysAgain(val title: String) : UserMessage
+
+    /** Try again couldn't ask YouTube about [title]; nothing changed. */
+    data class Unchecked(val title: String) : UserMessage
 }
 
 /** Where ViewModels post messages for the app's snackbar. */
@@ -62,7 +70,7 @@ class UserMessages @Inject constructor() {
 @HiltViewModel
 class MessagesViewModel @Inject constructor(
     private val playback: PlaybackController,
-    posted: UserMessages
+    private val posted: UserMessages
 ) : ViewModel() {
     val messages: Flow<UserMessage> = merge(
         playback.state
@@ -79,8 +87,17 @@ class MessagesViewModel @Inject constructor(
         posted.messages
     )
 
-    /** Try again on an unplayable track's message: its next play tries its sources again. */
-    fun onTryAgain(trackId: String) = playback.tryAgain(trackId)
+    /** Try again on [message]: checks the track's videos and says what it found. */
+    fun onTryAgain(message: UserMessage.TrackUnplayable) {
+        viewModelScope.launch {
+            val reply = when (val result = playback.tryAgain(message.trackId)) {
+                TryAgainResult.Back -> UserMessage.PlaysAgain(message.title)
+                is TryAgainResult.StillBroken -> message.copy(reason = result.reason)
+                TryAgainResult.Unchecked -> UserMessage.Unchecked(message.title)
+            }
+            posted.post(reply)
+        }
+    }
 }
 
 /** Shows each message in [snackbars] while the app is on screen. */
@@ -100,7 +117,7 @@ fun MessagesEffect(snackbars: SnackbarHostState, viewModel: MessagesViewModel = 
                         duration = SnackbarDuration.Long
                     )
                     if (result == SnackbarResult.ActionPerformed) {
-                        viewModel.onTryAgain(message.trackId)
+                        viewModel.onTryAgain(message)
                     }
                 } else {
                     snackbars.showSnackbar(text)
@@ -131,6 +148,10 @@ private fun UserMessage.text(resources: Resources): String = when (this) {
         },
         title
     )
+
+    is UserMessage.PlaysAgain -> resources.getString(R.string.plays_again, title)
+
+    is UserMessage.Unchecked -> resources.getString(R.string.try_again_unchecked, title)
 
     is UserMessage.TrackUnplayable -> resources.getString(
         when (reason) {

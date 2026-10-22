@@ -12,6 +12,7 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackEvent
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.playback.TryAgainResult
 import java.time.Instant
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -85,8 +86,11 @@ class FakePlaybackController : PlaybackController {
         calls += ClearQueue
     }
 
-    override fun tryAgain(trackId: String) {
+    var tryAgainResult: TryAgainResult = TryAgainResult.Back
+
+    override suspend fun tryAgain(trackId: String): TryAgainResult {
         calls += TryAgain(trackId)
+        return tryAgainResult
     }
 
     override fun playFrom(trackIds: List<String>, index: Int, context: QueueContext) {
@@ -116,10 +120,7 @@ class FakeBrokenSources(initial: Map<String, BrokenMark> = emptyMap()) : BrokenS
         return true
     }
 
-    val cleared = mutableListOf<String>()
-
-    override suspend fun clearTrack(trackId: String) {
-        cleared += trackId
-        marks.value = marks.value.filterValues { it.trackId != trackId }
+    override suspend fun clear(videoId: String) {
+        marks.value -= videoId
     }
 }

@@ -38,7 +38,7 @@ class RoomBrokenSources @Inject constructor(
         )
     )
 
-    override suspend fun clearTrack(trackId: String) = dao.deleteForTrack(trackId)
+    override suspend fun clear(videoId: String) = dao.delete(videoId)
 }
 
 /** A row whose reason this version doesn't know is left out. */

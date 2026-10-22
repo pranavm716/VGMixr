@@ -70,20 +70,20 @@ class UnplayableTracksTest {
             assertEquals(null, awaitItem().unplayable()["rse-one"])
             broken.mark("AAAAAAAAAAA", "rse-one", BrokenReason.NO_AUDIO, null)
             assertEquals(BrokenReason.NO_AUDIO, awaitItem().unplayable()["rse-one"])
-            broken.clearTrack("rse-one")
+            broken.clear("AAAAAAAAAAA")
             assertEquals(null, awaitItem().unplayable()["rse-one"])
         }
     }
 
     @Test
-    fun `clearing a track clears the marks of its videos only`() = runTest(dispatcher) {
+    fun `clearing a video's mark un-greys every track that uses it`() = runTest(dispatcher) {
         import()
         broken.mark("AAAAAAAAAAA", "rse-one", BrokenReason.NO_AUDIO, null)
         broken.mark("BBBBBBBBBBB", "rse-two", BrokenReason.NO_AUDIO, null)
-        broken.mark("CCCCCCCCCCC", "rse-slice", BrokenReason.NO_AUDIO, null)
 
-        broken.clearTrack("rse-two")
+        broken.clear("AAAAAAAAAAA")
 
-        assertEquals(setOf("CCCCCCCCCCC"), broken.marks.first().keys)
+        assertEquals(setOf("BBBBBBBBBBB"), broken.marks.first().keys)
+        assertEquals(null, repository.catalog.first().unplayable()["rse-one"])
     }
 }

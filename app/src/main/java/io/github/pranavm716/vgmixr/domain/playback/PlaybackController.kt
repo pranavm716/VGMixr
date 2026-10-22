@@ -43,10 +43,10 @@ interface PlaybackController {
     fun clearQueue()
 
     /**
-     * Clears the broken marks of [trackId]'s sources (Try again), so its next play tries them
-     * again.
+     * Try again on a track whose sources are all broken: looks its videos up again and un-greys it
+     * only if one works now.
      */
-    fun tryAgain(trackId: String)
+    suspend fun tryAgain(trackId: String): TryAgainResult
 
     /** The current track's position, a few times a second while collected. */
     val progress: Flow<PlaybackProgress>

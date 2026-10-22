@@ -13,6 +13,8 @@
     <string name="track_unplayable_no_audio">%s can\'t play: YouTube won\'t give the app its audio</string>
     <string name="track_unplayable_unavailable">%s can\'t play: its video is unavailable</string>
     <string name="try_again">Try again</string>
+    <string name="plays_again">%s can play again</string>
+    <string name="try_again_unchecked">Couldn\'t check %s right now</string>
     <string name="unplayable">Can\'t play: every source is broken</string>
 
     <string name="add_to_queue">Add to queue</string>

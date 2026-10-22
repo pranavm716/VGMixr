@@ -13,8 +13,7 @@ import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.github.pranavm716.vgmixr.di.ApplicationScope
-import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
+import io.github.pranavm716.vgmixr.domain.playback.BrokenSourceCheck
 import io.github.pranavm716.vgmixr.domain.playback.PlayQueue
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackEvent
@@ -23,10 +22,10 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEdit
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
+import io.github.pranavm716.vgmixr.domain.playback.TryAgainResult
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -38,7 +37,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 /**
@@ -48,8 +46,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 @Singleton
 class MediaControllerPlaybackController @Inject constructor(
     @ApplicationContext context: Context,
-    private val brokenSources: BrokenSources,
-    @ApplicationScope private val scope: CoroutineScope
+    private val brokenSourceCheck: BrokenSourceCheck
 ) : PlaybackController {
     private val main = ContextCompat.getMainExecutor(context)
     private val _state = MutableStateFlow(PlaybackState())
@@ -126,9 +123,8 @@ class MediaControllerPlaybackController @Inject constructor(
 
     override fun clearQueue() = withController { it.apply(it.queue().clearQueue()) }
 
-    override fun tryAgain(trackId: String) {
-        scope.launch { brokenSources.clearTrack(trackId) }
-    }
+    override suspend fun tryAgain(trackId: String): TryAgainResult =
+        brokenSourceCheck.tryAgain(trackId)
 
     override val progress: Flow<PlaybackProgress> = flow {
         val controller = controller.await()
