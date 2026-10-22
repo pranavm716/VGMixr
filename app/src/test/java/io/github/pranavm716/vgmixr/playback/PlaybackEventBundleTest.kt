@@ -14,9 +14,19 @@ class PlaybackEventBundleTest {
     @Test
     fun `a source failure crosses from the service to the app intact`() {
         listOf(
-            PlaybackEvent.SourceFailed("oras-a", BrokenReason.NO_AUDIO, trackSkipped = true),
-            PlaybackEvent.SourceFailed("oras-a", BrokenReason.UNAVAILABLE, trackSkipped = false),
-            PlaybackEvent.SourceFailed("frlg-b", null, trackSkipped = false)
+            PlaybackEvent.SourceFailed(
+                "oras-a",
+                "Battle! (Elite Four)",
+                BrokenReason.NO_AUDIO,
+                trackSkipped = true
+            ),
+            PlaybackEvent.SourceFailed(
+                "oras-a",
+                "Battle! (Elite Four)",
+                BrokenReason.UNAVAILABLE,
+                trackSkipped = false
+            ),
+            PlaybackEvent.SourceFailed("frlg-b", "Pewter City Theme", null, trackSkipped = false)
         ).forEach { event ->
             assertEquals(event, playbackEvent(SOURCE_FAILED, event.toBundle()))
         }

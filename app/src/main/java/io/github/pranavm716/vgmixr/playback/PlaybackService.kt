@@ -34,10 +34,9 @@ import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
 import io.github.pranavm716.vgmixr.domain.playback.SourceFailure
-import io.github.pranavm716.vgmixr.domain.playback.SourceReport
+import io.github.pranavm716.vgmixr.domain.playback.nextSource
 import io.github.pranavm716.vgmixr.domain.playback.onSourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
-import io.github.pranavm716.vgmixr.domain.playback.startReport
 import java.time.Clock
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -144,9 +143,11 @@ class PlaybackService : MediaSessionService() {
             val items = SettableFuture.create<MutableList<MediaItem>>()
             scope.launch {
                 val catalog = catalog.filterNotNull().first()
+                // Read fresh, so a track whose marks were just cleared (Try again) plays its sources.
+                val fresh = brokenSources.marks.first().also { marks.value = it }
                 mediaSession.setStoppedBy(null)
                 items.set(
-                    mediaItems.map { catalog.startItem(it.mediaId, it.context, marks.value) }
+                    mediaItems.map { catalog.startItem(it.mediaId, it.context, fresh) }
                         .toMutableList()
                 )
             }
@@ -183,19 +184,12 @@ class PlaybackService : MediaSessionService() {
             val streams = track?.let { playableStreams(it.sources) }.orEmpty()
             val failed = FailedSource(
                 trackId = item.mediaId,
+                title = track?.title.orEmpty(),
                 sourceIndex = item.sourceIndex,
                 videoId = item.videoId,
-                retried = item.retried,
-                report = item.sourceReport
+                retried = item.retried
             )
-            val outcome = onSourceFailure(
-                failure,
-                failed,
-                streams,
-                marks.value,
-                clock.instant(),
-                error.errorCodeName
-            )
+            val outcome = onSourceFailure(failure, failed, streams, marks.value)
             val action = outcome.action
             diagnostics.log(
                 "error ${item.mediaId} source ${item.sourceIndex}/${streams.size}: " +
@@ -211,7 +205,6 @@ class PlaybackService : MediaSessionService() {
                         item.mediaId,
                         item.context,
                         item.sourceIndex,
-                        outcome.report,
                         retried = true
                     )
                     player.replaceMediaItem(player.currentMediaItemIndex, again)
@@ -220,12 +213,7 @@ class PlaybackService : MediaSessionService() {
                 }
 
                 is FailoverAction.TrySource -> {
-                    val next = catalog.itemFor(
-                        item.mediaId,
-                        item.context,
-                        action.index,
-                        outcome.report
-                    )
+                    val next = catalog.itemFor(item.mediaId, item.context, action.index)
                     player.replaceMediaItem(player.currentMediaItemIndex, next)
                     player.prepare()
                     player.play()
@@ -278,8 +266,7 @@ private fun Catalog.startItem(
     val streams = tracks.firstOrNull { it.id == trackId }
         ?.let { playableStreams(it.sources) }
         .orEmpty()
-    val report = startReport(streams, marks)
-    return itemFor(trackId, context, report.playing ?: streams.size, report)
+    return itemFor(trackId, context, nextSource(streams, 0, marks.keys) ?: streams.size)
 }
 
 /**
@@ -290,7 +277,6 @@ private fun Catalog.itemFor(
     trackId: String,
     context: QueueContext,
     sourceIndex: Int,
-    report: SourceReport,
     retried: Boolean = false
 ): MediaItem {
     val track = tracks.firstOrNull { it.id == trackId }
@@ -298,7 +284,7 @@ private fun Catalog.itemFor(
             QueueEntry(trackId, context)
         ).buildUpon().setUri(NO_SOURCE_URI).build()
     val familyName = families.firstOrNull { it.id == track.familyId }?.name.orEmpty()
-    return trackMediaItem(track, familyName, sourceIndex, context, retried, report)
+    return trackMediaItem(track, familyName, sourceIndex, context, retried)
 }
 
 private val MediaItem.videoId: String?

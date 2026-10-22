@@ -9,11 +9,13 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackEvent
 const val SOURCE_FAILED = "io.github.pranavm716.vgmixr.SOURCE_FAILED"
 
 private const val TRACK_ID = "trackId"
+private const val TITLE = "title"
 private const val REASON = "reason"
 private const val TRACK_SKIPPED = "trackSkipped"
 
 fun PlaybackEvent.SourceFailed.toBundle(): Bundle = Bundle().apply {
     putString(TRACK_ID, trackId)
+    putString(TITLE, title)
     reason?.let { putString(REASON, it.key) }
     putBoolean(TRACK_SKIPPED, trackSkipped)
 }
@@ -23,6 +25,7 @@ fun playbackEvent(action: String, args: Bundle): PlaybackEvent? = when (action) 
     SOURCE_FAILED -> args.getString(TRACK_ID)?.let {
         PlaybackEvent.SourceFailed(
             trackId = it,
+            title = args.getString(TITLE).orEmpty(),
             reason = args.getString(REASON)?.let(BrokenReason::fromKey),
             trackSkipped = args.getBoolean(TRACK_SKIPPED)
         )
