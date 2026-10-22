@@ -32,7 +32,6 @@ def build_manifest(draft: Draft, matches: list[Match], generated_at: str) -> Man
                     family=t.family,
                     games=t.games,
                     title=t.title,
-                    category=t.category,
                     order=t.order,
                     sources=sources,
                 )

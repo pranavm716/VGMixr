@@ -9,7 +9,6 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.model.Loop
 import io.github.pranavm716.vgmixr.domain.model.Source
@@ -50,7 +49,6 @@ class RoomCatalogRepository @Inject constructor(
                     if (subset == null) game.familyId == track.familyId else game.id in subset
                 },
                 title = track.title,
-                category = Category.valueOf(track.category),
                 order = track.order,
                 sources = sources[track.id].orEmpty().map { it.toDomain() }
             )

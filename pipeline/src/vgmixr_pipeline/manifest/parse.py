@@ -9,7 +9,7 @@ from vgmixr_pipeline.manifest.errors import ErrorCode, ManifestError
 from vgmixr_pipeline.manifest.models import Manifest
 from vgmixr_pipeline.manifest.validate import validate
 
-SUPPORTED_SCHEMA_VERSION = 1
+SUPPORTED_SCHEMA_VERSION = 2
 
 
 @dataclass(frozen=True)

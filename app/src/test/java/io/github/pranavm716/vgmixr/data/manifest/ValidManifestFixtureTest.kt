@@ -1,7 +1,6 @@
 package io.github.pranavm716.vgmixr.data.manifest
 
 import io.github.pranavm716.vgmixr.domain.manifest.ManifestParseResult
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Loop
 import io.github.pranavm716.vgmixr.domain.model.Manifest
 import io.github.pranavm716.vgmixr.domain.model.Source
@@ -78,11 +77,9 @@ class ValidManifestFixtureTest {
     }
 
     @Test
-    fun `parses track games, category and replaces`() {
+    fun `parses track games and replaces`() {
         assertNull(track("rse-route-101").games)
         assertEquals(listOf("ruby", "emerald"), track("rse-weather-institute").games)
-        assertEquals(Category.OTHER, track("rse-weather-institute").category)
-        assertEquals(Category.ROUTE, track("rse-route-101").category)
         assertEquals(listOf("rse-weather-lab"), track("rse-weather-institute").replaces)
         assertEquals(emptyList<String>(), track("rse-route-101").replaces)
     }

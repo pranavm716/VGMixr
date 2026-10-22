@@ -1,16 +1,12 @@
-"""The reports. The family report: per family, shared vs. exclusive tracks, categories and
-exclusions, used to confirm family groupings (e.g. SM/USUM) and to find tracks that need an
-override. The match report: per family, how many tracks got stream sources, which need review and
-which found nothing (and so are left out of the manifest).
+"""The reports. The family report: per family, shared vs. exclusive tracks and exclusions, used
+to confirm family groupings (e.g. SM/USUM) and to find tracks that need an override. The match
+report: per family, how many tracks got stream sources, which need review and which found nothing
+(and so are left out of the manifest).
 """
-
-from collections import Counter
 
 from vgmixr_pipeline.catalog.build import BuildResult, DraftTrack, Excluded
 from vgmixr_pipeline.catalog.match import Match
 from vgmixr_pipeline.manifest.models import Game
-
-CATEGORIES = ["battle", "route", "town", "dungeon", "event", "other"]
 
 
 def family_report(games: list[Game], result: BuildResult) -> str:
@@ -28,24 +24,20 @@ def family_report(games: list[Game], result: BuildResult) -> str:
             for key, group in _exclusive_groups(tracks, [g.id for g in members]):
                 titles = ", ".join(t.title for t in group)
                 sections.append(f"- Exclusive to {key}: {len(group)} ({titles})")
-            counts = Counter(t.category for t in tracks)
-            categories = ", ".join(f"{c} {counts[c]}" for c in CATEGORIES if counts[c])
-            sections.append(f"- Categories: {categories}")
         sections += _excluded_lines(excluded)
         sections.append("")
     return "\n".join(sections)
 
 
 def summary(games: list[Game], result: BuildResult) -> str:
-    lines = ["family  tracks  shared  exclusive  other  excluded"]
+    lines = ["family  tracks  shared  exclusive  excluded"]
     for family in _families(games):
         tracks = [t for t in result.tracks if t.family == family]
         shared = sum(t.games is None for t in tracks)
-        other = sum(t.category == "other" for t in tracks)
         excluded = sum(e.family == family for e in result.excluded)
         lines.append(
             f"{family:<6}{len(tracks):>4} tracks{shared:>4} shared{len(tracks) - shared:>4} "
-            f"exclusive{other:>4} other{excluded:>4} excluded"
+            f"exclusive{excluded:>4} excluded"
         )
     return "\n".join(lines)
 

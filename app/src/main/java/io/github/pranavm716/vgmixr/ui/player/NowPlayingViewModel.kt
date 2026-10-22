@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
@@ -24,7 +23,6 @@ sealed interface NowPlayingUiState {
     data class Visible(
         val title: String,
         val chips: List<ChipUi>,
-        val category: Category,
         val playingFrom: PlayingFromUi,
         val isPlaying: Boolean,
         val isLoading: Boolean
@@ -86,7 +84,6 @@ private fun Catalog.nowPlaying(state: PlaybackState): NowPlayingUiState {
     return NowPlayingUiState.Visible(
         title = track.title,
         chips = track.games.map { ChipUi(it.shortName, it.color) },
-        category = track.category,
         playingFrom = playingFrom,
         isPlaying = state.isPlaying,
         isLoading = state.isLoading

@@ -5,7 +5,6 @@ import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.playback.PlayQueue
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
@@ -36,7 +35,6 @@ class MiniPlayerViewModelTest {
                 "rse",
                 listOf(ruby, sapphire),
                 "Route 101",
-                Category.ROUTE,
                 0,
                 emptyList()
             ),
@@ -45,7 +43,6 @@ class MiniPlayerViewModelTest {
                 "rse",
                 listOf(ruby),
                 "Battle! (Magma)",
-                Category.BATTLE,
                 1,
                 emptyList()
             )
@@ -61,9 +58,9 @@ class MiniPlayerViewModelTest {
     private fun chip(shortName: String) = ChipUi(shortName, "#336699")
 
     private val route101 =
-        MiniTrackUi("rse-a", "rse", "Route 101", listOf(chip("R"), chip("S")), Category.ROUTE)
+        MiniTrackUi("rse-a", "rse", "Route 101", listOf(chip("R"), chip("S")))
     private val magma =
-        MiniTrackUi("rse-b", "rse", "Battle! (Magma)", listOf(chip("R")), Category.BATTLE)
+        MiniTrackUi("rse-b", "rse", "Battle! (Magma)", listOf(chip("R")))
 
     @Test
     fun `hidden while nothing is loaded`() = runTest {
@@ -73,27 +70,26 @@ class MiniPlayerViewModelTest {
     }
 
     @Test
-    fun `shows the current track with all its games' chips and its category, and the next one`() =
-        runTest {
-            playback.state.value = PlaybackState(
-                queue = queue("rse-a", "rse-b", current = 0),
-                trackId = "rse-a",
-                isPlaying = true
-            )
+    fun `shows the current track with all its games' chips, and the next one`() = runTest {
+        playback.state.value = PlaybackState(
+            queue = queue("rse-a", "rse-b", current = 0),
+            trackId = "rse-a",
+            isPlaying = true
+        )
 
-            viewModel.uiState.test {
-                assertEquals(
-                    MiniPlayerUiState.Visible(
-                        track = route101,
-                        previous = null,
-                        next = magma,
-                        isPlaying = true,
-                        isLoading = false
-                    ),
-                    awaitItem()
-                )
-            }
+        viewModel.uiState.test {
+            assertEquals(
+                MiniPlayerUiState.Visible(
+                    track = route101,
+                    previous = null,
+                    next = magma,
+                    isPlaying = true,
+                    isLoading = false
+                ),
+                awaitItem()
+            )
         }
+    }
 
     @Test
     fun `a loading track says so, and the last one has a previous but no next`() = runTest {

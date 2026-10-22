@@ -4,7 +4,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 
 ## Scope
 - Personal app with a single user (the developer), who does all setup by hand once. Prefer fixed configuration over pickers, onboarding or settings screens. In-app warnings and dev-facing debug/cataloging UI are welcome when cheap and useful.
-- MVP: browse/filter tracks by game, family, generation, category (battle, route, town, dungeon, event, other); recently played; favorites; playback from remote streams; downloads/caching for offline use.
+- MVP: browse/filter tracks by game, family, generation; recently played; favorites; playback from remote streams; downloads/caching for offline use.
 - Right after MVP: local files from ROM rips become the first source on each track.
 - v2: seamless looping with a single global loop-cycle setting. Loop points are in the schema (on `local` sources) from day one.
 - After downloads/cache: user-added YouTube tracks (mainly fan remixes), added by pasting a link (see `docs/roadmap.md`).
@@ -39,11 +39,10 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - A family's cover is `catalog/covers/<family id>.webp`, bundled with the manifest in assets and found by file name, not by a manifest field. A family without one shows a fallback tile. Box and album art stay out of the manifest.
 - Game fields: id, name, shortName, color (`#RRGGBB`), optional generation, platform, optional family. Generation is an optional, unbounded int (Gen 10+ is coming; other franchises have none); never hard-code a maximum. Games in a family share a generation.
 - UI colors come from each game's `color` field and are never hard-coded. Derive chip text color from it for contrast. A track's chip is its games' short names, each in its own game's color (e.g. "RSE", or just "R" for a Ruby-only track).
-- Track fields: id, family, optional `games` (subset of the family's games; omitted = all), title, category, order, sources, optional `replaces`. A track id is `<family>-<slug of its final title>`, computed when the pipeline writes the manifest; overrides and the review tool key tracks by their source key (the slug of the source's title) instead. Track ids are immutable from the first real deploy: favorites and history reference them.
+- Track fields: id, family, optional `games` (subset of the family's games; omitted = all), title, order, sources, optional `replaces`. A track id is `<family>-<slug of its final title>`, computed when the pipeline writes the manifest; overrides and the review tool key tracks by their source key (the slug of the source's title) instead. Track ids are immutable from the first real deploy: favorites and history reference them.
 - One track entry per distinct piece of audio. Never duplicate shared tracks per game; use `games` for game-exclusive tracks.
 - Tracks in one family that share a name are told apart by their versions in parentheses, joined with "&": "Opening Movie (Ruby & Sapphire)" and "Opening Movie (Emerald)", "Title Screen (Black & White)" and "Title Screen (Black 2 & White 2)". Both sides get the qualifier.
 - Import rules (details in `docs/manifest.md`): validate fully before writing, upsert by id, never delete user data, retire tracks and games missing from a new manifest instead of deleting them (un-retire if they reappear), honor `replaces` by re-pointing playlist entries (favorites included), history and `remixOf`. A failed import keeps the existing catalog and shows a warning.
-- Categories: battle, route, town, dungeon, event, other. Unknown values import as `other`.
 - Each track has an ordered `sources` list of `local` files, then `stream` candidates. The player tries local files (skipping missing ones), then a cached download of a stream source, then streams, and marks sources that exist but fail to play as broken. The cache is runtime state, never a manifest source. Unknown source types are a validation error; adding one bumps `schemaVersion`.
 - Runtime source state lives in Room, keyed by source identity, never by list index: local by `path`; stream broken flag by `videoId`; stream cache by `(videoId, startMs, endMs)`.
 - Local files live in a fixed app-specific folder (`files/music/`), copied there by hand.

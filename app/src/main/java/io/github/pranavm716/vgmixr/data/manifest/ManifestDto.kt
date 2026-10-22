@@ -45,7 +45,6 @@ internal data class TrackDto(
     // Null (omitted) means all of the family's games; empty is a validation error.
     val games: List<String>? = null,
     val title: String,
-    val category: String,
     val order: Int,
     val sources: List<SourceDto>,
     val replaces: List<String> = emptyList()

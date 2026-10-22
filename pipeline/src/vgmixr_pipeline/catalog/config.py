@@ -9,7 +9,6 @@ the generated draft is never edited by hand.
 
 import re
 from pathlib import Path
-from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, RootModel, field_validator, model_validator
 
@@ -18,8 +17,6 @@ from vgmixr_pipeline.manifest.models import Game, LocalSource, Source
 from vgmixr_pipeline.manifest.validate import VIDEO_ID
 
 DATA_DIR = Path(__file__).resolve().parents[3] / "data"
-
-type Category = Literal["battle", "route", "town", "dungeon", "event", "other"]
 
 
 def _check_time(time: str | None) -> str | None:
@@ -198,7 +195,6 @@ class Streams(_Model):
 
 class TrackOverride(_Model):
     title: str | None = None
-    category: Category | None = None
     games: list[str] | None = None
     # True drops the track; False keeps one that was auto-excluded as a jingle.
     exclude: bool | None = None
@@ -227,7 +223,6 @@ class Extra(_Model):
     family: str
     title: str
     games: list[str] | None = None
-    category: Category | None = None
     order: int | None = None
     sources: list[Source] = []
     # "m:ss"; lets the jingle length rule apply to the extra.

@@ -5,7 +5,6 @@ import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.playback.PlayQueue
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
@@ -28,7 +27,7 @@ class QueueViewModelTest {
     private val ruby = game("ruby", shortName = "R")
 
     private fun track(id: String) =
-        CatalogTrack(id, "rse", listOf(ruby), "Title $id", Category.ROUTE, 0, emptyList())
+        CatalogTrack(id, "rse", listOf(ruby), "Title $id", 0, emptyList())
 
     private val catalog = Catalog(
         games = listOf(ruby),
@@ -44,7 +43,7 @@ class QueueViewModelTest {
     }
 
     private fun row(index: Int, id: String) =
-        QueueRowUi(index, id, "Title $id", listOf(ChipUi("R", "#336699")), Category.ROUTE)
+        QueueRowUi(index, id, "Title $id", listOf(ChipUi("R", "#336699")))
 
     private fun state(entries: List<QueueEntry>, current: Int) = PlaybackState(
         queue = PlayQueue(entries, current),

@@ -5,7 +5,6 @@ import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.playback.PlayQueue
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
@@ -36,7 +35,6 @@ class NowPlayingViewModelTest {
                 "rse",
                 listOf(ruby, sapphire),
                 "Route 101",
-                Category.ROUTE,
                 0,
                 emptyList()
             )
@@ -54,7 +52,7 @@ class NowPlayingViewModelTest {
     )
 
     @Test
-    fun `shows the track, its games and category, and the family it plays from`() = runTest {
+    fun `shows the track, its games, and the family it plays from`() = runTest {
         playback.state.value = playing(QueueContext.Family("rse"))
 
         viewModel.uiState.test {
@@ -62,7 +60,6 @@ class NowPlayingViewModelTest {
                 NowPlayingUiState.Visible(
                     title = "Route 101",
                     chips = listOf(ChipUi("R", "#336699"), ChipUi("S", "#336699")),
-                    category = Category.ROUTE,
                     playingFrom = PlayingFromUi.Family("rse", "Ruby / Sapphire"),
                     isPlaying = true,
                     isLoading = false

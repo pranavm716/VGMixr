@@ -23,13 +23,6 @@
     <string name="previous">Previous</string>
     <string name="next">Next</string>
 
-    <string name="category_battle">Battle</string>
-    <string name="category_route">Route</string>
-    <string name="category_town">Town</string>
-    <string name="category_dungeon">Dungeon</string>
-    <string name="category_event">Event</string>
-    <string name="category_other">Other</string>
-
     <plurals name="added_to_queue">
         <item quantity="one">Added to queue</item>
         <item quantity="other">Added %d tracks to queue</item>

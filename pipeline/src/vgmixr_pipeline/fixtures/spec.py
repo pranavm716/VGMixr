@@ -16,7 +16,7 @@ type JsonObject = dict[str, Any]
 # A two-game family (ruby, sapphire in rse), a standalone game (pla) and one track with one
 # stream source. A fixture adds a second track or source only when its rule needs one.
 BASE: JsonObject = {
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "generatedAt": "2026-10-14T08:00:00Z",
     "games": [
         {
@@ -51,7 +51,6 @@ BASE: JsonObject = {
             "id": "rse-route-101",
             "family": "rse",
             "title": "Route 101",
-            "category": "route",
             "order": 12,
             "sources": [{"type": "stream", "videoId": "XXXXXXXXXXX", "startMs": 0, "endMs": None}],
         }
@@ -109,7 +108,6 @@ def route_102(**fields: Any) -> JsonObject:
         "id": "rse-route-102",
         "family": "rse",
         "title": "Route 102",
-        "category": "route",
         "order": 13,
         "sources": [stream("YYYYYYYYYYY")],
         **fields,
@@ -122,7 +120,7 @@ def set_source(new: JsonObject) -> Callable[[JsonObject], object]:
 
 SYNTAX_ERROR = """\
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "generatedAt": "2026-10-14T08:00:00Z",
   "games": [
     {
@@ -157,7 +155,6 @@ SYNTAX_ERROR = """\
       "id": "rse-route-101",
       "family": "rse",
       "title": "Route 101",
-      "category": "route",
       "order": 12,
       "sources": [
         { "type": "stream", "videoId": "XXXXXXXXXXX", "startMs": 0, "endMs": null }
@@ -173,14 +170,14 @@ FIXTURES: list[Fixture | RawFixture] = [
     Fixture(
         "schemaVersion-string.json",
         E.MALFORMED,
-        '`schemaVersion` is `"1"`, a string',
-        lambda m: m.update(schemaVersion="1"),
+        '`schemaVersion` is `"2"`, a string',
+        lambda m: m.update(schemaVersion="2"),
     ),
     Fixture(
         "schemaVersion-unsupported.json",
         E.SCHEMA_VERSION_UNSUPPORTED,
-        "`schemaVersion` is `2`",
-        lambda m: m.update(schemaVersion=2),
+        "`schemaVersion` is `1`, an older version",
+        lambda m: m.update(schemaVersion=1),
     ),
     Fixture(
         "generatedAt-offset.json",

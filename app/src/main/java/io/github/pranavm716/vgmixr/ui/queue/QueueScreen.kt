@@ -38,7 +38,6 @@ import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueueOrRemove
 import io.github.pranavm716.vgmixr.ui.components.SwipeToRemove
-import io.github.pranavm716.vgmixr.ui.player.label
 import kotlinx.coroutines.launch
 
 /**
@@ -132,7 +131,7 @@ private fun SectionHeader(title: String, action: @Composable () -> Unit = {}) {
     }
 }
 
-/** A queued track: its tile, title and games · category; the current one is tinted. */
+/** A queued track: its tile, title and game chips; the current one is tinted. */
 @Composable
 private fun QueueRow(row: QueueRowUi, current: Boolean, onClick: () -> Unit) {
     val accent = MaterialTheme.colorScheme.primary
@@ -155,15 +154,7 @@ private fun QueueRow(row: QueueRowUi, current: Boolean, onClick: () -> Unit) {
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(Modifier.height(4.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                GameChips(row.chips)
-                Text(
-                    " · " + stringResource(row.category.label),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1
-                )
-            }
+            GameChips(row.chips)
         }
     }
 }

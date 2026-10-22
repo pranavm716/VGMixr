@@ -1,7 +1,6 @@
 package io.github.pranavm716.vgmixr.domain.catalog
 
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
-import io.github.pranavm716.vgmixr.domain.model.Category
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -15,7 +14,6 @@ class FamilySummariesTest {
         familyId = familyId,
         games = emptyList(),
         title = id,
-        category = Category.ROUTE,
         order = 0,
         sources = emptyList()
     )

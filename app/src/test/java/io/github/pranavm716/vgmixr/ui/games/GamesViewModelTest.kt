@@ -7,7 +7,6 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.catalog.FamilySummary
 import io.github.pranavm716.vgmixr.domain.catalog.ImportError
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakeCatalogSync
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
@@ -29,7 +28,7 @@ class GamesViewModelTest {
     private val xy = Family("xy", "X / Y", "XY")
 
     private fun track(id: String, familyId: String) =
-        CatalogTrack(id, familyId, emptyList(), id, Category.ROUTE, 0, emptyList())
+        CatalogTrack(id, familyId, emptyList(), id, 0, emptyList())
 
     private val catalog = Catalog(
         games = emptyList(),

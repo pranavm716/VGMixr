@@ -49,13 +49,11 @@ def track(result: BuildResult, track_id: str) -> DraftTrack:
     return next(t for t in result.tracks if t.id == track_id)
 
 
-def test_one_track_per_occurrence_with_id_title_and_guessed_category() -> None:
+def test_one_track_per_occurrence_with_id_and_title() -> None:
     result = build([occ("Pallet Town Theme"), occ("Battle! (Wild Pokémon)")])
     assert ids(result) == ["rby-pallet-town-theme", "rby-battle-wild-pokemon"]
     pallet = track(result, "rby-pallet-town-theme")
-    assert (pallet.family, pallet.title, pallet.category, pallet.order) == (
-        "rby", "Pallet Town Theme", "town", 0
-    )  # fmt: skip
+    assert (pallet.family, pallet.title, pallet.order) == ("rby", "Pallet Town Theme", 0)
     assert pallet.games is None
     assert pallet.sources == []
     assert pallet.durationMs == 60_000
@@ -109,14 +107,12 @@ def test_exclude_true_drops_a_track() -> None:
     assert [(e.id, e.reason) for e in result.excluded] == [("rby-route-1", "override")]
 
 
-def test_title_category_and_games_overrides_keep_the_id() -> None:
+def test_title_and_games_overrides_keep_the_id() -> None:
     overrides = Overrides(
-        tracks={
-            "rby-route-1": TrackOverride(title="Route 1 (Fixed)", category="other", games=["blue"])
-        }
+        tracks={"rby-route-1": TrackOverride(title="Route 1 (Fixed)", games=["blue"])}
     )
     route = track(build([occ("Route 1")], overrides), "rby-route-1")
-    assert (route.title, route.category, route.games) == ("Route 1 (Fixed)", "other", ["blue"])
+    assert (route.title, route.games) == ("Route 1 (Fixed)", ["blue"])
 
 
 def test_listed_games_are_the_games_before_a_games_override() -> None:
@@ -194,25 +190,25 @@ def test_extras_get_defaults_like_generated_tracks() -> None:
     overrides = Overrides(extras=[Extra(family="rby", title="Pikachu's Beach", games=["yellow"])])
     result = build([occ("Route 1"), occ("Arceus", family="pla")], overrides)
     beach = track(result, "rby-pikachus-beach")
-    assert (beach.games, beach.category, beach.order, beach.sources) == (["yellow"], "other", 1, [])
+    assert (beach.games, beach.order, beach.sources) == (["yellow"], 1, [])
     assert beach.durationMs is None
     assert ids(result) == ["rby-route-1", "rby-pikachus-beach", "pla-arceus"]
 
 
-def test_extras_keep_explicit_id_order_category_and_sources() -> None:
+def test_extras_keep_explicit_id_order_and_sources() -> None:
     source = LocalSource(type="local", path="pla/test-tone.wav")
-    extra = Extra(id="pla-test-tone", family="pla", title="Test Tone (Local)", category="other",
-                  order=999, sources=[source])  # fmt: skip
+    extra = Extra(id="pla-test-tone", family="pla", title="Test Tone (Local)", order=999,
+                  sources=[source])  # fmt: skip
     tone = track(build([], Overrides(extras=[extra])), "pla-test-tone")
-    assert (tone.order, tone.category, tone.sources) == (999, "other", [source])
+    assert (tone.order, tone.sources) == (999, [source])
 
 
 def test_extras_can_be_overridden() -> None:
     overrides = Overrides(
-        tracks={"rby-beach": TrackOverride(category="event")},
+        tracks={"rby-beach": TrackOverride(title="Beach (Fixed)")},
         extras=[Extra(family="rby", title="Beach")],
     )
-    assert track(build([], overrides), "rby-beach").category == "event"
+    assert track(build([], overrides), "rby-beach").title == "Beach (Fixed)"
 
 
 def test_extra_colliding_with_a_generated_track_is_an_error() -> None:
@@ -227,14 +223,14 @@ def test_extra_in_an_unknown_family_is_an_error() -> None:
 
 
 def test_override_for_an_unknown_track_is_an_error() -> None:
-    overrides = Overrides(tracks={"rby-rout-1": TrackOverride(category="route")})
+    overrides = Overrides(tracks={"rby-rout-1": TrackOverride(title="Route 1")})
     with pytest.raises(BuildError, match="rby-rout-1"):
         build([occ("Route 1")], overrides)
 
 
 def test_reports_every_error_at_once() -> None:
     overrides = Overrides(
-        tracks={"rby-a": TrackOverride(category="route"), "rby-b": TrackOverride(exclude=True)}
+        tracks={"rby-a": TrackOverride(title="A"), "rby-b": TrackOverride(exclude=True)}
     )
     with pytest.raises(BuildError) as error:
         build([], overrides)
@@ -290,8 +286,7 @@ def test_parts_replace_a_track_with_consecutive_tracks_in_its_place() -> None:
     ]  # fmt: skip
     assert [track(result, i).order for i in ids(result)] == [0, 1, 2, 3]
     spring, summer = track(result, "rby-route-2-spring"), track(result, "rby-route-2-summer")
-    assert (spring.title, spring.games, spring.category) == ("Route 2 (Spring)", ["red", "blue"],
-                                                             "route")  # fmt: skip
+    assert (spring.title, spring.games) == ("Route 2 (Spring)", ["red", "blue"])
     # A part's own length, else an equal share of the whole.
     assert (spring.durationMs, summer.durationMs) == (46_000, 45_000)
     assert spring.origins == ["Album / Disc 1 #Route 2 (Spring/Summer) (part 1 of 2)"]

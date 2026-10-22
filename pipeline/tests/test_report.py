@@ -18,17 +18,17 @@ GAMES = [
 ]
 
 
-def draft(id_: str, games: list[str] | None, category: str = "route") -> DraftTrack:
-    return DraftTrack(id=id_, family="rse", games=games, title=id_.title(), category=category,
+def draft(id_: str, games: list[str] | None) -> DraftTrack:
+    return DraftTrack(id=id_, family="rse", games=games, title=id_.title(),
                       order=0, sources=[], durationMs=None, origins=[])  # fmt: skip
 
 
 RESULT = BuildResult(
     tracks=[
         draft("rse-a", None),
-        draft("rse-b", None, "other"),
+        draft("rse-b", None),
         draft("rse-c", ["emerald"]),
-        draft("rse-d", ["emerald"], "battle"),
+        draft("rse-d", ["emerald"]),
         draft("rse-e", ["ruby"]),
     ],
     excluded=[
@@ -44,7 +44,6 @@ def test_family_report_counts_shared_and_exclusive_tracks() -> None:
     assert "- Tracks: 5 (shared by all games: 2)" in report
     assert "- Exclusive to emerald: 2 (Rse-C, Rse-D)" in report
     assert "- Exclusive to ruby: 1 (Rse-E)" in report
-    assert "- Categories: battle 1, route 3, other 1" in report
     assert "- Excluded jingles: 1 (Pokémon Healed 0:05)" in report
     assert "- Excluded by override: 1 (X)" in report
 
@@ -58,8 +57,8 @@ def test_family_report_warns_about_families_without_tracks() -> None:
 def test_summary_has_one_line_per_family() -> None:
     lines = summary(GAMES, RESULT).splitlines()
     assert lines[1:] == [
-        "rse      5 tracks   2 shared   3 exclusive   1 other   2 excluded",
-        "solo     0 tracks   0 shared   0 exclusive   0 other   0 excluded",
+        "rse      5 tracks   2 shared   3 exclusive   2 excluded",
+        "solo     0 tracks   0 shared   0 exclusive   0 excluded",
     ]
 
 

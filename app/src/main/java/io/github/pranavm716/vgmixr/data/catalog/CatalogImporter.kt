@@ -115,7 +115,6 @@ private fun Track.toEntity() = TrackEntity(
     id = id,
     familyId = familyId,
     title = title,
-    category = category.name,
     order = order,
     retired = false
 )

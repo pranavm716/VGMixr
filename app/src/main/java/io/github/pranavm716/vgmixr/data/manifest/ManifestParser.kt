@@ -2,7 +2,6 @@ package io.github.pranavm716.vgmixr.data.manifest
 
 import io.github.pranavm716.vgmixr.domain.manifest.ManifestError
 import io.github.pranavm716.vgmixr.domain.manifest.ManifestParseResult
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.model.Loop
 import io.github.pranavm716.vgmixr.domain.model.Manifest
@@ -53,7 +52,7 @@ class ManifestParser @Inject constructor() {
     private fun invalid(error: ManifestError) = ManifestParseResult.Invalid(listOf(error))
 
     private companion object {
-        const val SUPPORTED_SCHEMA_VERSION = 1
+        const val SUPPORTED_SCHEMA_VERSION = 2
     }
 }
 
@@ -78,7 +77,6 @@ private fun TrackDto.toDomain() = Track(
     familyId = family,
     games = games,
     title = title,
-    category = Category.fromManifest(category),
     order = order,
     sources = sources.map { it.toDomain() },
     replaces = replaces

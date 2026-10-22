@@ -6,7 +6,6 @@ import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
-import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
@@ -32,7 +31,7 @@ class FamilyViewModelTest {
     private val rse = listOf(ruby, sapphire, emerald)
 
     private fun track(id: String, games: List<Game>, order: Int, familyId: String = "rse") =
-        CatalogTrack(id, familyId, games, "Title $id", Category.ROUTE, order, emptyList())
+        CatalogTrack(id, familyId, games, "Title $id", order, emptyList())
 
     private val catalog = Catalog(
         games = rse + x,
