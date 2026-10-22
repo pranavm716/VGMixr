@@ -63,7 +63,8 @@ class NowPlayingViewModel @Inject constructor(
 
     fun onPlayPause() = playback.togglePlayPause()
 
-    fun onPrevious() = playback.skipToPrevious()
+    /** Restarts the track a few seconds in, else goes back one (the mini player's swipe always does). */
+    fun onPrevious() = playback.restartOrSkipToPrevious()
 
     fun onNext() = playback.skipToNext()
 

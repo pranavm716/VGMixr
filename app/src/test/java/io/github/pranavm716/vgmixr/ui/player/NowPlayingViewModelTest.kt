@@ -109,12 +109,19 @@ class NowPlayingViewModelTest {
         assertEquals(
             listOf(
                 FakePlaybackController.TogglePlayPause,
-                FakePlaybackController.SkipToPrevious,
+                FakePlaybackController.RestartOrSkipToPrevious,
                 FakePlaybackController.SkipToNext,
                 FakePlaybackController.SeekTo(42_000)
             ),
             playback.calls
         )
+    }
+
+    @Test
+    fun `previous restarts a track that has played a while, as the notification's button does`() {
+        viewModel.onPrevious()
+
+        assertEquals(listOf(FakePlaybackController.RestartOrSkipToPrevious), playback.calls)
     }
 
     @Test

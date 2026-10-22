@@ -24,6 +24,12 @@ interface PlaybackController {
     /** Plays the previous queue item (never restarting the current one), also when paused. */
     fun skipToPrevious()
 
+    /**
+     * Restarts the current track once it has played past a few seconds, else plays the previous
+     * queue item, as the notification's previous button does. Also when paused.
+     */
+    fun restartOrSkipToPrevious()
+
     /** Moves within the current track; 0 is its start, also for a slice of an album video. */
     fun seekTo(positionMs: Long)
 

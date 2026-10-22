@@ -86,6 +86,13 @@ class MediaControllerPlaybackController @Inject constructor(@ApplicationContext 
         it.playFromHere()
     }
 
+    override fun restartOrSkipToPrevious() = withController {
+        // Media3's own rule, shared with the notification: restart past
+        // maxSeekToPreviousPosition (3 s by default), else the previous item.
+        it.seekToPrevious()
+        it.playFromHere()
+    }
+
     override fun seekTo(positionMs: Long) = withController { it.seekTo(positionMs) }
 
     override fun jumpTo(index: Int) = withController { it.apply(it.queue().jumpTo(index)) }

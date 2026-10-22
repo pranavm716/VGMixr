@@ -30,6 +30,8 @@ class FakePlaybackController : PlaybackController {
 
     data object SkipToPrevious
 
+    data object RestartOrSkipToPrevious
+
     data class SeekTo(val positionMs: Long)
 
     data class JumpTo(val index: Int)
@@ -52,6 +54,10 @@ class FakePlaybackController : PlaybackController {
 
     override fun skipToPrevious() {
         calls += SkipToPrevious
+    }
+
+    override fun restartOrSkipToPrevious() {
+        calls += RestartOrSkipToPrevious
     }
 
     override fun seekTo(positionMs: Long) {
