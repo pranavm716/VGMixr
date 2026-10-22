@@ -1,12 +1,14 @@
 package io.github.pranavm716.vgmixr.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
@@ -28,6 +32,41 @@ val RowTileSize = 44.dp
 
 /** The gap between that tile and the row's text. */
 val RowTileGap = 14.dp
+
+/**
+ * A track's title over its game chips, placed so the gap between the two splits a [RowTileSize]
+ * tile beside them in half: the title's line is trimmed to its letters, and the block sits 1.5dp
+ * up, as measured on the phone for the mini player. [marquee] scrolls a long title instead of
+ * cutting it short.
+ */
+@Composable
+fun TrackTitleChips(
+    title: String,
+    chips: List<ChipUi>,
+    modifier: Modifier = Modifier,
+    marquee: Boolean = false
+) {
+    Column(modifier.offset(y = (-1.5).dp)) {
+        Text(
+            title,
+            style = MaterialTheme.typography.titleMedium.trimmed(),
+            maxLines = 1,
+            overflow = if (marquee) TextOverflow.Clip else TextOverflow.Ellipsis,
+            modifier = if (marquee) Modifier.basicMarquee(iterations = Int.MAX_VALUE) else Modifier
+        )
+        // The trim takes the room under the title's descenders too; give the chips some back.
+        Spacer(Modifier.height(4.dp))
+        GameChips(chips)
+    }
+}
+
+/** The style with its line trimmed to the letters, so the text centers by its glyphs. */
+private fun TextStyle.trimmed() = copy(
+    lineHeightStyle = LineHeightStyle(
+        alignment = LineHeightStyle.Alignment.Center,
+        trim = LineHeightStyle.Trim.Both
+    )
+)
 
 // The current track's tint: the accent over the background, faint as in Shuttle.
 private const val CURRENT_TINT = 0.12f
@@ -57,16 +96,7 @@ fun TrackTileRow(
         val faint = Modifier.unplayable(unplayable)
         ArtTile(RowTileSize, faint)
         Spacer(Modifier.width(RowTileGap))
-        Column(Modifier.weight(1f).then(faint)) {
-            Text(
-                title,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(Modifier.height(4.dp))
-            GameChips(chips)
-        }
+        TrackTitleChips(title, chips, Modifier.weight(1f).then(faint))
         if (unplayable) {
             Spacer(Modifier.width(12.dp))
             UnplayableIcon()

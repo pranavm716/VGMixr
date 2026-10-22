@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
@@ -141,27 +142,41 @@ fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = h
             }
             .windowInsetsPadding(WindowInsets.systemBars)
             // Below the header, which the sheet draws on top.
-            .padding(top = 66.dp, start = 24.dp, end = 24.dp),
+            .padding(top = 66.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.height(16.dp))
-        ArtTile(Modifier.fillMaxWidth(ART_WIDTH).aspectRatio(1f))
-        Spacer(Modifier.weight(INFO_PUSH))
-        Text(
-            visible.title,
-            style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-            modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE)
-        )
-        Spacer(Modifier.height(12.dp))
-        GameChips(visible.chips)
-        Spacer(Modifier.height(24.dp))
-        SeekRow(viewModel)
-        Spacer(Modifier.height(16.dp))
-        Controls(visible.isPlaying, visible.isLoading, viewModel)
-        Spacer(Modifier.weight(2f - INFO_PUSH))
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+        ArtTile(Modifier.padding(horizontal = ART_MARGIN).fillMaxWidth().aspectRatio(1f))
+        // The title and chips sit halfway between the art and the controls: equal gaps, plus a
+        // nudge for the room the text and the slider leave around what you see.
+        Spacer(Modifier.weight(INFO_GAP))
+        Column(
+            Modifier.offset(y = INFO_NUDGE),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                visible.title,
+                style = MaterialTheme.typography.headlineSmall,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                modifier = Modifier
+                    .padding(horizontal = SIDE_MARGIN)
+                    .basicMarquee(iterations = Int.MAX_VALUE)
+            )
+            Spacer(Modifier.height(12.dp))
+            GameChips(visible.chips)
+        }
+        Spacer(Modifier.weight(INFO_GAP))
+        Column(Modifier.padding(horizontal = SIDE_MARGIN)) {
+            SeekRow(viewModel)
+            Spacer(Modifier.height(16.dp))
+            Controls(visible.isPlaying, visible.isLoading, viewModel)
+        }
+        Spacer(Modifier.weight(BOTTOM_GAP))
+        Row(
+            Modifier.fillMaxWidth().padding(horizontal = SIDE_MARGIN),
+            horizontalArrangement = Arrangement.End
+        ) {
             IconButton(onClick = onOpenQueue) {
                 Icon(
                     painterResource(R.drawable.ic_queue),
@@ -284,8 +299,18 @@ private fun PlaybackProgress.fraction(): Float {
 }
 
 // The art takes most of the width, a little less than Shuttle's; the tint is gone 40% down.
-private const val ART_WIDTH = 0.9f
+// The art's distance from the screen edges: half of the 40dp it had, so it fills more of the width.
+private val ART_MARGIN = 20.dp
 
-// How the free space splits around the info and controls: more above, so they sit lower.
-private const val INFO_PUSH = 1.4f
+// Measured on the phone: with equal gaps, the title's letters sat 11dp closer to the art than the
+// chips to the slider's thumb, since the slider leaves room above its thumb.
+private val INFO_NUDGE = 6.dp
+
+// The margin of everything else.
+private val SIDE_MARGIN = 24.dp
+
+// How the free space splits: equal gaps above and below the title and chips, so they center
+// between the art and the controls, and a smaller one under the controls, so they sit low.
+private const val INFO_GAP = 0.7f
+private const val BOTTOM_GAP = 0.6f
 private const val TINT_FADE_END = 0.4f

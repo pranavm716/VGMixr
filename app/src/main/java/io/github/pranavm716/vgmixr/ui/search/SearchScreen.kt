@@ -228,13 +228,6 @@ private fun NoResults(query: String) {
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
-        Spacer(Modifier.height(8.dp))
-        Text(
-            stringResource(R.string.search_no_results_hint),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
     }
 }
 

@@ -69,6 +69,7 @@ import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.RowTileGap
 import io.github.pranavm716.vgmixr.ui.components.RowTileSize
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
+import io.github.pranavm716.vgmixr.ui.components.TrackTitleChips
 import io.github.pranavm716.vgmixr.ui.components.tintColor
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import kotlin.math.roundToInt
@@ -262,21 +263,8 @@ private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
 }
 
 @Composable
-private fun TrackText(state: MiniTrackUi) {
-    // Measured on the phone: centered by layout, the letters and chips still sat 1.5dp low against
-    // the gaps under the progress line and above the bar's bottom edge.
-    Column(Modifier.offset(y = (-1.5).dp)) {
-        Text(
-            state.title,
-            style = MaterialTheme.typography.titleMedium.trimmed(),
-            maxLines = 1,
-            modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE)
-        )
-        // The trim takes the room under the title's descenders too; give the chips some back.
-        Spacer(Modifier.height(4.dp))
-        GameChips(state.chips)
-    }
-}
+private fun TrackText(state: MiniTrackUi) =
+    TrackTitleChips(state.title, state.chips, marquee = true)
 
 @Composable
 private fun PlayPauseButton(isPlaying: Boolean, isLoading: Boolean, onClick: () -> Unit) {
@@ -338,13 +326,6 @@ private const val GAME_TINT = 0.25f
 
 // Open Sans leaves room above its letters, so a text line sits optically low; trimming the line box
 // to the glyphs centers the title and its second line on the bar.
-private fun TextStyle.trimmed() = copy(
-    lineHeightStyle = LineHeightStyle(
-        alignment = LineHeightStyle.Alignment.Center,
-        trim = LineHeightStyle.Trim.Both
-    )
-)
-
 // A swipe this fast (px/s) counts even if it was short.
 private const val FLING_VELOCITY = 1500f
 
