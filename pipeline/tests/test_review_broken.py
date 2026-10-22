@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 from test_match import RS_LIST, vid
-from test_recheck import REFUSED_INFO, FakeProbe, checks
+from test_recheck import FINE_INFO, REFUSED_INFO, FakeProbe, checks
 from test_review_service import (
     PLAYLIST,
     TRACKS,
@@ -17,7 +17,14 @@ from test_review_service import (
     write_inputs,
 )
 
-from vgmixr_pipeline.catalog.review.service import Review
+from vgmixr_pipeline.broken.recheck import CheckFailed
+from vgmixr_pipeline.catalog.review.service import (
+    BLOCK_COOLDOWN_SECONDS,
+    LIVE_SPACING_SECONDS,
+    Review,
+    ReviewError,
+)
+from vgmixr_pipeline.catalog.youtube import YouTubeBlocked
 
 BUILT_AT = "2026-10-22T03:39:13Z"
 OLDER = "2026-10-21T03:12:40Z"
@@ -223,3 +230,111 @@ def test_a_rebuild_rereads_the_manifest(review: Review, tmp_path: Path) -> None:
     review.rebuild()
 
     assert review.broken()["manifestGeneratedAt"] == "2026-10-23T00:00:00Z"
+
+
+# Re-checks on request
+
+
+def test_an_app_check_asks_youtube_and_caches_the_result(
+    review: Review, probe: FakeProbe, tmp_path: Path
+) -> None:
+    result = review.app_check(f"https://youtu.be/{vid(1)}")
+
+    assert result["check"]["videoId"] == vid(1)
+    assert result["check"]["verdict"] == "refused"
+    assert result["youtube"] == {"mode": "live"}
+    assert probe.calls == [vid(1)]
+    assert checks(tmp_path, probe).cached(vid(1)) is not None
+
+
+def test_app_checks_are_spaced_like_other_live_calls(
+    review: Review, probe: FakeProbe, clock: Clock
+) -> None:
+    probe.answers[vid(3)] = (FINE_INFO, [])
+    review.app_check(vid(1))
+    clock.now += 1
+
+    review.app_check(vid(3))
+
+    assert clock.sleeps == [LIVE_SPACING_SECONDS - 1]
+
+
+def test_an_app_check_needs_a_video_id(review: Review) -> None:
+    with pytest.raises(ReviewError, match="not a YouTube video id"):
+        review.app_check("hello")
+
+
+def test_cached_only_never_asks_youtube_for_an_app_check(
+    tmp_path: Path, clock: Clock, live: LiveVideos, probe: FakeProbe
+) -> None:
+    review = make(tmp_path, clock, live, cached_only=True, app_checks=checks(tmp_path, probe))
+
+    with pytest.raises(ReviewError, match="cached-only"):
+        review.app_check(vid(1))
+    assert probe.calls == []
+
+
+def test_a_bot_check_starts_the_cooldown_and_keeps_the_last_check(
+    review: Review, probe: FakeProbe, clock: Clock
+) -> None:
+    review.app_check(vid(1))
+    probe.answers[vid(1)] = YouTubeBlocked("Sign in to confirm you're not a bot")
+    clock.now += 60
+
+    result = review.app_check(vid(1))
+
+    assert result["check"]["verdict"] == "refused"  # the last one, kept
+    assert "blocking" in result["notice"]
+    assert result["youtube"]["mode"] == "blocked"
+    assert review.app_check(vid(1))["check"]["verdict"] == "refused"
+    assert probe.calls == [vid(1), vid(1)]  # not asked again while blocked
+    clock.now += BLOCK_COOLDOWN_SECONDS
+    probe.answers[vid(1)] = (FINE_INFO, [])
+    assert review.app_check(vid(1))["check"]["verdict"] == "plays"  # asked again after it
+
+
+def test_a_failed_app_check_is_an_error_and_not_cached(
+    review: Review, probe: FakeProbe, tmp_path: Path
+) -> None:
+    probe.answers[vid(3)] = CheckFailed("Unable to download webpage")
+
+    with pytest.raises(ReviewError, match="Couldn't check"):
+        review.app_check(vid(3))
+    assert checks(tmp_path, probe).cached(vid(3)) is None
+
+
+# The track view
+
+
+def test_a_reported_track_shows_its_reports_and_cached_checks(
+    review: Review, probe: FakeProbe, tmp_path: Path
+) -> None:
+    review.app_check(vid(1))
+    pull(tmp_path, mark("rse-littleroot-town", vid(1)), mark("rse-route-101", "zzzzzzzzzzz"))
+
+    detail = review.track("rse-littleroot-town")
+
+    (reported,) = detail["reported"]
+    assert (reported["videoId"], reported["reason"]) == (vid(1), "no-audio")
+    assert reported["check"]["verdict"] == "refused"
+    assert detail["checks"][vid(1)]["verdict"] == "refused"
+    assert vid(3) not in detail["checks"]  # unchecked videos have no entry
+    assert review.track("rse-abandoned-ship")["reported"] == []
+
+
+def test_a_video_reported_on_another_track_shows_on_every_track_using_it(
+    review: Review, tmp_path: Path
+) -> None:
+    pull(tmp_path, mark("rse-old-title", vid(3)))
+
+    assert [r["videoId"] for r in review.track("rse-littleroot-town")["reported"]] == [vid(3)]
+
+
+def test_candidates_show_their_cached_checks(review: Review, probe: FakeProbe) -> None:
+    probe.answers[vid(2)] = (FINE_INFO, [])
+    review.app_check(vid(2))
+
+    detail = review.track("rse-route-101")
+
+    assert detail["candidates"][0]["videoId"] == vid(2)
+    assert detail["checks"][vid(2)]["verdict"] == "plays"

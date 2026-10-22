@@ -28,7 +28,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from vgmixr_pipeline.broken import BrokenMark, read_pulled
-from vgmixr_pipeline.broken.recheck import AppCheck, AppChecks
+from vgmixr_pipeline.broken.recheck import AppCheck, AppChecks, CheckFailed
 from vgmixr_pipeline.catalog import slug
 from vgmixr_pipeline.catalog.build import Draft, DraftTrack
 from vgmixr_pipeline.catalog.config import (
@@ -242,6 +242,18 @@ class Review:
             "query": search_query(facts, self._families[track.family]),
             "renamed": self._override(track_id).title is not None,
             "note": self._override(track_id).note,
+            # The app's reports on this track or on a video it uses, and cached re-checks of its
+            # videos (unchecked ones are left out).
+            "reported": self._reported(track_id),
+            "checks": {
+                video_id: check
+                for video_id in [
+                    *(s.videoId for s in match.streams),
+                    *(s.candidate.video_id for s in match.candidates),
+                    *(s.videoId for s in decision.accept),
+                ]
+                if (check := self._check_json(video_id)) is not None
+            },
         }
 
     def set_streams(self, track_id: str, streams: dict[str, Any]) -> dict[str, Any]:
@@ -548,6 +560,33 @@ class Review:
             "youtube": self._youtube_mode(),
         }
 
+    def app_check(self, text: str) -> dict[str, Any]:
+        """Re-checks a video the way the app sees it, now. While YouTube blocks requests, the
+        last check (if any) is kept and the notice says so; network trouble is an error."""
+        video_id = video_id_from(text)
+        if video_id is None:
+            raise ReviewError([f"{text.strip()!r} is not a YouTube video id or link"])
+        checks = self._app_checks
+        if checks is None or self._live is None:
+            raise ReviewError(["YouTube can't be asked (cached-only): App check needs it"])
+        notice = None
+        if self._is_blocked():
+            check, notice = self._cached_check(video_id), "YouTube is blocking requests"
+        else:
+            try:
+                check = self._spaced(lambda: checks.fresh(video_id))
+            except YouTubeBlocked as e:
+                check, notice = self._cached_check(video_id), f"YouTube is blocking requests ({e})"
+            except CheckFailed as e:
+                raise ReviewError([f"Couldn't check {video_id}: {e}"]) from e
+        if notice:
+            notice += "; showing the last check." if check else "; not checked."
+        return {
+            "check": check.model_dump(mode="json", by_alias=True) if check else None,
+            "youtube": self._youtube_mode(),
+            **({"notice": notice} if notice else {}),
+        }
+
     def _catalog_ids(self) -> dict[str, str]:
         """Catalog ids (the manifest's, the app's) to source keys: from the titles as built, which
         the phone has, and from today's titles, so a rename in this session still resolves."""
@@ -597,6 +636,14 @@ class Review:
             ],  # fmt: skip
         }
 
+    def _reported(self, track_id: str) -> list[dict[str, Any]]:
+        def concerns(report: dict[str, Any]) -> bool:
+            refs = [report["track"], *report["usedBy"]]
+            return any(ref is not None and ref["id"] == track_id for ref in refs)
+
+        keys = ["trackId", "videoId", "reason", "detail", "markedAt", "check"]
+        return [{k: r[k] for k in keys} for r in self.broken()["reports"] if concerns(r)]
+
     def _tracks_using(self, video_id: str) -> list[DraftTrack]:
         """The draft's tracks (not removed) whose sources, as matched today, use the video."""
         return [
@@ -631,20 +678,28 @@ class Review:
 
     def _ask[T](self, call: Callable[[Videos], T]) -> tuple[T, str | None]:
         """Asks the live client when YouTube may be asked, else the cache; a block falls back."""
-        if self._live is None or self._is_blocked():
+        live = self._live
+        if live is None or self._is_blocked():
             return call(self._cached), None
+        try:
+            return self._spaced(lambda: call(live)), None
+        except YouTubeBlocked as e:
+            return call(self._cached), f"YouTube is blocking requests ({e}); using the cache."
+        except Exception as e:  # yt-dlp's errors: unavailable video, network...
+            raise ReviewError([f"YouTube: {e}"]) from e
+
+    def _spaced[T](self, call: Callable[[], T]) -> T:
+        """A live call, spaced from the last one; a bot check starts the cooldown and re-raises."""
         if self._last_live is not None:
             wait = LIVE_SPACING_SECONDS - (self._clock() - self._last_live)
             if wait > 0:
                 self._sleep(wait)
         self._last_live = self._clock()
         try:
-            return call(self._live), None
-        except YouTubeBlocked as e:
+            return call()
+        except YouTubeBlocked:
             self._blocked_until = self._clock() + BLOCK_COOLDOWN_SECONDS
-            return call(self._cached), f"YouTube is blocking requests ({e}); using the cache."
-        except Exception as e:  # yt-dlp's errors: unavailable video, network...
-            raise ReviewError([f"YouTube: {e}"]) from e
+            raise
 
     def _playlist(
         self, text: str, games: Any, first: int | None, last: int | None, note: str | None
