@@ -69,6 +69,17 @@ interface CatalogDao {
 
     @Query("SELECT * FROM sources ORDER BY trackId, position")
     suspend fun allSources(): List<SourceEntity>
+
+    /**
+     * Clears the broken marks of videos no stream source of an active track uses any more. A
+     * subquery, not a list of ids, so it stays clear of SQLite's 999-variable limit on API 26.
+     */
+    @Query(
+        "DELETE FROM broken_streams WHERE videoId NOT IN (" +
+            "SELECT s.videoId FROM sources s JOIN tracks t ON t.id = s.trackId " +
+            "WHERE s.type = 'stream' AND t.retired = 0)"
+    )
+    suspend fun clearUnusedBrokenMarks()
 }
 
 @Dao
