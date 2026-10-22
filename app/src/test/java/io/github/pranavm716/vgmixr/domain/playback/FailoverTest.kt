@@ -42,4 +42,24 @@ class FailoverTest {
             failover(SourceFailure.Everything(ResolveFailure.NETWORK), 0, 2)
         )
     }
+
+    @Test
+    fun `a refused stream is looked up again and retried once`() {
+        assertEquals(
+            FailoverAction.RetrySource,
+            failover(SourceFailure.Refused, sourceIndex = 0, sourceCount = 1, retried = false)
+        )
+    }
+
+    @Test
+    fun `refused again after the retry, the track moves on as for any failed source`() {
+        assertEquals(
+            FailoverAction.TrySource(1),
+            failover(SourceFailure.Refused, sourceIndex = 0, sourceCount = 2, retried = true)
+        )
+        assertEquals(
+            FailoverAction.SkipTrack,
+            failover(SourceFailure.Refused, sourceIndex = 0, sourceCount = 1, retried = true)
+        )
+    }
 }

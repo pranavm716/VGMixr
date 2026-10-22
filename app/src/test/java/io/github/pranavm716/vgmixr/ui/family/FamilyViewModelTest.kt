@@ -9,6 +9,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.model.Category
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
@@ -71,6 +72,16 @@ class FamilyViewModelTest {
     }
 
     @Test
+    fun `the header is tinted with the family's games in manifest order`() = runTest {
+        viewModel("rse").uiState.test {
+            assertEquals(
+                listOf(chip(ruby), chip(sapphire), chip(emerald)),
+                (awaitItem() as FamilyUiState.Loaded).games
+            )
+        }
+    }
+
+    @Test
     fun `tracks are numbered from 1 in family order`() = runTest {
         viewModel("rse").uiState.test {
             val tracks = (awaitItem() as FamilyUiState.Loaded).tracks
@@ -129,7 +140,13 @@ class FamilyViewModelTest {
         viewModel("rse").onTrackClick("rse-b")
 
         assertEquals(
-            listOf(FakePlaybackController.PlayFrom(listOf("rse-a", "rse-b", "rse-c"), 1)),
+            listOf(
+                FakePlaybackController.PlayFrom(
+                    listOf("rse-a", "rse-b", "rse-c"),
+                    1,
+                    QueueContext.Family("rse")
+                )
+            ),
             playback.calls
         )
     }

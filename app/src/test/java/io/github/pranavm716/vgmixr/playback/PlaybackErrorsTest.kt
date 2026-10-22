@@ -46,13 +46,20 @@ class PlaybackErrorsTest {
     }
 
     @Test
-    fun `a bad response or undecodable audio fails this source`() {
+    fun `undecodable audio fails this source`() {
         listOf(
-            PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS,
             PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED,
             PlaybackException.ERROR_CODE_DECODING_FAILED
         ).forEach {
             assertEquals(SourceFailure.ThisSource, error(IOException(), it).sourceFailure())
         }
+    }
+
+    @Test
+    fun `a stream the server refuses (an HTTP error such as 403) counts as refused`() {
+        assertEquals(
+            SourceFailure.Refused,
+            error(IOException(), PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS).sourceFailure()
+        )
     }
 }

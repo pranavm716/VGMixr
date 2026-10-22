@@ -32,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.catalog.FamilySummary
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
+import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -83,13 +84,7 @@ private fun FamilyRow(family: FamilySummary, onClick: () -> Unit) {
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // A blank tile until families get covers.
-        Box(
-            Modifier
-                .size(44.dp)
-                .clip(RoundedCornerShape(6.dp))
-                .background(ArtPlaceholder)
-        )
+        ArtTile(44.dp)
         Spacer(Modifier.width(14.dp))
         Column {
             Text(

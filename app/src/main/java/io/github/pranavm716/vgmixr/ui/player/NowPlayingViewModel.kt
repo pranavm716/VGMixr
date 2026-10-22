@@ -1,0 +1,107 @@
+package io.github.pranavm716.vgmixr.ui.player
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.pranavm716.vgmixr.domain.catalog.Catalog
+import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.model.Category
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import javax.inject.Inject
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+
+sealed interface NowPlayingUiState {
+    data object Hidden : NowPlayingUiState
+
+    /** [chips] are all of the track's games, also when it plays in every game of its family. */
+    data class Visible(
+        val title: String,
+        val chips: List<ChipUi>,
+        val category: Category,
+        val playingFrom: PlayingFromUi,
+        val isPlaying: Boolean,
+        val isLoading: Boolean
+    ) : NowPlayingUiState
+}
+
+/** Where the current track plays from, for the header's "Playing from". */
+sealed interface PlayingFromUi {
+    /** Tapped in a family's list; the header opens it. */
+    data class Family(val familyId: String, val name: String) : PlayingFromUi
+
+    /** Added with swipe to queue. */
+    data object Queue : PlayingFromUi
+}
+
+@HiltViewModel
+class NowPlayingViewModel @Inject constructor(
+    repository: CatalogRepository,
+    private val playback: PlaybackController
+) : ViewModel() {
+    val uiState: StateFlow<NowPlayingUiState> =
+        combine(repository.catalog, playback.state) { catalog, state -> catalog.nowPlaying(state) }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                NowPlayingUiState.Hidden
+            )
+
+    /** The seek bar's position and length, kept apart so its ticks redraw only the seek bar. */
+    val progress: StateFlow<PlaybackProgress> =
+        playback.progress.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            PlaybackProgress(positionMs = 0, durationMs = null)
+        )
+
+    fun onPlayPause() = playback.togglePlayPause()
+
+    /** Restarts the track a few seconds in, else goes back one (the mini player's swipe always does). */
+    fun onPrevious() = playback.restartOrSkipToPrevious()
+
+    fun onNext() = playback.skipToNext()
+
+    fun onSeek(positionMs: Long) = playback.seekTo(positionMs)
+}
+
+private fun Catalog.nowPlaying(state: PlaybackState): NowPlayingUiState {
+    val track = tracks.firstOrNull { it.id == state.trackId } ?: return NowPlayingUiState.Hidden
+    val context = state.queue.entries.getOrNull(state.queue.current)?.context
+        ?: QueueContext.Family(track.familyId)
+    val playingFrom = when (context) {
+        is QueueContext.Family -> PlayingFromUi.Family(
+            context.familyId,
+            families.firstOrNull { it.id == context.familyId }?.name.orEmpty()
+        )
+
+        QueueContext.Queue -> PlayingFromUi.Queue
+    }
+    return NowPlayingUiState.Visible(
+        title = track.title,
+        chips = track.games.map { ChipUi(it.shortName, it.color) },
+        category = track.category,
+        playingFrom = playingFrom,
+        isPlaying = state.isPlaying,
+        isLoading = state.isLoading
+    )
+}
+
+/** A time as `m:ss`, or `h:mm:ss` from an hour on. */
+fun formatTime(ms: Long): String {
+    val total = ms.coerceAtLeast(0) / 1000
+    val hours = total / 3600
+    val minutes = total / 60 % 60
+    val seconds = total % 60
+    return if (hours > 0) {
+        "%d:%02d:%02d".format(hours, minutes, seconds)
+    } else {
+        "%d:%02d".format(minutes, seconds)
+    }
+}

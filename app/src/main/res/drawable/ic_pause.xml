@@ -1,0 +1,10 @@
+<!-- Pause with Shuttle's proportions: skinnier bars, further apart than Material's. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+  <path
+      android:fillColor="@android:color/white"
+      android:pathData="M580,760L580,200L700,200L700,760L580,760ZM260,760L260,200L380,200L380,760L260,760Z"/>
+</vector>

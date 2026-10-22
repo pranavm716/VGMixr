@@ -11,6 +11,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.TrackFilter
 import io.github.pranavm716.vgmixr.domain.catalog.filter
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
@@ -31,10 +32,14 @@ sealed interface FamilyUiState {
     /** The family isn't in the catalog (e.g. it was retired). */
     data object NotFound : FamilyUiState
 
-    /** [playing] is the current track when it is in this family. */
+    /**
+     * [games] are the family's games, whose colors tint the header. [playing] is the current track
+     * when it is in this family.
+     */
     data class Loaded(
         val name: String,
         val trackCount: Int,
+        val games: List<ChipUi>,
         val tracks: List<TrackRowUi>,
         val playing: PlayingRowUi? = null
     ) : FamilyUiState
@@ -69,7 +74,7 @@ class FamilyViewModel @Inject constructor(
         viewModelScope.launch {
             val ids = repository.catalog.first().familyTrackIds(familyId)
             val index = ids.indexOf(trackId)
-            if (index >= 0) playback.playFrom(ids, index)
+            if (index >= 0) playback.playFrom(ids, index, QueueContext.Family(familyId))
         }
     }
 
@@ -96,7 +101,8 @@ private fun Catalog.familyTrackIds(familyId: String): List<String> =
 
 private fun Catalog.familyState(familyId: String): FamilyUiState {
     val family = families.firstOrNull { it.id == familyId } ?: return FamilyUiState.NotFound
-    val familyGames = games.filter { it.familyId == familyId }.map { it.id }.toSet()
+    val gamesInFamily = games.filter { it.familyId == familyId }
+    val familyGames = gamesInFamily.map { it.id }.toSet()
     val tracks = filter(TrackFilter(family = familyId)).mapIndexed { index, track ->
         val playsEverywhere = track.games.map { it.id }.toSet() == familyGames
         TrackRowUi(
@@ -110,5 +116,10 @@ private fun Catalog.familyState(familyId: String): FamilyUiState {
             }
         )
     }
-    return FamilyUiState.Loaded(family.name, tracks.size, tracks)
+    return FamilyUiState.Loaded(
+        family.name,
+        tracks.size,
+        gamesInFamily.map { ChipUi(it.shortName, it.color) },
+        tracks
+    )
 }

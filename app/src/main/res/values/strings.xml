@@ -8,6 +8,27 @@
     <string name="playback_stopped_extractor">Playback stopped: YouTube changed and the stream extractor needs an update</string>
 
     <string name="add_to_queue">Add to queue</string>
+    <string name="remove_from_queue">Remove from queue</string>
+    <string name="clear_queue">Clear queue</string>
+    <string name="next_in_queue">Next in queue</string>
+    <string name="next_from">Next from %1$s</string>
+    <string name="back">Back</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="now_playing">Now playing</string>
+    <string name="playing_from">Playing from</string>
+    <string name="playing_from_queue">Queue</string>
+    <string name="close_now_playing">Close now playing</string>
+    <string name="queue">Queue</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+
+    <string name="category_battle">Battle</string>
+    <string name="category_route">Route</string>
+    <string name="category_town">Town</string>
+    <string name="category_dungeon">Dungeon</string>
+    <string name="category_event">Event</string>
+    <string name="category_other">Other</string>
 
     <plurals name="added_to_queue">
         <item quantity="one">Added to queue</item>
