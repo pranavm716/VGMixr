@@ -165,7 +165,7 @@ Pipeline convention: local sources first, then streams by descending confidence.
 
 ### Playback order
 
-The player tries, in order: `local` sources (a missing file is silently skipped), then a cached download of a `stream` source, then `stream` sources in manifest order. The cache is runtime state in Room, never a manifest source. A source is marked broken only when it exists but fails to play.
+The player tries, in order: `local` sources (a missing file is silently skipped), then a cached download of a `stream` source, then `stream` sources in manifest order. The cache is runtime state in Room, never a manifest source. A stream source is marked broken only when its video exists but is dead for the app (no playable audio, or unavailable), and is skipped from then on; what marks, what doesn't and what clears a mark is in [`broken.md`](broken.md).
 
 ## Loop
 
@@ -187,7 +187,7 @@ All three fields are required when `loop` is present. Unused until v2 looping, b
 4. **Never delete user data.** Favorites and PlayHistory are untouched by an import, except for `replaces` migration.
 5. **Missing tracks and games are retired, not deleted.** A track or game absent from a new manifest is marked retired: hidden from browse, still shown (as unavailable) in favorites and history. Games are kept so retired tracks can still render their chips. A retired track or game that reappears in a later manifest is un-retired and updated.
 6. **`replaces` migrates ids.** Favorites and history pointing at an id listed in a track's `replaces` are re-pointed to the new track. If both the old and new ids are favorited, they merge into one favorite. History rows are all re-pointed.
-7. **Runtime source state** is keyed by source identity, not by array index, so reordering doesn't lose it. The broken flag for a stream is keyed by `videoId` (a dead video is dead for every slice); its cached download is keyed by `(videoId, startMs, endMs)`. Local state is keyed by `path`.
+7. **Runtime source state** is keyed by source identity, not by array index, so reordering doesn't lose it. The broken flag for a stream is keyed by `videoId` (a dead video is dead for every slice); its cached download is keyed by `(videoId, startMs, endMs)`. Local state is keyed by `path`. After an import, broken marks of videos no stream source of an active track uses any more are cleared, in the same transaction.
 
 ## Validation errors (each needs a test)
 
