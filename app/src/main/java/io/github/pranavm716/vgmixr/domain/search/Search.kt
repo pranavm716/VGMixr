@@ -7,20 +7,25 @@ import java.time.Instant
 /**
  * The tracks matching [query], best first. Every query word must match a word of the track's
  * title, family, games, generation or region (see [matchWord] and [SEARCH_ALIASES]); a title word
- * counts double. Ties go to the track whose title is more fully matched, then to Games tab order.
+ * counts double. Tracks with the same text score are ordered by [weight] (history), then by how
+ * much of the title matched, then in Games tab order.
  */
 fun search(
     query: String,
     index: SearchIndex,
     history: List<Play>,
-    now: Instant
+    now: Instant,
+    weight: HistoryWeight = NoHistoryWeight
 ): List<CatalogTrack> {
     val words = searchWords(query)
     if (words.isEmpty()) return emptyList()
     return index.entries
-        .mapNotNull { entry -> score(words, entry) }
+        .mapNotNull { entry ->
+            score(words, entry) { weight.weight(entry.track.id, history, now) }
+        }
         .sortedWith(
             compareByDescending<Scored> { it.points }
+                .thenByDescending { it.history }
                 .thenByDescending { it.coverage }
                 .thenBy { it.entry.familyPosition }
                 .thenBy { it.entry.track.order }
@@ -29,12 +34,29 @@ fun search(
         .map { it.entry.track }
 }
 
-private class Scored(val entry: IndexedTrack, val points: Int, val coverage: Double)
+/**
+ * How much a track's play [history] lifts it at [now]. It only orders tracks whose text matches
+ * score the same, so it never lifts a weaker match over a stronger one. Step 12b fills it in.
+ */
+fun interface HistoryWeight {
+    fun weight(trackId: String, history: List<Play>, now: Instant): Double
+}
+
+/** No history effect yet. */
+val NoHistoryWeight = HistoryWeight { _, _, _ -> 0.0 }
+
+private class Scored(
+    val entry: IndexedTrack,
+    val points: Int,
+    val history: Double,
+    val coverage: Double
+)
 
 /** A query word's best match: its points and the title words it used. */
 private class WordScore(val points: Int, val titleWords: Set<Int>)
 
-private fun score(words: List<String>, entry: IndexedTrack): Scored? {
+/** [entry]'s score, or null unless every word matches; [history] is asked only for a match. */
+private fun score(words: List<String>, entry: IndexedTrack, history: () -> Double): Scored? {
     var points = 0
     val matchedTitleWords = mutableSetOf<Int>()
     for (word in words) {
@@ -50,7 +72,7 @@ private fun score(words: List<String>, entry: IndexedTrack): Scored? {
     } else {
         matchedTitleWords.size.toDouble() / entry.title.size
     }
-    return Scored(entry, points, coverage)
+    return Scored(entry, points, history(), coverage)
 }
 
 /** A title word scores twice a family or game word of the same kind of match. */
