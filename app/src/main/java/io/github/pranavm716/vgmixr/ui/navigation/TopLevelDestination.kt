@@ -9,7 +9,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object GamesRoute
 
-@Serializable data class FamilyRoute(val familyId: String)
+/**
+ * A family's tracks. [fromNowPlaying] opens it from now playing's "Playing from": the page shows at
+ * once under the collapsing sheet, without sliding in.
+ */
+@Serializable data class FamilyRoute(val familyId: String, val fromNowPlaying: Boolean = false)
 
 /** The Search tab. */
 @Serializable data object SearchRoute
