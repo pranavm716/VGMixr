@@ -9,6 +9,8 @@ import dagger.hilt.components.SingletonComponent
 import io.github.pranavm716.vgmixr.data.diagnostics.FileDiagnostics
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.NewPipeStreamResolver
+import io.github.pranavm716.vgmixr.data.stream.RoomBrokenSources
+import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import io.github.pranavm716.vgmixr.domain.playback.StreamResolver
@@ -37,6 +39,9 @@ object PlaybackModule {
 
     @Provides
     fun provideStreamResolver(resolver: CachingStreamResolver): StreamResolver = resolver
+
+    @Provides
+    fun provideBrokenSources(sources: RoomBrokenSources): BrokenSources = sources
 
     @Provides
     fun providePlaybackController(

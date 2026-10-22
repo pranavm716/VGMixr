@@ -3,8 +3,10 @@ package io.github.pranavm716.vgmixr.data.db
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CatalogDao {
@@ -103,4 +105,22 @@ interface ImportStateDao {
 
     @Upsert
     suspend fun upsert(state: ImportStateEntity)
+}
+
+@Dao
+abstract class BrokenStreamDao {
+    /** Inserts [mark] unless its video is already marked; true if it was new. */
+    suspend fun insert(mark: BrokenStreamEntity): Boolean = insertOrIgnore(mark) != -1L
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract suspend fun insertOrIgnore(mark: BrokenStreamEntity): Long
+
+    @Query("DELETE FROM broken_streams WHERE videoId = :videoId")
+    abstract suspend fun delete(videoId: String)
+
+    @Query("SELECT * FROM broken_streams ORDER BY markedAt, videoId")
+    abstract suspend fun all(): List<BrokenStreamEntity>
+
+    @Query("SELECT * FROM broken_streams ORDER BY markedAt, videoId")
+    abstract fun observeAll(): Flow<List<BrokenStreamEntity>>
 }

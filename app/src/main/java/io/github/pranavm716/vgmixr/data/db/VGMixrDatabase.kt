@@ -17,11 +17,16 @@ import java.time.Instant
         SourceEntity::class,
         FavoriteEntity::class,
         PlayHistoryEntity::class,
-        ImportStateEntity::class
+        ImportStateEntity::class,
+        BrokenStreamEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 1, to = 2, spec = DropTrackCategory::class)]
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2, spec = DropTrackCategory::class),
+        // 2 to 3: broken stream marks (roadmap step 10), a new table.
+        AutoMigration(from = 2, to = 3)
+    ]
 )
 @TypeConverters(Converters::class)
 abstract class VGMixrDatabase : RoomDatabase() {
@@ -30,6 +35,8 @@ abstract class VGMixrDatabase : RoomDatabase() {
     abstract fun userDataDao(): UserDataDao
 
     abstract fun importStateDao(): ImportStateDao
+
+    abstract fun brokenStreamDao(): BrokenStreamDao
 }
 
 /** 1 to 2: track categories are gone from the manifest (roadmap step 9b). */

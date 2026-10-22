@@ -84,6 +84,67 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `2 to 3 adds an empty broken_streams table and keeps every row`() {
+        helper.createDatabase(2).use { db ->
+            db.execSQL(
+                "INSERT INTO games (id, name, shortName, color, generation, platform, familyId, " +
+                    "position, retired) VALUES ('ruby', 'Ruby', 'R', '#C8372D', 3, 'GBA', 'rse', 0, 0)"
+            )
+            db.execSQL(
+                "INSERT INTO tracks (id, familyId, title, sortOrder, retired) " +
+                    "VALUES ('rse-drought', 'rse', 'Drought', 90, 1)"
+            )
+            db.execSQL("INSERT INTO track_games (trackId, gameId) VALUES ('rse-drought', 'ruby')")
+            db.execSQL(
+                "INSERT INTO sources (trackId, position, type, videoId, startMs, endMs) " +
+                    "VALUES ('rse-drought', 0, 'stream', 'YYYYYYYYYYY', 1000, 2000)"
+            )
+            db.execSQL("INSERT INTO favorites (trackId, addedAt) VALUES ('rse-drought', 111)")
+            db.execSQL("INSERT INTO play_history (trackId, playedAt) VALUES ('rse-drought', 222)")
+            db.execSQL(
+                "INSERT INTO import_state (id, generatedAt, importedAt) " +
+                    "VALUES (0, '2026-10-14T08:00:00Z', 333)"
+            )
+        }
+
+        helper.runMigrationsAndValidate(3).use { db ->
+            assertEquals(
+                listOf("videoId", "trackId", "reason", "detail", "markedAt", "catalogGeneratedAt"),
+                db.rows("PRAGMA table_info(broken_streams)").map { it[1] }
+            )
+            assertEquals(emptyList<List<String?>>(), db.rows("SELECT * FROM broken_streams"))
+            assertEquals(
+                listOf(listOf("rse-drought", "rse", "Drought", "90", "1")),
+                db.rows("SELECT id, familyId, title, sortOrder, retired FROM tracks")
+            )
+            assertEquals(
+                listOf(listOf("ruby", "Ruby", "R", "#C8372D", "3", "GBA", "rse", "0", "0")),
+                db.rows("SELECT * FROM games")
+            )
+            assertEquals(
+                listOf(listOf("rse-drought", "ruby")),
+                db.rows("SELECT trackId, gameId FROM track_games")
+            )
+            assertEquals(
+                listOf(listOf("rse-drought", "0", "stream", "YYYYYYYYYYY", "1000", "2000")),
+                db.rows("SELECT trackId, position, type, videoId, startMs, endMs FROM sources")
+            )
+            assertEquals(
+                listOf(listOf("rse-drought", "111")),
+                db.rows("SELECT trackId, addedAt FROM favorites")
+            )
+            assertEquals(
+                listOf(listOf("rse-drought", "222")),
+                db.rows("SELECT trackId, playedAt FROM play_history")
+            )
+            assertEquals(
+                listOf(listOf("0", "2026-10-14T08:00:00Z", "333")),
+                db.rows("SELECT id, generatedAt, importedAt FROM import_state")
+            )
+        }
+    }
+
     private fun SQLiteConnection.rows(sql: String): List<List<String?>> = prepare(sql).use { row ->
         buildList {
             while (row.step()) {

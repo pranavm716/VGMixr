@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.github.pranavm716.vgmixr.data.db.BrokenStreamDao
 import io.github.pranavm716.vgmixr.data.db.CatalogDao
 import io.github.pranavm716.vgmixr.data.db.ImportStateDao
 import io.github.pranavm716.vgmixr.data.db.UserDataDao
@@ -29,4 +30,7 @@ object DatabaseModule {
 
     @Provides
     fun provideImportStateDao(db: VGMixrDatabase): ImportStateDao = db.importStateDao()
+
+    @Provides
+    fun provideBrokenStreamDao(db: VGMixrDatabase): BrokenStreamDao = db.brokenStreamDao()
 }

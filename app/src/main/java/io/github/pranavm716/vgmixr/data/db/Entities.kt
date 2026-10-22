@@ -100,3 +100,18 @@ data class ImportStateEntity(
     val generatedAt: String,
     val importedAt: Instant
 )
+
+/**
+ * A stream video found broken (no playable audio, or unavailable): runtime state keyed by video id,
+ * since a dead video is dead for every slice. [reason] is a `BrokenReason` key, [markedAt] when
+ * it first broke, [catalogGeneratedAt] the catalog then (null before the first import).
+ */
+@Entity(tableName = "broken_streams")
+data class BrokenStreamEntity(
+    @PrimaryKey val videoId: String,
+    val trackId: String,
+    val reason: String,
+    val detail: String?,
+    val markedAt: Instant,
+    val catalogGeneratedAt: String?
+)

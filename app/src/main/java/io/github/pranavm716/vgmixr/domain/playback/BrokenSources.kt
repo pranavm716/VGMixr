@@ -37,8 +37,16 @@ interface BrokenSources {
     /** Every mark, by video id. */
     val marks: Flow<Map<String, BrokenMark>>
 
-    /** Marks [videoId] broken. A video already marked keeps its first mark. */
-    suspend fun mark(videoId: String, trackId: String, reason: BrokenReason, detail: String?)
+    /**
+     * Marks [videoId] broken; true if it wasn't marked yet. A video already marked keeps its first
+     * mark.
+     */
+    suspend fun mark(
+        videoId: String,
+        trackId: String,
+        reason: BrokenReason,
+        detail: String?
+    ): Boolean
 
     /** Removes [videoId]'s mark, so the next play tries it again. */
     suspend fun clear(videoId: String)
