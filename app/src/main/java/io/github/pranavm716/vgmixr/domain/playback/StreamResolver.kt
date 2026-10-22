@@ -11,6 +11,12 @@ sealed interface StreamResolution {
     /** This video can't play (removed, private, restricted): try the track's next source. */
     data class Unavailable(val reason: String) : StreamResolution
 
+    /**
+     * The video resolves but has no audio stream the player can use, which is how YouTube refusing
+     * it to the extractor's client shows: try the track's next source.
+     */
+    data object NoAudio : StreamResolution
+
     /** Nothing can resolve right now, whatever the video: stop and show an error. */
     data class Failed(val failure: ResolveFailure) : StreamResolution
 }

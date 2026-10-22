@@ -81,6 +81,7 @@ class CatalogImporter @Inject constructor(
         for (track in manifest.tracks) {
             track.replaces.forEach { oldId -> migrateUserData(oldId, track.id) }
         }
+        catalogDao.clearUnusedBrokenMarks()
     }
 
     /**

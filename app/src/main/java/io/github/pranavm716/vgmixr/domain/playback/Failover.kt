@@ -20,6 +20,12 @@ sealed interface SourceFailure {
      */
     data object Refused : SourceFailure
 
+    /**
+     * The source's video is dead (unavailable, or no audio the app can play): mark it broken and
+     * move on.
+     */
+    data class Broken(val reason: BrokenReason, val detail: String?) : SourceFailure
+
     /** Nothing can play right now (no network, bot check, extractor broken). */
     data class Everything(val failure: ResolveFailure) : SourceFailure
 }
@@ -49,10 +55,35 @@ fun failover(
 
     SourceFailure.Refused if !retried -> FailoverAction.RetrySource
 
-    SourceFailure.ThisSource, SourceFailure.Refused ->
+    SourceFailure.ThisSource, SourceFailure.Refused, is SourceFailure.Broken ->
         if (sourceIndex + 1 < sourceCount) {
             FailoverAction.TrySource(sourceIndex + 1)
         } else {
             FailoverAction.SkipTrack
         }
 }
+
+/**
+ * [failover] for a track playing source [sourceIndex] of [streams], where the videos in [broken]
+ * are marked: moving on skips the marked sources.
+ */
+fun failover(
+    failure: SourceFailure,
+    sourceIndex: Int,
+    streams: List<Source.Stream>,
+    broken: Set<String>,
+    retried: Boolean = false
+): FailoverAction = when (val action = failover(failure, sourceIndex, streams.size, retried)) {
+    is FailoverAction.TrySource ->
+        nextSource(streams, action.index, broken)?.let(FailoverAction::TrySource)
+            ?: FailoverAction.SkipTrack
+
+    else -> action
+}
+
+/**
+ * The first of [streams], from [from] on, whose video isn't in [broken]; null when none is left.
+ * Indexes stay those of the full list, so a mark made mid-track never shifts them.
+ */
+fun nextSource(streams: List<Source.Stream>, from: Int, broken: Set<String>): Int? =
+    (from until streams.size).firstOrNull { streams[it].videoId !in broken }

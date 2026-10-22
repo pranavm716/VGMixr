@@ -9,6 +9,7 @@ fun PlaybackException.sourceFailure(): SourceFailure {
     generateSequence(cause) { it.cause }.forEach {
         when (it) {
             is ResolveFailedException -> return SourceFailure.Everything(it.failure)
+            is BrokenStreamException -> return SourceFailure.Broken(it.reason, it.detail)
             is SourceUnavailableException -> return SourceFailure.ThisSource
         }
     }

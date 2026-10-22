@@ -121,3 +121,7 @@ One file per condition, named `<field>-<variant>.json`, where `<field>` is the p
 | `tracks.replaces-live.json` | `track-replaces-invalid` | Track replaces another track in the manifest |
 | `tracks.replaces-twice.json` | `track-replaces-invalid` | Two tracks replace `rse-old-route` |
 <!-- End of generated table. -->
+
+## `broken.json`
+
+Not a manifest: an example of the broken-marks file the app writes and `python -m vgmixr_pipeline.broken` pulls (format in [`../broken.md`](../broken.md)). The app's writer must produce exactly this file from its two marks, and the pipeline's parser must read it, so the two sides agree on the format. It covers both reasons, `detail`, and a mark without `catalogGeneratedAt` (marked before the first import).

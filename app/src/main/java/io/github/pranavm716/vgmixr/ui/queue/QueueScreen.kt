@@ -38,6 +38,8 @@ import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueueOrRemove
 import io.github.pranavm716.vgmixr.ui.components.SwipeToRemove
+import io.github.pranavm716.vgmixr.ui.components.UnplayableIcon
+import io.github.pranavm716.vgmixr.ui.components.unplayable
 import kotlinx.coroutines.launch
 
 /**
@@ -98,11 +100,18 @@ fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()
                     )
                 }
                 items(state.nextFrom, key = { "nextfrom-${it.index}-${it.trackId}" }) { row ->
-                    SwipeToQueueOrRemove(
-                        onQueue = { viewModel.onQueue(row.index) },
-                        onRemove = { viewModel.onRemove(row.index) }
-                    ) {
-                        QueueRow(row, current = false, onClick = { jump(row.index) })
+                    // A greyed track can still be removed, but not queued.
+                    if (row.unplayable) {
+                        SwipeToRemove(onRemove = { viewModel.onRemove(row.index) }) {
+                            QueueRow(row, current = false, onClick = { jump(row.index) })
+                        }
+                    } else {
+                        SwipeToQueueOrRemove(
+                            onQueue = { viewModel.onQueue(row.index) },
+                            onRemove = { viewModel.onRemove(row.index) }
+                        ) {
+                            QueueRow(row, current = false, onClick = { jump(row.index) })
+                        }
                     }
                 }
             }
@@ -131,7 +140,10 @@ private fun SectionHeader(title: String, action: @Composable () -> Unit = {}) {
     }
 }
 
-/** A queued track: its tile, title and game chips; the current one is tinted. */
+/**
+ * A queued track: its tile, title and game chips; the current one is tinted, and one whose sources
+ * are all broken is greyed.
+ */
 @Composable
 private fun QueueRow(row: QueueRowUi, current: Boolean, onClick: () -> Unit) {
     val accent = MaterialTheme.colorScheme.primary
@@ -144,9 +156,10 @@ private fun QueueRow(row: QueueRowUi, current: Boolean, onClick: () -> Unit) {
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ArtTile(44.dp)
+        val faint = Modifier.unplayable(row.unplayable)
+        ArtTile(44.dp, faint)
         Spacer(Modifier.width(14.dp))
-        Column(Modifier.weight(1f)) {
+        Column(Modifier.weight(1f).then(faint)) {
             Text(
                 row.title,
                 style = MaterialTheme.typography.titleMedium,
@@ -155,6 +168,10 @@ private fun QueueRow(row: QueueRowUi, current: Boolean, onClick: () -> Unit) {
             )
             Spacer(Modifier.height(4.dp))
             GameChips(row.chips)
+        }
+        if (row.unplayable) {
+            Spacer(Modifier.width(12.dp))
+            UnplayableIcon()
         }
     }
 }

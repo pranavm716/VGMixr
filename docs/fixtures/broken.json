@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "marks": [
+    {
+      "trackId": "oras-battle-elite-four",
+      "videoId": "7DbGoUJkNfU",
+      "reason": "no-audio",
+      "detail": "no playable audio stream",
+      "markedAt": "2026-10-21T07:23:44.638Z",
+      "catalogGeneratedAt": "2026-10-21T03:12:40Z"
+    },
+    {
+      "trackId": "rse-route-101",
+      "videoId": "WMj9b4vYTXU",
+      "reason": "unavailable",
+      "detail": "This video is private",
+      "markedAt": "2026-10-22T18:05:00Z"
+    }
+  ]
+}

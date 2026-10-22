@@ -42,8 +42,17 @@ interface PlaybackController {
     /** Empties "Next in queue". */
     fun clearQueue()
 
+    /**
+     * Try again on a track whose sources are all broken: looks its videos up again and un-greys it
+     * only if one works now.
+     */
+    suspend fun tryAgain(trackId: String): TryAgainResult
+
     /** The current track's position, a few times a second while collected. */
     val progress: Flow<PlaybackProgress>
+
+    /** Things the user hears about once, as they happen, such as a source failing. */
+    val events: Flow<PlaybackEvent>
 }
 
 /** [durationMs] is null until known; a slice of an album video reports the slice's length. */

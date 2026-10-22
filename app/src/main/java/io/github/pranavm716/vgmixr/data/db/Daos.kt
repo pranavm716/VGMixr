@@ -3,8 +3,10 @@ package io.github.pranavm716.vgmixr.data.db
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CatalogDao {
@@ -67,6 +69,17 @@ interface CatalogDao {
 
     @Query("SELECT * FROM sources ORDER BY trackId, position")
     suspend fun allSources(): List<SourceEntity>
+
+    /**
+     * Clears the broken marks of videos no stream source of an active track uses any more. A
+     * subquery, not a list of ids, so it stays clear of SQLite's 999-variable limit on API 26.
+     */
+    @Query(
+        "DELETE FROM broken_streams WHERE videoId NOT IN (" +
+            "SELECT s.videoId FROM sources s JOIN tracks t ON t.id = s.trackId " +
+            "WHERE s.type = 'stream' AND t.retired = 0)"
+    )
+    suspend fun clearUnusedBrokenMarks()
 }
 
 @Dao
@@ -103,4 +116,22 @@ interface ImportStateDao {
 
     @Upsert
     suspend fun upsert(state: ImportStateEntity)
+}
+
+@Dao
+abstract class BrokenStreamDao {
+    /** Inserts [mark] unless its video is already marked; true if it was new. */
+    suspend fun insert(mark: BrokenStreamEntity): Boolean = insertOrIgnore(mark) != -1L
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract suspend fun insertOrIgnore(mark: BrokenStreamEntity): Long
+
+    @Query("DELETE FROM broken_streams WHERE videoId = :videoId")
+    abstract suspend fun delete(videoId: String)
+
+    @Query("SELECT * FROM broken_streams ORDER BY markedAt, videoId")
+    abstract suspend fun all(): List<BrokenStreamEntity>
+
+    @Query("SELECT * FROM broken_streams ORDER BY markedAt, videoId")
+    abstract fun observeAll(): Flow<List<BrokenStreamEntity>>
 }

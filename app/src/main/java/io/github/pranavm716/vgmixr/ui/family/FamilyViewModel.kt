@@ -48,8 +48,17 @@ sealed interface FamilyUiState {
 /** The current track's row: [index] in the list, and whether it still waits for its stream. */
 data class PlayingRowUi(val trackId: String, val index: Int, val loading: Boolean)
 
-/** [number] is the track's position in the list. [chips] is empty for a track in all games. */
-data class TrackRowUi(val id: String, val number: Int, val title: String, val chips: List<ChipUi>)
+/**
+ * [number] is the track's position in the list. [chips] is empty for a track in all games.
+ * [unplayable] greys a track whose sources are all broken.
+ */
+data class TrackRowUi(
+    val id: String,
+    val number: Int,
+    val title: String,
+    val chips: List<ChipUi>,
+    val unplayable: Boolean = false
+)
 
 @HiltViewModel
 class FamilyViewModel @Inject constructor(
@@ -69,10 +78,20 @@ class FamilyViewModel @Inject constructor(
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FamilyUiState.Loading)
 
-    /** Plays the family's list from the tapped track, as shown. */
+    /**
+     * Plays the family's list from the tapped track, as shown. A track whose sources are all
+     * broken says so instead, on every tap.
+     */
     fun onTrackClick(trackId: String) {
         viewModelScope.launch {
-            val ids = repository.catalog.first().familyTrackIds(familyId)
+            val catalog = repository.catalog.first()
+            val track = catalog.tracks.firstOrNull { it.id == trackId }
+            val unplayable = track?.unplayable
+            if (unplayable != null) {
+                messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
+                return@launch
+            }
+            val ids = catalog.familyTrackIds(familyId)
             val index = ids.indexOf(trackId)
             if (index >= 0) playback.playFrom(ids, index, QueueContext.Family(familyId))
         }
@@ -80,8 +99,13 @@ class FamilyViewModel @Inject constructor(
 
     /** Adds one track to "Next in queue". */
     fun onQueueTrack(trackId: String) {
-        playback.addToQueue(listOf(trackId))
-        messages.post(UserMessage.AddedToQueue(1))
+        viewModelScope.launch {
+            val track = repository.catalog.first().tracks.firstOrNull { it.id == trackId }
+            // A greyed row can't be swiped; this keeps any other path from queueing it.
+            if (track == null || track.unplayable != null) return@launch
+            playback.addToQueue(listOf(trackId))
+            messages.post(UserMessage.AddedToQueue(1))
+        }
     }
 }
 
@@ -96,8 +120,9 @@ private fun FamilyUiState.withPlaying(playback: PlaybackState): FamilyUiState {
     return copy(playing = playing)
 }
 
+/** What a tap plays: the family's list without its greyed tracks, which would only be skipped. */
 private fun Catalog.familyTrackIds(familyId: String): List<String> =
-    filter(TrackFilter(family = familyId)).map { it.id }
+    filter(TrackFilter(family = familyId)).filter { it.unplayable == null }.map { it.id }
 
 private fun Catalog.familyState(familyId: String): FamilyUiState {
     val family = families.firstOrNull { it.id == familyId } ?: return FamilyUiState.NotFound
@@ -113,7 +138,8 @@ private fun Catalog.familyState(familyId: String): FamilyUiState {
                 emptyList()
             } else {
                 track.games.map { ChipUi(it.shortName, it.color) }
-            }
+            },
+            unplayable = track.unplayable != null
         )
     }
     return FamilyUiState.Loaded(
