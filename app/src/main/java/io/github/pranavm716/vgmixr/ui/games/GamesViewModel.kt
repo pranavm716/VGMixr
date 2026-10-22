@@ -47,12 +47,15 @@ class GamesViewModel @Inject constructor(
         ) { families, importFailed -> GamesUiState.Loaded(families, importFailed) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GamesUiState.Loading)
 
-    /** Adds all of a family's tracks, in family order, to "Next in queue". */
+    /**
+     * Adds a family's tracks, in family order, to "Next in queue", leaving out those whose sources
+     * are all broken.
+     */
     fun onQueueFamily(familyId: String) {
         viewModelScope.launch {
-            val ids = repository.catalog.first().filter(TrackFilter(family = familyId)).map {
-                it.id
-            }
+            val ids = repository.catalog.first().filter(TrackFilter(family = familyId))
+                .filter { it.unplayable == null }
+                .map { it.id }
             if (ids.isEmpty()) return@launch
             playback.addToQueue(ids)
             messages.post(UserMessage.AddedToQueue(ids.size))

@@ -89,13 +89,19 @@ fun FamilyScreen(
             LazyColumn(Modifier.fillMaxSize(), state = listState) {
                 items(state.tracks, key = { it.id }) { track ->
                     val playing = state.playing?.takeIf { it.trackId == track.id }
-                    SwipeToQueue(onQueue = { onQueueTrack(track.id) }) {
+                    val row = @Composable {
                         TrackRow(
                             track,
                             playing = playing != null,
                             loading = playing?.loading == true,
                             onClick = { onTrackClick(track.id) }
                         )
+                    }
+                    // A greyed track can't be queued, so its row doesn't swipe.
+                    if (track.unplayable) {
+                        row()
+                    } else {
+                        SwipeToQueue(onQueue = { onQueueTrack(track.id) }, content = row)
                     }
                 }
             }

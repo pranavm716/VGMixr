@@ -66,6 +66,13 @@ class UnplayableQueueRowsTest {
     }
 
     @Test
+    fun `a greyed track in the queue can't be queued again`() {
+        viewModel.onQueue(1)
+
+        assertEquals(emptyList<Any>(), playback.calls)
+    }
+
+    @Test
     fun `tapping it says why it can't play instead of jumping to it`() = runTest {
         messages.messages.test {
             viewModel.onJump(1)

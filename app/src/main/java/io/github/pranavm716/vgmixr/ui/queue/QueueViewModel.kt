@@ -75,8 +75,13 @@ class QueueViewModel @Inject constructor(
     /** Adds the track at [index] (from "Next from") to the end of "Next in queue". */
     fun onQueue(index: Int) {
         val trackId = playback.state.value.queue.entries.getOrNull(index)?.trackId ?: return
-        playback.addToQueue(listOf(trackId))
-        messages.post(UserMessage.AddedToQueue(1))
+        viewModelScope.launch {
+            val track = repository.catalog.first().tracks.firstOrNull { it.id == trackId }
+            // A greyed row can't be swiped to the queue; this keeps any other path from it.
+            if (track == null || track.unplayable != null) return@launch
+            playback.addToQueue(listOf(trackId))
+            messages.post(UserMessage.AddedToQueue(1))
+        }
     }
 
     fun onClear() = playback.clearQueue()

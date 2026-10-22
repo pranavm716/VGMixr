@@ -100,11 +100,18 @@ fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()
                     )
                 }
                 items(state.nextFrom, key = { "nextfrom-${it.index}-${it.trackId}" }) { row ->
-                    SwipeToQueueOrRemove(
-                        onQueue = { viewModel.onQueue(row.index) },
-                        onRemove = { viewModel.onRemove(row.index) }
-                    ) {
-                        QueueRow(row, current = false, onClick = { jump(row.index) })
+                    // A greyed track can still be removed, but not queued.
+                    if (row.unplayable) {
+                        SwipeToRemove(onRemove = { viewModel.onRemove(row.index) }) {
+                            QueueRow(row, current = false, onClick = { jump(row.index) })
+                        }
+                    } else {
+                        SwipeToQueueOrRemove(
+                            onQueue = { viewModel.onQueue(row.index) },
+                            onRemove = { viewModel.onRemove(row.index) }
+                        ) {
+                            QueueRow(row, current = false, onClick = { jump(row.index) })
+                        }
                     }
                 }
             }

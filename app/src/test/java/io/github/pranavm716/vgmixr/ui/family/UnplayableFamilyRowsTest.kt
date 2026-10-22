@@ -24,20 +24,16 @@ class UnplayableFamilyRowsTest {
 
     private val or = game("or", familyId = "oras", shortName = "OR")
 
+    private fun track(id: String, title: String, order: Int, unplayable: BrokenReason? = null) =
+        CatalogTrack(id, "oras", listOf(or), title, order, emptyList(), unplayable)
+
     private val catalog = Catalog(
         games = listOf(or),
         families = listOf(Family("oras", "Omega Ruby", "OR")),
         tracks = listOf(
-            CatalogTrack(
-                "oras-a",
-                "oras",
-                listOf(or),
-                "Battle! (Elite Four)",
-                1,
-                emptyList(),
-                BrokenReason.NO_AUDIO
-            ),
-            CatalogTrack("oras-b", "oras", listOf(or), "Champion Steven", 2, emptyList())
+            track("oras-a", "The Elite Four Appear!", 1),
+            track("oras-b", "Battle! (Elite Four)", 2, BrokenReason.NO_AUDIO),
+            track("oras-c", "Champion Steven", 3)
         )
     )
 
@@ -53,53 +49,49 @@ class UnplayableFamilyRowsTest {
         )
     }
 
+    private val eliteFour =
+        UserMessage.TrackUnplayable("oras-b", "Battle! (Elite Four)", BrokenReason.NO_AUDIO)
+
     @Test
     fun `a track whose sources are all broken is greyed in the list`() = runTest {
         viewModel.uiState.test {
             val rows = (awaitItem() as FamilyUiState.Loaded).tracks
 
-            assertEquals(listOf(true, false), rows.map { it.unplayable })
+            assertEquals(listOf(false, true, false), rows.map { it.unplayable })
         }
     }
 
     @Test
     fun `tapping it says why it can't play, every time, and plays nothing`() = runTest {
         messages.messages.test {
-            viewModel.onTrackClick("oras-a")
-            assertEquals(
-                UserMessage.TrackUnplayable(
-                    "oras-a",
-                    "Battle! (Elite Four)",
-                    BrokenReason.NO_AUDIO
-                ),
-                awaitItem()
-            )
-            viewModel.onTrackClick("oras-a")
-            assertEquals(
-                UserMessage.TrackUnplayable(
-                    "oras-a",
-                    "Battle! (Elite Four)",
-                    BrokenReason.NO_AUDIO
-                ),
-                awaitItem()
-            )
+            viewModel.onTrackClick("oras-b")
+            assertEquals(eliteFour, awaitItem())
+            viewModel.onTrackClick("oras-b")
+            assertEquals(eliteFour, awaitItem())
         }
         assertEquals(emptyList<Any>(), playback.calls)
     }
 
     @Test
-    fun `the tracks around it still play from the family list, which keeps it`() {
-        viewModel.onTrackClick("oras-b")
+    fun `tapping another track plays the family list without the greyed tracks`() {
+        viewModel.onTrackClick("oras-c")
 
         assertEquals(
             listOf(
                 FakePlaybackController.PlayFrom(
-                    listOf("oras-a", "oras-b"),
+                    listOf("oras-a", "oras-c"),
                     1,
                     QueueContext.Family("oras")
                 )
             ),
             playback.calls
         )
+    }
+
+    @Test
+    fun `a greyed track can't be queued`() {
+        viewModel.onQueueTrack("oras-b")
+
+        assertEquals(emptyList<Any>(), playback.calls)
     }
 }

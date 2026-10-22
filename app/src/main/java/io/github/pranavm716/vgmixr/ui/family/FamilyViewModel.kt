@@ -99,8 +99,13 @@ class FamilyViewModel @Inject constructor(
 
     /** Adds one track to "Next in queue". */
     fun onQueueTrack(trackId: String) {
-        playback.addToQueue(listOf(trackId))
-        messages.post(UserMessage.AddedToQueue(1))
+        viewModelScope.launch {
+            val track = repository.catalog.first().tracks.firstOrNull { it.id == trackId }
+            // A greyed row can't be swiped; this keeps any other path from queueing it.
+            if (track == null || track.unplayable != null) return@launch
+            playback.addToQueue(listOf(trackId))
+            messages.post(UserMessage.AddedToQueue(1))
+        }
     }
 }
 
@@ -115,8 +120,9 @@ private fun FamilyUiState.withPlaying(playback: PlaybackState): FamilyUiState {
     return copy(playing = playing)
 }
 
+/** What a tap plays: the family's list without its greyed tracks, which would only be skipped. */
 private fun Catalog.familyTrackIds(familyId: String): List<String> =
-    filter(TrackFilter(family = familyId)).map { it.id }
+    filter(TrackFilter(family = familyId)).filter { it.unplayable == null }.map { it.id }
 
 private fun Catalog.familyState(familyId: String): FamilyUiState {
     val family = families.firstOrNull { it.id == familyId } ?: return FamilyUiState.NotFound
