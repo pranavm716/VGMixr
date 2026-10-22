@@ -117,7 +117,8 @@ fun NowPlayingHeader(
 
 /**
  * Now playing's body, Shuttle's look: the art, the title over its game chips, the seek
- * bar between the elapsed time and the length, previous / play-pause / next, and the queue button.
+ * bar between the elapsed time and the length, previous / play-pause / next, and under them the
+ * favorite heart (centered) with add to playlist and the queue button at the end.
  */
 @Composable
 fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = hiltViewModel()) {
@@ -171,15 +172,34 @@ fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = h
             Controls(visible.isPlaying, visible.isLoading, viewModel)
         }
         Spacer(Modifier.weight(BOTTOM_GAP))
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = SIDE_MARGIN),
-            horizontalArrangement = Arrangement.End
-        ) {
-            IconButton(onClick = onOpenQueue) {
+        Box(Modifier.fillMaxWidth().padding(horizontal = SIDE_MARGIN)) {
+            // White in both states, not the accent: filled when the track is a favorite.
+            IconButton(onClick = viewModel::onToggleFavorite, Modifier.align(Alignment.Center)) {
+                val favorite = visible.isFavorite
                 Icon(
-                    painterResource(R.drawable.ic_queue),
-                    contentDescription = stringResource(R.string.queue)
+                    painterResource(
+                        if (favorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+                    ),
+                    contentDescription = stringResource(
+                        if (favorite) R.string.remove_from_favorites else R.string.add_to_favorites
+                    ),
+                    tint = Color.White
                 )
+            }
+            Row(Modifier.align(Alignment.CenterEnd)) {
+                // Not wired yet: picking a playlist comes with the playlist page.
+                IconButton(onClick = {}) {
+                    Icon(
+                        painterResource(R.drawable.ic_add),
+                        contentDescription = stringResource(R.string.add_to_playlist)
+                    )
+                }
+                IconButton(onClick = onOpenQueue) {
+                    Icon(
+                        painterResource(R.drawable.ic_queue),
+                        contentDescription = stringResource(R.string.queue)
+                    )
+                }
             }
         }
         Spacer(Modifier.height(8.dp))

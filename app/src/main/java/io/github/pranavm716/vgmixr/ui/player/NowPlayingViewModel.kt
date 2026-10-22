@@ -9,12 +9,14 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 sealed interface NowPlayingUiState {
     data object Hidden : NowPlayingUiState
@@ -25,7 +27,8 @@ sealed interface NowPlayingUiState {
         val chips: List<ChipUi>,
         val playingFrom: PlayingFromUi,
         val isPlaying: Boolean,
-        val isLoading: Boolean
+        val isLoading: Boolean,
+        val isFavorite: Boolean = false
     ) : NowPlayingUiState
 }
 
@@ -41,10 +44,15 @@ sealed interface PlayingFromUi {
 @HiltViewModel
 class NowPlayingViewModel @Inject constructor(
     repository: CatalogRepository,
-    private val playback: PlaybackController
+    private val playback: PlaybackController,
+    private val playlists: PlaylistRepository
 ) : ViewModel() {
     val uiState: StateFlow<NowPlayingUiState> =
-        combine(repository.catalog, playback.state) { catalog, state -> catalog.nowPlaying(state) }
+        combine(
+            repository.catalog,
+            playback.state,
+            playlists.favorites
+        ) { catalog, state, favorites -> catalog.nowPlaying(state, favorites) }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
@@ -67,9 +75,16 @@ class NowPlayingViewModel @Inject constructor(
     fun onNext() = playback.skipToNext()
 
     fun onSeek(positionMs: Long) = playback.seekTo(positionMs)
+
+    /** Favorites the playing track, or unfavorites it if the heart shows it as one. */
+    fun onToggleFavorite() {
+        val trackId = playback.state.value.trackId ?: return
+        val isFavorite = (uiState.value as? NowPlayingUiState.Visible)?.isFavorite ?: return
+        viewModelScope.launch { playlists.setFavorite(trackId, !isFavorite) }
+    }
 }
 
-private fun Catalog.nowPlaying(state: PlaybackState): NowPlayingUiState {
+private fun Catalog.nowPlaying(state: PlaybackState, favorites: Set<String>): NowPlayingUiState {
     val track = tracks.firstOrNull { it.id == state.trackId } ?: return NowPlayingUiState.Hidden
     val context = state.queue.entries.getOrNull(state.queue.current)?.context
         ?: QueueContext.Family(track.familyId)
@@ -86,7 +101,8 @@ private fun Catalog.nowPlaying(state: PlaybackState): NowPlayingUiState {
         chips = track.games.map { ChipUi(it.shortName, it.color) },
         playingFrom = playingFrom,
         isPlaying = state.isPlaying,
-        isLoading = state.isLoading
+        isLoading = state.isLoading,
+        isFavorite = track.id in favorites
     )
 }
 
