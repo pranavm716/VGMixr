@@ -51,6 +51,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - Loop points (`loop`) are optional and only on `local` sources, since they describe one exact file. Loop cycle count is a global app setting.
 - Prefetch the next queued track; auto-cache favorites and recently played.
 - Deferred, do not build yet: an optional `franchise` field on games for multi-franchise grouping (see `docs/manifest.md`).
+- Adding a game or family (or a spin-off, or another franchise): follow the checklist in `docs/adding-games.md`, which lists the data files and every place in the code that knows about Pokémon.
 
 ## Testing (TDD)
 - Write the failing test first. Run it, confirm it fails for the right reason, then implement. Commit when green.
