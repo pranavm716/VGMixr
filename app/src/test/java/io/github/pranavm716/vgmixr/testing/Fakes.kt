@@ -159,4 +159,14 @@ class FakePlaylistRepository(
     override suspend fun setFavorite(trackId: String, favorite: Boolean) {
         favorites.value = if (favorite) favorites.value + trackId else favorites.value - trackId
     }
+
+    /** The names passed to [createPlaylist], in order; new ids count up from 100. */
+    val created = mutableListOf<String>()
+
+    override suspend fun createPlaylist(name: String): Long {
+        created += name
+        val id = 99L + created.size
+        contents.value += id to Playlist(id, name, isFavorites = false, trackIds = emptyList())
+        return id
+    }
 }

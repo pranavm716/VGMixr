@@ -80,6 +80,25 @@ class PlaylistsViewModelTest {
     }
 
     @Test
+    fun `creating a playlist makes it and opens it`() = runTest {
+        val viewModel = viewModel()
+
+        viewModel.events.test {
+            viewModel.onCreatePlaylist("Route themes")
+
+            assertEquals(PlaylistsEvent.Open(100), awaitItem())
+        }
+        assertEquals(listOf("Route themes"), repository.created)
+    }
+
+    @Test
+    fun `a blank name makes no playlist`() = runTest {
+        viewModel().onCreatePlaylist("   ")
+
+        assertEquals(emptyList<String>(), repository.created)
+    }
+
+    @Test
     fun `swiping a playlist with nothing playable queues nothing`() = runTest {
         repository.contents.value = mapOf(2L to Playlist(2, "Mix", false, listOf("rse-c")))
 

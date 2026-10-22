@@ -1,6 +1,7 @@
 package io.github.pranavm716.vgmixr.data.playlist
 
 import io.github.pranavm716.vgmixr.data.db.FAVORITES_PLAYLIST_ID
+import io.github.pranavm716.vgmixr.data.db.PlaylistEntity
 import io.github.pranavm716.vgmixr.data.db.PlaylistEntryEntity
 import io.github.pranavm716.vgmixr.data.db.UserDataDao
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
@@ -34,6 +35,9 @@ class RoomPlaylistRepository @Inject constructor(
 
     override val favorites: Flow<Set<String>> =
         dao.observePlaylistTrackIds(FAVORITES_PLAYLIST_ID).map { it.toSet() }
+
+    override suspend fun createPlaylist(name: String): Long =
+        dao.insertPlaylist(PlaylistEntity(name = name.trim(), createdAt = clock.instant()))
 
     override suspend fun setFavorite(trackId: String, favorite: Boolean) {
         if (favorite) {

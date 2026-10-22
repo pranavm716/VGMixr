@@ -12,6 +12,7 @@ import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -141,6 +142,35 @@ class RoomPlaylistRepositoryTest {
         repository.playlist(42).test {
             assertEquals(null, awaitItem())
         }
+    }
+
+    @Test
+    fun `a new playlist is listed after Favorites, empty, with its name trimmed`() =
+        runTest(dispatcher) {
+            val id = repository.createPlaylist("  Route themes ")
+
+            repository.playlists.test {
+                assertEquals(
+                    listOf(emptyFavorites, PlaylistSummary(id, "Route themes", 0, false)),
+                    awaitItem()
+                )
+            }
+            assertEquals(
+                Playlist(id, "Route themes", isFavorites = false, trackIds = emptyList()),
+                repository.playlist(id).first()
+            )
+        }
+
+    @Test
+    fun `new playlists are listed in the order they were made`() = runTest(dispatcher) {
+        val first = repository.createPlaylist("Battle!")
+        clock.instant = Instant.ofEpochMilli(2_000)
+        val second = repository.createPlaylist("Route themes")
+
+        assertEquals(
+            listOf(FAVORITES_PLAYLIST_ID, first, second),
+            repository.playlists.first().map { it.id }
+        )
     }
 
     private class MutableClock(var instant: Instant) : Clock() {

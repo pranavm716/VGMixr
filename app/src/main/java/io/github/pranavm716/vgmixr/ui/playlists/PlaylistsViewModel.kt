@@ -11,10 +11,13 @@ import io.github.pranavm716.vgmixr.domain.playlist.playableTrackIds
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import javax.inject.Inject
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -22,6 +25,12 @@ sealed interface PlaylistsUiState {
     data object Loading : PlaylistsUiState
 
     data class Loaded(val playlists: List<PlaylistSummary>) : PlaylistsUiState
+}
+
+/** One-off actions for the screen. */
+sealed interface PlaylistsEvent {
+    /** Open playlist [playlistId], as a tap on its row does. */
+    data class Open(val playlistId: Long) : PlaylistsEvent
 }
 
 @HiltViewModel
@@ -38,6 +47,17 @@ class PlaylistsViewModel @Inject constructor(
                 SharingStarted.WhileSubscribed(5_000),
                 PlaylistsUiState.Loading
             )
+
+    private val eventChannel = Channel<PlaylistsEvent>(Channel.BUFFERED)
+    val events: Flow<PlaylistsEvent> = eventChannel.receiveAsFlow()
+
+    /** Makes a playlist named [name] and opens it; a blank name makes nothing. */
+    fun onCreatePlaylist(name: String) {
+        if (name.isBlank()) return
+        viewModelScope.launch {
+            eventChannel.send(PlaylistsEvent.Open(repository.createPlaylist(name)))
+        }
+    }
 
     /**
      * Adds a playlist's tracks, in its order (newest first), to "Next in queue", leaving out those
