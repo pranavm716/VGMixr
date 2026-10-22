@@ -22,6 +22,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -117,8 +118,18 @@ fun SearchScreen(
             NoResults(query.trim())
         } else {
             val listState = rememberLazyListState()
-            // A new query lists from its best match.
-            LaunchedEffect(query) { listState.scrollToItem(0) }
+            // A new set of results starts at its best match. Otherwise the list keeps its first
+            // row in view wherever that row lands in the new results, which can be far down. A
+            // change of the playing track alone keeps the position. Requested before this
+            // frame's layout, so the old position never shows.
+            val ids = remember(state.results) { state.results.map { it.id } }
+            val shown = remember { ShownResults() }
+            SideEffect {
+                if (shown.ids != ids) {
+                    shown.ids = ids
+                    listState.requestScrollToItem(0)
+                }
+            }
             val hideOnDrag = remember {
                 object : NestedScrollConnection {
                     override fun onPreScroll(
@@ -154,6 +165,11 @@ fun SearchScreen(
             }
         }
     }
+}
+
+/** The ids of the results the list last scrolled to the top for. */
+private class ShownResults {
+    var ids: List<String>? = null
 }
 
 @Composable
