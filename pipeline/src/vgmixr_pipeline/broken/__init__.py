@@ -8,7 +8,8 @@ external files folder. The review tool's Broken tab (roadmap step 10b) reads the
 import subprocess
 from collections import Counter
 from collections.abc import Callable
-from datetime import datetime
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal
 
@@ -50,6 +51,29 @@ Runner = Callable[[list[str]], "subprocess.CompletedProcess[str]"]
 
 def parse_broken(text: str) -> BrokenFile:
     return BrokenFile.model_validate_json(text)
+
+
+@dataclass(frozen=True)
+class Pulled:
+    """The last pulled broken.json: its marks, or why it can't be read; both None when nothing
+    was pulled yet. `pulled_at` is the file's time."""
+
+    broken: BrokenFile | None
+    error: str | None
+    pulled_at: datetime | None
+
+
+def read_pulled(out_dir: Path) -> Pulled:
+    path = out_dir / FILE_NAME
+    try:
+        text = path.read_text(encoding="utf-8")
+        pulled_at = datetime.fromtimestamp(path.stat().st_mtime, UTC)
+    except FileNotFoundError:
+        return Pulled(None, None, None)
+    try:
+        return Pulled(parse_broken(text), None, pulled_at)
+    except ValidationError as e:
+        return Pulled(None, f"{path} is not a valid broken.json:\n{e}", pulled_at)
 
 
 def run_adb(args: list[str]) -> "subprocess.CompletedProcess[str]":
