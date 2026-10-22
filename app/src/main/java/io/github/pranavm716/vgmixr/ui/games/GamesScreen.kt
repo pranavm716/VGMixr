@@ -33,7 +33,10 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.catalog.FamilySummary
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
+import io.github.pranavm716.vgmixr.ui.components.RowTileGap
+import io.github.pranavm716.vgmixr.ui.components.RowTileSize
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
+import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
@@ -79,13 +82,13 @@ private fun FamilyRow(family: FamilySummary, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(TileRowHeight)
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ArtTile(44.dp)
-        Spacer(Modifier.width(14.dp))
+        ArtTile(RowTileSize)
+        Spacer(Modifier.width(RowTileGap))
         Column {
             Text(
                 family.name,

@@ -66,6 +66,9 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.RowTileGap
+import io.github.pranavm716.vgmixr.ui.components.RowTileSize
+import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.tintColor
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import kotlin.math.roundToInt
@@ -161,7 +164,7 @@ fun MiniPlayer(
         Row(
             Modifier
                 .fillMaxWidth()
-                .height(64.dp)
+                .height(TileRowHeight)
                 // No ripple on the body; only play/pause has one.
                 .clickable(
                     interactionSource = null,
@@ -252,8 +255,8 @@ private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
             .padding(start = 16.dp, end = ButtonWidth),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ArtTile(44.dp)
-        Spacer(Modifier.width(14.dp))
+        ArtTile(RowTileSize)
+        Spacer(Modifier.width(RowTileGap))
         TrackText(track)
     }
 }
