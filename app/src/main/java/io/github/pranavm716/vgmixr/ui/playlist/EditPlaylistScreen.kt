@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -120,6 +122,19 @@ fun EditPlaylistScreen(
         if (state.noResults) {
             NoSearchResults(query.trim())
         } else {
+            val listState = rememberLazyListState()
+            // Results for a new query start at the top, as the Search tab's do. Otherwise the list
+            // keeps its first row in view wherever that row lands in the new results, which can be
+            // far down. Keyed by the query, not the rows: unchecking a track under an empty field
+            // takes its row away and must leave the list where it is. Requested before this
+            // frame's layout, so the old position never shows.
+            val shown = remember { ShownQuery() }
+            SideEffect {
+                if (shown.query != state.resultsQuery) {
+                    shown.query = state.resultsQuery
+                    listState.requestScrollToItem(0)
+                }
+            }
             val hideOnDrag = remember {
                 object : NestedScrollConnection {
                     override fun onPreScroll(
@@ -131,7 +146,7 @@ fun EditPlaylistScreen(
                     }
                 }
             }
-            LazyColumn(Modifier.fillMaxSize().nestedScroll(hideOnDrag)) {
+            LazyColumn(Modifier.fillMaxSize().nestedScroll(hideOnDrag), state = listState) {
                 items(state.results, key = { it.id }) { row ->
                     TrackTileRow(
                         row.title,
@@ -152,6 +167,10 @@ fun EditPlaylistScreen(
             }
         }
     }
+}
+
+private class ShownQuery {
+    var query: String? = null
 }
 
 @Preview

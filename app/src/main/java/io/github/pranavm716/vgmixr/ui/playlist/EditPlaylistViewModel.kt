@@ -34,7 +34,10 @@ import kotlinx.coroutines.launch
 data class EditPlaylistUiState(
     val playlistName: String = "",
     val results: List<EditPlaylistRowUi> = emptyList(),
-    val noResults: Boolean = false
+    val noResults: Boolean = false,
+    // The query [results] answer ("" for the playlist's own tracks), so the list can tell new
+    // results from a toggle or a removal.
+    val resultsQuery: String = ""
 )
 
 /**
@@ -95,7 +98,8 @@ class EditPlaylistViewModel @Inject constructor(
             EditPlaylistUiState(
                 playlistName = playlist?.name ?: openedName,
                 results = tracks.map { it.toRow(it.id in added) },
-                noResults = matches.query.isNotBlank() && matches.tracks.isEmpty()
+                noResults = matches.query.isNotBlank() && matches.tracks.isEmpty(),
+                resultsQuery = matches.query
             )
         }.flowOn(dispatcher)
             .stateIn(

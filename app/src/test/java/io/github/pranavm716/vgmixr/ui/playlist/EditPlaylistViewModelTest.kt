@@ -165,6 +165,19 @@ class EditPlaylistViewModelTest {
     }
 
     @Test
+    fun `the results name the query they answer, which a toggle leaves alone`() = runTest {
+        viewModel.uiState.test {
+            assertEquals("", awaitItem().resultsQuery)
+            viewModel.onQueryChange("route")
+            assertEquals("route", awaitItem().resultsQuery)
+
+            viewModel.onToggle("rse-route-101")
+
+            assertEquals("route", awaitItem().resultsQuery)
+        }
+    }
+
+    @Test
     fun `a query that matches nothing says so`() = runTest {
         viewModel.uiState.test {
             awaitItem()
