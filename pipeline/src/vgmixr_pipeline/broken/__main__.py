@@ -7,21 +7,15 @@ adb isn't on PATH on this machine, so the default is the Android SDK's copy unde
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 
+from vgmixr_pipeline.adb import default_adb
 from vgmixr_pipeline.broken import FILE_NAME, PullError, pull_broken, summarize
 
 PIPELINE_DIR = Path(__file__).resolve().parents[3]
 OUT = PIPELINE_DIR / "out"
 MANIFEST = PIPELINE_DIR.parent / "catalog" / "manifest.json"
-
-
-def default_adb() -> Path:
-    return (
-        Path(os.environ.get("LOCALAPPDATA", "")) / "Android" / "Sdk" / "platform-tools" / "adb.exe"
-    )
 
 
 def main() -> int:
