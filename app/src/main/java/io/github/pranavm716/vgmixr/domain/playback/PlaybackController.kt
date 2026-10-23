@@ -18,6 +18,12 @@ interface PlaybackController {
 
     fun togglePlayPause()
 
+    /**
+     * Turns shuffle on or off: it shuffles "Next from" or puts it back in list order (see
+     * [PlayQueue.shuffle], [PlayQueue.unshuffle]).
+     */
+    fun setShuffle(on: Boolean)
+
     /** Plays the next queue item, also when paused. */
     fun skipToNext()
 
@@ -59,14 +65,15 @@ interface PlaybackController {
 data class PlaybackProgress(val positionMs: Long, val durationMs: Long?)
 
 /**
- * [queue] is the player's queue. [trackId] is the current track, playing or paused. [isLoading] is true while it is about to play
- * but waits for its stream. [stoppedBy] is set when a failure that affects every track stopped
- * playback.
+ * [queue] is the player's queue. [trackId] is the current track, playing or paused. [isLoading] is
+ * true while it is about to play but waits for its stream. [stoppedBy] is set when a failure that
+ * affects every track stopped playback. [shuffle] is the shuffle setting.
  */
 data class PlaybackState(
     val queue: PlayQueue = PlayQueue.EMPTY,
     val trackId: String? = null,
     val isPlaying: Boolean = false,
     val isLoading: Boolean = false,
-    val stoppedBy: ResolveFailure? = null
+    val stoppedBy: ResolveFailure? = null,
+    val shuffle: Boolean = false
 )

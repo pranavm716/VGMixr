@@ -41,6 +41,8 @@ class FakePlaybackController : PlaybackController {
 
     data object TogglePlayPause
 
+    data class SetShuffle(val on: Boolean)
+
     data object SkipToNext
 
     data object SkipToPrevious
@@ -64,6 +66,12 @@ class FakePlaybackController : PlaybackController {
 
     override fun togglePlayPause() {
         calls += TogglePlayPause
+    }
+
+    /** Flips the state's flag too, as the player does. */
+    override fun setShuffle(on: Boolean) {
+        calls += SetShuffle(on)
+        state.value = state.value.copy(shuffle = on)
     }
 
     override fun skipToNext() {

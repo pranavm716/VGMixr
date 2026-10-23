@@ -14,6 +14,7 @@ import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.ResolvingDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.source.ShuffleOrder
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.google.common.util.concurrent.ListenableFuture
@@ -42,6 +43,7 @@ import io.github.pranavm716.vgmixr.domain.playback.playableStreams
 import java.io.File
 import java.time.Clock
 import javax.inject.Inject
+import kotlin.random.Random
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -115,6 +117,9 @@ class PlaybackService : MediaSessionService() {
             .setHandleAudioBecomingNoisy(true)
             .setWakeMode(C.WAKE_MODE_NETWORK)
             .build()
+        // Shuffle rearranges the items themselves (Shuffling), so the queue screen shows what
+        // plays next; the player's own shuffle order stays the item order.
+        player.setShuffleOrder(ShuffleOrder.UnshuffledShuffleOrder(0))
         val openApp = PendingIntent.getActivity(
             this,
             0,
@@ -130,6 +135,7 @@ class PlaybackService : MediaSessionService() {
             .build()
         player.addListener(Failover(player, session))
         player.addListener(PlayRecording(player))
+        player.addListener(Shuffling(player))
         this.session = session
     }
 
@@ -158,8 +164,9 @@ class PlaybackService : MediaSessionService() {
                 val fresh = brokenSources.marks.first().also { marks.value = it }
                 mediaSession.setStoppedBy(null)
                 items.set(
-                    mediaItems.map { catalog.startItem(it.mediaId, it.context, fresh, artwork) }
-                        .toMutableList()
+                    mediaItems.map {
+                        catalog.startItem(it.mediaId, it.context, it.listIndex, fresh, artwork)
+                    }.toMutableList()
                 )
             }
             return items
@@ -215,6 +222,7 @@ class PlaybackService : MediaSessionService() {
                     val again = catalog.itemFor(
                         item.mediaId,
                         item.context,
+                        item.listIndex,
                         item.sourceIndex,
                         artwork,
                         retried = true
@@ -225,7 +233,13 @@ class PlaybackService : MediaSessionService() {
                 }
 
                 is FailoverAction.TrySource -> {
-                    val next = catalog.itemFor(item.mediaId, item.context, action.index, artwork)
+                    val next = catalog.itemFor(
+                        item.mediaId,
+                        item.context,
+                        item.listIndex,
+                        action.index,
+                        artwork
+                    )
                     player.replaceMediaItem(player.currentMediaItemIndex, next)
                     player.prepare()
                     player.play()
@@ -301,6 +315,17 @@ class PlaybackService : MediaSessionService() {
     }
 }
 
+/**
+ * Turning shuffle on shuffles "Next from"; turning it off puts it back in list order. Here, so a
+ * flip from the app, the notification or the lock screen all rearrange the same way.
+ */
+private class Shuffling(private val player: Player) : Player.Listener {
+    override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+        val queue = player.queue()
+        player.apply(if (shuffleModeEnabled) queue.shuffle(Random.Default) else queue.unshuffle())
+    }
+}
+
 private const val PLAY_CHECK_INTERVAL_MS = 1_000L
 
 private fun Int.toTransition(): PlayCounter.Transition = when (this) {
@@ -321,13 +346,15 @@ private fun MediaSession.setStoppedBy(failure: ResolveFailure?) {
 private fun Catalog.startItem(
     trackId: String,
     context: QueueContext,
+    listIndex: Int?,
     marks: Map<String, BrokenMark>,
     artwork: NotificationArtwork
 ): MediaItem {
     val streams = tracks.firstOrNull { it.id == trackId }
         ?.let { playableStreams(it.sources) }
         .orEmpty()
-    return itemFor(trackId, context, nextSource(streams, 0, marks.keys) ?: streams.size, artwork)
+    val sourceIndex = nextSource(streams, 0, marks.keys) ?: streams.size
+    return itemFor(trackId, context, listIndex, sourceIndex, artwork)
 }
 
 /**
@@ -337,17 +364,18 @@ private fun Catalog.startItem(
 private fun Catalog.itemFor(
     trackId: String,
     context: QueueContext,
+    listIndex: Int?,
     sourceIndex: Int,
     artwork: NotificationArtwork,
     retried: Boolean = false
 ): MediaItem {
     val track = tracks.firstOrNull { it.id == trackId }
         ?: return queueRequest(
-            QueueEntry(trackId, context)
+            QueueEntry(trackId, context, listIndex)
         ).buildUpon().setUri(NO_SOURCE_URI).build()
     val familyName = families.firstOrNull { it.id == track.familyId }?.name.orEmpty()
     val art = artwork.uriFor(track.games.map { it.color })
-    return trackMediaItem(track, familyName, sourceIndex, context, retried, art)
+    return trackMediaItem(track, familyName, sourceIndex, context, retried, art, listIndex)
 }
 
 private val MediaItem.videoId: String?

@@ -81,6 +81,28 @@ class TrackMediaItemTest {
     }
 
     @Test
+    fun `a list entry crosses to the service and back with its place in the list`() {
+        val entry = QueueEntry("rse-route-101", QueueContext.Playlist(3), listIndex = 12)
+        val crossed = MediaItem.fromBundle(queueRequest(entry).toBundle())
+
+        assertEquals(entry, crossed.queueEntry())
+    }
+
+    @Test
+    fun `the playable item keeps its place in the list, also on a later source`() {
+        val item = trackMediaItem(
+            track(listOf(slice, whole)),
+            "Scarlet / Violet",
+            1,
+            QueueContext.Family("sv"),
+            listIndex = 4
+        )
+
+        assertEquals(4, item.queueEntry().listIndex)
+        assertEquals(null, trackMediaItem(track(listOf(slice)), "S/V").queueEntry().listIndex)
+    }
+
+    @Test
     fun `the playable item keeps the queued flag, also on a later source`() {
         val item =
             trackMediaItem(track(listOf(slice, whole)), "Scarlet / Violet", 1, QueueContext.Queue)
