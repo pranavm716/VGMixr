@@ -13,11 +13,14 @@ from vgmixr_pipeline.backup import (
     DB,
     BackupError,
     backup_name,
+    files_to_delete,
     is_playing,
     parse_ls,
     parse_sha256,
     pull,
+    push,
     summarize,
+    validate_backup,
 )
 
 ADB = Path("C:/Sdk/platform-tools/adb.exe")
@@ -71,7 +74,18 @@ class FakePhone:
         self.playing = playing
         self.debuggable = debuggable
         self.mangled: set[str] = set()
+        self.mangled_writes: set[str] = set()
+        # Like the real exec-in, which returns before the phone's `cat` is done: a written file
+        # reads as empty for its first [lag] hash checks.
+        self.lag = 0
+        self.landing: dict[str, tuple[bytes, int]] = {}
+        self.sleeps: list[float] = []
+        # File modes: the app's own files are 660; a file written through run-as sh comes out 666.
+        self.modes = {name: "660" for name in self.files}
         self.calls: list[list[str]] = []
+
+    def sleep(self, seconds: float) -> None:
+        self.sleeps.append(seconds)
 
     def ok(self, args: list[str], out: bytes) -> subprocess.CompletedProcess[bytes]:
         return subprocess.CompletedProcess(args, 0, out, b"")
@@ -85,6 +99,21 @@ class FakePhone:
         if cmd == ["shell", "dumpsys", "media_session"]:
             return self.ok(args, dumpsys("PLAYING(3)" if self.playing else "PAUSED(2)").encode())
         if cmd == ["shell", "am", "force-stop", PACKAGE]:
+            return self.ok(args, b"")
+        if cmd[0] == "exec-in":
+            # One string, as on Windows: adb drops the quotes of separate arguments.
+            prefix, suffix = f"run-as {PACKAGE} sh -c 'cat > databases/", "'"
+            assert len(cmd) == 2 and cmd[1].startswith(prefix) and cmd[1].endswith(suffix), cmd
+            assert input is not None
+            name = cmd[1].removeprefix(prefix).removesuffix(suffix)
+            damaged = name.removesuffix(".part") in self.mangled_writes
+            data = input[:-1] if damaged else input
+            self.modes[name] = "666"
+            if self.lag:
+                self.files[name] = b""
+                self.landing[name] = (data, self.lag)
+            else:
+                self.files[name] = data
             return self.ok(args, b"")
         assert cmd[:3] == ["exec-out", "run-as", PACKAGE], cmd
         if not self.debuggable:
@@ -102,7 +131,32 @@ class FakePhone:
                 name = path.removeprefix("databases/")
                 if name not in self.files:
                     return self.ok(args, f"sha256sum: {path}: No such file or directory\n".encode())
+                if name in self.landing:
+                    data, checks = self.landing.pop(name)
+                    if checks > 1:
+                        self.landing[name] = (data, checks - 1)
+                    else:
+                        self.files[name] = data
                 return self.ok(args, f"{sha(self.files[name])}  {path}\n".encode())
+            case ["mv", src, dst]:
+                source = src.removeprefix("databases/")
+                if source not in self.files:
+                    return self.ok(args, f"mv: bad '{src}': No such file or directory\n".encode())
+                target = dst.removeprefix("databases/")
+                self.files[target] = self.files.pop(source)
+                self.modes[target] = self.modes.pop(source)
+                return self.ok(args, b"")
+            case ["chmod", mode, *paths]:
+                for path in paths:
+                    name = path.removeprefix("databases/")
+                    if name not in self.files:
+                        return self.ok(args, f"chmod: {path}: No such file\n".encode())
+                    self.modes[name] = mode
+                return self.ok(args, b"")
+            case ["rm", "-f", *paths]:
+                for path in paths:
+                    self.files.pop(path.removeprefix("databases/"), None)
+                return self.ok(args, b"")
         raise AssertionError(f"unexpected adb call {cmd}")
 
 
@@ -327,3 +381,229 @@ def test_summarize_leaves_the_backup_untouched(tmp_path: Path) -> None:
     summarize(folder, UTC)
 
     assert {p.name: p.read_bytes() for p in folder.iterdir()} == before
+
+
+# validate_backup
+
+
+def write_backup(folder: Path, files: dict[str, bytes]) -> Path:
+    folder.mkdir()
+    for name, data in files.items():
+        (folder / name).write_bytes(data)
+    return folder
+
+
+BACKUP = {DB: b"old db", f"{DB}-wal": b"old\nwal", f"{DB}-shm": b"old shm"}
+
+
+def test_a_backup_folder_lists_its_database_files(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", {**BACKUP, "notes.txt": b"x"})
+
+    assert validate_backup(folder) == set(BACKUP)
+
+
+def test_a_folder_without_the_database_is_refused(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", {f"{DB}-wal": b"wal"})
+
+    with pytest.raises(BackupError, match="no vgmixr.db"):
+        validate_backup(folder)
+
+
+def test_a_missing_folder_is_refused(tmp_path: Path) -> None:
+    with pytest.raises(BackupError, match="no vgmixr.db"):
+        validate_backup(tmp_path / "nope")
+
+
+def test_a_shm_without_its_wal_is_refused(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", {DB: b"db", f"{DB}-shm": b"shm"})
+
+    with pytest.raises(BackupError, match="-shm without"):
+        validate_backup(folder)
+
+
+# files_to_delete
+
+
+def test_phone_files_the_backup_lacks_are_deleted() -> None:
+    phone = {DB, f"{DB}-wal", f"{DB}-shm"}
+
+    assert files_to_delete({DB}, phone) == [f"{DB}-shm", f"{DB}-wal"]
+
+
+def test_nothing_is_deleted_when_the_backup_has_every_file() -> None:
+    assert files_to_delete({DB, f"{DB}-wal", f"{DB}-shm"}, {DB, f"{DB}-wal"}) == []
+
+
+# push
+
+
+class Confirm:
+    """Records what push asked, answers [answer], and marks the moment in the phone's calls."""
+
+    def __init__(self, phone: FakePhone, answer: bool = True) -> None:
+        self.phone = phone
+        self.answer = answer
+        self.asked: list[str] = []
+
+    def __call__(self, lines: list[str]) -> bool:
+        self.asked = lines
+        self.phone.calls.append(["<confirm>"])
+        return self.answer
+
+
+def test_push_writes_the_backup_over_the_phone(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", BACKUP)
+    phone = FakePhone()
+
+    push(ADB, folder, tmp_path / "backups", phone, NOW, Confirm(phone), sleep=phone.sleep)
+
+    assert phone.files == BACKUP
+
+
+def test_push_writes_with_exec_in_as_one_command_string(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", BACKUP)
+    phone = FakePhone()
+
+    push(ADB, folder, tmp_path / "backups", phone, NOW, Confirm(phone), sleep=phone.sleep)
+
+    assert ["exec-in", f"run-as {PACKAGE} sh -c 'cat > databases/vgmixr.db.part'"] in phone.calls
+
+
+def test_push_pulls_the_phone_first_as_a_rollback_point(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", BACKUP)
+    phone = FakePhone()
+    before = dict(phone.files)
+
+    rollback = push(
+        ADB, folder, tmp_path / "backups", phone, NOW, Confirm(phone), sleep=phone.sleep
+    )
+
+    assert rollback == tmp_path / "backups" / "2026-10-23_141205"
+    assert {p.name: p.read_bytes() for p in rollback.iterdir()} == before
+
+
+def test_push_asks_after_the_rollback_and_stops_the_app_again_before_writing(
+    tmp_path: Path,
+) -> None:
+    folder = write_backup(tmp_path / "b", BACKUP)
+    phone = FakePhone()
+
+    push(ADB, folder, tmp_path / "backups", phone, NOW, Confirm(phone), sleep=phone.sleep)
+
+    asked = phone.calls.index(["<confirm>"])
+    first_write = next(i for i, c in enumerate(phone.calls) if c[0] == "exec-in")
+    last_read = max(i for i, c in enumerate(phone.calls) if c[3:4] == ["cat"])
+    assert last_read < asked < first_write
+    after = phone.calls[asked:first_write]
+    assert ["shell", "dumpsys", "media_session"] in after
+    assert ["shell", "am", "force-stop", PACKAGE] in after
+
+
+def test_push_tells_what_it_will_write_and_delete(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", {DB: b"db"})
+    phone = FakePhone()
+    confirm = Confirm(phone)
+
+    push(ADB, folder, tmp_path / "backups", phone, NOW, confirm, sleep=phone.sleep)
+
+    text = "\n".join(confirm.asked)
+    assert str(folder) in text
+    assert "Write: vgmixr.db" in text
+    assert "Delete: vgmixr.db-shm, vgmixr.db-wal" in text
+    assert str(tmp_path / "backups" / "2026-10-23_141205") in text
+
+
+def test_push_deletes_a_wal_and_shm_the_backup_lacks(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", {DB: b"db"})
+    phone = FakePhone()
+
+    push(ADB, folder, tmp_path / "backups", phone, NOW, Confirm(phone), sleep=phone.sleep)
+
+    assert phone.files == {DB: b"db"}
+
+
+def test_declining_leaves_the_phone_unchanged(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", BACKUP)
+    phone = FakePhone()
+    before = dict(phone.files)
+
+    with pytest.raises(BackupError, match="unchanged"):
+        push(
+            ADB,
+            folder,
+            tmp_path / "backups",
+            phone,
+            NOW,
+            Confirm(phone, answer=False),
+            sleep=phone.sleep,
+        )
+
+    assert phone.files == before
+    assert not any(c[0] == "exec-in" for c in phone.calls)
+
+
+def test_push_refuses_a_folder_without_the_database_before_touching_the_phone(
+    tmp_path: Path,
+) -> None:
+    folder = write_backup(tmp_path / "b", {f"{DB}-wal": b"wal"})
+    phone = FakePhone()
+
+    with pytest.raises(BackupError):
+        push(ADB, folder, tmp_path / "backups", phone, NOW, Confirm(phone), sleep=phone.sleep)
+
+    assert phone.calls == []
+
+
+def test_push_refuses_while_vgmixr_plays(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", BACKUP)
+    phone = FakePhone(playing=True)
+    before = dict(phone.files)
+
+    with pytest.raises(BackupError, match="playing"):
+        push(ADB, folder, tmp_path / "backups", phone, NOW, Confirm(phone), sleep=phone.sleep)
+
+    assert phone.files == before
+    assert ["shell", "am", "force-stop", PACKAGE] not in phone.calls
+
+
+def test_a_write_that_arrives_damaged_leaves_the_phone_files_alone(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", BACKUP)
+    phone = FakePhone()
+    phone.mangled_writes = {f"{DB}-wal"}
+    before = dict(phone.files)
+
+    with pytest.raises(BackupError, match="vgmixr.db-wal"):
+        push(ADB, folder, tmp_path / "backups", phone, NOW, Confirm(phone), sleep=phone.sleep)
+
+    assert phone.files == before
+
+
+def test_push_waits_for_a_write_still_landing_on_the_phone(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", BACKUP)
+    phone = FakePhone()
+    phone.lag = 3
+
+    push(ADB, folder, tmp_path / "backups", phone, NOW, Confirm(phone), sleep=phone.sleep)
+
+    assert phone.files == BACKUP
+    assert phone.sleeps
+
+
+def test_a_write_that_never_matches_gives_up_within_seconds(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", BACKUP)
+    phone = FakePhone()
+    phone.mangled_writes = {DB}
+
+    with pytest.raises(BackupError, match="damaged"):
+        push(ADB, folder, tmp_path / "backups", phone, NOW, Confirm(phone), sleep=phone.sleep)
+
+    assert 0 < sum(phone.sleeps) <= 10
+
+
+def test_pushed_files_get_the_app_files_mode_back(tmp_path: Path) -> None:
+    folder = write_backup(tmp_path / "b", BACKUP)
+    phone = FakePhone()
+
+    push(ADB, folder, tmp_path / "backups", phone, NOW, Confirm(phone), sleep=phone.sleep)
+
+    assert {name: phone.modes[name] for name in phone.files} == dict.fromkeys(BACKUP, "660")
