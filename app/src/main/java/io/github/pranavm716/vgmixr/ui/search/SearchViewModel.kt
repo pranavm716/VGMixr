@@ -74,7 +74,7 @@ class SearchViewModel @Inject constructor(
         playHistory.plays
     ) { query, index, plays -> Triple(query, index, plays) }
         .mapLatest { (query, index, plays) ->
-            Matches(query, search(query, index, plays, clock.instant()))
+            Matches(query, search(query, index))
         }
         .flowOn(dispatcher)
 

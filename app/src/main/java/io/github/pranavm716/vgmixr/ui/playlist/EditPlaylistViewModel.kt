@@ -76,7 +76,7 @@ class EditPlaylistViewModel @Inject constructor(
         query.debounce { if (it.isBlank()) 0L else SEARCH_DELAY_MS },
         repository.catalog.map(::SearchIndex),
         playHistory.plays
-    ) { query, index, plays -> Matches(query, search(query, index, plays, clock.instant())) }
+    ) { query, index, plays -> Matches(query, search(query, index)) }
         .flowOn(dispatcher)
 
     // An empty field lists the playlist's own tracks (newest first, all checked), so unchecking one

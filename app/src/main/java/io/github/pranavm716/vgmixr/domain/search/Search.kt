@@ -1,27 +1,23 @@
 package io.github.pranavm716.vgmixr.domain.search
 
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
-import io.github.pranavm716.vgmixr.domain.history.Play
-import java.time.Instant
 
 /**
  * The tracks matching [query], best first. Every query word must match a word of the track's
  * title, family, games, generation or region (see [matchWord] and [SEARCH_ALIASES]); a title word
- * counts double. Tracks with the same text score are ordered by [weight] (history), then by how
- * much of the title matched, then in Games tab order.
+ * counts double. Tracks with the same text score are ordered by [weight] (what the user listens
+ * to), then by how much of the title matched, then in Games tab order.
  */
 fun search(
     query: String,
     index: SearchIndex,
-    history: List<Play>,
-    now: Instant,
     weight: HistoryWeight = NoHistoryWeight
 ): List<CatalogTrack> {
     val words = searchWords(query)
     if (words.isEmpty()) return emptyList()
     return index.entries
         .mapNotNull { entry ->
-            score(words, entry) { weight.weight(entry.track.id, history, now) }
+            score(words, entry) { weight.weight(entry.track) }
         }
         .sortedWith(
             compareByDescending<Scored> { it.points }
@@ -35,15 +31,15 @@ fun search(
 }
 
 /**
- * How much a track's play [history] lifts it at [now]. It only orders tracks whose text matches
- * score the same, so it never lifts a weaker match over a stronger one. Step 12b fills it in.
+ * How much what the user listens to lifts a track (see [frecencyWeight]). It only orders tracks
+ * whose text matches score the same, so it never lifts a weaker match over a stronger one.
  */
 fun interface HistoryWeight {
-    fun weight(trackId: String, history: List<Play>, now: Instant): Double
+    fun weight(track: CatalogTrack): Double
 }
 
-/** No history effect yet. */
-val NoHistoryWeight = HistoryWeight { _, _, _ -> 0.0 }
+/** Text alone decides. */
+val NoHistoryWeight = HistoryWeight { 0.0 }
 
 private class Scored(
     val entry: IndexedTrack,

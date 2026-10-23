@@ -8,6 +8,7 @@ import io.github.pranavm716.vgmixr.domain.history.Play
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.model.Source
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
+import java.time.Duration
 import java.time.Instant
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -87,7 +88,7 @@ class SearchTest {
     private val index = SearchIndex(catalog)
     private val now = Instant.parse("2026-10-22T12:00:00Z")
 
-    private fun ids(query: String) = search(query, index, emptyList(), now).map { it.id }
+    private fun ids(query: String) = search(query, index).map { it.id }
 
     @Test
     fun `a blank query finds nothing`() {
@@ -218,7 +219,7 @@ class SearchTest {
     @Test
     fun `history reorders tracks that match equally well`() {
         val favorsOras =
-            HistoryWeight { trackId, _, _ -> if (trackId.startsWith("oras")) 5.0 else 0.0 }
+            HistoryWeight { track -> if (track.id.startsWith("oras")) 5.0 else 0.0 }
 
         assertEquals(
             listOf(
@@ -228,33 +229,39 @@ class SearchTest {
                 "hgss-pokemon-center",
                 "dppt-pokemon-center-night"
             ),
-            search("pokemon center", index, emptyList(), now, favorsOras).map { it.id }
+            search("pokemon center", index, favorsOras).map { it.id }
+        )
+    }
+
+    @Test
+    fun `frecency puts playlist tracks, then played ones, then the lifted family first`() {
+        val signals = RankingSignals(
+            plays = listOf(Play("dppt-pokemon-center", now - Duration.ofDays(1))),
+            inPlaylists = setOf("hgss-pokemon-center"),
+            liftedFamilies = setOf("oras")
+        )
+
+        assertEquals(
+            listOf(
+                "hgss-pokemon-center",
+                "dppt-pokemon-center",
+                "oras-pokemon-center",
+                "rse-pokemon-center",
+                "dppt-pokemon-center-night"
+            ),
+            search("pokemon center", index, frecencyWeight(signals, now)).map { it.id }
         )
     }
 
     @Test
     fun `history never lifts a weaker text match over a stronger one`() {
-        val favorsRoute = HistoryWeight { trackId, _, _ ->
-            if (trackId == "rse-route-101") 1_000_000.0 else 0.0
+        val favorsRoute = HistoryWeight { track ->
+            if (track.id == "rse-route-101") 1_000_000.0 else 0.0
         }
 
-        val results = search("emerald", index, emptyList(), now, favorsRoute).map { it.id }
+        val results = search("emerald", index, favorsRoute).map { it.id }
 
         assertEquals(listOf("rse-opening-movie-emerald", "rse-route-101"), results.take(2))
-    }
-
-    @Test
-    fun `the history weight is given the plays and the time`() {
-        val plays = listOf(Play("rse-route-101", Instant.parse("2026-10-20T08:00:00Z")))
-        val seen = mutableListOf<Pair<List<Play>, Instant>>()
-        val recording = HistoryWeight { _, history, at ->
-            seen += history to at
-            0.0
-        }
-
-        search("route 101", index, plays, now, recording)
-
-        assertEquals(plays to now, seen.first())
     }
 
     private fun familiesOf(ids: List<String>) =
