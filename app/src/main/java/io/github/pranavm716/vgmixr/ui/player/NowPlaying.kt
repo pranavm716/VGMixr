@@ -25,6 +25,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -186,7 +187,7 @@ fun NowPlayingScreen(
         Column(Modifier.padding(horizontal = SIDE_MARGIN)) {
             SeekRow(viewModel)
             Spacer(Modifier.height(16.dp))
-            Controls(visible.isPlaying, visible.isLoading, viewModel)
+            Controls(visible.isPlaying, visible.isLoading, visible.shuffle, viewModel)
         }
         Spacer(Modifier.weight(BOTTOM_GAP))
         Box(Modifier.fillMaxWidth().padding(horizontal = SIDE_MARGIN)) {
@@ -276,12 +277,33 @@ private fun TimeText(text: String) {
 }
 
 @Composable
-private fun Controls(isPlaying: Boolean, isLoading: Boolean, viewModel: NowPlayingViewModel) {
+private fun Controls(
+    isPlaying: Boolean,
+    isLoading: Boolean,
+    shuffle: Boolean,
+    viewModel: NowPlayingViewModel
+) {
+    // Five slots, so play/pause stays centered; the last waits for repeat/loop (step 21).
     Row(
         Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        IconButton(onClick = viewModel::onShuffle, modifier = Modifier.size(56.dp)) {
+            Icon(
+                painterResource(R.drawable.ic_shuffle),
+                contentDescription = stringResource(
+                    if (shuffle) R.string.shuffle_on else R.string.shuffle_off
+                ),
+                // The accent when on; off, previous and next's color.
+                tint = if (shuffle) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    LocalContentColor.current
+                },
+                modifier = Modifier.size(28.dp)
+            )
+        }
         IconButton(onClick = viewModel::onPrevious, modifier = Modifier.size(56.dp)) {
             Icon(
                 painterResource(R.drawable.ic_skip_previous),
@@ -322,6 +344,7 @@ private fun Controls(isPlaying: Boolean, isLoading: Boolean, viewModel: NowPlayi
                 modifier = Modifier.size(36.dp)
             )
         }
+        Spacer(Modifier.size(56.dp))
     }
 }
 

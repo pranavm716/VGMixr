@@ -52,6 +52,8 @@
     <string name="add_to_playlist">Add to playlist</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
+    <string name="shuffle_on">Shuffle on</string>
+    <string name="shuffle_off">Shuffle off</string>
     <string name="search_hint">Search</string>
     <string name="clear_search">Clear search</string>
     <string name="search_no_results">No tracks match “%1$s”</string>

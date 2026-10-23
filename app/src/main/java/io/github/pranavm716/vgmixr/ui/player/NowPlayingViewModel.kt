@@ -29,7 +29,8 @@ sealed interface NowPlayingUiState {
         val playingFrom: PlayingFromUi,
         val isPlaying: Boolean,
         val isLoading: Boolean,
-        val isFavorite: Boolean = false
+        val isFavorite: Boolean = false,
+        val shuffle: Boolean = false
     ) : NowPlayingUiState
 }
 
@@ -81,6 +82,8 @@ class NowPlayingViewModel @Inject constructor(
 
     fun onNext() = playback.skipToNext()
 
+    fun onShuffle() = playback.setShuffle(!playback.state.value.shuffle)
+
     fun onSeek(positionMs: Long) = playback.seekTo(positionMs)
 
     /** Favorites the playing track, or unfavorites it if the heart shows it as one. */
@@ -122,7 +125,8 @@ private fun Catalog.nowPlaying(
         playingFrom = playingFrom,
         isPlaying = state.isPlaying,
         isLoading = state.isLoading,
-        isFavorite = track.id in favorites
+        isFavorite = track.id in favorites,
+        shuffle = state.shuffle
     )
 }
 
