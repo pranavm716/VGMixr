@@ -8,29 +8,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -42,7 +31,6 @@ import io.github.pranavm716.vgmixr.ui.components.CollectionRow
 import io.github.pranavm716.vgmixr.ui.components.RowTileSize
 import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnReselect
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
-import io.github.pranavm716.vgmixr.ui.theme.DialogBackground
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
@@ -97,8 +85,10 @@ fun PlaylistsScreen(
             }
         }
         if (naming) {
-            NewPlaylistDialog(
-                onCreate = { name ->
+            PlaylistNameDialog(
+                title = stringResource(R.string.new_playlist),
+                confirmLabel = stringResource(R.string.create),
+                onConfirm = { name ->
                     naming = false
                     onCreatePlaylist(name)
                 },
@@ -139,40 +129,4 @@ private fun PlaylistsScreenPreview() {
             onCreatePlaylist = {}
         )
     }
-}
-
-/** Asks for a new playlist's name, with the keyboard up; Create is off while the name is blank. */
-@Composable
-private fun NewPlaylistDialog(onCreate: (String) -> Unit, onDismiss: () -> Unit) {
-    var name by rememberSaveable { mutableStateOf("") }
-    val focus = remember { FocusRequester() }
-    LaunchedEffect(Unit) { focus.requestFocus() }
-    val create = { if (name.isNotBlank()) onCreate(name) }
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        containerColor = DialogBackground,
-        title = { Text(stringResource(R.string.new_playlist)) },
-        text = {
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                placeholder = { Text(stringResource(R.string.playlist_name)) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.Sentences,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(onDone = { create() }),
-                modifier = Modifier.focusRequester(focus)
-            )
-        },
-        confirmButton = {
-            TextButton(onClick = create, enabled = name.isNotBlank()) {
-                Text(stringResource(R.string.create))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
-        }
-    )
 }

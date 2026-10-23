@@ -100,9 +100,10 @@ fun VGMixrApp(
     navController: NavHostController = rememberNavController(),
     screen: TabScreen = { destination, _, _ -> PlaceholderScreen(destination.label) },
     familyScreen: @Composable () -> Unit = { PlaceholderScreen("Family") },
-    playlistScreen: @Composable (onEditPlaylist: (name: String) -> Unit) -> Unit = {
-        PlaceholderScreen("Playlist")
-    },
+    playlistScreen: @Composable (
+        onEditPlaylist: (name: String) -> Unit,
+        onClose: () -> Unit
+    ) -> Unit = { _, _ -> PlaceholderScreen("Playlist") },
     editPlaylistScreen: @Composable (
         onBack: () -> Unit
     ) -> Unit = { PlaceholderScreen("Add tracks") },
@@ -240,7 +241,10 @@ private fun AppNavHost(
     navController: NavHostController,
     screen: TabScreen,
     familyScreen: @Composable () -> Unit,
-    playlistScreen: @Composable (onEditPlaylist: (name: String) -> Unit) -> Unit,
+    playlistScreen: @Composable (
+        onEditPlaylist: (name: String) -> Unit,
+        onClose: () -> Unit
+    ) -> Unit,
     editPlaylistScreen: @Composable (onBack: () -> Unit) -> Unit,
     reselects: (TopLevelDestination) -> Int,
     modifier: Modifier
@@ -299,9 +303,10 @@ private fun AppNavHost(
             composable<PlaylistRoute> { entry ->
                 val playlistId = entry.toRoute<PlaylistRoute>().playlistId
                 Box(Modifier.screen().testTag(PLAYLIST_SCREEN_TAG)) {
-                    playlistScreen { name ->
-                        navController.navigate(EditPlaylistRoute(playlistId, name))
-                    }
+                    playlistScreen(
+                        { name -> navController.navigate(EditPlaylistRoute(playlistId, name)) },
+                        { navController.popBackStack() }
+                    )
                 }
             }
             // Slides in over the playlist like any screen inside a tab; pads itself too.

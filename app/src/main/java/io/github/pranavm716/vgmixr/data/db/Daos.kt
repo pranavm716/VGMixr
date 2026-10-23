@@ -105,6 +105,16 @@ interface UserDataDao {
     @Query("DELETE FROM playlist_entries WHERE playlistId = :playlistId AND trackId = :trackId")
     suspend fun removeFromPlaylist(playlistId: Long, trackId: String)
 
+    /** Renames playlist [id]; Favorites keeps its name. */
+    @Query(
+        "UPDATE playlists SET name = :name WHERE id = :id AND id != $FAVORITES_PLAYLIST_ID"
+    )
+    suspend fun renamePlaylist(id: Long, name: String)
+
+    /** Deletes playlist [id] and, by cascade, its entries; Favorites stays. */
+    @Query("DELETE FROM playlists WHERE id = :id AND id != $FAVORITES_PLAYLIST_ID")
+    suspend fun deletePlaylist(id: Long)
+
     @Query("SELECT * FROM playlists WHERE id = :id")
     fun observePlaylist(id: Long): Flow<PlaylistEntity?>
 

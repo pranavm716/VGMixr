@@ -169,4 +169,35 @@ class PlaylistViewModelTest {
             assertEquals(PlaylistUiState.NotFound, awaitItem())
         }
     }
+
+    @Test
+    fun `renaming trims the name`() = runTest {
+        playlists.contents.value += 2L to Playlist(2, "Mix", false, emptyList())
+
+        viewModel(playlistId = 2).onRename("  Gym leaders ")
+
+        assertEquals("Gym leaders", playlists.contents.value[2]?.name)
+    }
+
+    @Test
+    fun `a blank name renames nothing`() = runTest {
+        playlists.contents.value += 2L to Playlist(2, "Mix", false, emptyList())
+
+        viewModel(playlistId = 2).onRename("   ")
+
+        assertEquals("Mix", playlists.contents.value[2]?.name)
+    }
+
+    @Test
+    fun `deleting the playlist removes it and closes the page`() = runTest {
+        playlists.contents.value += 2L to Playlist(2, "Mix", false, listOf("rse-a"))
+        val viewModel = viewModel(playlistId = 2)
+
+        viewModel.events.test {
+            viewModel.onDelete()
+
+            assertEquals(PlaylistEvent.Closed, awaitItem())
+        }
+        assertEquals(null, playlists.contents.value[2])
+    }
 }

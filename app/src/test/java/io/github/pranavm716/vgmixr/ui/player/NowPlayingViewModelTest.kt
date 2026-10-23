@@ -100,6 +100,18 @@ class NowPlayingViewModelTest {
     }
 
     @Test
+    fun `a track from a deleted playlist plays from its family`() = runTest {
+        playback.state.value = playing(QueueContext.Playlist(9))
+
+        viewModel.uiState.test {
+            assertEquals(
+                PlayingFromUi.Family("rse", "Ruby / Sapphire"),
+                (awaitItem() as NowPlayingUiState.Visible).playingFrom
+            )
+        }
+    }
+
+    @Test
     fun `hidden while nothing plays`() = runTest {
         viewModel.uiState.test {
             assertEquals(NowPlayingUiState.Hidden, awaitItem())

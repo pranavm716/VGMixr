@@ -110,7 +110,12 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
     val queueEnd = queueStart + queue.upNext.size
     val nextFromName = when (val context = queue.nextFromContext.firstOrNull()?.context) {
         is QueueContext.Family -> families.firstOrNull { it.id == context.familyId }?.name
+
+        // A playlist deleted since: its tracks came from their family.
         is QueueContext.Playlist -> playlists.firstOrNull { it.id == context.playlistId }?.name
+            ?: tracksById[queue.nextFromContext.first().trackId]?.familyId
+                ?.let { id -> families.firstOrNull { it.id == id }?.name }
+
         QueueContext.Queue, null -> null
     }
     return QueueUiState(

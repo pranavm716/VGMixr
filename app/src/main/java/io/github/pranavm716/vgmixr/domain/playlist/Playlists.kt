@@ -38,6 +38,12 @@ interface PlaylistRepository {
      */
     suspend fun setInPlaylist(playlistId: Long, trackId: String, inPlaylist: Boolean)
 
+    /** Renames playlist [id] to [name] (trimmed); Favorites can't be renamed. */
+    suspend fun renamePlaylist(id: Long, name: String)
+
+    /** Deletes playlist [id] with its entries; Favorites can't be deleted. */
+    suspend fun deletePlaylist(id: Long)
+
     /** Makes an empty playlist named [name] (trimmed) and returns its id. */
     suspend fun createPlaylist(name: String): Long
 }

@@ -206,6 +206,46 @@ class RoomPlaylistRepositoryTest {
             )
         }
 
+    @Test
+    fun `renaming a playlist trims the name and shows it everywhere`() = runTest(dispatcher) {
+        val hype = repository.createPlaylist("Hype")
+
+        repository.renamePlaylist(hype, "  Hype mix ")
+
+        assertEquals("Hype mix", repository.playlist(hype).first()?.name)
+        assertEquals("Hype mix", repository.playlists.first().single { it.id == hype }.name)
+    }
+
+    @Test
+    fun `deleting a playlist removes it and its tracks, and nothing else`() = runTest(dispatcher) {
+        val hype = repository.createPlaylist("Hype")
+        val mix = repository.createPlaylist("Mix")
+        repository.setInPlaylist(hype, "rse-route-101", true)
+        repository.setInPlaylist(mix, "rse-route-101", true)
+        repository.setFavorite("rse-route-101", true)
+
+        repository.deletePlaylist(hype)
+
+        assertEquals(null, repository.playlist(hype).first())
+        assertEquals(emptyList<PlaylistEntryEntity>(), dao.playlistEntries(hype))
+        assertEquals(listOf("rse-route-101"), repository.playlist(mix).first()?.trackIds)
+        assertEquals(setOf("rse-route-101"), repository.favorites.first())
+        assertEquals(listOf(FAVORITES_PLAYLIST_ID, mix), repository.playlists.first().map { it.id })
+    }
+
+    @Test
+    fun `Favorites can't be renamed or deleted`() = runTest(dispatcher) {
+        repository.setFavorite("rse-route-101", true)
+
+        repository.renamePlaylist(FAVORITES_PLAYLIST_ID, "Loved")
+        repository.deletePlaylist(FAVORITES_PLAYLIST_ID)
+
+        assertEquals(
+            Playlist(FAVORITES_PLAYLIST_ID, "Favorites", true, listOf("rse-route-101")),
+            repository.playlist(FAVORITES_PLAYLIST_ID).first()
+        )
+    }
+
     private class MutableClock(var instant: Instant) : Clock() {
         override fun instant(): Instant = instant
 

@@ -17,6 +17,8 @@ import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -24,6 +26,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -41,6 +44,12 @@ sealed interface PlaylistUiState {
     ) : PlaylistUiState {
         val trackCount: Int get() = rows.size
     }
+}
+
+/** One-off actions for the screen. */
+sealed interface PlaylistEvent {
+    /** The playlist was deleted: leave its page. */
+    data object Closed : PlaylistEvent
 }
 
 /**
@@ -93,6 +102,23 @@ class PlaylistViewModel @Inject constructor(
             val ids = playlist.playableTrackIds(catalog)
             val index = ids.indexOf(trackId)
             if (index >= 0) playback.playFrom(ids, index, QueueContext.Playlist(playlistId))
+        }
+    }
+
+    private val eventChannel = Channel<PlaylistEvent>(Channel.BUFFERED)
+    val events: Flow<PlaylistEvent> = eventChannel.receiveAsFlow()
+
+    /** Renames the playlist; a blank name renames nothing. */
+    fun onRename(name: String) {
+        if (name.isBlank()) return
+        viewModelScope.launch { playlists.renamePlaylist(playlistId, name) }
+    }
+
+    /** Deletes the playlist and its entries, then closes its page. */
+    fun onDelete() {
+        viewModelScope.launch {
+            playlists.deletePlaylist(playlistId)
+            eventChannel.send(PlaylistEvent.Closed)
         }
     }
 

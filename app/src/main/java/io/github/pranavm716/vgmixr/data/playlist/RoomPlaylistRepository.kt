@@ -36,6 +36,11 @@ class RoomPlaylistRepository @Inject constructor(
     override val favorites: Flow<Set<String>> =
         dao.observePlaylistTrackIds(FAVORITES_PLAYLIST_ID).map { it.toSet() }
 
+    override suspend fun renamePlaylist(id: Long, name: String) =
+        dao.renamePlaylist(id, name.trim())
+
+    override suspend fun deletePlaylist(id: Long) = dao.deletePlaylist(id)
+
     override suspend fun createPlaylist(name: String): Long =
         dao.insertPlaylist(PlaylistEntity(name = name.trim(), createdAt = clock.instant()))
 

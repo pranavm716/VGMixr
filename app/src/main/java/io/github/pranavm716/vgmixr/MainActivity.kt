@@ -48,7 +48,9 @@ class MainActivity : ComponentActivity() {
                         AppScreen(destination, nav, reselects)
                     },
                     familyScreen = { FamilyTab() },
-                    playlistScreen = { edit -> PlaylistTab(onEditPlaylist = edit) },
+                    playlistScreen = { edit, close ->
+                        PlaylistTab(onEditPlaylist = edit, onClose = close)
+                    },
                     editPlaylistScreen = { back -> EditPlaylistTab(onBack = back) },
                     snackbars = snackbars,
                     miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },

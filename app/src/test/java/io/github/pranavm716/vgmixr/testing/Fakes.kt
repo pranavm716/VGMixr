@@ -172,6 +172,15 @@ class FakePlaylistRepository(
         contents.value += playlistId to playlist.copy(trackIds = ids)
     }
 
+    override suspend fun renamePlaylist(id: Long, name: String) {
+        val playlist = contents.value[id] ?: return
+        contents.value += id to playlist.copy(name = name.trim())
+    }
+
+    override suspend fun deletePlaylist(id: Long) {
+        contents.value -= id
+    }
+
     /** The names passed to [createPlaylist], in order; new ids count up from 100. */
     val created = mutableListOf<String>()
 

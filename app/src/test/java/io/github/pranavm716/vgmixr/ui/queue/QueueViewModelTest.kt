@@ -146,4 +146,15 @@ class QueueViewModelTest {
             assertEquals("Favorites", awaitItem().nextFromName)
         }
     }
+
+    @Test
+    fun `next from a deleted playlist names the family instead`() = runTest {
+        val gone = QueueContext.Playlist(9)
+        playback.state.value =
+            state(listOf(QueueEntry("c", gone), QueueEntry("x", gone)), current = 0)
+
+        viewModel.uiState.test {
+            assertEquals("Ruby / Sapphire / Emerald", awaitItem().nextFromName)
+        }
+    }
 }
