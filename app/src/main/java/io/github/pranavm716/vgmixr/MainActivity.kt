@@ -56,10 +56,10 @@ class MainActivity : ComponentActivity() {
                 val snackbars = remember { SnackbarHostState() }
                 MessagesEffect(snackbars)
                 VGMixrApp(
-                    screen = { destination, nav, reselects ->
-                        AppScreen(destination, nav, reselects)
+                    screen = { destination, nav, reselects, addToPlaylist ->
+                        AppScreen(destination, nav, reselects, addToPlaylist)
                     },
-                    familyScreen = { FamilyTab() },
+                    familyScreen = { addToPlaylist -> FamilyTab(addToPlaylist) },
                     playlistScreen = { edit, close ->
                         PlaylistTab(onEditPlaylist = edit, onClose = close)
                     },
@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
                     nowPlaying = { openQueue, addToPlaylist ->
                         NowPlayingScreen(onOpenQueue = openQueue, onAddToPlaylist = addToPlaylist)
                     },
-                    addToPlaylist = { close -> AddToPlaylist(onClose = close) },
+                    addToPlaylist = { trackId, close -> AddToPlaylist(trackId, onClose = close) },
                     queue = { close -> QueueScreen(onClose = close) },
                     nowPlayingOpen = nowPlayingOpen
                 )

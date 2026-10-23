@@ -109,6 +109,22 @@ class AddToPlaylistViewModelTest {
     }
 
     @Test
+    fun `opened for a track, it adds that track rather than the playing one`() = runTest {
+        play("rse-a")
+        viewModel.onOpen("rse-b")
+
+        viewModel.uiState.test {
+            assertEquals(
+                AddToPlaylistUiState("Route 102", listOf(favorites, hype.copy(added = false))),
+                expectMostRecentItem()
+            )
+            viewModel.onToggle(1)
+            assertEquals(listOf(true, false), awaitItem().rows.map { it.added })
+        }
+        assertEquals(listOf("rse-b"), playlists.contents.value[1]?.trackIds)
+    }
+
+    @Test
     fun `nothing playing lists nothing`() = runTest {
         viewModel.onOpen()
 

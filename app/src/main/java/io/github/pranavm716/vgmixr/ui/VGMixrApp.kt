@@ -88,7 +88,12 @@ import kotlinx.coroutines.flow.distinctUntilChanged
  * up each time the tab is tapped while its root screen shows (Games then scrolls to the top, Search
  * focuses its field).
  */
-typealias TabScreen = @Composable (TopLevelDestination, NavHostController, reselects: Int) -> Unit
+typealias TabScreen = @Composable (
+    TopLevelDestination,
+    NavHostController,
+    reselects: Int,
+    onAddToPlaylist: (trackId: String) -> Unit
+) -> Unit
 
 /** Test tag of the family track screen. */
 const val FAMILY_SCREEN_TAG = "screen-family"
@@ -109,8 +114,10 @@ const val SETTINGS_SCREEN_TAG = "screen-settings"
 @Composable
 fun VGMixrApp(
     navController: NavHostController = rememberNavController(),
-    screen: TabScreen = { destination, _, _ -> PlaceholderScreen(destination.label) },
-    familyScreen: @Composable () -> Unit = { PlaceholderScreen("Family") },
+    screen: TabScreen = { destination, _, _, _ -> PlaceholderScreen(destination.label) },
+    familyScreen: @Composable (
+        onAddToPlaylist: (trackId: String) -> Unit
+    ) -> Unit = { PlaceholderScreen("Family") },
     playlistScreen: @Composable (
         onEditPlaylist: (name: String) -> Unit,
         onClose: () -> Unit
@@ -136,8 +143,9 @@ fun VGMixrApp(
         onAddToPlaylist: () -> Unit
     ) -> Unit = { _, _ -> PlaceholderScreen("Now playing") },
     addToPlaylist: @Composable (
+        trackId: String?,
         onClose: () -> Unit
-    ) -> Unit = { PlaceholderScreen("Add to playlist") },
+    ) -> Unit = { _, _ -> PlaceholderScreen("Add to playlist") },
     queue: @Composable (onClose: () -> Unit) -> Unit = { PlaceholderScreen("Queue") },
     nowPlayingOpen: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
 ) {
@@ -157,8 +165,14 @@ fun VGMixrApp(
     }
     // The queue opens over now playing and closes with it.
     var queueOpen by rememberSaveable { mutableStateOf(false) }
-    // "Add to playlist" opens over now playing the same way.
+    // "Add to playlist" opens over now playing the same way, for the playing track (null), or over
+    // the tabs for a track long-pressed in a family or in search.
     var addToPlaylistOpen by rememberSaveable { mutableStateOf(false) }
+    var addToPlaylistTrack by rememberSaveable { mutableStateOf<String?>(null) }
+    val openAddToPlaylist = { trackId: String? ->
+        addToPlaylistTrack = trackId
+        addToPlaylistOpen = true
+    }
     LaunchedEffect(nowPlayingOpen.value) {
         if (!nowPlayingOpen.value) {
             queueOpen = false
@@ -226,6 +240,7 @@ fun VGMixrApp(
                 editPlaylistScreen,
                 settingsScreen,
                 { reselects[it] ?: 0 },
+                openAddToPlaylist,
                 Modifier.padding(padding)
             )
         }
@@ -261,7 +276,7 @@ fun VGMixrApp(
                     }
                 )
             },
-            content = { nowPlaying({ queueOpen = true }, { addToPlaylistOpen = true }) }
+            content = { nowPlaying({ queueOpen = true }, { openAddToPlaylist(null) }) }
         )
         AnimatedVisibility(
             visible = queueOpen,
@@ -280,7 +295,7 @@ fun VGMixrApp(
         ) {
             Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                 BackHandler { addToPlaylistOpen = false }
-                addToPlaylist { addToPlaylistOpen = false }
+                addToPlaylist(addToPlaylistTrack) { addToPlaylistOpen = false }
             }
         }
     }
@@ -290,7 +305,7 @@ fun VGMixrApp(
 private fun AppNavHost(
     navController: NavHostController,
     screen: TabScreen,
-    familyScreen: @Composable () -> Unit,
+    familyScreen: @Composable (onAddToPlaylist: (String) -> Unit) -> Unit,
     playlistScreen: @Composable (
         onEditPlaylist: (name: String) -> Unit,
         onClose: () -> Unit
@@ -298,6 +313,7 @@ private fun AppNavHost(
     editPlaylistScreen: @Composable (onBack: () -> Unit) -> Unit,
     settingsScreen: @Composable (onBack: () -> Unit) -> Unit,
     reselects: (TopLevelDestination) -> Int,
+    onAddToPlaylist: (trackId: String) -> Unit,
     modifier: Modifier
 ) {
     NavHost(
@@ -334,21 +350,27 @@ private fun AppNavHost(
         // One entry per tab; the bar's order comes from TopLevelDestination, not from here.
         navigation<GamesGraph>(startDestination = GamesRoute) {
             composable<GamesRoute> {
-                Tab(TopLevelDestination.GAMES, navController, screen, reselects)
+                Tab(TopLevelDestination.GAMES, navController, screen, reselects, onAddToPlaylist)
             }
             // The family screen pads below the status bar itself, under its tinted header.
             composable<FamilyRoute> {
                 Box(Modifier.screen().testTag(FAMILY_SCREEN_TAG)) {
-                    familyScreen()
+                    familyScreen(onAddToPlaylist)
                 }
             }
         }
         composable<SearchRoute> {
-            Tab(TopLevelDestination.SEARCH, navController, screen, reselects)
+            Tab(TopLevelDestination.SEARCH, navController, screen, reselects, onAddToPlaylist)
         }
         navigation<PlaylistsGraph>(startDestination = PlaylistsRoute) {
             composable<PlaylistsRoute> {
-                Tab(TopLevelDestination.PLAYLISTS, navController, screen, reselects)
+                Tab(
+                    TopLevelDestination.PLAYLISTS,
+                    navController,
+                    screen,
+                    reselects,
+                    onAddToPlaylist
+                )
             }
             // Pads below the status bar itself, as the family screen does.
             composable<PlaylistRoute> { entry ->
@@ -369,7 +391,7 @@ private fun AppNavHost(
         }
         navigation<RemixesGraph>(startDestination = RemixesRoute) {
             composable<RemixesRoute> {
-                Tab(TopLevelDestination.REMIXES, navController, screen, reselects)
+                Tab(TopLevelDestination.REMIXES, navController, screen, reselects, onAddToPlaylist)
             }
             // Pads below the status bar itself, as the edit playlist screen does.
             composable<SettingsRoute> {
@@ -386,21 +408,27 @@ private fun Tab(
     destination: TopLevelDestination,
     navController: NavHostController,
     screen: TabScreen,
-    reselects: (TopLevelDestination) -> Int
+    reselects: (TopLevelDestination) -> Int,
+    onAddToPlaylist: (trackId: String) -> Unit
 ) {
     Box(Modifier.screen().statusBarsPadding().testTag(destination.screenTag)) {
-        screen(destination, navController, reselects(destination))
+        screen(destination, navController, reselects(destination), onAddToPlaylist)
     }
 }
 
 /** The real root screen of each tab. */
 @Composable
-fun AppScreen(destination: TopLevelDestination, navController: NavHostController, reselects: Int) {
+fun AppScreen(
+    destination: TopLevelDestination,
+    navController: NavHostController,
+    reselects: Int,
+    onAddToPlaylist: (trackId: String) -> Unit
+) {
     when (destination) {
         TopLevelDestination.GAMES ->
             GamesTab(onFamilyClick = { navController.navigate(FamilyRoute(it)) }, reselects)
 
-        TopLevelDestination.SEARCH -> SearchTab(reselects)
+        TopLevelDestination.SEARCH -> SearchTab(reselects, onAddToPlaylist)
 
         TopLevelDestination.PLAYLISTS ->
             PlaylistsTab(onPlaylistClick = { navController.navigate(PlaylistRoute(it)) }, reselects)

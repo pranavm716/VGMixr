@@ -32,8 +32,9 @@ data class AddToPlaylistRowUi(
 )
 
 /**
- * Adds the playing track to playlists, or takes it out. The track is the one playing when the
- * screen opened ([onOpen]), so a song ending meanwhile doesn't change what the checks apply to.
+ * Adds a track to playlists, or takes it out: the one the screen was opened for (a long-pressed
+ * row), or else the one playing when it opened ([onOpen]), so a song ending meanwhile doesn't
+ * change what the checks apply to.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -64,9 +65,9 @@ class AddToPlaylistViewModel @Inject constructor(
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AddToPlaylistUiState())
 
-    /** Takes the playing track as the one to add; called each time the screen opens. */
-    fun onOpen() {
-        trackId.value = playback.state.value.trackId
+    /** Takes [trackId], or the playing track, as the one to add; called each time the screen opens. */
+    fun onOpen(trackId: String? = null) {
+        this.trackId.value = trackId ?: playback.state.value.trackId
     }
 
     /** The plus adds the track to playlist [playlistId]; the check takes it out. */

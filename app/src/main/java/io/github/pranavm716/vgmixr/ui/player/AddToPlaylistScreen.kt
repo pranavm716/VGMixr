@@ -38,9 +38,13 @@ import io.github.pranavm716.vgmixr.ui.playlists.PlaylistArt
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
-fun AddToPlaylist(onClose: () -> Unit, viewModel: AddToPlaylistViewModel = hiltViewModel()) {
-    // Each opening takes the track playing then.
-    LaunchedEffect(Unit) { viewModel.onOpen() }
+fun AddToPlaylist(
+    trackId: String?,
+    onClose: () -> Unit,
+    viewModel: AddToPlaylistViewModel = hiltViewModel()
+) {
+    // Each opening takes its track: the one given, or the one playing then.
+    LaunchedEffect(trackId) { viewModel.onOpen(trackId) }
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     AddToPlaylistScreen(state, onToggle = viewModel::onToggle, onClose = onClose)
 }

@@ -1,7 +1,7 @@
 package io.github.pranavm716.vgmixr.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -73,7 +73,8 @@ private const val CURRENT_TINT = 0.12f
 /**
  * A track with its family's tile, the title over its game chips, as the queue and search list
  * them. [current] tints the playing track; [unplayable] greys a track whose sources are all broken.
- * Without [onClick] the row doesn't react to taps; [trailing] (a button) ends it.
+ * Without [onClick] the row doesn't react to taps; [onLongClick], if given, runs on a long press
+ * with a haptic tick. [trailing] (a button) ends it.
  */
 @Composable
 fun TrackTileRow(
@@ -82,6 +83,7 @@ fun TrackTileRow(
     unplayable: Boolean,
     current: Boolean,
     onClick: (() -> Unit)?,
+    onLongClick: (() -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null
 ) {
     val accent = MaterialTheme.colorScheme.primary
@@ -90,7 +92,14 @@ fun TrackTileRow(
             .fillMaxWidth()
             .height(TileRowHeight)
             .then(if (current) Modifier.background(accent.copy(alpha = CURRENT_TINT)) else Modifier)
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .then(
+                if (onClick != null) {
+                    // Ticks on a long press by itself (hapticFeedbackEnabled).
+                    Modifier.combinedClickable(onClick = onClick, onLongClick = onLongClick)
+                } else {
+                    Modifier
+                }
+            )
             .padding(start = 16.dp, end = if (trailing != null) 4.dp else 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
