@@ -64,10 +64,21 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
     /**
      * Tapping track [index] of [trackIds], tapped in [context]: it plays now, the queue still waits
      * right after it, and the rest of [trackIds] follows. The tracks before it stay, so "previous"
-     * walks back through them.
+     * walks back through them. With [shuffle] on, the rest of [trackIds] follows shuffled instead,
+     * all of it, so nothing waits behind for "previous".
      */
-    fun playFrom(trackIds: List<String>, context: QueueContext, index: Int): QueueEdit.Replace {
+    fun playFrom(
+        trackIds: List<String>,
+        context: QueueContext,
+        index: Int,
+        shuffle: Boolean = false,
+        random: Random = Random.Default
+    ): QueueEdit.Replace {
         val tapped = trackIds.mapIndexed { i, id -> QueueEntry(id, context, listIndex = i) }
+        if (shuffle) {
+            val rest = (tapped.take(index) + tapped.drop(index + 1)).shuffled(random)
+            return QueueEdit.Replace(listOf(tapped[index]) + upNext + rest, startIndex = 0)
+        }
         return QueueEdit.Replace(
             tapped.take(index + 1) + upNext + tapped.drop(index + 1),
             startIndex = index

@@ -125,6 +125,30 @@ class ShuffleTest {
     }
 
     @Test
+    fun `tapping with shuffle on plays the tapped track, then the queue, then the rest shuffled`() {
+        val queue = PlayQueue(listOf(at("x", 0)) + queued("q1", "q2"), current = 0)
+
+        val edit = queue.playFrom(
+            listOf("a", "b", "c", "d", "e"),
+            rse,
+            index = 2,
+            shuffle = true,
+            random = Random(SEED)
+        )
+
+        val rest = listOf(at("a", 0), at("b", 1), at("d", 3), at("e", 4)).shuffled(Random(SEED))
+        assertNotEquals(listOf("a", "b", "d", "e"), rest.map { it.trackId })
+        assertEquals(QueueEdit.Replace(listOf(at("c", 2)) + queued("q1", "q2") + rest, 0), edit)
+    }
+
+    @Test
+    fun `tapping with shuffle off keeps list order`() {
+        val edit = PlayQueue.EMPTY.playFrom(listOf("a", "b"), rse, 1, shuffle = false, Random(SEED))
+
+        assertEquals(QueueEdit.Replace(listOf(at("a", 0), at("b", 1)), 1), edit)
+    }
+
+    @Test
     fun `a list already in order is left alone`() {
         assertEquals(emptyList<QueueEdit>(), inOrder.unshuffle())
     }

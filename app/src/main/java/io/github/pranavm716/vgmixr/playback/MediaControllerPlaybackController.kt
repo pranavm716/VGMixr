@@ -81,7 +81,9 @@ class MediaControllerPlaybackController @Inject constructor(
     }
 
     override fun playFrom(trackIds: List<String>, index: Int, context: QueueContext) =
-        withController { it.apply(it.queue().playFrom(trackIds, context, index)) }
+        withController {
+            it.apply(it.queue().playFrom(trackIds, context, index, it.shuffleModeEnabled))
+        }
 
     override fun addToQueue(trackIds: List<String>) = withController {
         it.apply(it.queue().add(trackIds, hasEnded = it.playbackState == Player.STATE_ENDED))
