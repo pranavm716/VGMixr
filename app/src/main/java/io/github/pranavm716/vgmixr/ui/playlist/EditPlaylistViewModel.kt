@@ -7,13 +7,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
-import io.github.pranavm716.vgmixr.domain.history.PlayHistory
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.search.SearchIndex
 import io.github.pranavm716.vgmixr.domain.search.search
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.search.SEARCH_DELAY_MS
-import java.time.Clock
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -58,8 +56,6 @@ class EditPlaylistViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: CatalogRepository,
     private val playlists: PlaylistRepository,
-    playHistory: PlayHistory,
-    private val clock: Clock,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     // The EditPlaylistRoute's argument, stored by type-safe navigation under its property name.
@@ -71,12 +67,13 @@ class EditPlaylistViewModel @Inject constructor(
 
     private val query = MutableStateFlow("")
 
-    // As in the Search tab: searched once typing pauses, an emptied field clears at once.
+    // As in the Search tab: searched once typing pauses, an emptied field clears at once. Text
+    // alone ranks: a track worth adding is rarely in another playlist already, and history would
+    // mostly lift tracks the playlist has.
     private val matches = combine(
         query.debounce { if (it.isBlank()) 0L else SEARCH_DELAY_MS },
-        repository.catalog.map(::SearchIndex),
-        playHistory.plays
-    ) { query, index, plays -> Matches(query, search(query, index)) }
+        repository.catalog.map(::SearchIndex)
+    ) { query, index -> Matches(query, search(query, index)) }
         .flowOn(dispatcher)
 
     // An empty field lists the playlist's own tracks (newest first, all checked), so unchecking one

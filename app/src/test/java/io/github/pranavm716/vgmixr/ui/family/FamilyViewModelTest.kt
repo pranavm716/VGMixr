@@ -9,6 +9,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.search.BrowsedFamily
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
@@ -50,16 +51,25 @@ class FamilyViewModelTest {
     private val repository = FakeCatalogRepository(catalog)
     private val playback = FakePlaybackController()
     private val messages = UserMessages()
+    private val browsed = BrowsedFamily()
 
     private fun viewModel(familyId: String) = FamilyViewModel(
         SavedStateHandle(mapOf("familyId" to familyId)),
         repository,
         playback,
         messages,
+        browsed,
         main.dispatcher
     )
 
     private fun chip(game: Game) = ChipUi(game.shortName, game.color)
+
+    @Test
+    fun `opening a family's page makes it the last browsed family`() {
+        viewModel("rse")
+
+        assertEquals("rse", browsed.familyId.value)
+    }
 
     @Test
     fun `the header has the family's name and track count`() = runTest {

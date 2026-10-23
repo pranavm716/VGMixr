@@ -124,7 +124,12 @@ class SearchViewModelTest {
             awaitItem()
             viewModel.onQueryChange("route 101")
 
-            assertEquals(listOf("oras-route-101", "rse-route-101"), awaitItem().results.map { it.id })
+            assertEquals(
+                listOf("oras-route-101", "rse-route-101"),
+                awaitItem().results.map {
+                    it.id
+                }
+            )
         }
     }
 
@@ -133,14 +138,24 @@ class SearchViewModelTest {
         viewModel.uiState.test {
             awaitItem()
             viewModel.onQueryChange("route 101")
-            assertEquals(listOf("rse-route-101", "oras-route-101"), awaitItem().results.map { it.id })
+            assertEquals(
+                listOf("rse-route-101", "oras-route-101"),
+                awaitItem().results.map {
+                    it.id
+                }
+            )
 
             history.plays.value = listOf(Play("oras-route-101", TestCatalog.clock.instant()))
             runCurrent()
             expectNoEvents()
 
             viewModel.onQueryChange("route 101 ")
-            assertEquals(listOf("oras-route-101", "rse-route-101"), awaitItem().results.map { it.id })
+            assertEquals(
+                listOf("oras-route-101", "rse-route-101"),
+                awaitItem().results.map {
+                    it.id
+                }
+            )
         }
     }
 

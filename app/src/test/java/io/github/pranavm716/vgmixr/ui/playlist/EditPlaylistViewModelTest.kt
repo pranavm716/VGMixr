@@ -2,14 +2,12 @@ package io.github.pranavm716.vgmixr.ui.playlist
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import io.github.pranavm716.vgmixr.data.catalog.TestCatalog
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
-import io.github.pranavm716.vgmixr.testing.FakePlayHistory
 import io.github.pranavm716.vgmixr.testing.FakePlaylistRepository
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
@@ -60,8 +58,6 @@ class EditPlaylistViewModelTest {
             SavedStateHandle(mapOf("playlistId" to 7L)),
             FakeCatalogRepository(catalog),
             playlists,
-            FakePlayHistory(),
-            TestCatalog.clock,
             main.dispatcher
         )
     }
@@ -75,8 +71,6 @@ class EditPlaylistViewModelTest {
             SavedStateHandle(mapOf("playlistId" to 7L, "playlistName" to "Hype")),
             FakeCatalogRepository(catalog),
             FakePlaylistRepository(),
-            FakePlayHistory(),
-            TestCatalog.clock,
             main.dispatcher
         )
 
