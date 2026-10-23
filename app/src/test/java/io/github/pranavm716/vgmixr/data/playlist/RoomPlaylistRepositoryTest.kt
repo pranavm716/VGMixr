@@ -267,6 +267,28 @@ class RoomPlaylistRepositoryTest {
             }
         }
 
+    @Test
+    fun `the tracks in any playlist follow adds, removes and deletes, Favorites included`() =
+        runTest(dispatcher) {
+            val hype = repository.createPlaylist("Hype")
+            val mix = repository.createPlaylist("Mix")
+
+            repository.tracksInPlaylists.test {
+                assertEquals(emptySet<String>(), awaitItem())
+
+                repository.setFavorite("rse-route-101", true)
+                assertEquals(setOf("rse-route-101"), awaitItem())
+
+                repository.setInPlaylist(hype, "rse-route-101", true)
+                repository.setInPlaylist(mix, "frlg-pallet-town", true)
+                assertEquals(setOf("rse-route-101", "frlg-pallet-town"), awaitItem())
+
+                repository.setFavorite("rse-route-101", false)
+                repository.deletePlaylist(mix)
+                assertEquals(setOf("rse-route-101"), awaitItem())
+            }
+        }
+
     private class MutableClock(var instant: Instant) : Clock() {
         override fun instant(): Instant = instant
 

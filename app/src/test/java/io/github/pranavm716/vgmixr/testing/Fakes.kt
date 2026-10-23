@@ -157,6 +157,11 @@ class FakePlaylistRepository(
 
     override fun playlist(id: Long): Flow<Playlist?> = contents.map { it[id] }
 
+    override val tracksInPlaylists: Flow<Set<String>> =
+        combine(contents, this.favorites) { lists, favorites ->
+            lists.values.flatMap { it.trackIds }.toSet() + favorites
+        }
+
     /** The [contents] playlists holding [trackId], plus Favorites (id 1) if [favorites] has it. */
     override fun playlistsContaining(trackId: String): Flow<Set<Long>> =
         combine(contents, favorites) { lists, favorites ->
