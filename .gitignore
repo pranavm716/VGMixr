@@ -84,6 +84,8 @@ roms/
 
 # Pipeline (Python)
 pipeline/out/
+# Backups of the phone's database (python -m vgmixr_pipeline.backup)
+/backups/
 # Cover sources, cropped by hand; only catalog/covers/ is committed
 pipeline/covers-in/
 __pycache__/
