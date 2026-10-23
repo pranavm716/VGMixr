@@ -130,6 +130,9 @@ interface UserDataDao {
     @Query("SELECT trackId FROM playlist_entries WHERE playlistId = :playlistId")
     fun observePlaylistTrackIds(playlistId: Long): Flow<List<String>>
 
+    @Query("SELECT DISTINCT trackId FROM playlist_entries")
+    fun observeTrackIdsInPlaylists(): Flow<List<String>>
+
     @Upsert
     suspend fun upsertPlaylistEntry(entry: PlaylistEntryEntity)
 

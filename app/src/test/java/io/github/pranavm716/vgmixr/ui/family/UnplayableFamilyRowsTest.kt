@@ -8,6 +8,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.search.BrowsedFamily
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
@@ -45,6 +46,7 @@ class UnplayableFamilyRowsTest {
             FakeCatalogRepository(catalog),
             playback,
             messages,
+            BrowsedFamily(),
             main.dispatcher
         )
     }

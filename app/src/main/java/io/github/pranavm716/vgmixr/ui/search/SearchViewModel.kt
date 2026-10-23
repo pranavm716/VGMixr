@@ -7,10 +7,11 @@ import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.playableFamilyTrackIds
-import io.github.pranavm716.vgmixr.domain.history.PlayHistory
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.search.SearchIndex
+import io.github.pranavm716.vgmixr.domain.search.SearchRanking
+import io.github.pranavm716.vgmixr.domain.search.frecencyWeight
 import io.github.pranavm716.vgmixr.domain.search.search
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
@@ -58,7 +59,7 @@ data class SearchRowUi(
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val repository: CatalogRepository,
-    playHistory: PlayHistory,
+    private val ranking: SearchRanking,
     private val playback: PlaybackController,
     private val messages: UserMessages,
     private val clock: Clock,
@@ -68,13 +69,14 @@ class SearchViewModel @Inject constructor(
 
     // Searched once typing pauses, as Spotify does, so fast typing doesn't flash a list per
     // letter; an emptied field clears at once. A newer query cancels a search still running.
+    // The ranking is read per search, so a play or a tap doesn't reorder the list on screen.
     private val matches = combine(
         query.debounce { if (it.isBlank()) 0L else SEARCH_DELAY_MS },
-        repository.catalog.map(::SearchIndex),
-        playHistory.plays
-    ) { query, index, plays -> Triple(query, index, plays) }
-        .mapLatest { (query, index, plays) ->
-            Matches(query, search(query, index, plays, clock.instant()))
+        repository.catalog.map(::SearchIndex)
+    ) { query, index -> query to index }
+        .mapLatest { (query, index) ->
+            val weight = frecencyWeight(ranking.signals.first(), clock.instant())
+            Matches(query, search(query, index, weight))
         }
         .flowOn(dispatcher)
 

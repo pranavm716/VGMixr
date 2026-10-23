@@ -38,6 +38,10 @@ class RoomPlaylistRepository @Inject constructor(
         // Room re-emits on any entry change; only a change for this track gets through.
         dao.observePlaylistIdsContaining(trackId).map { it.toSet() }.distinctUntilChanged()
 
+    override val tracksInPlaylists: Flow<Set<String>> =
+        // Room re-emits on any entry change; only a change to the set gets through.
+        dao.observeTrackIdsInPlaylists().map { it.toSet() }.distinctUntilChanged()
+
     override val favorites: Flow<Set<String>> =
         dao.observePlaylistTrackIds(FAVORITES_PLAYLIST_ID).map { it.toSet() }
 

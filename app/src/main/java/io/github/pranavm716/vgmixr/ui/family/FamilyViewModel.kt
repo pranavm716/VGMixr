@@ -13,6 +13,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.playableFamilyTrackIds
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.search.BrowsedFamily
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
@@ -67,10 +68,16 @@ class FamilyViewModel @Inject constructor(
     private val repository: CatalogRepository,
     private val playback: PlaybackController,
     private val messages: UserMessages,
+    browsed: BrowsedFamily,
     @DefaultDispatcher dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     // The FamilyRoute's argument, stored by type-safe navigation under its property name.
     private val familyId: String = checkNotNull(savedStateHandle["familyId"])
+
+    // Search lifts the family browsed last a little.
+    init {
+        browsed.opened(familyId)
+    }
 
     val uiState: StateFlow<FamilyUiState> =
         repository.catalog

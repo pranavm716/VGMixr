@@ -29,6 +29,9 @@ interface PlaylistRepository {
     /** The ids of the playlists holding [trackId], Favorites included. */
     fun playlistsContaining(trackId: String): Flow<Set<Long>>
 
+    /** The ids of the tracks in any playlist, Favorites included. */
+    val tracksInPlaylists: Flow<Set<String>>
+
     /** The ids of the tracks in Favorites. */
     val favorites: Flow<Set<String>>
 
