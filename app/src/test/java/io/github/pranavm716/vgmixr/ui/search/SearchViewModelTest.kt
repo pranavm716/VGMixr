@@ -6,13 +6,17 @@ import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
+import io.github.pranavm716.vgmixr.domain.history.Play
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.search.BrowsedFamily
+import io.github.pranavm716.vgmixr.domain.search.SearchRanking
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlayHistory
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
+import io.github.pranavm716.vgmixr.testing.FakePlaylistRepository
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
@@ -61,12 +65,20 @@ class SearchViewModelTest {
 
     private val playback = FakePlaybackController()
     private val messages = UserMessages()
+    private val catalogRepository = FakeCatalogRepository(catalog)
+    private val history = FakePlayHistory()
 
     // Built once the main dispatcher rule has started, since viewModelScope uses it.
     private val viewModel by lazy {
         SearchViewModel(
-            FakeCatalogRepository(catalog),
-            FakePlayHistory(),
+            catalogRepository,
+            SearchRanking(
+                history,
+                FakePlaylistRepository(),
+                playback,
+                catalogRepository,
+                BrowsedFamily()
+            ),
             playback,
             messages,
             TestCatalog.clock,
@@ -102,6 +114,33 @@ class SearchViewModelTest {
                 ),
                 awaitItem().results
             )
+        }
+    }
+
+    @Test
+    fun `a track that was played comes before a same-named one that wasn't`() = runTest {
+        history.plays.value = listOf(Play("oras-route-101", TestCatalog.clock.instant()))
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.onQueryChange("route 101")
+
+            assertEquals(listOf("oras-route-101", "rse-route-101"), awaitItem().results.map { it.id })
+        }
+    }
+
+    @Test
+    fun `a play doesn't reorder the results on screen, the next search uses it`() = runTest {
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.onQueryChange("route 101")
+            assertEquals(listOf("rse-route-101", "oras-route-101"), awaitItem().results.map { it.id })
+
+            history.plays.value = listOf(Play("oras-route-101", TestCatalog.clock.instant()))
+            runCurrent()
+            expectNoEvents()
+
+            viewModel.onQueryChange("route 101 ")
+            assertEquals(listOf("oras-route-101", "rse-route-101"), awaitItem().results.map { it.id })
         }
     }
 
