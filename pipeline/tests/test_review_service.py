@@ -856,3 +856,57 @@ def test_a_note_is_written_shown_and_cleared(review: Review, tmp_path: Path) -> 
     assert review.set_note("rse-route-101", "  ")["note"] is None
     written = json.loads((tmp_path / "data" / "overrides.json").read_text(encoding="utf-8"))
     assert written["tracks"] == {}
+
+
+# Frozen catalog ids (ids.json, docs/roadmap.md step 12e)
+
+
+def frozen_review(tmp_path: Path, frozen: dict[str, str], **kw: Any) -> Review:
+    data, out = write_inputs(tmp_path, TRACKS)
+    (data / "ids.json").write_text(json.dumps(frozen), encoding="utf-8")
+    return Review(data, out, CachedVideos({RS_LIST: PLAYLIST}), None, **kw)
+
+
+def test_a_frozen_track_keeps_its_catalog_id_after_a_rename(tmp_path: Path) -> None:
+    review = frozen_review(tmp_path, {"rse-littleroot-town": "rse-littleroot-town"})
+    detail = review.rename("rse-littleroot-town", "Littleroot Town (Day)")
+    assert (detail["catalogId"], detail["idFrozen"]) == ("rse-littleroot-town", True)
+    route = review.track("rse-route-101")
+    assert (route["catalogId"], route["idFrozen"]) == ("rse-route-101", False)
+
+
+@pytest.mark.parametrize(
+    ("frozen", "title", "owner"),
+    [
+        ({"rse-littleroot-town": "rse-littleroot"}, "Littleroot", "rse-littleroot-town"),
+        ({"rse-gone": "rse-route-1"}, "Route 1", "rse-gone"),  # excluded or vanished
+    ],
+    ids=["kept", "not-in-draft"],
+)
+def test_an_unfrozen_rename_onto_a_frozen_id_is_refused(
+    tmp_path: Path, frozen: dict[str, str], title: str, owner: str
+) -> None:
+    review = frozen_review(tmp_path, frozen)
+    path = tmp_path / "data" / "overrides.json"
+    before = path.read_bytes()
+    with pytest.raises(ReviewError) as raised:
+        review.rename("rse-abandoned-ship", title)
+    assert any(owner in e for e in raised.value.errors), raised.value.errors
+    assert path.read_bytes() == before
+
+
+def test_a_frozen_track_may_take_a_title_that_slugs_like_its_own_id(tmp_path: Path) -> None:
+    review = frozen_review(tmp_path, {"rse-littleroot-town": "rse-littleroot"})
+    assert review.rename("rse-littleroot-town", "Littleroot")["catalogId"] == "rse-littleroot"
+
+
+def test_rebuild_reloads_the_frozen_ids(tmp_path: Path) -> None:
+    def rebuild() -> tuple[bool, str]:
+        ids = {"rse-route-101": "rse-route-101"}
+        (tmp_path / "data" / "ids.json").write_text(json.dumps(ids), encoding="utf-8")
+        return True, "built"
+
+    review = frozen_review(tmp_path, {}, rebuild=rebuild)
+    assert review.track("rse-route-101")["idFrozen"] is False
+    review.rebuild()
+    assert review.track("rse-route-101")["idFrozen"] is True

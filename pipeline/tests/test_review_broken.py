@@ -345,3 +345,16 @@ def test_a_track_names_its_catalog_id_the_one_reports_use(review: Review) -> Non
 
     assert review.track("rse-littleroot-town")["catalogId"] == "rse-littleroot-town"
     assert review.track("rse-route-101")["catalogId"] == "rse-route-101-day"
+
+
+def test_a_report_finds_a_frozen_track_by_its_id_after_a_rename(tmp_path: Path) -> None:
+    # Rebuilt since the rename: the title slugs to rse-route-101-day, the id stays frozen.
+    route = TRACKS[1].model_copy(update={"title": "Route 101 (Day)"})
+    data, out = write_inputs(tmp_path, [TRACKS[0], route, TRACKS[2]])
+    (data / "ids.json").write_text(json.dumps({"rse-route-101": "rse-route-101"}), encoding="utf-8")
+    review = Review(data, out, CachedVideos({RS_LIST: PLAYLIST}), None)
+    pull(tmp_path, mark("rse-route-101", vid(8)))
+
+    (report,) = review.broken()["reports"]
+
+    assert report["track"]["id"] == "rse-route-101"

@@ -40,6 +40,7 @@ from vgmixr_pipeline.catalog.config import (
     load_games,
     load_overrides,
 )
+from vgmixr_pipeline.catalog.ids import catalog_id, load_ids
 from vgmixr_pipeline.catalog.jingles import is_jingle
 from vgmixr_pipeline.catalog.match import (
     SEARCH_RESULTS,
@@ -117,6 +118,9 @@ class Review:
     def _load(self) -> None:
         self._load_games()
         self._overrides = load_overrides(self._data_dir / "overrides.json")
+        # The frozen catalog ids (source key -> id), which the builder adds to on every Rebuild.
+        self._frozen = load_ids(self._data_dir / "ids.json")
+        self._frozen_owner = {id_: key for key, id_ in self._frozen.items()}
         draft = Draft.model_validate_json(
             (self._out_dir / "draft.json").read_text(encoding="utf-8")
         )
@@ -209,8 +213,10 @@ class Review:
         taken = {(s.videoId, s.startMs, s.endMs) for s in match.streams}
         return {
             "id": track.id,
-            # The id the manifest (and the app's reports) will give it, from today's title.
-            "catalogId": slug.track_id(track.family, track.title),
+            # The id the manifest (and the app's reports) gives it: frozen in ids.json once it
+            # shipped, else the slug of today's title.
+            "catalogId": self._catalog_id(track),
+            "idFrozen": track.id in self._frozen,
             "family": track.family,
             "title": track.title,
             "order": track.order,
@@ -341,21 +347,26 @@ class Review:
         return {"family": track.family, "order": ids}
 
     def rename(self, track_id: str, title: str) -> dict[str, Any]:
-        """Sets a track's title (a `title` override). Its current videos are pinned first, as
-        accepted ones in order, since matching scores titles and cached searches are keyed by
-        the old one: a rename never drops or reorders a source."""
+        """Sets a track's title (a `title` override); a frozen catalog id stays as it is. Its
+        current videos are pinned first, as accepted ones in order, since matching scores titles
+        and cached searches are keyed by the old one: a rename never drops or reorders a source."""
         track = self._track(track_id)
         title = " ".join(str(title).split())
         if not title:
             raise ReviewError(["a title can't be empty"])
         if title == track.title:
             raise ReviewError([f"the track is already titled {title!r}"])
-        # Titles that slug alike would give both tracks one catalog id, which fails the build.
-        catalog_id = slug.track_id(track.family, title)
+        # A family's titles stay distinct (titles that slug alike fail the build).
+        title_slug = slug.track_id(track.family, title)
         for other in self._draft.tracks:
             if other.family == track.family and other.id != track_id:
-                if slug.track_id(other.family, other.title) == catalog_id:
+                if slug.track_id(other.family, other.title) == title_slug:
                     raise ReviewError([f"{other.id} is already titled {other.title!r}"])
+        # A track without a frozen id would ship under the slug, and ids are never reused.
+        owner = self._frozen_owner.get(title_slug)
+        if track_id not in self._frozen and owner is not None:
+            raise ReviewError([f"ids.json already gives {title_slug} to {owner}; ids are never "
+                               "reused, so pick another title"])  # fmt: skip
         decision = self._decision(track_id)
         pinned = [Slice(videoId=s.videoId, startMs=s.startMs, endMs=s.endMs)
                   for s in self._matches[track_id].streams]  # fmt: skip
@@ -589,14 +600,21 @@ class Review:
             **({"notice": notice} if notice else {}),
         }
 
+    def _catalog_id(self, track: DraftTrack) -> str:
+        return catalog_id(self._frozen, track.id, track.family, track.title)
+
     def _catalog_ids(self) -> dict[str, str]:
-        """Catalog ids (the manifest's, the app's) to source keys: from the titles as built, which
-        the phone has, and from today's titles, so a rename in this session still resolves."""
+        """Catalog ids (the manifest's, the app's) to source keys: the frozen ones, then for
+        tracks without one, from the titles as built, which the phone has, and from today's
+        titles, so a rename in this session still resolves."""
 
         def ids(tracks: Any) -> dict[str, str]:
-            return {slug.track_id(t.family, t.title): t.id for t in tracks}
+            return {
+                slug.track_id(t.family, t.title): t.id for t in tracks if t.id not in self._frozen
+            }
 
-        return {**ids(self._tracks.values()), **ids(self._built.values())}
+        frozen = {id_: key for key, id_ in self._frozen.items() if key in self._tracks}
+        return {**ids(self._tracks.values()), **ids(self._built.values()), **frozen}
 
     def _report(self, mark: BrokenMark, catalog_ids: dict[str, str]) -> dict[str, Any]:
         used_by = self._tracks_using(mark.video_id)
