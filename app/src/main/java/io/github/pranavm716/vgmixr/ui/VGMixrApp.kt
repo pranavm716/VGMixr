@@ -67,8 +67,10 @@ import io.github.pranavm716.vgmixr.ui.navigation.GamesRoute
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistRoute
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistsGraph
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistsRoute
+import io.github.pranavm716.vgmixr.ui.navigation.RemixesGraph
+import io.github.pranavm716.vgmixr.ui.navigation.RemixesRoute
 import io.github.pranavm716.vgmixr.ui.navigation.SearchRoute
-import io.github.pranavm716.vgmixr.ui.navigation.Tab4Route
+import io.github.pranavm716.vgmixr.ui.navigation.SettingsRoute
 import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
 import io.github.pranavm716.vgmixr.ui.navigation.VGMixrNavBar
 import io.github.pranavm716.vgmixr.ui.navigation.screenTag
@@ -77,6 +79,7 @@ import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheetState
 import io.github.pranavm716.vgmixr.ui.player.PlayingFromUi
 import io.github.pranavm716.vgmixr.ui.playlists.PlaylistsTab
 import io.github.pranavm716.vgmixr.ui.search.SearchTab
+import io.github.pranavm716.vgmixr.ui.settings.SettingsScreen
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
@@ -92,11 +95,15 @@ const val FAMILY_SCREEN_TAG = "screen-family"
 /** Test tag of a playlist's track screen. */
 const val PLAYLIST_SCREEN_TAG = "screen-playlist"
 
+/** Test tag of the settings screen. */
+const val SETTINGS_SCREEN_TAG = "screen-settings"
+
 /**
  * The app shell: the tabs' screens above the navbar. [screen] draws a tab's root,
  * [familyScreen] a family's tracks, [playlistScreen] a playlist's (its plus opens
  * [editPlaylistScreen]); all default to placeholders
  * so the shell runs without Hilt (tests), and MainActivity passes the real screens.
+ * [settingsScreen], opened by a long press on the Remixes tab, needs no Hilt yet.
  */
 @Composable
 fun VGMixrApp(
@@ -110,6 +117,7 @@ fun VGMixrApp(
     editPlaylistScreen: @Composable (
         onBack: () -> Unit
     ) -> Unit = { PlaceholderScreen("Add tracks") },
+    settingsScreen: @Composable (onBack: () -> Unit) -> Unit = { SettingsScreen(it) },
     snackbars: SnackbarHostState = remember { SnackbarHostState() },
     miniPlayer: @Composable (
         NowPlayingSheetState,
@@ -196,6 +204,12 @@ fun VGMixrApp(
                             } else {
                                 navController.navigateTo(tab)
                             }
+                        },
+                        // Opens the tab's page inside it, over whatever the tab shows.
+                        onLongPress = { tab ->
+                            val page = tab.longPressRoute ?: return@VGMixrNavBar
+                            if (tab != selected) navController.navigateTo(tab)
+                            navController.navigate(page) { launchSingleTop = true }
                         }
                     )
                 }
@@ -207,6 +221,7 @@ fun VGMixrApp(
                 familyScreen,
                 playlistScreen,
                 editPlaylistScreen,
+                settingsScreen,
                 { reselects[it] ?: 0 },
                 Modifier.padding(padding)
             )
@@ -278,6 +293,7 @@ private fun AppNavHost(
         onClose: () -> Unit
     ) -> Unit,
     editPlaylistScreen: @Composable (onBack: () -> Unit) -> Unit,
+    settingsScreen: @Composable (onBack: () -> Unit) -> Unit,
     reselects: (TopLevelDestination) -> Int,
     modifier: Modifier
 ) {
@@ -348,7 +364,17 @@ private fun AppNavHost(
                 }
             }
         }
-        composable<Tab4Route> { Tab(TopLevelDestination.TAB_4, navController, screen, reselects) }
+        navigation<RemixesGraph>(startDestination = RemixesRoute) {
+            composable<RemixesRoute> {
+                Tab(TopLevelDestination.REMIXES, navController, screen, reselects)
+            }
+            // Pads below the status bar itself, as the edit playlist screen does.
+            composable<SettingsRoute> {
+                Box(Modifier.screen().testTag(SETTINGS_SCREEN_TAG)) {
+                    settingsScreen { navController.popBackStack() }
+                }
+            }
+        }
     }
 }
 
