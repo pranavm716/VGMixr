@@ -2,6 +2,8 @@ package io.github.pranavm716.vgmixr.playback
 
 import android.content.Context
 import android.os.Bundle
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.CommandButton
 import androidx.media3.session.SessionCommand
 import io.github.pranavm716.vgmixr.R
@@ -18,6 +20,7 @@ val toggleFavorite = SessionCommand(TOGGLE_FAVORITE, Bundle.EMPTY)
  * passes only overflow buttons on to Android's own media session (the notification and lock
  * screen on Android 13+), so each falls back to it; there the system places them.
  */
+@OptIn(UnstableApi::class)
 fun mediaButtons(context: Context, shuffle: Boolean, favorite: Boolean): List<CommandButton> =
     listOf(
         CommandButton.Builder(
