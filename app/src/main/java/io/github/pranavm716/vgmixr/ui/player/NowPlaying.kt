@@ -293,7 +293,7 @@ private fun Controls(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ControlSlot(SHUFFLE_WIDTH) {
+        ControlSlot(OUTER_WIDTH) {
             IconButton(onClick = viewModel::onShuffle, Modifier.requiredSize(48.dp)) {
                 Icon(
                     painterResource(R.drawable.ic_shuffle),
@@ -356,12 +356,11 @@ private fun Controls(
                 )
             }
         }
-        ControlSlot(SHUFFLE_WIDTH) {
+        ControlSlot(OUTER_WIDTH) {
             Icon(
                 painterResource(R.drawable.ic_repeat),
                 contentDescription = null,
-                // Its glyph fills more of its box than shuffle's: this matches their widths.
-                modifier = Modifier.requiredSize(25.dp)
+                modifier = Modifier.requiredSize(REPEAT_ICON)
             )
         }
     }
@@ -374,12 +373,14 @@ private fun ControlSlot(width: Dp, content: @Composable () -> Unit) {
 }
 
 private val SHUFFLE_ICON = 28.dp
+private val REPEAT_ICON = 28.dp
 private val SKIP_ICON = 36.dp
 private val PLAY_SIZE = 52.dp
 
-// Material Symbols' shuffle glyph spans 640 of its 960 units, skip 520.
-private val SHUFFLE_WIDTH = SHUFFLE_ICON * 640 / 960
+// Material Symbols' skip glyph spans 520 of its 960 units, repeat 720 (shuffle 640). Shuffle's
+// slot takes repeat's width too, so play/pause stays centered.
 private val SKIP_WIDTH = SKIP_ICON * 520 / 960
+private val OUTER_WIDTH = REPEAT_ICON * 720 / 960
 
 // Inside the side margin, so shuffle and repeat sit about where Shuttle's do.
 private val CONTROLS_INSET = 22.dp
