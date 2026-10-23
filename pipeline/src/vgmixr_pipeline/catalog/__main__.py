@@ -1,7 +1,8 @@
 """Builds the catalog from Bulbapedia, YouTube and pipeline/data/ into catalog/manifest.json.
 
 Writes the draft, the family report, the match report and every track's best YouTube candidates to
-pipeline/out/, then the manifest, only if it validates.
+pipeline/out/, then the manifest, only if it validates, and then adds its new tracks' ids to
+pipeline/data/ids.json, where ids are frozen once shipped.
 
 uv run python -m vgmixr_pipeline.catalog                    # uses cached responses where present
 uv run python -m vgmixr_pipeline.catalog --refresh          # refetches every Bulbapedia page
@@ -25,7 +26,8 @@ from vgmixr_pipeline.catalog.config import (
     load_order,
     load_overrides,
 )
-from vgmixr_pipeline.catalog.manifest_out import write_manifest
+from vgmixr_pipeline.catalog.ids import IDS_PATH, load_ids
+from vgmixr_pipeline.catalog.manifest_out import write_catalog
 from vgmixr_pipeline.catalog.match import candidates_json, match_tracks
 from vgmixr_pipeline.catalog.report import family_report, match_report, match_summary, summary
 from vgmixr_pipeline.catalog.score import Names
@@ -49,11 +51,17 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--out", type=Path, default=OUT_DIR, help="output directory")
     parser.add_argument("--manifest", type=Path, default=MANIFEST, help="manifest to write")
+    parser.add_argument("--ids", type=Path, default=IDS_PATH, help="frozen ids to read and add to")
     args = parser.parse_args(argv)
 
     games = load_games()
     bulbapedia = Bulbapedia(args.out / "bulbapedia", refresh=args.refresh)
     generated_at = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    try:
+        frozen = load_ids(args.ids)
+    except ValueError as e:
+        print(f"Build failed: {e}", file=sys.stderr)
+        return 1
     try:
         draft, result = build_draft(
             games,
@@ -62,6 +70,7 @@ def main(argv: list[str] | None = None) -> int:
             generated_at,
             load_durations(),
             order=load_order(),
+            frozen=frozen,
         )
     except BuildError as e:
         print("Build failed:", *e.errors, sep="\n  ", file=sys.stderr)
@@ -89,11 +98,14 @@ def main(argv: list[str] | None = None) -> int:
     print(match_summary(games.games, matches))
     print(f"\nWrote {match_path} and {candidates_path}.")
 
-    errors = write_manifest(args.manifest, draft, matches, generated_at)
+    families = list(dict.fromkeys(g.family_id for g in games.games))
+    errors, added = write_catalog(
+        args.manifest, args.ids, draft, matches, generated_at, frozen, families
+    )
     if errors:
         print("Manifest invalid, not written:", *errors, sep="\n  ", file=sys.stderr)
         return 1
-    print(f"Wrote {args.manifest}.")
+    print(f"Wrote {args.manifest}; {added} new ids in {args.ids}.")
     return 0
 
 

@@ -5,7 +5,12 @@ from pathlib import Path
 from typing import Any
 
 from vgmixr_pipeline.catalog.build import Draft, DraftTrack
-from vgmixr_pipeline.catalog.manifest_out import build_manifest, write_manifest
+from vgmixr_pipeline.catalog.manifest_out import (
+    build_manifest,
+    shipped_ids,
+    write_catalog,
+    write_manifest,
+)
 from vgmixr_pipeline.catalog.match import Match
 from vgmixr_pipeline.manifest.models import Game, LocalSource, StreamSource
 from vgmixr_pipeline.manifest.parse import Valid, parse
@@ -115,3 +120,40 @@ def test_generated_at_is_kept_when_nothing_else_changed(tmp_path: Path) -> None:
     changed = [match(DRAFT.tracks[0], stream("ccccccccccc")), *MATCHES[1:]]
     write_manifest(path, DRAFT, changed, "2026-10-17T09:00:00Z")
     assert json.loads(path.read_text(encoding="utf-8"))["generatedAt"] == "2026-10-17T09:00:00Z"
+
+
+def test_a_manifest_id_is_frozen_in_ids_json() -> None:
+    t = track("rse-route-101", title="Route 101 (Renamed)")
+    draft = DRAFT.model_copy(update={"tracks": [t]})
+    manifest = build_manifest(draft, [match(t, stream("aaaaaaaaaaa"))], "2026-10-16T10:00:00Z",
+                              {"rse-route-101": "rse-route-101"})  # fmt: skip
+    assert [x.id for x in manifest.tracks] == ["rse-route-101"]
+
+
+def test_shipped_ids_are_the_tracks_with_sources() -> None:
+    assert shipped_ids(DRAFT, MATCHES, {"dev-test-tone": "dev-tone"}) == {
+        "rse-route-101": "rse-route-101",
+        "dev-test-tone": "dev-tone",
+    }
+
+
+def test_write_catalog_adds_the_shipped_ids_to_ids_json(tmp_path: Path) -> None:
+    manifest, ids = tmp_path / "manifest.json", tmp_path / "ids.json"
+    ids.write_text('{\n  "rse-gone": "rse-gone"\n}\n', encoding="utf-8")
+    frozen = {"rse-gone": "rse-gone"}
+    result = write_catalog(manifest, ids, DRAFT, MATCHES, "2026-10-16T10:00:00Z", frozen,
+                           ["rse", "dev"])  # fmt: skip
+    assert result == ([], 2)
+    assert ids.read_text(encoding="utf-8") == (
+        '{\n  "rse-gone": "rse-gone",\n  "rse-route-101": "rse-route-101",\n\n'
+        '  "dev-test-tone": "dev-test-tone"\n}\n'
+    )
+
+
+def test_an_invalid_manifest_adds_no_ids(tmp_path: Path) -> None:
+    manifest, ids = tmp_path / "manifest.json", tmp_path / "ids.json"
+    bad = [match(DRAFT.tracks[0], stream("not-a-video-id")), *MATCHES[1:]]
+    errors, added = write_catalog(manifest, ids, DRAFT, bad, "2026-10-16T10:00:00Z", {},
+                                  ["rse", "dev"])  # fmt: skip
+    assert errors and added == 0
+    assert not ids.exists() and not manifest.exists()

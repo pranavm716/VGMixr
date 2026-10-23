@@ -1,5 +1,6 @@
 """The reports. The family report: per family, shared vs. exclusive tracks and exclusions, used
-to confirm family groupings (e.g. SM/USUM) and to find tracks that need an override. The match
+to confirm family groupings (e.g. SM/USUM), to find tracks that need an override, and ids.json
+entries whose source key vanished (a renamed upstream title or a merge; step 12e). The match
 report: per family, how many tracks got stream sources, which need review and which found nothing
 (and so are left out of the manifest).
 """
@@ -25,6 +26,10 @@ def family_report(games: list[Game], result: BuildResult) -> str:
                 titles = ", ".join(t.title for t in group)
                 sections.append(f"- Exclusive to {key}: {len(group)} ({titles})")
         sections += _excluded_lines(excluded)
+        vanished = [v for v in result.vanished if v.family == family]
+        if vanished:
+            pairs = ", ".join(f"{v.key} -> {v.id}" for v in vanished)
+            sections.append(f"- Vanished ids: {len(vanished)} ({pairs})")
         sections.append("")
     return "\n".join(sections)
 
@@ -39,6 +44,8 @@ def summary(games: list[Game], result: BuildResult) -> str:
             f"{family:<6}{len(tracks):>4} tracks{shared:>4} shared{len(tracks) - shared:>4} "
             f"exclusive{excluded:>4} excluded"
         )
+    if result.vanished:
+        lines.append(f"{len(result.vanished)} vanished ids (see family-report.md)")
     return "\n".join(lines)
 
 

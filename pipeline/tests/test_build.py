@@ -5,6 +5,7 @@ from vgmixr_pipeline.catalog.build import (
     BuildResult,
     DraftTrack,
     Occurrence,
+    Vanished,
     build_tracks,
 )
 from vgmixr_pipeline.catalog.config import (
@@ -416,3 +417,116 @@ def test_an_excluded_track_never_collides() -> None:
         }
     )
     assert ids(build([occ("Route 1"), occ("Route 2")], overrides)) == ["rby-route-2"]
+
+
+# Frozen catalog ids (ids.json, docs/roadmap.md step 12e)
+
+
+def frozen_build(
+    occurrences: list[Occurrence], frozen: dict[str, str], overrides: Overrides | None = None
+) -> BuildResult:
+    return build_tracks(GAMES, occurrences, overrides or Overrides(), frozen=frozen)
+
+
+def catalog_ids(result: BuildResult) -> dict[str, str]:
+    return result.catalog_ids
+
+
+def errors_of(occurrences: list[Occurrence], frozen: dict[str, str],
+              overrides: Overrides | None = None) -> list[str]:  # fmt: skip
+    with pytest.raises(BuildError) as raised:
+        frozen_build(occurrences, frozen, overrides)
+    return raised.value.errors
+
+
+def test_without_frozen_ids_a_catalog_id_is_the_final_titles_slug() -> None:
+    overrides = Overrides(tracks={"rby-route-1": TrackOverride(title="Route One")})
+    assert catalog_ids(build([occ("Route 1"), occ("Route 2")], overrides)) == {
+        "rby-route-1": "rby-route-one",
+        "rby-route-2": "rby-route-2",
+    }
+
+
+def test_a_frozen_track_keeps_its_id_after_a_rename() -> None:
+    overrides = Overrides(tracks={"rby-route-1": TrackOverride(title="Route One")})
+    result = frozen_build([occ("Route 1")], {"rby-route-1": "rby-route-1"}, overrides)
+    assert catalog_ids(result) == {"rby-route-1": "rby-route-1"}
+    assert track(result, "rby-route-1").title == "Route One"
+
+
+def test_an_unlisted_track_gets_its_titles_slug() -> None:
+    overrides = Overrides(tracks={"rby-route-2": TrackOverride(title="Route Two")})
+    result = frozen_build([occ("Route 1"), occ("Route 2")], {"rby-route-1": "rby-route-1"},
+                          overrides)  # fmt: skip
+    assert catalog_ids(result)["rby-route-2"] == "rby-route-two"
+
+
+@pytest.mark.parametrize(
+    ("occurrences", "overrides"),
+    [
+        ([occ("Old Route")], None),  # the frozen id's track is kept
+        ([occ("Old Route")], Overrides(tracks={"rby-old-route": TrackOverride(exclude=True)})),
+        ([], None),  # its source key vanished
+    ],
+    ids=["kept", "excluded", "vanished"],
+)
+def test_a_new_track_whose_slug_is_a_frozen_id_fails(
+    occurrences: list[Occurrence], overrides: Overrides | None
+) -> None:
+    errors = errors_of([*occurrences, occ("Route 1")], {"rby-old-route": "rby-route-1"}, overrides)
+    [error] = errors
+    assert "rby-route-1" in error and "rby-old-route" in error
+
+
+def test_an_excluded_track_keeps_its_entry_and_gets_its_id_back() -> None:
+    frozen = {"rby-route-1": "rby-route-one"}
+    excluded = Overrides(tracks={"rby-route-1": TrackOverride(exclude=True)})
+    result = frozen_build([occ("Route 1"), occ("Route 2")], frozen, excluded)
+    assert ids(result) == ["rby-route-2"]
+    assert result.vanished == []
+    assert catalog_ids(frozen_build([occ("Route 1")], frozen))["rby-route-1"] == "rby-route-one"
+
+
+def test_frozen_keys_that_are_no_track_are_vanished() -> None:
+    merged = Overrides(tracks={"rby-route-1b": TrackOverride(mergeInto="rby-route-1")})
+    frozen = {"rby-gone": "rby-gone", "rby-route-1b": "rby-route-1b", "rby-route-1": "rby-route-1"}
+    result = frozen_build([occ("Route 1"), occ("Route 1b")], frozen, merged)
+    assert result.vanished == [
+        Vanished("rby", "rby-gone", "rby-gone"),
+        Vanished("rby", "rby-route-1b", "rby-route-1b"),
+    ]
+
+
+def test_extras_splits_and_parts_keep_their_frozen_ids_after_a_rename() -> None:
+    split = Split(games=["yellow"], title="Title Screen (Yellow)")
+    overrides = Overrides(
+        tracks={
+            "rby-title-screen": TrackOverride(split={"rby-title-screen-y": split}),
+            "rby-title-screen-y": TrackOverride(title="Title Screen (Pikachu)"),
+            "rby-route-2-spring-summer": TrackOverride(parts=SEASONS),
+            "rby-route-2-summer": TrackOverride(title="Route 2 (Summertime)"),
+            "pla-test-tone": TrackOverride(title="Test Tone (Renamed)"),
+        },
+        extras=[Extra(id="pla-test-tone", family="pla", title="Test Tone (Local)")],
+    )
+    frozen = {
+        "rby-title-screen-y": "rby-title-screen-yellow",
+        "rby-route-2-summer": "rby-route-2-summer",
+        "pla-test-tone": "pla-test-tone-local",
+    }
+    occurrences = [occ("Title Screen", RB), occ("Title Screen", Y), occ("Route 2 (Spring/Summer)")]
+    result = catalog_ids(frozen_build(occurrences, frozen, overrides))
+    assert result["rby-title-screen-y"] == "rby-title-screen-yellow"
+    assert result["rby-route-2-summer"] == "rby-route-2-summer"
+    assert result["rby-route-2-spring"] == "rby-route-2-spring"
+    assert result["pla-test-tone"] == "pla-test-tone-local"
+
+
+def test_two_keys_with_one_frozen_id_fail() -> None:
+    [error] = errors_of([occ("Route 1")], {"rby-route-1": "rby-route-1", "rby-old": "rby-route-1"})
+    assert "rby-route-1" in error and "rby-old" in error
+
+
+def test_a_frozen_id_of_another_family_fails() -> None:
+    [error] = errors_of([occ("Route 1")], {"rby-route-1": "pla-route-1"})
+    assert "rby-route-1" in error and "pla-route-1" in error

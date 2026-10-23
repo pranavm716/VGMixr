@@ -85,6 +85,12 @@ def format_order(data: dict[str, list[str]]) -> str:
     return "{\n" + ",\n\n".join(families) + "\n}\n"
 
 
+def format_ids(data: dict[str, str], families: list[str]) -> str:
+    """ids.json: one source key -> catalog id per line, a blank line between families. The order
+    given is kept (the builder writes families in games-file order, keys sorted within one)."""
+    return format_data(data, {(): Collection(lambda key, _: track_family(key or "", families))})
+
+
 def format_data(data: Any, collections: dict[Path_, Collection]) -> str:
     return _value(data, (), 0, collections) + "\n"
 
@@ -167,6 +173,10 @@ def main() -> None:
     _rewrite(overrides_path, format_overrides(overrides, games_families(games)))
     if order_path.exists():
         _rewrite(order_path, format_order(json.loads(order_path.read_text(encoding="utf-8"))))
+    ids_path = DATA_DIR / "ids.json"
+    if ids_path.exists():
+        ids = json.loads(ids_path.read_text(encoding="utf-8"))
+        _rewrite(ids_path, format_ids(ids, games_families(games)))
 
 
 if __name__ == "__main__":
