@@ -17,6 +17,9 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.ShuffleOrder
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionResult
+import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.SettableFuture
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,6 +44,7 @@ import io.github.pranavm716.vgmixr.domain.playback.SourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.nextSource
 import io.github.pranavm716.vgmixr.domain.playback.onSourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import java.io.File
 import java.time.Clock
 import javax.inject.Inject
@@ -89,10 +93,14 @@ class PlaybackService : MediaSessionService() {
     @Inject
     lateinit var shuffleSetting: ShuffleSetting
 
+    @Inject
+    lateinit var playlists: PlaylistRepository
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val artwork by lazy { NotificationArtwork(File(cacheDir, "artwork")) }
     private val catalog = MutableStateFlow<Catalog?>(null)
     private val marks = MutableStateFlow<Map<String, BrokenMark>>(emptyMap())
+    private val favorites = MutableStateFlow<Set<String>>(emptySet())
     private var session: MediaSession? = null
 
     override fun onCreate() {
@@ -137,14 +145,43 @@ class PlaybackService : MediaSessionService() {
         val session = MediaSession.Builder(this, player)
             .setCallback(Callback())
             .setSessionActivity(openApp)
+            .setMediaButtonPreferences(
+                mediaButtons(this, player.shuffleModeEnabled, favorite = false)
+            )
             .build()
         player.addListener(Failover(player, session))
         player.addListener(PlayRecording(player))
         player.addListener(Shuffling(player, shuffleSetting))
+        player.addListener(
+            object : Player.Listener {
+                override fun onEvents(player: Player, events: Player.Events) {
+                    if (events.containsAny(
+                            Player.EVENT_SHUFFLE_MODE_ENABLED_CHANGED,
+                            Player.EVENT_MEDIA_ITEM_TRANSITION
+                        )
+                    ) {
+                        updateButtons(session)
+                    }
+                }
+            }
+        )
+        scope.launch {
+            playlists.favorites.collect {
+                favorites.value = it
+                updateButtons(session)
+            }
+        }
         this.session = session
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? = session
+
+    /** The notification's shuffle and favorite buttons, showing the player's state. */
+    private fun updateButtons(session: MediaSession) {
+        val player = session.player
+        val favorite = player.currentMediaItem?.mediaId in favorites.value
+        session.setMediaButtonPreferences(mediaButtons(this, player.shuffleModeEnabled, favorite))
+    }
 
     override fun onDestroy() {
         session?.run {
@@ -157,6 +194,39 @@ class PlaybackService : MediaSessionService() {
     }
 
     private inner class Callback : MediaSession.Callback {
+        override fun onConnect(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo
+        ): MediaSession.ConnectionResult =
+            MediaSession.ConnectionResult.AcceptedResultBuilder(session)
+                .setAvailableSessionCommands(
+                    MediaSession.ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon()
+                        .add(toggleShuffle)
+                        .add(toggleFavorite)
+                        .build()
+                )
+                .build()
+
+        override fun onCustomCommand(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            customCommand: SessionCommand,
+            args: Bundle
+        ): ListenableFuture<SessionResult> {
+            val player = session.player
+            when (customCommand.customAction) {
+                TOGGLE_SHUFFLE -> player.shuffleModeEnabled = !player.shuffleModeEnabled
+
+                TOGGLE_FAVORITE -> player.currentMediaItem?.mediaId?.let { trackId ->
+                    val favorite = trackId in favorites.value
+                    scope.launch { playlists.setFavorite(trackId, !favorite) }
+                }
+
+                else -> return super.onCustomCommand(session, controller, customCommand, args)
+            }
+            return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+        }
+
         override fun onAddMediaItems(
             mediaSession: MediaSession,
             controller: MediaSession.ControllerInfo,
