@@ -39,10 +39,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
@@ -75,6 +77,7 @@ import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheetState
 import io.github.pranavm716.vgmixr.ui.player.PlayingFromUi
 import io.github.pranavm716.vgmixr.ui.playlists.PlaylistsTab
 import io.github.pranavm716.vgmixr.ui.search.SearchTab
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
  * Draws a tab's root screen; the controller lets it open screens inside its tab. The count goes
@@ -133,6 +136,14 @@ fun VGMixrApp(
     // change of the flag (a tap, a track, the notification, back) animates the sheet.
     val sheet = remember { NowPlayingSheetState(scope) { nowPlayingOpen.value = it } }
     LaunchedEffect(nowPlayingOpen.value) { sheet.animateTo(nowPlayingOpen.value) }
+    // A focused field (search) loses focus as soon as now playing starts to open, so the keyboard
+    // and the cursor's handle, which draws above every window, don't stay over the sheet.
+    val focusManager = LocalFocusManager.current
+    LaunchedEffect(sheet) {
+        snapshotFlow { sheet.expansion > 0f }
+            .distinctUntilChanged()
+            .collect { opening -> if (opening) focusManager.clearFocus() }
+    }
     // The queue opens over now playing and closes with it.
     var queueOpen by rememberSaveable { mutableStateOf(false) }
     // "Add to playlist" opens over now playing the same way.

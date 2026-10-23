@@ -17,10 +17,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.VGMixr">
+        <!-- Portrait only: the app runs on one phone. Android 16 ignores a fixed orientation on
+             large screens (600dp and wider) only, which the lint warnings are about. -->
         <activity
+            tools:ignore="LockedOrientationActivity,DiscouragedApi"
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.VGMixr">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
