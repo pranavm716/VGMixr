@@ -1,0 +1,280 @@
+package io.github.pranavm716.vgmixr.data.playlist
+
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.cash.turbine.test
+import io.github.pranavm716.vgmixr.data.db.FAVORITES_PLAYLIST_ID
+import io.github.pranavm716.vgmixr.data.db.PlaylistEntity
+import io.github.pranavm716.vgmixr.data.db.PlaylistEntryEntity
+import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
+import io.github.pranavm716.vgmixr.domain.playlist.Playlist
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+class RoomPlaylistRepositoryTest {
+    private val dispatcher = StandardTestDispatcher()
+    private val db = inMemoryDatabase(dispatcher)
+    private val dao = db.userDataDao()
+    private val clock = MutableClock(Instant.ofEpochMilli(1_000))
+    private val repository = RoomPlaylistRepository(dao, clock)
+
+    @After
+    fun closeDb() = db.close()
+
+    private val emptyFavorites = PlaylistSummary(FAVORITES_PLAYLIST_ID, "Favorites", 0, true)
+
+    @Test
+    fun `a new database has Favorites with no tracks`() = runTest(dispatcher) {
+        repository.playlists.test {
+            assertEquals(listOf(emptyFavorites), awaitItem())
+        }
+    }
+
+    @Test
+    fun `counts each playlist's entries, Favorites first`() = runTest(dispatcher) {
+        // Created at the epoch too, so only the Favorites rule puts it second.
+        val mix = dao.insertPlaylist(PlaylistEntity(name = "Mix", createdAt = Instant.EPOCH))
+        val later = dao.insertPlaylist(
+            PlaylistEntity(name = "Later", createdAt = Instant.ofEpochMilli(1_000))
+        )
+        entry(FAVORITES_PLAYLIST_ID, "rse-route-101")
+        entry(FAVORITES_PLAYLIST_ID, "yt:abc")
+        entry(mix, "rse-route-101")
+
+        repository.playlists.test {
+            assertEquals(
+                listOf(
+                    emptyFavorites.copy(trackCount = 2),
+                    PlaylistSummary(mix, "Mix", 1, false),
+                    PlaylistSummary(later, "Later", 0, false)
+                ),
+                awaitItem()
+            )
+        }
+    }
+
+    @Test
+    fun `favoriting adds the track to Favorites, unfavoriting takes it out`() =
+        runTest(dispatcher) {
+            repository.favorites.test {
+                assertEquals(emptySet<String>(), awaitItem())
+
+                repository.setFavorite("rse-route-101", true)
+                assertEquals(setOf("rse-route-101"), awaitItem())
+                assertEquals(
+                    listOf(
+                        PlaylistEntryEntity(
+                            FAVORITES_PLAYLIST_ID,
+                            "rse-route-101",
+                            Instant.ofEpochMilli(1_000)
+                        )
+                    ),
+                    dao.playlistEntries(FAVORITES_PLAYLIST_ID)
+                )
+
+                repository.setFavorite("rse-route-101", false)
+                assertEquals(emptySet<String>(), awaitItem())
+            }
+        }
+
+    @Test
+    fun `favoriting a favorite keeps when it was first added`() = runTest(dispatcher) {
+        repository.setFavorite("rse-route-101", true)
+        clock.instant = Instant.ofEpochMilli(5_000)
+
+        repository.setFavorite("rse-route-101", true)
+
+        assertEquals(
+            listOf(Instant.ofEpochMilli(1_000)),
+            dao.playlistEntries(FAVORITES_PLAYLIST_ID).map { it.addedAt }
+        )
+    }
+
+    @Test
+    fun `unfavoriting a track that isn't a favorite does nothing`() = runTest(dispatcher) {
+        repository.setFavorite("rse-route-101", false)
+
+        assertEquals(emptyList<PlaylistEntryEntity>(), dao.playlistEntries(FAVORITES_PLAYLIST_ID))
+    }
+
+    @Test
+    fun `a playlist lists its tracks newest first`() = runTest(dispatcher) {
+        repository.setFavorite("rse-route-101", true)
+        clock.instant = Instant.ofEpochMilli(2_000)
+        repository.setFavorite("frlg-pallet-town", true)
+
+        repository.playlist(FAVORITES_PLAYLIST_ID).test {
+            assertEquals(
+                Playlist(
+                    FAVORITES_PLAYLIST_ID,
+                    "Favorites",
+                    isFavorites = true,
+                    trackIds = listOf("frlg-pallet-town", "rse-route-101")
+                ),
+                awaitItem()
+            )
+        }
+    }
+
+    @Test
+    fun `a playlist follows a favorite added while it shows`() = runTest(dispatcher) {
+        repository.playlist(FAVORITES_PLAYLIST_ID).test {
+            assertEquals(emptyList<String>(), awaitItem()?.trackIds)
+
+            repository.setFavorite("rse-route-101", true)
+
+            assertEquals(listOf("rse-route-101"), awaitItem()?.trackIds)
+        }
+    }
+
+    @Test
+    fun `a playlist that doesn't exist is null`() = runTest(dispatcher) {
+        repository.playlist(42).test {
+            assertEquals(null, awaitItem())
+        }
+    }
+
+    @Test
+    fun `a new playlist is listed after Favorites, empty, with its name trimmed`() =
+        runTest(dispatcher) {
+            val id = repository.createPlaylist("  Route themes ")
+
+            repository.playlists.test {
+                assertEquals(
+                    listOf(emptyFavorites, PlaylistSummary(id, "Route themes", 0, false)),
+                    awaitItem()
+                )
+            }
+            assertEquals(
+                Playlist(id, "Route themes", isFavorites = false, trackIds = emptyList()),
+                repository.playlist(id).first()
+            )
+        }
+
+    @Test
+    fun `new playlists are listed in the order they were made`() = runTest(dispatcher) {
+        val first = repository.createPlaylist("Battle!")
+        clock.instant = Instant.ofEpochMilli(2_000)
+        val second = repository.createPlaylist("Route themes")
+
+        assertEquals(
+            listOf(FAVORITES_PLAYLIST_ID, first, second),
+            repository.playlists.first().map { it.id }
+        )
+    }
+
+    @Test
+    fun `a track goes into a playlist and comes out again, without touching Favorites`() =
+        runTest(dispatcher) {
+            val hype = repository.createPlaylist("Hype")
+            repository.setFavorite("rse-route-101", true)
+
+            repository.setInPlaylist(hype, "rse-route-101", true)
+            repository.setInPlaylist(hype, "frlg-pallet-town", true)
+            assertEquals(
+                setOf("rse-route-101", "frlg-pallet-town"),
+                repository.playlist(hype).first()?.trackIds?.toSet()
+            )
+
+            repository.setInPlaylist(hype, "rse-route-101", false)
+            assertEquals(listOf("frlg-pallet-town"), repository.playlist(hype).first()?.trackIds)
+            assertEquals(setOf("rse-route-101"), repository.favorites.first())
+        }
+
+    @Test
+    fun `adding a track a playlist already has keeps when it was first added`() =
+        runTest(dispatcher) {
+            val hype = repository.createPlaylist("Hype")
+            repository.setInPlaylist(hype, "rse-route-101", true)
+            clock.instant = Instant.ofEpochMilli(5_000)
+
+            repository.setInPlaylist(hype, "rse-route-101", true)
+
+            assertEquals(
+                listOf(Instant.ofEpochMilli(1_000)),
+                dao.playlistEntries(hype).map { it.addedAt }
+            )
+        }
+
+    @Test
+    fun `renaming a playlist trims the name and shows it everywhere`() = runTest(dispatcher) {
+        val hype = repository.createPlaylist("Hype")
+
+        repository.renamePlaylist(hype, "  Hype mix ")
+
+        assertEquals("Hype mix", repository.playlist(hype).first()?.name)
+        assertEquals("Hype mix", repository.playlists.first().single { it.id == hype }.name)
+    }
+
+    @Test
+    fun `deleting a playlist removes it and its tracks, and nothing else`() = runTest(dispatcher) {
+        val hype = repository.createPlaylist("Hype")
+        val mix = repository.createPlaylist("Mix")
+        repository.setInPlaylist(hype, "rse-route-101", true)
+        repository.setInPlaylist(mix, "rse-route-101", true)
+        repository.setFavorite("rse-route-101", true)
+
+        repository.deletePlaylist(hype)
+
+        assertEquals(null, repository.playlist(hype).first())
+        assertEquals(emptyList<PlaylistEntryEntity>(), dao.playlistEntries(hype))
+        assertEquals(listOf("rse-route-101"), repository.playlist(mix).first()?.trackIds)
+        assertEquals(setOf("rse-route-101"), repository.favorites.first())
+        assertEquals(listOf(FAVORITES_PLAYLIST_ID, mix), repository.playlists.first().map { it.id })
+    }
+
+    @Test
+    fun `Favorites can't be renamed or deleted`() = runTest(dispatcher) {
+        repository.setFavorite("rse-route-101", true)
+
+        repository.renamePlaylist(FAVORITES_PLAYLIST_ID, "Loved")
+        repository.deletePlaylist(FAVORITES_PLAYLIST_ID)
+
+        assertEquals(
+            Playlist(FAVORITES_PLAYLIST_ID, "Favorites", true, listOf("rse-route-101")),
+            repository.playlist(FAVORITES_PLAYLIST_ID).first()
+        )
+    }
+
+    @Test
+    fun `the playlists holding a track follow adds and removes, Favorites included`() =
+        runTest(dispatcher) {
+            val hype = repository.createPlaylist("Hype")
+            val mix = repository.createPlaylist("Mix")
+
+            repository.playlistsContaining("rse-route-101").test {
+                assertEquals(emptySet<Long>(), awaitItem())
+
+                repository.setInPlaylist(hype, "rse-route-101", true)
+                assertEquals(setOf(hype), awaitItem())
+
+                repository.setFavorite("rse-route-101", true)
+                assertEquals(setOf(hype, FAVORITES_PLAYLIST_ID), awaitItem())
+
+                repository.setInPlaylist(mix, "frlg-pallet-town", true)
+                repository.setInPlaylist(hype, "rse-route-101", false)
+                assertEquals(setOf(FAVORITES_PLAYLIST_ID), awaitItem())
+            }
+        }
+
+    private class MutableClock(var instant: Instant) : Clock() {
+        override fun instant(): Instant = instant
+
+        override fun getZone(): ZoneId = ZoneOffset.UTC
+
+        override fun withZone(zone: ZoneId): Clock = this
+    }
+
+    private suspend fun entry(playlistId: Long, trackId: String) =
+        dao.insertPlaylistEntry(PlaylistEntryEntity(playlistId, trackId, Instant.EPOCH))
+}

@@ -18,13 +18,25 @@ import kotlinx.serialization.Serializable
 /** The Search tab. */
 @Serializable data object SearchRoute
 
-@Serializable data object Tab3Route
+/** The Playlists tab: the playlist list, and a playlist's tracks opened from it. */
+@Serializable data object PlaylistsGraph
+
+@Serializable data object PlaylistsRoute
+
+/** A playlist's tracks. [fromNowPlaying] opens it at once, as [FamilyRoute]'s does. */
+@Serializable data class PlaylistRoute(val playlistId: Long, val fromNowPlaying: Boolean = false)
+
+/**
+ * "Edit <playlist>": playlist [playlistId]'s tracks, and search to add more. [playlistName] is
+ * the name the playlist page showed, so the title is whole before the playlist loads.
+ */
+@Serializable data class EditPlaylistRoute(val playlistId: Long, val playlistName: String = "")
 
 @Serializable data object Tab4Route
 
 /**
  * The navbar's tabs, in bar order. The first entry is the start tab, so moving a tab is moving
- * its line. Tabs 3 and 4 are placeholders until their content is built.
+ * its line. Tab 4 is a placeholder until its content is built.
  */
 enum class TopLevelDestination(
     val label: String,
@@ -33,7 +45,7 @@ enum class TopLevelDestination(
 ) {
     GAMES("Games", R.drawable.ic_games, GamesGraph),
     SEARCH("Search", R.drawable.ic_search, SearchRoute),
-    TAB_3("Tab 3", R.drawable.ic_tab_triangle, Tab3Route),
+    PLAYLISTS("Playlists", R.drawable.ic_library_music, PlaylistsGraph),
     TAB_4("Tab 4", R.drawable.ic_tab_square, Tab4Route);
 
     companion object {

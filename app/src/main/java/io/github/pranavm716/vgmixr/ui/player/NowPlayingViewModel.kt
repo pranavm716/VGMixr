@@ -9,12 +9,15 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 sealed interface NowPlayingUiState {
     data object Hidden : NowPlayingUiState
@@ -25,7 +28,8 @@ sealed interface NowPlayingUiState {
         val chips: List<ChipUi>,
         val playingFrom: PlayingFromUi,
         val isPlaying: Boolean,
-        val isLoading: Boolean
+        val isLoading: Boolean,
+        val isFavorite: Boolean = false
     ) : NowPlayingUiState
 }
 
@@ -34,6 +38,9 @@ sealed interface PlayingFromUi {
     /** Tapped in a family's list; the header opens it. */
     data class Family(val familyId: String, val name: String) : PlayingFromUi
 
+    /** Tapped in a playlist; the header opens it. */
+    data class Playlist(val playlistId: Long, val name: String) : PlayingFromUi
+
     /** Added with swipe to queue. */
     data object Queue : PlayingFromUi
 }
@@ -41,10 +48,18 @@ sealed interface PlayingFromUi {
 @HiltViewModel
 class NowPlayingViewModel @Inject constructor(
     repository: CatalogRepository,
-    private val playback: PlaybackController
+    private val playback: PlaybackController,
+    private val playlists: PlaylistRepository
 ) : ViewModel() {
     val uiState: StateFlow<NowPlayingUiState> =
-        combine(repository.catalog, playback.state) { catalog, state -> catalog.nowPlaying(state) }
+        combine(
+            repository.catalog,
+            playback.state,
+            playlists.favorites,
+            playlists.playlists
+        ) { catalog, state, favorites, playlists ->
+            catalog.nowPlaying(state, favorites, playlists)
+        }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
@@ -67,16 +82,36 @@ class NowPlayingViewModel @Inject constructor(
     fun onNext() = playback.skipToNext()
 
     fun onSeek(positionMs: Long) = playback.seekTo(positionMs)
+
+    /** Favorites the playing track, or unfavorites it if the heart shows it as one. */
+    fun onToggleFavorite() {
+        val trackId = playback.state.value.trackId ?: return
+        val isFavorite = (uiState.value as? NowPlayingUiState.Visible)?.isFavorite ?: return
+        viewModelScope.launch { playlists.setFavorite(trackId, !isFavorite) }
+    }
 }
 
-private fun Catalog.nowPlaying(state: PlaybackState): NowPlayingUiState {
+private fun Catalog.nowPlaying(
+    state: PlaybackState,
+    favorites: Set<String>,
+    playlists: List<PlaylistSummary>
+): NowPlayingUiState {
     val track = tracks.firstOrNull { it.id == state.trackId } ?: return NowPlayingUiState.Hidden
+    // No context, or a playlist deleted since: the track plays from its family.
     val context = state.queue.entries.getOrNull(state.queue.current)?.context
+        ?.takeUnless {
+            it is QueueContext.Playlist && playlists.none { p -> p.id == it.playlistId }
+        }
         ?: QueueContext.Family(track.familyId)
     val playingFrom = when (context) {
         is QueueContext.Family -> PlayingFromUi.Family(
             context.familyId,
             families.firstOrNull { it.id == context.familyId }?.name.orEmpty()
+        )
+
+        is QueueContext.Playlist -> PlayingFromUi.Playlist(
+            context.playlistId,
+            playlists.firstOrNull { it.id == context.playlistId }?.name.orEmpty()
         )
 
         QueueContext.Queue -> PlayingFromUi.Queue
@@ -86,7 +121,8 @@ private fun Catalog.nowPlaying(state: PlaybackState): NowPlayingUiState {
         chips = track.games.map { ChipUi(it.shortName, it.color) },
         playingFrom = playingFrom,
         isPlaying = state.isPlaying,
-        isLoading = state.isLoading
+        isLoading = state.isLoading,
+        isFavorite = track.id in favorites
     )
 }
 

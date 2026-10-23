@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -55,13 +56,13 @@ import io.github.pranavm716.vgmixr.ui.components.MarqueeText
 
 /**
  * Now playing's header, as Spotify's: a chevron that closes the sheet, and "Playing from" over
- * where the track plays from; tapping that opens the family. As tall as the mini player, which
- * cross-fades into it at the top of the sheet.
+ * where the track plays from; tapping that opens the family or playlist. As tall as the mini
+ * player, which cross-fades into it at the top of the sheet.
  */
 @Composable
 fun NowPlayingHeader(
     onClose: () -> Unit,
-    onOpenFamily: (familyId: String) -> Unit,
+    onOpenPlayingFrom: (PlayingFromUi) -> Unit,
     viewModel: NowPlayingViewModel = hiltViewModel()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -79,35 +80,24 @@ fun NowPlayingHeader(
                 contentDescription = stringResource(R.string.close_now_playing)
             )
         }
-        Column(
-            Modifier
-                .weight(1f)
-                .then(
-                    if (playingFrom is PlayingFromUi.Family) {
-                        Modifier.clickable { onOpenFamily(playingFrom.familyId) }
-                    } else {
-                        Modifier
-                    }
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (playingFrom != null) {
-                Text(
-                    stringResource(R.string.playing_from),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1
-                )
-                Text(
-                    when (playingFrom) {
-                        is PlayingFromUi.Family -> playingFrom.name
-                        PlayingFromUi.Queue -> stringResource(R.string.playing_from_queue)
-                    },
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+        // The tap target is as wide as the text and as tall as the header, with no ripple.
+        Box(Modifier.weight(1f).fillMaxHeight(), contentAlignment = Alignment.Center) {
+            Column(
+                Modifier
+                    .fillMaxHeight()
+                    .then(
+                        if (playingFrom != null && playingFrom != PlayingFromUi.Queue) {
+                            Modifier.clickable(interactionSource = null, indication = null) {
+                                onOpenPlayingFrom(playingFrom)
+                            }
+                        } else {
+                            Modifier
+                        }
+                    ),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                PlayingFromText(playingFrom)
             }
         }
         // Balances the chevron, so the context sits in the middle.
@@ -115,12 +105,40 @@ fun NowPlayingHeader(
     }
 }
 
+/** "Playing from" over the family's or playlist's name, or "Queue". */
+@Composable
+private fun PlayingFromText(playingFrom: PlayingFromUi?) {
+    if (playingFrom == null) return
+    Text(
+        stringResource(R.string.playing_from),
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1
+    )
+    Text(
+        when (playingFrom) {
+            is PlayingFromUi.Family -> playingFrom.name
+            is PlayingFromUi.Playlist -> playingFrom.name
+            PlayingFromUi.Queue -> stringResource(R.string.playing_from_queue)
+        },
+        style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.Bold,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+}
+
 /**
  * Now playing's body, Shuttle's look: the art, the title over its game chips, the seek
- * bar between the elapsed time and the length, previous / play-pause / next, and the queue button.
+ * bar between the elapsed time and the length, previous / play-pause / next, and under them the
+ * row of add to playlist (start), the favorite heart (centered) and the queue button (end).
  */
 @Composable
-fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = hiltViewModel()) {
+fun NowPlayingScreen(
+    onOpenQueue: () -> Unit,
+    onAddToPlaylist: () -> Unit,
+    viewModel: NowPlayingViewModel = hiltViewModel()
+) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val visible = state as? NowPlayingUiState.Visible ?: return
     val background = MaterialTheme.colorScheme.background
@@ -171,11 +189,27 @@ fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = h
             Controls(visible.isPlaying, visible.isLoading, viewModel)
         }
         Spacer(Modifier.weight(BOTTOM_GAP))
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = SIDE_MARGIN),
-            horizontalArrangement = Arrangement.End
-        ) {
-            IconButton(onClick = onOpenQueue) {
+        Box(Modifier.fillMaxWidth().padding(horizontal = SIDE_MARGIN)) {
+            // White in both states, not the accent: filled when the track is a favorite.
+            IconButton(onClick = viewModel::onToggleFavorite, Modifier.align(Alignment.Center)) {
+                val favorite = visible.isFavorite
+                Icon(
+                    painterResource(
+                        if (favorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+                    ),
+                    contentDescription = stringResource(
+                        if (favorite) R.string.remove_from_favorites else R.string.add_to_favorites
+                    ),
+                    tint = Color.White
+                )
+            }
+            IconButton(onClick = onAddToPlaylist, Modifier.align(Alignment.CenterStart)) {
+                Icon(
+                    painterResource(R.drawable.ic_add),
+                    contentDescription = stringResource(R.string.add_to_playlist)
+                )
+            }
+            IconButton(onClick = onOpenQueue, Modifier.align(Alignment.CenterEnd)) {
                 Icon(
                     painterResource(R.drawable.ic_queue),
                     contentDescription = stringResource(R.string.queue)

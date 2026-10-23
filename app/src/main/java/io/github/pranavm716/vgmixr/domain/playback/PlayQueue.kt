@@ -13,6 +13,9 @@ sealed interface QueueContext {
     /** Tapped in a family's track list. */
     data class Family(val familyId: String) : QueueContext
 
+    /** Tapped in a playlist. */
+    data class Playlist(val playlistId: Long) : QueueContext
+
     /** Added with swipe to queue. */
     data object Queue : QueueContext
 
@@ -20,16 +23,23 @@ sealed interface QueueContext {
     val key: String
         get() = when (this) {
             is Family -> "$FAMILY_PREFIX$familyId"
+            is Playlist -> "$PLAYLIST_PREFIX$playlistId"
             Queue -> QUEUE_KEY
         }
 
     companion object {
         private const val FAMILY_PREFIX = "family:"
+        private const val PLAYLIST_PREFIX = "playlist:"
         private const val QUEUE_KEY = "queue"
 
         fun fromKey(key: String): QueueContext? = when {
             key == QUEUE_KEY -> Queue
+
             key.startsWith(FAMILY_PREFIX) -> Family(key.removePrefix(FAMILY_PREFIX))
+
+            key.startsWith(PLAYLIST_PREFIX) ->
+                key.removePrefix(PLAYLIST_PREFIX).toLongOrNull()?.let(::Playlist)
+
             else -> null
         }
     }

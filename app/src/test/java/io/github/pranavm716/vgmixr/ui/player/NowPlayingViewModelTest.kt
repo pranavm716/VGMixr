@@ -10,8 +10,10 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
+import io.github.pranavm716.vgmixr.testing.FakePlaylistRepository
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import kotlinx.coroutines.test.runTest
@@ -42,7 +44,12 @@ class NowPlayingViewModelTest {
     )
 
     private val playback = FakePlaybackController()
-    private val viewModel by lazy { NowPlayingViewModel(FakeCatalogRepository(catalog), playback) }
+    private val playlists = FakePlaylistRepository(
+        initialPlaylists = listOf(PlaylistSummary(1, "Favorites", 1, isFavorites = true))
+    )
+    private val viewModel by lazy {
+        NowPlayingViewModel(FakeCatalogRepository(catalog), playback, playlists)
+    }
 
     private fun playing(context: QueueContext, isLoading: Boolean = false) = PlaybackState(
         queue = PlayQueue(listOf(QueueEntry("rse-a", context)), current = 0),
@@ -81,9 +88,60 @@ class NowPlayingViewModelTest {
     }
 
     @Test
+    fun `a track tapped in a playlist plays from it`() = runTest {
+        playback.state.value = playing(QueueContext.Playlist(1))
+
+        viewModel.uiState.test {
+            assertEquals(
+                PlayingFromUi.Playlist(1, "Favorites"),
+                (awaitItem() as NowPlayingUiState.Visible).playingFrom
+            )
+        }
+    }
+
+    @Test
+    fun `a track from a deleted playlist plays from its family`() = runTest {
+        playback.state.value = playing(QueueContext.Playlist(9))
+
+        viewModel.uiState.test {
+            assertEquals(
+                PlayingFromUi.Family("rse", "Ruby / Sapphire"),
+                (awaitItem() as NowPlayingUiState.Visible).playingFrom
+            )
+        }
+    }
+
+    @Test
     fun `hidden while nothing plays`() = runTest {
         viewModel.uiState.test {
             assertEquals(NowPlayingUiState.Hidden, awaitItem())
+        }
+    }
+
+    @Test
+    fun `the heart shows whether the track is a favorite`() = runTest {
+        playlists.favorites.value = setOf("rse-a")
+        playback.state.value = playing(QueueContext.Family("rse"))
+
+        viewModel.uiState.test {
+            assertEquals(true, (awaitItem() as NowPlayingUiState.Visible).isFavorite)
+        }
+    }
+
+    @Test
+    fun `the heart favorites the playing track, and a second tap unfavorites it`() = runTest {
+        playback.state.value = playing(QueueContext.Family("rse"))
+
+        viewModel.uiState.test {
+            assertEquals(false, (awaitItem() as NowPlayingUiState.Visible).isFavorite)
+
+            viewModel.onToggleFavorite()
+            assertEquals(true, (awaitItem() as NowPlayingUiState.Visible).isFavorite)
+            assertEquals(setOf("rse-a"), playlists.favorites.value)
+
+            viewModel.onToggleFavorite()
+            assertEquals(false, (awaitItem() as NowPlayingUiState.Visible).isFavorite)
+            assertEquals(emptySet<String>(), playlists.favorites.value)
         }
     }
 

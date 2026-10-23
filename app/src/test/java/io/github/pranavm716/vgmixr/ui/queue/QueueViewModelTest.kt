@@ -9,8 +9,10 @@ import io.github.pranavm716.vgmixr.domain.playback.PlayQueue
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
+import io.github.pranavm716.vgmixr.testing.FakePlaylistRepository
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
@@ -39,8 +41,12 @@ class QueueViewModelTest {
     private val playback = FakePlaybackController()
     private val messages = UserMessages()
     private val viewModel by lazy {
-        QueueViewModel(FakeCatalogRepository(catalog), playback, messages)
+        QueueViewModel(FakeCatalogRepository(catalog), playback, messages, playlists)
     }
+
+    private val playlists = FakePlaylistRepository(
+        initialPlaylists = listOf(PlaylistSummary(1, "Favorites", 2, isFavorites = true))
+    )
 
     private fun row(index: Int, id: String) =
         QueueRowUi(index, id, "Title $id", listOf(ChipUi("R", "#336699")))
@@ -125,6 +131,30 @@ class QueueViewModelTest {
                 assertEquals(UserMessage.AddedToQueue(1), awaitItem())
             }
             assertEquals(listOf(FakePlaybackController.AddToQueue(listOf("x"))), playback.calls)
+        }
+    }
+
+    @Test
+    fun `next from names the playlist the list was tapped in`() = runTest {
+        val favorites = QueueContext.Playlist(1)
+        playback.state.value = state(
+            listOf(QueueEntry("c", favorites), QueueEntry("x", favorites)),
+            current = 0
+        )
+
+        viewModel.uiState.test {
+            assertEquals("Favorites", awaitItem().nextFromName)
+        }
+    }
+
+    @Test
+    fun `next from a deleted playlist names the family instead`() = runTest {
+        val gone = QueueContext.Playlist(9)
+        playback.state.value =
+            state(listOf(QueueEntry("c", gone), QueueEntry("x", gone)), current = 0)
+
+        viewModel.uiState.test {
+            assertEquals("Ruby / Sapphire / Emerald", awaitItem().nextFromName)
         }
     }
 }

@@ -85,19 +85,68 @@ interface CatalogDao {
 @Dao
 interface UserDataDao {
     @Insert
-    suspend fun insertFavorite(favorite: FavoriteEntity)
+    suspend fun insertPlaylist(playlist: PlaylistEntity): Long
+
+    /** Every playlist with its entry count: Favorites first, then by creation. */
+    @Query(
+        "SELECT p.id, p.name, COUNT(e.trackId) AS trackCount FROM playlists p " +
+            "LEFT JOIN playlist_entries e ON e.playlistId = p.id GROUP BY p.id " +
+            "ORDER BY p.id = $FAVORITES_PLAYLIST_ID DESC, p.createdAt, p.id"
+    )
+    fun observePlaylists(): Flow<List<PlaylistCountRow>>
+
+    @Insert
+    suspend fun insertPlaylistEntry(entry: PlaylistEntryEntity)
+
+    /** Adds [entry] unless its track is already in the playlist, which keeps its addedAt. */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertPlaylistEntryIfAbsent(entry: PlaylistEntryEntity)
+
+    @Query("DELETE FROM playlist_entries WHERE playlistId = :playlistId AND trackId = :trackId")
+    suspend fun removeFromPlaylist(playlistId: Long, trackId: String)
+
+    /** Renames playlist [id]; Favorites keeps its name. */
+    @Query(
+        "UPDATE playlists SET name = :name WHERE id = :id AND id != $FAVORITES_PLAYLIST_ID"
+    )
+    suspend fun renamePlaylist(id: Long, name: String)
+
+    /** Deletes playlist [id] and, by cascade, its entries; Favorites stays. */
+    @Query("DELETE FROM playlists WHERE id = :id AND id != $FAVORITES_PLAYLIST_ID")
+    suspend fun deletePlaylist(id: Long)
+
+    @Query("SELECT * FROM playlists WHERE id = :id")
+    fun observePlaylist(id: Long): Flow<PlaylistEntity?>
+
+    @Query(
+        "SELECT trackId FROM playlist_entries WHERE playlistId = :playlistId " +
+            "ORDER BY addedAt DESC, trackId"
+    )
+    fun observePlaylistTrackIdsNewestFirst(playlistId: Long): Flow<List<String>>
+
+    @Query("SELECT playlistId FROM playlist_entries WHERE trackId = :trackId")
+    fun observePlaylistIdsContaining(trackId: String): Flow<List<Long>>
+
+    @Query("SELECT trackId FROM playlist_entries WHERE playlistId = :playlistId")
+    fun observePlaylistTrackIds(playlistId: Long): Flow<List<String>>
 
     @Upsert
-    suspend fun upsertFavorite(favorite: FavoriteEntity)
+    suspend fun upsertPlaylistEntry(entry: PlaylistEntryEntity)
 
     @Delete
-    suspend fun deleteFavorite(favorite: FavoriteEntity)
+    suspend fun deletePlaylistEntry(entry: PlaylistEntryEntity)
 
-    @Query("SELECT * FROM favorites WHERE trackId = :trackId")
-    suspend fun favorite(trackId: String): FavoriteEntity?
+    @Query("SELECT * FROM playlist_entries WHERE playlistId = :playlistId AND trackId = :trackId")
+    suspend fun playlistEntry(playlistId: Long, trackId: String): PlaylistEntryEntity?
 
-    @Query("SELECT * FROM favorites ORDER BY trackId")
-    suspend fun favorites(): List<FavoriteEntity>
+    /** A track's entries across all playlists. */
+    @Query("SELECT * FROM playlist_entries WHERE trackId = :trackId ORDER BY playlistId")
+    suspend fun playlistEntriesOf(trackId: String): List<PlaylistEntryEntity>
+
+    @Query(
+        "SELECT * FROM playlist_entries WHERE playlistId = :playlistId ORDER BY addedAt, trackId"
+    )
+    suspend fun playlistEntries(playlistId: Long): List<PlaylistEntryEntity>
 
     @Insert
     suspend fun insertHistory(entry: PlayHistoryEntity)

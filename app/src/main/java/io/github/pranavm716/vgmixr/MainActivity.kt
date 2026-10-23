@@ -15,10 +15,13 @@ import io.github.pranavm716.vgmixr.ui.AppScreen
 import io.github.pranavm716.vgmixr.ui.VGMixrApp
 import io.github.pranavm716.vgmixr.ui.family.FamilyTab
 import io.github.pranavm716.vgmixr.ui.messages.MessagesEffect
+import io.github.pranavm716.vgmixr.ui.player.AddToPlaylist
 import io.github.pranavm716.vgmixr.ui.player.MiniPlayerBar
 import io.github.pranavm716.vgmixr.ui.player.MiniPlayerInSheet
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingHeader
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingScreen
+import io.github.pranavm716.vgmixr.ui.playlist.EditPlaylistTab
+import io.github.pranavm716.vgmixr.ui.playlist.PlaylistTab
 import io.github.pranavm716.vgmixr.ui.queue.QueueScreen
 import io.github.pranavm716.vgmixr.ui.theme.Background
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -46,11 +49,18 @@ class MainActivity : ComponentActivity() {
                         AppScreen(destination, nav, reselects)
                     },
                     familyScreen = { FamilyTab() },
+                    playlistScreen = { edit, close ->
+                        PlaylistTab(onEditPlaylist = edit, onClose = close)
+                    },
+                    editPlaylistScreen = { back -> EditPlaylistTab(onBack = back) },
                     snackbars = snackbars,
                     miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },
                     miniPlayerInSheet = { MiniPlayerInSheet() },
-                    nowPlayingHeader = { close, openFamily -> NowPlayingHeader(close, openFamily) },
-                    nowPlaying = { openQueue -> NowPlayingScreen(onOpenQueue = openQueue) },
+                    nowPlayingHeader = { close, open -> NowPlayingHeader(close, open) },
+                    nowPlaying = { openQueue, addToPlaylist ->
+                        NowPlayingScreen(onOpenQueue = openQueue, onAddToPlaylist = addToPlaylist)
+                    },
+                    addToPlaylist = { close -> AddToPlaylist(onClose = close) },
                     queue = { close -> QueueScreen(onClose = close) },
                     nowPlayingOpen = nowPlayingOpen
                 )

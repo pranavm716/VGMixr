@@ -73,6 +73,7 @@ private const val CURRENT_TINT = 0.12f
 /**
  * A track with its family's tile, the title over its game chips, as the queue and search list
  * them. [current] tints the playing track; [unplayable] greys a track whose sources are all broken.
+ * Without [onClick] the row doesn't react to taps; [trailing] (a button) ends it.
  */
 @Composable
 fun TrackTileRow(
@@ -80,7 +81,8 @@ fun TrackTileRow(
     chips: List<ChipUi>,
     unplayable: Boolean,
     current: Boolean,
-    onClick: () -> Unit
+    onClick: (() -> Unit)?,
+    trailing: (@Composable () -> Unit)? = null
 ) {
     val accent = MaterialTheme.colorScheme.primary
     Row(
@@ -88,8 +90,8 @@ fun TrackTileRow(
             .fillMaxWidth()
             .height(TileRowHeight)
             .then(if (current) Modifier.background(accent.copy(alpha = CURRENT_TINT)) else Modifier)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp),
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(start = 16.dp, end = if (trailing != null) 4.dp else 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         val faint = Modifier.unplayable(unplayable)
@@ -100,5 +102,6 @@ fun TrackTileRow(
             Spacer(Modifier.width(12.dp))
             UnplayableIcon()
         }
+        trailing?.invoke()
     }
 }

@@ -8,6 +8,8 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
@@ -50,10 +52,13 @@ data class QueueRowUi(
 class QueueViewModel @Inject constructor(
     private val repository: CatalogRepository,
     private val playback: PlaybackController,
-    private val messages: UserMessages
+    private val messages: UserMessages,
+    playlists: PlaylistRepository
 ) : ViewModel() {
     val uiState: StateFlow<QueueUiState> =
-        combine(repository.catalog, playback.state) { catalog, state -> catalog.queue(state) }
+        combine(repository.catalog, playback.state, playlists.playlists) { catalog, state, lists ->
+            catalog.queue(state, lists)
+        }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), QueueUiState.EMPTY)
 
     /** Plays entry [index]; a track whose sources are all broken says so instead. */
@@ -87,7 +92,7 @@ class QueueViewModel @Inject constructor(
     fun onClear() = playback.clearQueue()
 }
 
-private fun Catalog.queue(state: PlaybackState): QueueUiState {
+private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>): QueueUiState {
     val queue = state.queue
     if (queue.current !in queue.entries.indices) return QueueUiState.EMPTY
     val tracksById = tracks.associateBy { it.id }
@@ -103,13 +108,20 @@ private fun Catalog.queue(state: PlaybackState): QueueUiState {
     }
     val queueStart = queue.current + 1
     val queueEnd = queueStart + queue.upNext.size
-    val nextFromContext = queue.nextFromContext.firstOrNull()?.context as? QueueContext.Family
+    val nextFromName = when (val context = queue.nextFromContext.firstOrNull()?.context) {
+        is QueueContext.Family -> families.firstOrNull { it.id == context.familyId }?.name
+
+        // A playlist deleted since: its tracks came from their family.
+        is QueueContext.Playlist -> playlists.firstOrNull { it.id == context.playlistId }?.name
+            ?: tracksById[queue.nextFromContext.first().trackId]?.familyId
+                ?.let { id -> families.firstOrNull { it.id == id }?.name }
+
+        QueueContext.Queue, null -> null
+    }
     return QueueUiState(
         nowPlaying = row(queue.current),
         upNext = (queueStart until queueEnd).mapNotNull(::row),
-        nextFromName = nextFromContext?.let { context ->
-            families.firstOrNull { it.id == context.familyId }?.name
-        },
+        nextFromName = nextFromName,
         nextFrom = (queueEnd until queue.entries.size).mapNotNull(::row)
     )
 }

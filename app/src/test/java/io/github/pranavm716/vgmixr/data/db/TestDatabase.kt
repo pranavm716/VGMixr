@@ -5,7 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import kotlin.coroutines.CoroutineContext
 
 /**
- * An in-memory database whose suspend queries run on [queryContext] (the test dispatcher). That
+ * An in-memory database, with the built-in Favorites playlist as a new app database has it, whose suspend queries run on [queryContext] (the test dispatcher). That
  * dispatcher runs on Robolectric's main thread, hence allowMainThreadQueries.
  */
 fun inMemoryDatabase(queryContext: CoroutineContext): VGMixrDatabase = Room
@@ -15,4 +15,5 @@ fun inMemoryDatabase(queryContext: CoroutineContext): VGMixrDatabase = Room
     )
     .setQueryCoroutineContext(queryContext)
     .allowMainThreadQueries()
+    .addCallback(SeedFavorites)
     .build()

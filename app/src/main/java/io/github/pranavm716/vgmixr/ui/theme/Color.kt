@@ -15,3 +15,6 @@ val Divider = Color(0xFF2A2A2A)
 
 /** The art tile shown until a family has a cover. */
 val ArtPlaceholder = Color(0xFF202020)
+
+/** Dialogs, a step above the window so they stand out from it. */
+val DialogBackground = Color(0xFF1E1E1E)

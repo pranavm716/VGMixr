@@ -12,6 +12,7 @@ import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
+import io.github.pranavm716.vgmixr.testing.FakePlaylistRepository
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
@@ -52,7 +53,7 @@ class UnplayableQueueRowsTest {
     }
     private val messages = UserMessages()
     private val viewModel by lazy {
-        QueueViewModel(FakeCatalogRepository(catalog), playback, messages)
+        QueueViewModel(FakeCatalogRepository(catalog), playback, messages, FakePlaylistRepository())
     }
 
     @Test

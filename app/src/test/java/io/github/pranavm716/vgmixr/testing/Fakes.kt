@@ -15,9 +15,15 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.TryAgainResult
+import io.github.pranavm716.vgmixr.domain.playlist.Playlist
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import java.time.Instant
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 
 class FakeCatalogRepository(initial: Catalog = Catalog(emptyList(), emptyList(), emptyList())) :
     CatalogRepository {
@@ -132,5 +138,64 @@ class FakeBrokenSources(initial: Map<String, BrokenMark> = emptyMap()) : BrokenS
 
     override suspend fun clear(videoId: String) {
         marks.value -= videoId
+    }
+}
+
+/**
+ * Playlists in memory: [playlists] starts with [initialPlaylists] (null: nothing until a test
+ * emits), [favorites] holds the favorited track ids, [contents] each playlist's page.
+ */
+class FakePlaylistRepository(
+    favorites: Set<String> = emptySet(),
+    initialPlaylists: List<PlaylistSummary>? = emptyList()
+) : PlaylistRepository {
+    override val playlists = MutableSharedFlow<List<PlaylistSummary>>(replay = 1).apply {
+        initialPlaylists?.let(::tryEmit)
+    }
+    override val favorites = MutableStateFlow(favorites)
+    val contents = MutableStateFlow<Map<Long, Playlist>>(emptyMap())
+
+    override fun playlist(id: Long): Flow<Playlist?> = contents.map { it[id] }
+
+    /** The [contents] playlists holding [trackId], plus Favorites (id 1) if [favorites] has it. */
+    override fun playlistsContaining(trackId: String): Flow<Set<Long>> =
+        combine(contents, favorites) { lists, favorites ->
+            lists.values.filter { trackId in it.trackIds }.map { it.id }.toSet() +
+                (if (trackId in favorites) setOf(1L) else emptySet())
+        }
+
+    override suspend fun setFavorite(trackId: String, favorite: Boolean) {
+        favorites.value = if (favorite) favorites.value + trackId else favorites.value - trackId
+    }
+
+    /** Adds to the front (newest first) or removes from [contents]' playlist [playlistId]. */
+    override suspend fun setInPlaylist(playlistId: Long, trackId: String, inPlaylist: Boolean) {
+        val playlist = contents.value[playlistId] ?: return
+        val others = playlist.trackIds - trackId
+        val ids = when {
+            !inPlaylist -> others
+            trackId in playlist.trackIds -> playlist.trackIds
+            else -> listOf(trackId) + others
+        }
+        contents.value += playlistId to playlist.copy(trackIds = ids)
+    }
+
+    override suspend fun renamePlaylist(id: Long, name: String) {
+        val playlist = contents.value[id] ?: return
+        contents.value += id to playlist.copy(name = name.trim())
+    }
+
+    override suspend fun deletePlaylist(id: Long) {
+        contents.value -= id
+    }
+
+    /** The names passed to [createPlaylist], in order; new ids count up from 100. */
+    val created = mutableListOf<String>()
+
+    override suspend fun createPlaylist(name: String): Long {
+        created += name
+        val id = 99L + created.size
+        contents.value += id to Playlist(id, name, isFavorites = false, trackIds = emptyList())
+        return id
     }
 }
