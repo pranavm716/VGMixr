@@ -21,26 +21,29 @@ import io.github.pranavm716.vgmixr.R
 
 /**
  * A collection's row, as Shuttle's album list: its [art] tile, its name over its track count.
- * Families in the Games tab and playlists in the Playlists tab. Not clickable without [onClick].
+ * Families in the Games tab, playlists in the Playlists tab and in Add to playlist, where
+ * [trailing] (the plus or check) ends it. Not clickable without [onClick].
  */
 @Composable
 fun CollectionRow(
     name: String,
     trackCount: Int,
     art: @Composable () -> Unit,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    trailing: (@Composable () -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(TileRowHeight)
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
-            .padding(horizontal = 16.dp),
+            .padding(start = 16.dp, end = if (trailing != null) 4.dp else 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         art()
         Spacer(Modifier.width(RowTileGap))
-        Column {
+        // Takes the free width, so a long name ellipsizes before the trailing button.
+        Column(Modifier.weight(1f)) {
             Text(
                 name,
                 style = MaterialTheme.typography.titleMedium,
@@ -53,6 +56,7 @@ fun CollectionRow(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+        trailing?.invoke()
     }
 }
 

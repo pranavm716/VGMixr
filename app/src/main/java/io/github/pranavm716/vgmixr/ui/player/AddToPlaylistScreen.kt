@@ -30,9 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
-import io.github.pranavm716.vgmixr.ui.components.RowTileGap
+import io.github.pranavm716.vgmixr.ui.components.CollectionRow
 import io.github.pranavm716.vgmixr.ui.components.RowTileSize
-import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.ToggleAddButton
 import io.github.pranavm716.vgmixr.ui.playlists.PlaylistArt
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -95,31 +94,22 @@ fun AddToPlaylistScreen(
     }
 }
 
+// The Playlists tab's row, ending in the plus or check; only the button reacts.
 @Composable
 private fun PlaylistToggleRow(row: AddToPlaylistRowUi, onToggle: () -> Unit) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .height(TileRowHeight)
-            .padding(start = 16.dp, end = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        PlaylistArt(row.isFavorites, RowTileSize)
-        Spacer(Modifier.width(RowTileGap))
-        Text(
-            row.name,
-            style = MaterialTheme.typography.titleMedium,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f)
-        )
-        ToggleAddButton(
-            row.added,
-            onClick = onToggle,
-            addLabel = stringResource(R.string.add_to_named_playlist, row.name),
-            removeLabel = stringResource(R.string.remove_from_named_playlist, row.name)
-        )
-    }
+    CollectionRow(
+        row.name,
+        row.trackCount,
+        art = { PlaylistArt(row.isFavorites, RowTileSize) },
+        trailing = {
+            ToggleAddButton(
+                row.added,
+                onClick = onToggle,
+                addLabel = stringResource(R.string.add_to_named_playlist, row.name),
+                removeLabel = stringResource(R.string.remove_from_named_playlist, row.name)
+            )
+        }
+    )
 }
 
 @Preview
@@ -130,8 +120,8 @@ private fun AddToPlaylistScreenPreview() {
             AddToPlaylistUiState(
                 trackTitle = "Route 101",
                 rows = listOf(
-                    AddToPlaylistRowUi(1, "Favorites", isFavorites = true, added = true),
-                    AddToPlaylistRowUi(7, "Hype", isFavorites = false, added = false)
+                    AddToPlaylistRowUi(1, "Favorites", 12, isFavorites = true, added = true),
+                    AddToPlaylistRowUi(7, "Hype", 40, isFavorites = false, added = false)
                 )
             ),
             onToggle = {},

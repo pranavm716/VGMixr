@@ -59,8 +59,10 @@ class AddToPlaylistViewModelTest {
         )
     }
 
-    private val favorites = AddToPlaylistRowUi(1, "Favorites", isFavorites = true, added = false)
-    private val hype = AddToPlaylistRowUi(7, "Hype", isFavorites = false, added = true)
+    private val favorites =
+        AddToPlaylistRowUi(1, "Favorites", trackCount = 0, isFavorites = true, added = false)
+    private val hype =
+        AddToPlaylistRowUi(7, "Hype", trackCount = 1, isFavorites = false, added = true)
 
     @Test
     fun `lists every playlist, Favorites first, checked where the playing track is`() = runTest {
@@ -122,6 +124,16 @@ class AddToPlaylistViewModelTest {
             assertEquals(listOf(true, false), awaitItem().rows.map { it.added })
         }
         assertEquals(listOf("rse-b"), playlists.contents.value[1]?.trackIds)
+    }
+
+    @Test
+    fun `each playlist shows its track count`() = runTest {
+        play("rse-a")
+        viewModel.onOpen()
+
+        viewModel.uiState.test {
+            assertEquals(listOf(0, 1), expectMostRecentItem().rows.map { it.trackCount })
+        }
     }
 
     @Test

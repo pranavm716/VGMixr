@@ -23,10 +23,11 @@ data class AddToPlaylistUiState(
     val rows: List<AddToPlaylistRowUi> = emptyList()
 )
 
-/** A playlist row: its art (Favorites' heart or the blank tile), name, and plus or check. */
+/** A playlist row: its art (Favorites' heart or the blank tile), name over track count, and plus or check. */
 data class AddToPlaylistRowUi(
     val id: Long,
     val name: String,
+    val trackCount: Int,
     val isFavorites: Boolean,
     val added: Boolean
 )
@@ -58,7 +59,13 @@ class AddToPlaylistViewModel @Inject constructor(
                     AddToPlaylistUiState(
                         trackTitle = catalog.tracks.firstOrNull { it.id == id }?.title.orEmpty(),
                         rows = summaries.map {
-                            AddToPlaylistRowUi(it.id, it.name, it.isFavorites, it.id in containing)
+                            AddToPlaylistRowUi(
+                                it.id,
+                                it.name,
+                                it.trackCount,
+                                it.isFavorites,
+                                it.id in containing
+                            )
                         }
                     )
                 }
