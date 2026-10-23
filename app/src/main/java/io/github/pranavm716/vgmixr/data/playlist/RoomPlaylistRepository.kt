@@ -12,6 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 @Singleton
@@ -32,6 +33,10 @@ class RoomPlaylistRepository @Inject constructor(
     ) { playlist, trackIds ->
         playlist?.let { Playlist(it.id, it.name, it.id == FAVORITES_PLAYLIST_ID, trackIds) }
     }
+
+    override fun playlistsContaining(trackId: String): Flow<Set<Long>> =
+        // Room re-emits on any entry change; only a change for this track gets through.
+        dao.observePlaylistIdsContaining(trackId).map { it.toSet() }.distinctUntilChanged()
 
     override val favorites: Flow<Set<String>> =
         dao.observePlaylistTrackIds(FAVORITES_PLAYLIST_ID).map { it.toSet() }

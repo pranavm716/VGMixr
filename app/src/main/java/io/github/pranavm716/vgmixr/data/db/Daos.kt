@@ -124,6 +124,9 @@ interface UserDataDao {
     )
     fun observePlaylistTrackIdsNewestFirst(playlistId: Long): Flow<List<String>>
 
+    @Query("SELECT playlistId FROM playlist_entries WHERE trackId = :trackId")
+    fun observePlaylistIdsContaining(trackId: String): Flow<List<Long>>
+
     @Query("SELECT trackId FROM playlist_entries WHERE playlistId = :playlistId")
     fun observePlaylistTrackIds(playlistId: Long): Flow<List<String>>
 

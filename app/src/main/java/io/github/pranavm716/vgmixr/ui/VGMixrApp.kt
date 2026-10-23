@@ -118,8 +118,12 @@ fun VGMixrApp(
         onOpenPlayingFrom: (PlayingFromUi) -> Unit
     ) -> Unit = { _, _ -> },
     nowPlaying: @Composable (
-        onOpenQueue: () -> Unit
-    ) -> Unit = { PlaceholderScreen("Now playing") },
+        onOpenQueue: () -> Unit,
+        onAddToPlaylist: () -> Unit
+    ) -> Unit = { _, _ -> PlaceholderScreen("Now playing") },
+    addToPlaylist: @Composable (
+        onClose: () -> Unit
+    ) -> Unit = { PlaceholderScreen("Add to playlist") },
     queue: @Composable (onClose: () -> Unit) -> Unit = { PlaceholderScreen("Queue") },
     nowPlayingOpen: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
 ) {
@@ -131,7 +135,14 @@ fun VGMixrApp(
     LaunchedEffect(nowPlayingOpen.value) { sheet.animateTo(nowPlayingOpen.value) }
     // The queue opens over now playing and closes with it.
     var queueOpen by rememberSaveable { mutableStateOf(false) }
-    LaunchedEffect(nowPlayingOpen.value) { if (!nowPlayingOpen.value) queueOpen = false }
+    // "Add to playlist" opens over now playing the same way.
+    var addToPlaylistOpen by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(nowPlayingOpen.value) {
+        if (!nowPlayingOpen.value) {
+            queueOpen = false
+            addToPlaylistOpen = false
+        }
+    }
     val reselects = remember { mutableStateMapOf<TopLevelDestination, Int>() }
     val backStackEntry by navController.currentBackStackEntryAsState()
     val selected = backStackEntry?.destination?.let { current ->
@@ -221,7 +232,7 @@ fun VGMixrApp(
                     }
                 )
             },
-            content = { nowPlaying { queueOpen = true } }
+            content = { nowPlaying({ queueOpen = true }, { addToPlaylistOpen = true }) }
         )
         AnimatedVisibility(
             visible = queueOpen,
@@ -231,6 +242,16 @@ fun VGMixrApp(
             Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                 BackHandler { queueOpen = false }
                 queue { queueOpen = false }
+            }
+        }
+        AnimatedVisibility(
+            visible = addToPlaylistOpen,
+            enter = slideInHorizontally { it },
+            exit = slideOutHorizontally { it }
+        ) {
+            Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                BackHandler { addToPlaylistOpen = false }
+                addToPlaylist { addToPlaylistOpen = false }
             }
         }
     }

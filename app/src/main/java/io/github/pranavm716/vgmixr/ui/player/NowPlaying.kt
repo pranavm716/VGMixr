@@ -134,7 +134,11 @@ private fun PlayingFromText(playingFrom: PlayingFromUi?) {
  * row of add to playlist (start), the favorite heart (centered) and the queue button (end).
  */
 @Composable
-fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = hiltViewModel()) {
+fun NowPlayingScreen(
+    onOpenQueue: () -> Unit,
+    onAddToPlaylist: () -> Unit,
+    viewModel: NowPlayingViewModel = hiltViewModel()
+) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     val visible = state as? NowPlayingUiState.Visible ?: return
     val background = MaterialTheme.colorScheme.background
@@ -199,8 +203,7 @@ fun NowPlayingScreen(onOpenQueue: () -> Unit, viewModel: NowPlayingViewModel = h
                     tint = Color.White
                 )
             }
-            // Not wired yet: picking a playlist comes with the playlist page.
-            IconButton(onClick = {}, Modifier.align(Alignment.CenterStart)) {
+            IconButton(onClick = onAddToPlaylist, Modifier.align(Alignment.CenterStart)) {
                 Icon(
                     painterResource(R.drawable.ic_add),
                     contentDescription = stringResource(R.string.add_to_playlist)

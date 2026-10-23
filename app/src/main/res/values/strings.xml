@@ -15,6 +15,8 @@
     <string name="delete">Delete</string>
     <string name="rename_playlist">Rename playlist</string>
     <string name="delete_playlist_title">Delete %1$s?</string>
+    <string name="add_to_named_playlist">Add to %1$s</string>
+    <string name="remove_from_named_playlist">Remove from %1$s</string>
     <string name="playlist_empty">No tracks yet</string>
     <string name="family_not_found">This game isn\'t in the catalog</string>
     <string name="import_failed">Catalog update failed; showing the previous catalog</string>

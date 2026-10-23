@@ -22,6 +22,7 @@ import java.time.Instant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 class FakeCatalogRepository(initial: Catalog = Catalog(emptyList(), emptyList(), emptyList())) :
@@ -155,6 +156,13 @@ class FakePlaylistRepository(
     val contents = MutableStateFlow<Map<Long, Playlist>>(emptyMap())
 
     override fun playlist(id: Long): Flow<Playlist?> = contents.map { it[id] }
+
+    /** The [contents] playlists holding [trackId], plus Favorites (id 1) if [favorites] has it. */
+    override fun playlistsContaining(trackId: String): Flow<Set<Long>> =
+        combine(contents, favorites) { lists, favorites ->
+            lists.values.filter { trackId in it.trackIds }.map { it.id }.toSet() +
+                (if (trackId in favorites) setOf(1L) else emptySet())
+        }
 
     override suspend fun setFavorite(trackId: String, favorite: Boolean) {
         favorites.value = if (favorite) favorites.value + trackId else favorites.value - trackId

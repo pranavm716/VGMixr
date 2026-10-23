@@ -42,6 +42,7 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.NoSearchResults
 import io.github.pranavm716.vgmixr.ui.components.SearchField
+import io.github.pranavm716.vgmixr.ui.components.ToggleAddButton
 import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
@@ -138,29 +139,18 @@ fun EditPlaylistScreen(
                         row.unplayable,
                         current = false,
                         onClick = null,
-                        trailing = { AddButton(row.added, onClick = { onToggle(row.id) }) }
+                        trailing = {
+                            ToggleAddButton(
+                                row.added,
+                                onClick = { onToggle(row.id) },
+                                addLabel = stringResource(R.string.add_to_this_playlist),
+                                removeLabel = stringResource(R.string.remove_from_this_playlist)
+                            )
+                        }
                     )
                 }
             }
         }
-    }
-}
-
-/** A plus, or the accent check once the track is in the playlist. */
-@Composable
-private fun AddButton(added: Boolean, onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
-        Icon(
-            painterResource(if (added) R.drawable.ic_check else R.drawable.ic_add),
-            contentDescription = stringResource(
-                if (added) R.string.remove_from_this_playlist else R.string.add_to_this_playlist
-            ),
-            tint = if (added) {
-                MaterialTheme.colorScheme.primary
-            } else {
-                MaterialTheme.colorScheme.onSurface
-            }
-        )
     }
 }
 
