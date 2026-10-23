@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
@@ -283,69 +284,86 @@ private fun Controls(
     shuffle: Boolean,
     viewModel: NowPlayingViewModel
 ) {
-    // Five slots, so play/pause stays centered; the last waits for repeat/loop (step 21).
-    Row(
-        Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = viewModel::onShuffle, modifier = Modifier.size(56.dp)) {
-            Icon(
-                painterResource(R.drawable.ic_shuffle),
-                contentDescription = stringResource(
-                    if (shuffle) R.string.shuffle_on else R.string.shuffle_off
-                ),
-                // The accent when on; off, previous and next's color.
-                tint = if (shuffle) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    LocalContentColor.current
-                },
-                modifier = Modifier.size(28.dp)
-            )
-        }
-        IconButton(onClick = viewModel::onPrevious, modifier = Modifier.size(56.dp)) {
-            Icon(
-                painterResource(R.drawable.ic_skip_previous),
-                contentDescription = stringResource(R.string.previous),
-                modifier = Modifier.size(36.dp)
-            )
-        }
-        Box(
-            Modifier
-                .size(68.dp)
-                // Clipped first, so the ripple stays inside the circle.
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary)
-                .clickable(onClick = viewModel::onPlayPause),
-            contentAlignment = Alignment.Center
-        ) {
-            when {
-                isLoading -> CircularProgressIndicator(
-                    modifier = Modifier.size(28.dp),
-                    color = Color.White,
-                    strokeWidth = 3.dp
-                )
-
-                else -> Icon(
-                    painterResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
+    // Five equal slots, as Shuttle's, so play/pause stays centered. Repeat is a placeholder for
+    // step 21's repeat/loop button and does nothing yet.
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        ControlSlot {
+            IconButton(onClick = viewModel::onShuffle) {
+                Icon(
+                    painterResource(R.drawable.ic_shuffle),
                     contentDescription = stringResource(
-                        if (isPlaying) R.string.pause else R.string.play
+                        if (shuffle) R.string.shuffle_on else R.string.shuffle_off
                     ),
-                    tint = Color.White,
+                    // The accent when on; off, previous and next's color.
+                    tint = if (shuffle) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        LocalContentColor.current
+                    },
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+        }
+        ControlSlot {
+            IconButton(onClick = viewModel::onPrevious, modifier = Modifier.size(56.dp)) {
+                Icon(
+                    painterResource(R.drawable.ic_skip_previous),
+                    contentDescription = stringResource(R.string.previous),
                     modifier = Modifier.size(36.dp)
                 )
             }
         }
-        IconButton(onClick = viewModel::onNext, modifier = Modifier.size(56.dp)) {
+        ControlSlot {
+            Box(
+                Modifier
+                    .size(52.dp)
+                    // Clipped first, so the ripple stays inside the circle.
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .clickable(onClick = viewModel::onPlayPause),
+                contentAlignment = Alignment.Center
+            ) {
+                when {
+                    isLoading -> CircularProgressIndicator(
+                        modifier = Modifier.size(22.dp),
+                        color = Color.White,
+                        strokeWidth = 2.5.dp
+                    )
+
+                    else -> Icon(
+                        painterResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
+                        contentDescription = stringResource(
+                            if (isPlaying) R.string.pause else R.string.play
+                        ),
+                        tint = Color.White,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
+            }
+        }
+        ControlSlot {
+            IconButton(onClick = viewModel::onNext, modifier = Modifier.size(56.dp)) {
+                Icon(
+                    painterResource(R.drawable.ic_skip_next),
+                    contentDescription = stringResource(R.string.next),
+                    modifier = Modifier.size(36.dp)
+                )
+            }
+        }
+        ControlSlot {
             Icon(
-                painterResource(R.drawable.ic_skip_next),
-                contentDescription = stringResource(R.string.next),
-                modifier = Modifier.size(36.dp)
+                painterResource(R.drawable.ic_repeat),
+                contentDescription = null,
+                modifier = Modifier.size(28.dp)
             )
         }
-        Spacer(Modifier.size(56.dp))
     }
+}
+
+/** One of the controls row's five equal slots, its button centered. */
+@Composable
+private fun RowScope.ControlSlot(content: @Composable () -> Unit) {
+    Box(Modifier.weight(1f), contentAlignment = Alignment.Center) { content() }
 }
 
 private fun PlaybackProgress.fraction(): Float {
