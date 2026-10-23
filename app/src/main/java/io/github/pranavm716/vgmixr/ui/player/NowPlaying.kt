@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
@@ -17,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
@@ -47,6 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -284,11 +285,16 @@ private fun Controls(
     shuffle: Boolean,
     viewModel: NowPlayingViewModel
 ) {
-    // Five equal slots, as Shuttle's, so play/pause stays centered. Repeat is a placeholder for
+    // Equal gaps between what the eye sees: each control takes its glyph's visible width (the
+    // icons have padding of their own), and the row spreads them out. Repeat is a placeholder for
     // step 21's repeat/loop button and does nothing yet.
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        ControlSlot {
-            IconButton(onClick = viewModel::onShuffle) {
+    Row(
+        Modifier.fillMaxWidth().padding(horizontal = CONTROLS_INSET),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ControlSlot(SHUFFLE_WIDTH) {
+            IconButton(onClick = viewModel::onShuffle, Modifier.requiredSize(48.dp)) {
                 Icon(
                     painterResource(R.drawable.ic_shuffle),
                     contentDescription = stringResource(
@@ -300,23 +306,23 @@ private fun Controls(
                     } else {
                         LocalContentColor.current
                     },
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(SHUFFLE_ICON)
                 )
             }
         }
-        ControlSlot {
-            IconButton(onClick = viewModel::onPrevious, modifier = Modifier.size(56.dp)) {
+        ControlSlot(SKIP_WIDTH) {
+            IconButton(onClick = viewModel::onPrevious, Modifier.requiredSize(56.dp)) {
                 Icon(
                     painterResource(R.drawable.ic_skip_previous),
                     contentDescription = stringResource(R.string.previous),
-                    modifier = Modifier.size(36.dp)
+                    modifier = Modifier.size(SKIP_ICON)
                 )
             }
         }
-        ControlSlot {
+        ControlSlot(PLAY_SIZE) {
             Box(
                 Modifier
-                    .size(52.dp)
+                    .size(PLAY_SIZE)
                     // Clipped first, so the ripple stays inside the circle.
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.primary)
@@ -341,30 +347,42 @@ private fun Controls(
                 }
             }
         }
-        ControlSlot {
-            IconButton(onClick = viewModel::onNext, modifier = Modifier.size(56.dp)) {
+        ControlSlot(SKIP_WIDTH) {
+            IconButton(onClick = viewModel::onNext, Modifier.requiredSize(56.dp)) {
                 Icon(
                     painterResource(R.drawable.ic_skip_next),
                     contentDescription = stringResource(R.string.next),
-                    modifier = Modifier.size(36.dp)
+                    modifier = Modifier.size(SKIP_ICON)
                 )
             }
         }
-        ControlSlot {
+        ControlSlot(SHUFFLE_WIDTH) {
             Icon(
                 painterResource(R.drawable.ic_repeat),
                 contentDescription = null,
-                modifier = Modifier.size(28.dp)
+                // Its glyph fills more of its box than shuffle's: this matches their widths.
+                modifier = Modifier.requiredSize(25.dp)
             )
         }
     }
 }
 
-/** One of the controls row's five equal slots, its button centered. */
+/** A control [width] wide, its glyph's visible width; its touch target overflows it. */
 @Composable
-private fun RowScope.ControlSlot(content: @Composable () -> Unit) {
-    Box(Modifier.weight(1f), contentAlignment = Alignment.Center) { content() }
+private fun ControlSlot(width: Dp, content: @Composable () -> Unit) {
+    Box(Modifier.width(width), contentAlignment = Alignment.Center) { content() }
 }
+
+private val SHUFFLE_ICON = 28.dp
+private val SKIP_ICON = 36.dp
+private val PLAY_SIZE = 52.dp
+
+// Material Symbols' shuffle glyph spans 640 of its 960 units, skip 520.
+private val SHUFFLE_WIDTH = SHUFFLE_ICON * 640 / 960
+private val SKIP_WIDTH = SKIP_ICON * 520 / 960
+
+// Inside the side margin, so shuffle and repeat sit about where Shuttle's do.
+private val CONTROLS_INSET = 22.dp
 
 private fun PlaybackProgress.fraction(): Float {
     val duration = durationMs?.takeIf { it > 0 } ?: return 0f
