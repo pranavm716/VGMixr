@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,8 +43,14 @@ import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import io.github.pranavm716.vgmixr.ui.theme.color
 import io.github.pranavm716.vgmixr.ui.theme.label
 
-// Shuttle's circles fit six across a 360 dp phone; eight split evenly into two rows.
-private const val ACCENTS_PER_ROW = 4
+// Smaller than Shuttle's 32 dp, so all eight fit in one row across a 360 dp phone.
+private val CircleSize = 28.dp
+private val RingWidth = 2.5.dp
+private val DotSize = 19.dp
+
+// Each circle's cell reaches past it, so the row starts this far before the title's edge (24 dp)
+// and the first circle lines up with it.
+private val RowPadding = 18.dp
 
 @Composable
 fun SettingsTab(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
@@ -74,15 +81,10 @@ fun SettingsScreen(state: SettingsUiState, onAccentClick: (Accent) -> Unit, onBa
         }
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
             SectionTitle(stringResource(R.string.accent))
-            // Each circle's touch area reaches 8 dp past it, so the rows start 8 dp before the
-            // title's edge and the circles line up with it.
-            Column(Modifier.padding(horizontal = 16.dp).selectableGroup()) {
-                state.accents.chunked(ACCENTS_PER_ROW).forEach { row ->
-                    Row {
-                        row.forEach { accent ->
-                            AccentCircle(accent, accent == state.accent) { onAccentClick(accent) }
-                        }
-                    }
+            // One row, spread evenly: every circle gets an equal share of the width.
+            Row(Modifier.fillMaxWidth().padding(horizontal = RowPadding).selectableGroup()) {
+                state.accents.forEach { accent ->
+                    AccentCircle(accent, accent == state.accent) { onAccentClick(accent) }
                 }
             }
         }
@@ -99,27 +101,28 @@ private fun SectionTitle(title: String) {
 }
 
 @Composable
-private fun AccentCircle(accent: Accent, selected: Boolean, onClick: () -> Unit) {
+private fun RowScope.AccentCircle(accent: Accent, selected: Boolean, onClick: () -> Unit) {
     val color = accent.color
     val name = stringResource(accent.label)
     Box(
         Modifier
-            .size(48.dp)
+            .weight(1f)
+            .height(48.dp)
             .semantics { contentDescription = name }
             .selectable(
                 selected = selected,
                 onClick = onClick,
                 role = Role.RadioButton,
                 interactionSource = null,
-                indication = ripple(bounded = false, radius = 24.dp)
+                indication = ripple(bounded = false, radius = 20.dp)
             ),
         contentAlignment = Alignment.Center
     ) {
         Box(
-            Modifier.size(32.dp).border(2.5.dp, color, CircleShape),
+            Modifier.size(CircleSize).border(RingWidth, color, CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            if (selected) Box(Modifier.size(22.dp).background(color, CircleShape))
+            if (selected) Box(Modifier.size(DotSize).background(color, CircleShape))
         }
     }
 }
