@@ -140,8 +140,9 @@ fun VGMixrApp(
     ) -> Unit = { _, _ -> },
     nowPlaying: @Composable (
         onOpenQueue: () -> Unit,
-        onAddToPlaylist: () -> Unit
-    ) -> Unit = { _, _ -> PlaceholderScreen("Now playing") },
+        onAddToPlaylist: () -> Unit,
+        onOpenFamily: (familyId: String) -> Unit
+    ) -> Unit = { _, _, _ -> PlaceholderScreen("Now playing") },
     addToPlaylist: @Composable (
         trackId: String?,
         onClose: () -> Unit
@@ -177,6 +178,14 @@ fun VGMixrApp(
         if (!nowPlayingOpen.value) {
             queueOpen = false
             addToPlaylistOpen = false
+        }
+    }
+    // Closes the sheet and opens a family in the Games tab, replacing any one already open there;
+    // it scrolls to the playing track on opening.
+    val openFamily = { familyId: String ->
+        nowPlayingOpen.value = false
+        navController.navigate(FamilyRoute(familyId, fromNowPlaying = true)) {
+            popUpTo<GamesRoute>()
         }
     }
     val reselects = remember { mutableStateMapOf<TopLevelDestination, Int>() }
@@ -257,9 +266,7 @@ fun VGMixrApp(
                         // playing track on opening.
                         nowPlayingOpen.value = false
                         when (playingFrom) {
-                            is PlayingFromUi.Family -> navController.navigate(
-                                FamilyRoute(playingFrom.familyId, fromNowPlaying = true)
-                            ) { popUpTo<GamesRoute>() }
+                            is PlayingFromUi.Family -> openFamily(playingFrom.familyId)
 
                             // Unlike the Games tab's list, the playlist list isn't under every
                             // tab's screens: switch to its tab first, so the playlist opens over
@@ -276,7 +283,9 @@ fun VGMixrApp(
                     }
                 )
             },
-            content = { nowPlaying({ queueOpen = true }, { openAddToPlaylist(null) }) }
+            content = {
+                nowPlaying({ queueOpen = true }, { openAddToPlaylist(null) }, openFamily)
+            }
         )
         AnimatedVisibility(
             visible = queueOpen,

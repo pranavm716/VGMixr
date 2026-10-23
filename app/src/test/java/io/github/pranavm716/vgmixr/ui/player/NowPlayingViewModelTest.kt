@@ -67,6 +67,7 @@ class NowPlayingViewModelTest {
                 NowPlayingUiState.Visible(
                     title = "Route 101",
                     chips = listOf(ChipUi("R", "#336699"), ChipUi("S", "#336699")),
+                    familyId = "rse",
                     playingFrom = PlayingFromUi.Family("rse", "Ruby / Sapphire"),
                     isPlaying = true,
                     isLoading = false
@@ -96,6 +97,15 @@ class NowPlayingViewModelTest {
                 PlayingFromUi.Playlist(1, "Favorites"),
                 (awaitItem() as NowPlayingUiState.Visible).playingFrom
             )
+        }
+    }
+
+    @Test
+    fun `a track playing from a playlist still knows its own family`() = runTest {
+        playback.state.value = playing(QueueContext.Playlist(1))
+
+        viewModel.uiState.test {
+            assertEquals("rse", (awaitItem() as NowPlayingUiState.Visible).familyId)
         }
     }
 

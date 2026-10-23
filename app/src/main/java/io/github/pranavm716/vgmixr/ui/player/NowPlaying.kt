@@ -135,11 +135,14 @@ private fun PlayingFromText(playingFrom: PlayingFromUi?) {
  * Now playing's body, Shuttle's look: the art, the title over its game chips, the seek
  * bar between the elapsed time and the length, previous / play-pause / next, and under them the
  * row of add to playlist (start), the favorite heart (centered) and the queue button (end).
+ * Tapping the title or chips opens the track's own family ([onOpenFamily]), also when it plays
+ * from a playlist, to reach the tracks around it.
  */
 @Composable
 fun NowPlayingScreen(
     onOpenQueue: () -> Unit,
     onAddToPlaylist: () -> Unit,
+    onOpenFamily: (familyId: String) -> Unit,
     viewModel: NowPlayingViewModel = hiltViewModel()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -172,8 +175,13 @@ fun NowPlayingScreen(
         // The title and chips sit halfway between the art and the controls: equal gaps, plus a
         // nudge for the room the text and the slider leave around what you see.
         Spacer(Modifier.weight(INFO_GAP))
+        // A tap target without a ripple, as the header's "Playing from".
         Column(
-            Modifier.offset(y = INFO_NUDGE),
+            Modifier
+                .offset(y = INFO_NUDGE)
+                .clickable(interactionSource = null, indication = null) {
+                    onOpenFamily(visible.familyId)
+                },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // A title too wide scrolls, fading at both edges.

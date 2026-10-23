@@ -22,10 +22,14 @@ import kotlinx.coroutines.launch
 sealed interface NowPlayingUiState {
     data object Hidden : NowPlayingUiState
 
-    /** [chips] are all of the track's games, also when it plays in every game of its family. */
+    /**
+     * [chips] are all of the track's games, also when it plays in every game of its family.
+     * [familyId] is the track's own family, which tapping the title opens wherever it plays from.
+     */
     data class Visible(
         val title: String,
         val chips: List<ChipUi>,
+        val familyId: String,
         val playingFrom: PlayingFromUi,
         val isPlaying: Boolean,
         val isLoading: Boolean,
@@ -122,6 +126,7 @@ private fun Catalog.nowPlaying(
     return NowPlayingUiState.Visible(
         title = track.title,
         chips = track.games.map { ChipUi(it.shortName, it.color) },
+        familyId = track.familyId,
         playingFrom = playingFrom,
         isPlaying = state.isPlaying,
         isLoading = state.isLoading,

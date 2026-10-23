@@ -69,8 +69,12 @@ class MainActivity : ComponentActivity() {
                     miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },
                     miniPlayerInSheet = { MiniPlayerInSheet() },
                     nowPlayingHeader = { close, open -> NowPlayingHeader(close, open) },
-                    nowPlaying = { openQueue, addToPlaylist ->
-                        NowPlayingScreen(onOpenQueue = openQueue, onAddToPlaylist = addToPlaylist)
+                    nowPlaying = { openQueue, addToPlaylist, openFamily ->
+                        NowPlayingScreen(
+                            onOpenQueue = openQueue,
+                            onAddToPlaylist = addToPlaylist,
+                            onOpenFamily = openFamily
+                        )
                     },
                     addToPlaylist = { trackId, close -> AddToPlaylist(trackId, onClose = close) },
                     queue = { close -> QueueScreen(onClose = close) },

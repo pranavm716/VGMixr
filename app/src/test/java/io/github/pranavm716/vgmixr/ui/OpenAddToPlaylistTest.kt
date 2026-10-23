@@ -51,7 +51,7 @@ class OpenAddToPlaylistTest {
                         Text(destination.label)
                     },
                     familyScreen = { add -> fromFamily = add },
-                    nowPlaying = { _, add -> fromNowPlaying = add },
+                    nowPlaying = { _, add, _ -> fromNowPlaying = add },
                     addToPlaylist = { trackId, _ -> Text("Add ${trackId ?: "the playing track"}") },
                     nowPlayingOpen = nowPlayingOpen
                 )
