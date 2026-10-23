@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 // Shuttle's dark look: one near-black for the window, bars and sheets.
 val Background = Color(0xFF111111)
 
-/** The app's one accent, for the selected tab and other current elements. A setting later. */
+/** The default accent (Accent.RED), for the selected tab and other current elements. */
 val DefaultAccent = Color(0xFFF44336)
 
 val TextPrimary = Color(0xFFE6E6E6)

@@ -80,6 +80,7 @@ import io.github.pranavm716.vgmixr.ui.player.PlayingFromUi
 import io.github.pranavm716.vgmixr.ui.playlists.PlaylistsTab
 import io.github.pranavm716.vgmixr.ui.search.SearchTab
 import io.github.pranavm716.vgmixr.ui.settings.SettingsScreen
+import io.github.pranavm716.vgmixr.ui.settings.SettingsUiState
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
@@ -103,7 +104,7 @@ const val SETTINGS_SCREEN_TAG = "screen-settings"
  * [familyScreen] a family's tracks, [playlistScreen] a playlist's (its plus opens
  * [editPlaylistScreen]); all default to placeholders
  * so the shell runs without Hilt (tests), and MainActivity passes the real screens.
- * [settingsScreen], opened by a long press on the Remixes tab, needs no Hilt yet.
+ * [settingsScreen] is opened by a long press on the Remixes tab.
  */
 @Composable
 fun VGMixrApp(
@@ -117,7 +118,9 @@ fun VGMixrApp(
     editPlaylistScreen: @Composable (
         onBack: () -> Unit
     ) -> Unit = { PlaceholderScreen("Add tracks") },
-    settingsScreen: @Composable (onBack: () -> Unit) -> Unit = { SettingsScreen(it) },
+    settingsScreen: @Composable (onBack: () -> Unit) -> Unit = {
+        SettingsScreen(SettingsUiState(), onAccentClick = {}, onBack = it)
+    },
     snackbars: SnackbarHostState = remember { SnackbarHostState() },
     miniPlayer: @Composable (
         NowPlayingSheetState,

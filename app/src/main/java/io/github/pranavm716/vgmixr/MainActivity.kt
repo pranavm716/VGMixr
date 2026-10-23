@@ -7,10 +7,13 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toArgb
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
 import io.github.pranavm716.vgmixr.ui.AppScreen
 import io.github.pranavm716.vgmixr.ui.VGMixrApp
 import io.github.pranavm716.vgmixr.ui.family.FamilyTab
@@ -23,11 +26,17 @@ import io.github.pranavm716.vgmixr.ui.player.NowPlayingScreen
 import io.github.pranavm716.vgmixr.ui.playlist.EditPlaylistTab
 import io.github.pranavm716.vgmixr.ui.playlist.PlaylistTab
 import io.github.pranavm716.vgmixr.ui.queue.QueueScreen
+import io.github.pranavm716.vgmixr.ui.settings.SettingsTab
 import io.github.pranavm716.vgmixr.ui.theme.Background
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
+import io.github.pranavm716.vgmixr.ui.theme.color
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var accentSetting: AccentSetting
+
     // Held here so the notification's intent (onNewIntent) can open it.
     private val nowPlayingOpen = mutableStateOf(false)
 
@@ -41,7 +50,9 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.dark(Background.toArgb())
         )
         setContent {
-            VGMixrTheme {
+            // A pick in Settings recolors the whole app at once.
+            val accent by accentSetting.accent.collectAsStateWithLifecycle()
+            VGMixrTheme(accent.color) {
                 val snackbars = remember { SnackbarHostState() }
                 MessagesEffect(snackbars)
                 VGMixrApp(
@@ -53,6 +64,7 @@ class MainActivity : ComponentActivity() {
                         PlaylistTab(onEditPlaylist = edit, onClose = close)
                     },
                     editPlaylistScreen = { back -> EditPlaylistTab(onBack = back) },
+                    settingsScreen = { back -> SettingsTab(onBack = back) },
                     snackbars = snackbars,
                     miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },
                     miniPlayerInSheet = { MiniPlayerInSheet() },

@@ -18,6 +18,8 @@ import io.github.pranavm716.vgmixr.domain.playback.TryAgainResult
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
+import io.github.pranavm716.vgmixr.domain.settings.Accent
+import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
 import java.time.Instant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -210,5 +212,13 @@ class FakePlaylistRepository(
         val id = 99L + created.size
         contents.value += id to Playlist(id, name, isFavorites = false, trackIds = emptyList())
         return id
+    }
+}
+
+class FakeAccentSetting(initial: Accent = Accent.DEFAULT) : AccentSetting {
+    override val accent = MutableStateFlow(initial)
+
+    override fun set(accent: Accent) {
+        this.accent.value = accent
     }
 }
