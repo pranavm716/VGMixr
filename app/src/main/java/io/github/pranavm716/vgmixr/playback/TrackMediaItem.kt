@@ -19,10 +19,12 @@ const val NO_SOURCE_URI = "vgmixr://none"
 private const val SOURCE_INDEX = "sourceIndex"
 private const val CONTEXT = "context"
 private const val RETRIED = "retried"
+private const val LIST_INDEX = "listIndex"
 
 /**
  * The player item for [track], playing its playable source number [sourceIndex]; [context] is where
- * it plays from, by default the track's own family. [artworkUri] is the media notification's art.
+ * it plays from, by default the track's own family, and [listIndex] its place in the tapped list.
+ * [artworkUri] is the media notification's art.
  */
 fun trackMediaItem(
     track: CatalogTrack,
@@ -30,7 +32,8 @@ fun trackMediaItem(
     sourceIndex: Int = 0,
     context: QueueContext = QueueContext.Family(track.familyId),
     retried: Boolean = false,
-    artworkUri: Uri? = null
+    artworkUri: Uri? = null,
+    listIndex: Int? = null
 ): MediaItem {
     val source = playableStreams(track.sources).getOrNull(sourceIndex)
     val clipping = MediaItem.ClippingConfiguration.Builder()
@@ -41,7 +44,7 @@ fun trackMediaItem(
         .setMediaId(track.id)
         .setUri(source?.let { STREAM_URI_PREFIX + it.videoId } ?: NO_SOURCE_URI)
         .setClippingConfiguration(clipping)
-        .setRequestMetadata(contextRequest(context))
+        .setRequestMetadata(contextRequest(context, listIndex))
         .setMediaMetadata(
             MediaMetadata.Builder()
                 .setTitle(track.title)
@@ -71,12 +74,18 @@ val MediaItem.retried: Boolean get() = mediaMetadata.extras?.getBoolean(RETRIED)
  */
 fun queueRequest(entry: QueueEntry): MediaItem = MediaItem.Builder()
     .setMediaId(entry.trackId)
-    .setRequestMetadata(contextRequest(entry.context))
+    .setRequestMetadata(contextRequest(entry.context, entry.listIndex))
     .build()
 
-private fun contextRequest(context: QueueContext) = MediaItem.RequestMetadata.Builder()
-    .setExtras(Bundle().apply { putString(CONTEXT, context.key) })
-    .build()
+private fun contextRequest(context: QueueContext, listIndex: Int?) =
+    MediaItem.RequestMetadata.Builder()
+        .setExtras(
+            Bundle().apply {
+                putString(CONTEXT, context.key)
+                listIndex?.let { putInt(LIST_INDEX, it) }
+            }
+        )
+        .build()
 
 /** Where this item plays from; an item without one counts as added to the queue. */
 val MediaItem.context: QueueContext
@@ -86,4 +95,8 @@ val MediaItem.context: QueueContext
 /** Whether the user added this item to the queue. */
 val MediaItem.isQueued: Boolean get() = context == QueueContext.Queue
 
-fun MediaItem.queueEntry(): QueueEntry = QueueEntry(mediaId, context)
+/** A tapped item's place in the list it was tapped in; null for a queued one. */
+val MediaItem.listIndex: Int?
+    get() = requestMetadata.extras?.takeIf { it.containsKey(LIST_INDEX) }?.getInt(LIST_INDEX)
+
+fun MediaItem.queueEntry(): QueueEntry = QueueEntry(mediaId, context, listIndex)

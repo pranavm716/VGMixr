@@ -146,6 +146,28 @@ class NowPlayingViewModelTest {
     }
 
     @Test
+    fun `the shuffle button shows the setting and flips it`() = runTest {
+        playback.state.value = playing(QueueContext.Family("rse"))
+
+        viewModel.uiState.test {
+            assertEquals(false, (awaitItem() as NowPlayingUiState.Visible).shuffle)
+
+            viewModel.onShuffle()
+            assertEquals(true, (awaitItem() as NowPlayingUiState.Visible).shuffle)
+
+            viewModel.onShuffle()
+            assertEquals(false, (awaitItem() as NowPlayingUiState.Visible).shuffle)
+        }
+        assertEquals(
+            listOf(
+                FakePlaybackController.SetShuffle(true),
+                FakePlaybackController.SetShuffle(false)
+            ),
+            playback.calls
+        )
+    }
+
+    @Test
     fun `the seek bar follows playback`() = runTest {
         viewModel.progress.test {
             assertEquals(PlaybackProgress(0, null), awaitItem())

@@ -10,13 +10,17 @@ class PlayQueueTest {
 
     private fun queued(vararg ids: String) = ids.map { QueueEntry(it, QueueContext.Queue) }
 
+    /** Entries of the tapped list, [ids] at its positions [from], [from] + 1, … */
+    private fun listed(from: Int, vararg ids: String) =
+        ids.mapIndexed { i, id -> QueueEntry(id, rse, listIndex = from + i) }
+
     private val family = listOf("a", "b", "c", "d")
 
     @Test
     fun `tapping a track plays it, with the family before it for previous and after it for next`() {
         val edit = PlayQueue.EMPTY.playFrom(family, rse, index = 2)
 
-        assertEquals(QueueEdit.Replace(context("a", "b", "c", "d"), startIndex = 2), edit)
+        assertEquals(QueueEdit.Replace(listed(0, "a", "b", "c", "d"), startIndex = 2), edit)
     }
 
     @Test
@@ -26,7 +30,7 @@ class PlayQueueTest {
         val edit = queue.playFrom(family, rse, index = 1)
 
         assertEquals(
-            QueueEdit.Replace(context("a", "b") + queued("q1", "q2") + context("c", "d"), 1),
+            QueueEdit.Replace(listed(0, "a", "b") + queued("q1", "q2") + listed(2, "c", "d"), 1),
             edit
         )
     }
@@ -38,7 +42,7 @@ class PlayQueueTest {
         val edit = queue.playFrom(family, rse, index = 0)
 
         assertEquals(
-            QueueEdit.Replace(context("a") + queued("next") + context("b", "c", "d"), 0),
+            QueueEdit.Replace(listed(0, "a") + queued("next") + listed(1, "b", "c", "d"), 0),
             edit
         )
     }
@@ -102,7 +106,8 @@ class PlayQueueTest {
 
         assertEquals(
             QueueEdit.Replace(
-                listOf(QueueEntry("x", QueueContext.Family("frlg"))) + queued("q1").drop(1),
+                listOf(QueueEntry("x", QueueContext.Family("frlg"), listIndex = 0)) +
+                    queued("q1").drop(1),
                 0
             ),
             edit

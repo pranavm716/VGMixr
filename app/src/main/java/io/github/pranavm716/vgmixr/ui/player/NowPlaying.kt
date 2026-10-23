@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
@@ -25,6 +26,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -45,6 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -186,7 +189,7 @@ fun NowPlayingScreen(
         Column(Modifier.padding(horizontal = SIDE_MARGIN)) {
             SeekRow(viewModel)
             Spacer(Modifier.height(16.dp))
-            Controls(visible.isPlaying, visible.isLoading, viewModel)
+            Controls(visible.isPlaying, visible.isLoading, visible.shuffle, viewModel)
         }
         Spacer(Modifier.weight(BOTTOM_GAP))
         Box(Modifier.fillMaxWidth().padding(horizontal = SIDE_MARGIN)) {
@@ -276,54 +279,111 @@ private fun TimeText(text: String) {
 }
 
 @Composable
-private fun Controls(isPlaying: Boolean, isLoading: Boolean, viewModel: NowPlayingViewModel) {
+private fun Controls(
+    isPlaying: Boolean,
+    isLoading: Boolean,
+    shuffle: Boolean,
+    viewModel: NowPlayingViewModel
+) {
+    // Equal gaps between what the eye sees: each control takes its glyph's visible width (the
+    // icons have padding of their own), and the row spreads them out. Repeat is a placeholder for
+    // step 21's repeat/loop button and does nothing yet.
     Row(
-        Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        Modifier.fillMaxWidth().padding(horizontal = CONTROLS_INSET),
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(onClick = viewModel::onPrevious, modifier = Modifier.size(56.dp)) {
-            Icon(
-                painterResource(R.drawable.ic_skip_previous),
-                contentDescription = stringResource(R.string.previous),
-                modifier = Modifier.size(36.dp)
-            )
-        }
-        Box(
-            Modifier
-                .size(68.dp)
-                // Clipped first, so the ripple stays inside the circle.
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary)
-                .clickable(onClick = viewModel::onPlayPause),
-            contentAlignment = Alignment.Center
-        ) {
-            when {
-                isLoading -> CircularProgressIndicator(
-                    modifier = Modifier.size(28.dp),
-                    color = Color.White,
-                    strokeWidth = 3.dp
-                )
-
-                else -> Icon(
-                    painterResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
+        ControlSlot(OUTER_WIDTH) {
+            IconButton(onClick = viewModel::onShuffle, Modifier.requiredSize(48.dp)) {
+                Icon(
+                    painterResource(R.drawable.ic_shuffle),
                     contentDescription = stringResource(
-                        if (isPlaying) R.string.pause else R.string.play
+                        if (shuffle) R.string.shuffle_on else R.string.shuffle_off
                     ),
-                    tint = Color.White,
-                    modifier = Modifier.size(36.dp)
+                    // The accent when on; off, previous and next's color.
+                    tint = if (shuffle) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        LocalContentColor.current
+                    },
+                    modifier = Modifier.size(SHUFFLE_ICON)
                 )
             }
         }
-        IconButton(onClick = viewModel::onNext, modifier = Modifier.size(56.dp)) {
+        ControlSlot(SKIP_WIDTH) {
+            IconButton(onClick = viewModel::onPrevious, Modifier.requiredSize(56.dp)) {
+                Icon(
+                    painterResource(R.drawable.ic_skip_previous),
+                    contentDescription = stringResource(R.string.previous),
+                    modifier = Modifier.size(SKIP_ICON)
+                )
+            }
+        }
+        ControlSlot(PLAY_SIZE) {
+            Box(
+                Modifier
+                    .size(PLAY_SIZE)
+                    // Clipped first, so the ripple stays inside the circle.
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .clickable(onClick = viewModel::onPlayPause),
+                contentAlignment = Alignment.Center
+            ) {
+                when {
+                    isLoading -> CircularProgressIndicator(
+                        modifier = Modifier.size(22.dp),
+                        color = Color.White,
+                        strokeWidth = 2.5.dp
+                    )
+
+                    else -> Icon(
+                        painterResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
+                        contentDescription = stringResource(
+                            if (isPlaying) R.string.pause else R.string.play
+                        ),
+                        tint = Color.White,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
+            }
+        }
+        ControlSlot(SKIP_WIDTH) {
+            IconButton(onClick = viewModel::onNext, Modifier.requiredSize(56.dp)) {
+                Icon(
+                    painterResource(R.drawable.ic_skip_next),
+                    contentDescription = stringResource(R.string.next),
+                    modifier = Modifier.size(SKIP_ICON)
+                )
+            }
+        }
+        ControlSlot(OUTER_WIDTH) {
             Icon(
-                painterResource(R.drawable.ic_skip_next),
-                contentDescription = stringResource(R.string.next),
-                modifier = Modifier.size(36.dp)
+                painterResource(R.drawable.ic_repeat),
+                contentDescription = null,
+                modifier = Modifier.requiredSize(REPEAT_ICON)
             )
         }
     }
 }
+
+/** A control [width] wide, its glyph's visible width; its touch target overflows it. */
+@Composable
+private fun ControlSlot(width: Dp, content: @Composable () -> Unit) {
+    Box(Modifier.width(width), contentAlignment = Alignment.Center) { content() }
+}
+
+private val SHUFFLE_ICON = 28.dp
+private val REPEAT_ICON = 28.dp
+private val SKIP_ICON = 36.dp
+private val PLAY_SIZE = 52.dp
+
+// Material Symbols' skip glyph spans 520 of its 960 units, repeat 720 (shuffle 640). Shuffle's
+// slot takes repeat's width too, so play/pause stays centered.
+private val SKIP_WIDTH = SKIP_ICON * 520 / 960
+private val OUTER_WIDTH = REPEAT_ICON * 720 / 960
+
+// Inside the side margin, so shuffle and repeat sit about where Shuttle's do.
+private val CONTROLS_INSET = 22.dp
 
 private fun PlaybackProgress.fraction(): Float {
     val duration = durationMs?.takeIf { it > 0 } ?: return 0f

@@ -14,8 +14,12 @@ import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.ResolvingDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.source.ShuffleOrder
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import androidx.media3.session.SessionCommand
+import androidx.media3.session.SessionResult
+import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.SettableFuture
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,13 +39,16 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
+import io.github.pranavm716.vgmixr.domain.playback.ShuffleSetting
 import io.github.pranavm716.vgmixr.domain.playback.SourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.nextSource
 import io.github.pranavm716.vgmixr.domain.playback.onSourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import java.io.File
 import java.time.Clock
 import javax.inject.Inject
+import kotlin.random.Random
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -83,10 +90,17 @@ class PlaybackService : MediaSessionService() {
     @Inject
     lateinit var playHistory: PlayHistory
 
+    @Inject
+    lateinit var shuffleSetting: ShuffleSetting
+
+    @Inject
+    lateinit var playlists: PlaylistRepository
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val artwork by lazy { NotificationArtwork(File(cacheDir, "artwork")) }
     private val catalog = MutableStateFlow<Catalog?>(null)
     private val marks = MutableStateFlow<Map<String, BrokenMark>>(emptyMap())
+    private val favorites = MutableStateFlow<Set<String>>(emptySet())
     private var session: MediaSession? = null
 
     override fun onCreate() {
@@ -115,6 +129,10 @@ class PlaybackService : MediaSessionService() {
             .setHandleAudioBecomingNoisy(true)
             .setWakeMode(C.WAKE_MODE_NETWORK)
             .build()
+        // Shuffle rearranges the items themselves (Shuffling), so the queue screen shows what
+        // plays next; the player's own shuffle order stays the item order.
+        player.setShuffleOrder(ShuffleOrder.UnshuffledShuffleOrder(0))
+        player.shuffleModeEnabled = shuffleSetting.isOn()
         val openApp = PendingIntent.getActivity(
             this,
             0,
@@ -127,13 +145,43 @@ class PlaybackService : MediaSessionService() {
         val session = MediaSession.Builder(this, player)
             .setCallback(Callback())
             .setSessionActivity(openApp)
+            .setMediaButtonPreferences(
+                mediaButtons(this, player.shuffleModeEnabled, favorite = false)
+            )
             .build()
         player.addListener(Failover(player, session))
         player.addListener(PlayRecording(player))
+        player.addListener(Shuffling(player, shuffleSetting))
+        player.addListener(
+            object : Player.Listener {
+                override fun onEvents(player: Player, events: Player.Events) {
+                    if (events.containsAny(
+                            Player.EVENT_SHUFFLE_MODE_ENABLED_CHANGED,
+                            Player.EVENT_MEDIA_ITEM_TRANSITION
+                        )
+                    ) {
+                        updateButtons(session)
+                    }
+                }
+            }
+        )
+        scope.launch {
+            playlists.favorites.collect {
+                favorites.value = it
+                updateButtons(session)
+            }
+        }
         this.session = session
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? = session
+
+    /** The notification's shuffle and favorite buttons, showing the player's state. */
+    private fun updateButtons(session: MediaSession) {
+        val player = session.player
+        val favorite = player.currentMediaItem?.mediaId in favorites.value
+        session.setMediaButtonPreferences(mediaButtons(this, player.shuffleModeEnabled, favorite))
+    }
 
     override fun onDestroy() {
         session?.run {
@@ -146,6 +194,39 @@ class PlaybackService : MediaSessionService() {
     }
 
     private inner class Callback : MediaSession.Callback {
+        override fun onConnect(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo
+        ): MediaSession.ConnectionResult =
+            MediaSession.ConnectionResult.AcceptedResultBuilder(session)
+                .setAvailableSessionCommands(
+                    MediaSession.ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon()
+                        .add(toggleShuffle)
+                        .add(toggleFavorite)
+                        .build()
+                )
+                .build()
+
+        override fun onCustomCommand(
+            session: MediaSession,
+            controller: MediaSession.ControllerInfo,
+            customCommand: SessionCommand,
+            args: Bundle
+        ): ListenableFuture<SessionResult> {
+            val player = session.player
+            when (customCommand.customAction) {
+                TOGGLE_SHUFFLE -> player.shuffleModeEnabled = !player.shuffleModeEnabled
+
+                TOGGLE_FAVORITE -> player.currentMediaItem?.mediaId?.let { trackId ->
+                    val favorite = trackId in favorites.value
+                    scope.launch { playlists.setFavorite(trackId, !favorite) }
+                }
+
+                else -> return super.onCustomCommand(session, controller, customCommand, args)
+            }
+            return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+        }
+
         override fun onAddMediaItems(
             mediaSession: MediaSession,
             controller: MediaSession.ControllerInfo,
@@ -158,8 +239,9 @@ class PlaybackService : MediaSessionService() {
                 val fresh = brokenSources.marks.first().also { marks.value = it }
                 mediaSession.setStoppedBy(null)
                 items.set(
-                    mediaItems.map { catalog.startItem(it.mediaId, it.context, fresh, artwork) }
-                        .toMutableList()
+                    mediaItems.map {
+                        catalog.startItem(it.mediaId, it.context, it.listIndex, fresh, artwork)
+                    }.toMutableList()
                 )
             }
             return items
@@ -215,6 +297,7 @@ class PlaybackService : MediaSessionService() {
                     val again = catalog.itemFor(
                         item.mediaId,
                         item.context,
+                        item.listIndex,
                         item.sourceIndex,
                         artwork,
                         retried = true
@@ -225,7 +308,13 @@ class PlaybackService : MediaSessionService() {
                 }
 
                 is FailoverAction.TrySource -> {
-                    val next = catalog.itemFor(item.mediaId, item.context, action.index, artwork)
+                    val next = catalog.itemFor(
+                        item.mediaId,
+                        item.context,
+                        item.listIndex,
+                        action.index,
+                        artwork
+                    )
                     player.replaceMediaItem(player.currentMediaItemIndex, next)
                     player.prepare()
                     player.play()
@@ -301,6 +390,20 @@ class PlaybackService : MediaSessionService() {
     }
 }
 
+/**
+ * Turning shuffle on shuffles "Next from"; turning it off puts it back in list order. Here, so a
+ * flip from the app, the notification or the lock screen all rearrange the same way. The setting
+ * is saved for the next launch.
+ */
+private class Shuffling(private val player: Player, private val setting: ShuffleSetting) :
+    Player.Listener {
+    override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+        setting.set(shuffleModeEnabled)
+        val queue = player.queue()
+        player.apply(if (shuffleModeEnabled) queue.shuffle(Random.Default) else queue.unshuffle())
+    }
+}
+
 private const val PLAY_CHECK_INTERVAL_MS = 1_000L
 
 private fun Int.toTransition(): PlayCounter.Transition = when (this) {
@@ -321,13 +424,15 @@ private fun MediaSession.setStoppedBy(failure: ResolveFailure?) {
 private fun Catalog.startItem(
     trackId: String,
     context: QueueContext,
+    listIndex: Int?,
     marks: Map<String, BrokenMark>,
     artwork: NotificationArtwork
 ): MediaItem {
     val streams = tracks.firstOrNull { it.id == trackId }
         ?.let { playableStreams(it.sources) }
         .orEmpty()
-    return itemFor(trackId, context, nextSource(streams, 0, marks.keys) ?: streams.size, artwork)
+    val sourceIndex = nextSource(streams, 0, marks.keys) ?: streams.size
+    return itemFor(trackId, context, listIndex, sourceIndex, artwork)
 }
 
 /**
@@ -337,17 +442,18 @@ private fun Catalog.startItem(
 private fun Catalog.itemFor(
     trackId: String,
     context: QueueContext,
+    listIndex: Int?,
     sourceIndex: Int,
     artwork: NotificationArtwork,
     retried: Boolean = false
 ): MediaItem {
     val track = tracks.firstOrNull { it.id == trackId }
         ?: return queueRequest(
-            QueueEntry(trackId, context)
+            QueueEntry(trackId, context, listIndex)
         ).buildUpon().setUri(NO_SOURCE_URI).build()
     val familyName = families.firstOrNull { it.id == track.familyId }?.name.orEmpty()
     val art = artwork.uriFor(track.games.map { it.color })
-    return trackMediaItem(track, familyName, sourceIndex, context, retried, art)
+    return trackMediaItem(track, familyName, sourceIndex, context, retried, art, listIndex)
 }
 
 private val MediaItem.videoId: String?

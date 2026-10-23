@@ -1,10 +1,13 @@
 package io.github.pranavm716.vgmixr.domain.playback
 
+import kotlin.random.Random
+
 /**
  * A track in the play queue and where it plays from. [queued] is true for one the user added
- * ("Next in queue").
+ * ("Next in queue"). [listIndex] is a tapped track's place in the list it was tapped in (null for a
+ * queued one), so turning shuffle off can put the list back in order.
  */
-data class QueueEntry(val trackId: String, val context: QueueContext) {
+data class QueueEntry(val trackId: String, val context: QueueContext, val listIndex: Int? = null) {
     val queued: Boolean get() = context == QueueContext.Queue
 }
 
@@ -61,10 +64,21 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
     /**
      * Tapping track [index] of [trackIds], tapped in [context]: it plays now, the queue still waits
      * right after it, and the rest of [trackIds] follows. The tracks before it stay, so "previous"
-     * walks back through them.
+     * walks back through them. With [shuffle] on, the rest of [trackIds] follows shuffled instead,
+     * all of it, so nothing waits behind for "previous".
      */
-    fun playFrom(trackIds: List<String>, context: QueueContext, index: Int): QueueEdit.Replace {
-        val tapped = trackIds.map { QueueEntry(it, context) }
+    fun playFrom(
+        trackIds: List<String>,
+        context: QueueContext,
+        index: Int,
+        shuffle: Boolean = false,
+        random: Random = Random.Default
+    ): QueueEdit.Replace {
+        val tapped = trackIds.mapIndexed { i, id -> QueueEntry(id, context, listIndex = i) }
+        if (shuffle) {
+            val rest = (tapped.take(index) + tapped.drop(index + 1)).shuffled(random)
+            return QueueEdit.Replace(listOf(tapped[index]) + upNext + rest, startIndex = 0)
+        }
         return QueueEdit.Replace(
             tapped.take(index + 1) + upNext + tapped.drop(index + 1),
             startIndex = index
@@ -127,6 +141,43 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
         listOf(QueueEdit.Remove(current + 1, current + 1 + upNext.size))
     }
 
+    /** Where "Next from" starts: after the current track and "Next in queue". */
+    private val nextFromStart: Int get() = current + 1 + upNext.size
+
+    /**
+     * Turning shuffle on shuffles "Next from" only; "Next in queue" and the tracks played stay as
+     * they are.
+     */
+    fun shuffle(random: Random): List<QueueEdit> {
+        if (nextFromContext.size < 2) return emptyList()
+        val order = (nextFromStart until entries.size).shuffled(random)
+        return listOf(QueueEdit.Rearrange(nextFromStart, entries.size, order))
+    }
+
+    /**
+     * Turning shuffle off makes "Next from" the whole list after the current track, in list order,
+     * tracks that played while shuffled included. If a queued track plays, the list goes on after
+     * the last list track that played. Tracks removed from the list stay removed; queued tracks left
+     * in "Next from" by going back past them come first.
+     */
+    fun unshuffle(): List<QueueEdit> {
+        val anchor = entries.take(current + 1).lastOrNull { it.listIndex != null }?.listIndex
+            ?: return emptyList()
+        // Each list position once, at its last place in the queue (the upcoming copy if any).
+        val placeOf = entries.withIndex()
+            .mapNotNull { (i, entry) -> entry.listIndex?.let { it to i } }
+            .toMap()
+        // Queued tracks left in "Next from" (by going back past them) stay, ahead of the list.
+        val stranded = (nextFromStart until entries.size).filter { entries[it].queued }
+        val order = stranded + placeOf.filterKeys { it > anchor }.toSortedMap().values
+        val unchanged = order == (nextFromStart until entries.size).toList()
+        return if (unchanged) {
+            emptyList()
+        } else {
+            listOf(QueueEdit.Rearrange(nextFromStart, entries.size, order))
+        }
+    }
+
     /** The queue after [edits], applied in order as the player applies them. */
     fun applying(edits: List<QueueEdit>): PlayQueue = edits.fold(this) { queue, edit ->
         queue.applying(edit)
@@ -144,6 +195,10 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
                 marked.take(edit.index) + edit.entries.map { it to false } + marked.drop(edit.index)
 
             is QueueEdit.Remove -> marked.take(edit.from) + marked.drop(edit.to)
+
+            is QueueEdit.Rearrange ->
+                marked.take(edit.from) + edit.sourceIndices.map { entries[it] to false } +
+                    marked.drop(edit.to)
 
             is QueueEdit.Move -> {
                 val moving = marked.subList(edit.from, edit.to)
@@ -172,6 +227,12 @@ sealed interface QueueEdit {
 
     /** Remove entries [from] until [to]. */
     data class Remove(val from: Int, val to: Int) : QueueEdit
+
+    /**
+     * Replace entries [from] until [to] with the entries now at [sourceIndices], which may repeat
+     * ones elsewhere in the queue. The player reuses its own items for them.
+     */
+    data class Rearrange(val from: Int, val to: Int, val sourceIndices: List<Int>) : QueueEdit
 
     /** Play entry [index] from its start. */
     data class Seek(val index: Int) : QueueEdit
