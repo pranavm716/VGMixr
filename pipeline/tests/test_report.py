@@ -1,4 +1,4 @@
-from vgmixr_pipeline.catalog.build import BuildResult, DraftTrack, Excluded
+from vgmixr_pipeline.catalog.build import BuildResult, DraftTrack, Excluded, Vanished
 from vgmixr_pipeline.catalog.match import Match, Scored
 from vgmixr_pipeline.catalog.report import family_report, match_report, match_summary, summary
 from vgmixr_pipeline.catalog.score import Candidate, Score
@@ -92,3 +92,21 @@ def test_match_summary_has_a_line_per_family() -> None:
     lines = match_summary(GAMES, MATCHES).splitlines()
     assert lines[1].split() == ["rse", "2", "matched", "1", "review", "2", "unmatched"]
     assert lines[2].split() == ["solo", "0", "matched", "0", "review", "0", "unmatched"]
+
+
+VANISHED = BuildResult(
+    tracks=RESULT.tracks,
+    excluded=RESULT.excluded,
+    vanished=[Vanished("rse", "rse-old", "rse-old"), Vanished("rse", "rse-b-old", "rse-b2")],
+)
+
+
+def test_family_report_lists_vanished_ids() -> None:
+    report = family_report(GAMES, VANISHED)
+    assert "- Vanished ids: 2 (rse-old -> rse-old, rse-b-old -> rse-b2)" in report
+    assert "Vanished" not in family_report(GAMES, RESULT)
+
+
+def test_summary_counts_vanished_ids() -> None:
+    assert summary(GAMES, VANISHED).splitlines()[-1] == "2 vanished ids (see family-report.md)"
+    assert "vanished" not in summary(GAMES, RESULT)

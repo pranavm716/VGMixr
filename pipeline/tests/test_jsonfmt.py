@@ -8,6 +8,7 @@ import pytest
 from vgmixr_pipeline.catalog.config import DATA_DIR
 from vgmixr_pipeline.catalog.jsonfmt import (
     format_games,
+    format_ids,
     format_order,
     format_overrides,
     games_families,
@@ -173,3 +174,12 @@ def test_an_order_lists_one_id_per_line_with_families_apart() -> None:
 
 def test_an_empty_order_is_compact() -> None:
     assert format_order({}) == "{}\n"
+
+
+def test_committed_ids_file_is_canonical() -> None:
+    path = DATA_DIR / "ids.json"
+    if not path.exists():
+        pytest.skip("no ids.json yet")
+    games = json.loads((DATA_DIR / "games.json").read_text(encoding="utf-8"))
+    text = path.read_text(encoding="utf-8")
+    assert format_ids(json.loads(text), games_families(games)) == text

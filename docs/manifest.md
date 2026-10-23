@@ -114,7 +114,7 @@ The app derives chip text color from `color` for contrast, so the manifest doesn
 
 | Field | Type | Rules |
 |---|---|---|
-| `id` | string | Slug `[a-z0-9-]+`, convention `<family>-<slug>`. Unique. **Immutable**: favorites and history reference it. |
+| `id` | string | Slug `[a-z0-9-]+`, convention `<family>-<slug>`. Unique. **Immutable**: favorites and history reference it. The pipeline freezes it in `pipeline/data/ids.json` the first time the track ships (the slug of its title then), so a later title change never changes it. |
 | `family` | string | Required. Must match a family id: a `family` slug used by at least one game, or the id of a standalone game. |
 | `games` | string[] | Optional. Non-empty, no duplicates, each entry must be the id of a game in the track's family. Omitted means the track exists in all of the family's games. |
 | `title` | string | Non-empty. |

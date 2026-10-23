@@ -14,11 +14,13 @@ Data, by hand:
 - Track order, renames, notes and stream decisions: in the review tool (writes `order.json` and `overrides.json`).
 - Cover: `pipeline/covers-in/<family>.<ext>`, then `uv run python -m vgmixr_pipeline.covers`. Without one, the family shows a blank tile.
 - Rebuild the catalog, check `family-report.md` and `match-report.md`, then build a new APK (the manifest is bundled in assets).
+- Ids: the first build that ships a track (any build that writes the manifest, the review tool's Rebuild included, not only a deployed one) freezes its id in `pipeline/data/ids.json` as the slug of its title then. Rename before its videos match if the id should follow a fixed title; until an APK with the ids is installed, the new lines in ids.json can still be hand-edited. Commit ids.json with the manifest: without it the next build would give renamed tracks new ids.
+- Later changes to a shipped game: a changed upstream title vanishes the old key ("Vanished ids" in `family-report.md`); give the new key the old id by hand in ids.json. A merged-away track's favorites follow only with a hand-written `replaces`. A split keeps the original key's id; the split part gets a new one.
 
 Code:
 - `app/.../domain/search/SearchAliases.kt`, `FAMILY_REGIONS`: the family's main region, as a search word ("hoenn"). A family missing here just has no region word.
 - `pipeline/.../catalog/score.py`, `_VARIANTS`: a new region's name (it tells versions of one track apart), and `_NOISE` / `_DEMAKE` for a new platform's name.
-- Family ids must stay unique across everything that will ever be added; short ids collide easily (`sm` is Sun/Moon, not Super Mario). Ids are frozen once deployed: favorites and history reference them.
+- Family ids must stay unique across everything that will ever be added; short ids collide easily (`sm` is Sun/Moon, not Super Mario). Ids are frozen once shipped: favorites and history reference them, and every track id starts with its family id, so a family can't be renamed afterwards.
 
 ## A Pokémon spin-off (e.g. Mystery Dungeon)
 

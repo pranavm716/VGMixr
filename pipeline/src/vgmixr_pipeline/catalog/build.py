@@ -2,9 +2,10 @@
 
 Each Bulbapedia row is an occurrence of a title in a family. Occurrences with the same source key
 (`<family>-<slug of the source's title>`) are one track; overrides, keyed by it, then merge, split,
-exclude, correct and add tracks. A draft track's `id` is its source key; the manifest's id comes
-from its final title (step 19), so two kept tracks of a family may not share one. Every rule
-problem is collected and reported at once as a BuildError.
+exclude, correct and add tracks. A draft track's `id` is its source key; its catalog id, the id
+the manifest ships, is frozen in ids.json (step 12e), else the slug of its final title. Titles stay
+slug-unique among a family's kept tracks, and a new track may not take an id ids.json already
+gives out. Every rule problem is collected and reported at once as a BuildError.
 """
 
 from collections.abc import Callable, Iterable
@@ -21,7 +22,9 @@ from vgmixr_pipeline.catalog.config import (
     TrackOrder,
     TrackOverride,
 )
+from vgmixr_pipeline.catalog.ids import catalog_id
 from vgmixr_pipeline.catalog.jingles import is_jingle
+from vgmixr_pipeline.catalog.jsonfmt import track_family
 from vgmixr_pipeline.catalog.order import ordered
 from vgmixr_pipeline.catalog.slug import track_id
 from vgmixr_pipeline.catalog.tracklist import parse_disc, parse_duration, parse_tsv_disc
@@ -71,9 +74,22 @@ class Excluded:
 
 
 @dataclass(frozen=True)
+class Vanished:
+    """An ids.json entry whose source key is no track now (an upstream title changed, or the
+    track was merged into another): its id stays taken."""
+
+    family: str
+    key: str
+    id: str
+
+
+@dataclass(frozen=True)
 class BuildResult:
     tracks: list[DraftTrack]
     excluded: list[Excluded]
+    vanished: list[Vanished] = field(default_factory=list)
+    # Each kept track's catalog id, by source key.
+    catalog_ids: dict[str, str] = field(default_factory=dict)
 
 
 class Draft(BaseModel):
@@ -104,10 +120,12 @@ def build_draft(
     durations: Durations | None = None,
     read_file: Callable[[str], str] = _read_data_file,
     order: TrackOrder | None = None,
+    frozen: dict[str, str] | None = None,
 ) -> tuple[Draft, BuildResult]:
     """Reads each tracklist's disc from `wikitext(page)` or `read_file(file)`; builds the draft.
 
-    `durations` fills in track lengths that a page leaves blank; `order` is the hand-set order.
+    `durations` fills in track lengths that a page leaves blank; `order` is the hand-set order;
+    `frozen` is ids.json (source key -> catalog id).
     """
     durations = durations or Durations()
     occurrences = []
@@ -133,7 +151,7 @@ def build_draft(
             occurrences.append(Occurrence(tracklist.family, games, title, duration, origin))
     if errors:
         raise BuildError(errors)
-    result = build_tracks(games_file.games, occurrences, overrides, order)
+    result = build_tracks(games_file.games, occurrences, overrides, order, frozen)
     return Draft(generatedAt=generated_at, games=games_file.games, tracks=result.tracks), result
 
 
@@ -162,6 +180,7 @@ def build_tracks(
     occurrences: list[Occurrence],
     overrides: Overrides,
     order: TrackOrder | None = None,
+    frozen: dict[str, str] | None = None,
 ) -> BuildResult:
     family_games: dict[str, list[str]] = {}
     for game in games:
@@ -199,10 +218,11 @@ def build_tracks(
         else:
             _apply(track, override, family_games, errors)
             kept.append(track)
-    _check_catalog_ids(kept, errors)
+    _check_titles(kept, errors)
+    ids, vanished = _catalog_ids(kept, excluded, frozen or {}, list(family_games), errors)
     if errors:
         raise BuildError(errors)
-    return BuildResult(_draft(kept, family_games, hand_order), excluded)
+    return BuildResult(_draft(kept, family_games, hand_order), excluded, vanished, ids)
 
 
 def _group(
@@ -343,16 +363,53 @@ def _check_games(id_: str, games: list[str], family: list[str], errors: list[str
         errors.append(f"{id_}: games {games} must be distinct games of its family {family}")
 
 
-def _check_catalog_ids(tracks: list[_Track], errors: list[str]) -> None:
-    """A track's catalog id (the manifest's) comes from its final title, so two kept tracks of a
-    family must not slug to the same one; excluded tracks never ship."""
+def _check_titles(tracks: list[_Track], errors: list[str]) -> None:
+    """Two kept tracks of a family must not have titles that slug alike: a new track's catalog id
+    comes from its title, and a family's titles stay distinct. Excluded tracks never ship."""
     by_id: dict[str, list[_Track]] = {}
     for track in tracks:
         by_id.setdefault(track_id(track.family, track.title), []).append(track)
-    for catalog_id, same in by_id.items():
+    for id_, same in by_id.items():
         if len(same) > 1:
             names = " and ".join(f"{t.id} ({t.title!r})" for t in same)
-            errors.append(f"{names} both get catalog id {catalog_id}; give them distinct titles")
+            errors.append(f"{names} have titles that slug alike ({id_}); give them distinct titles")
+
+
+def _catalog_ids(
+    kept: list[_Track],
+    excluded: list[Excluded],
+    frozen: dict[str, str],
+    families: list[str],
+    errors: list[str],
+) -> tuple[dict[str, str], list[Vanished]]:
+    """Each kept track's frozen id, else its title's slug, which must not be an id that ids.json
+    gives any key (a kept, excluded or vanished one): ids are never reused, so a new track can't
+    inherit an old one's favorites and history. Also returns the vanished entries."""
+    owners: dict[str, list[str]] = {}
+    for key, id_ in frozen.items():
+        owners.setdefault(id_, []).append(key)
+    for id_, keys in owners.items():
+        if len(keys) > 1:
+            errors.append(f"ids.json gives {' and '.join(keys)} the same id {id_}")
+    ids = {}
+    for track in kept:
+        id_ = ids[track.id] = catalog_id(frozen, track.id, track.family, track.title)
+        if track.id in frozen:
+            if not id_.startswith(track.family + "-"):
+                errors.append(f"ids.json gives {track.id} {id_}, which is not an id of its "
+                              f"family {track.family}")  # fmt: skip
+        elif id_ in owners:
+            owner = " and ".join(owners[id_])
+            errors.append(f"{track.id} ({track.title!r}) would get catalog id {id_}, which "
+                          f"ids.json gives {owner}; ids are never reused, so give it another "
+                          "title")  # fmt: skip
+    tracks = set(ids) | {e.id for e in excluded}
+    vanished = [
+        Vanished(track_family(key, families) or "", key, id_)
+        for key, id_ in frozen.items()
+        if key not in tracks
+    ]
+    return ids, vanished
 
 
 def _check_order(

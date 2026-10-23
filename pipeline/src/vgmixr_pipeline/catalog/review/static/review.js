@@ -457,7 +457,8 @@ function renderDetail() {
     <div class="facts">
       ${gamesEditor(d)}
       · ${minutes(d.durationMs)} · <span class="status-${d.status}">${d.status}</span>
-      · <code>${esc(d.id)}</code>
+      · key <code>${esc(d.id)}</code>
+      · id <code>${esc(d.catalogId)}</code> <span class="facts" title="${d.idFrozen ? "Frozen in ids.json: a rename changes only the title" : "Not shipped yet: it gets this id, from its title, the first time it ships"}">${d.idFrozen ? "frozen" : "new, from title"}</span>
     </div>
     <div class="facts">${d.origins.map(esc).join("<br>")}</div>
     ${d.reported.map((r) => `<div class="reported">
