@@ -8,12 +8,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.pranavm716.vgmixr.data.diagnostics.BrokenMarksMirror
 import io.github.pranavm716.vgmixr.data.diagnostics.FileDiagnostics
+import io.github.pranavm716.vgmixr.data.settings.PrefsShuffleSetting
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.NewPipeStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.RoomBrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
+import io.github.pranavm716.vgmixr.domain.playback.ShuffleSetting
 import io.github.pranavm716.vgmixr.domain.playback.StreamResolver
 import io.github.pranavm716.vgmixr.playback.MediaControllerPlaybackController
 import java.io.File
@@ -56,6 +58,9 @@ object PlaybackModule {
 
     @Provides
     fun provideBrokenSources(sources: RoomBrokenSources): BrokenSources = sources
+
+    @Provides
+    fun provideShuffleSetting(setting: PrefsShuffleSetting): ShuffleSetting = setting
 
     @Provides
     fun providePlaybackController(

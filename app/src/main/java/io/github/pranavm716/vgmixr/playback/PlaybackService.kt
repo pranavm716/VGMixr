@@ -36,6 +36,7 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
+import io.github.pranavm716.vgmixr.domain.playback.ShuffleSetting
 import io.github.pranavm716.vgmixr.domain.playback.SourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.nextSource
 import io.github.pranavm716.vgmixr.domain.playback.onSourceFailure
@@ -85,6 +86,9 @@ class PlaybackService : MediaSessionService() {
     @Inject
     lateinit var playHistory: PlayHistory
 
+    @Inject
+    lateinit var shuffleSetting: ShuffleSetting
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val artwork by lazy { NotificationArtwork(File(cacheDir, "artwork")) }
     private val catalog = MutableStateFlow<Catalog?>(null)
@@ -120,6 +124,7 @@ class PlaybackService : MediaSessionService() {
         // Shuffle rearranges the items themselves (Shuffling), so the queue screen shows what
         // plays next; the player's own shuffle order stays the item order.
         player.setShuffleOrder(ShuffleOrder.UnshuffledShuffleOrder(0))
+        player.shuffleModeEnabled = shuffleSetting.isOn()
         val openApp = PendingIntent.getActivity(
             this,
             0,
@@ -135,7 +140,7 @@ class PlaybackService : MediaSessionService() {
             .build()
         player.addListener(Failover(player, session))
         player.addListener(PlayRecording(player))
-        player.addListener(Shuffling(player))
+        player.addListener(Shuffling(player, shuffleSetting))
         this.session = session
     }
 
@@ -317,10 +322,13 @@ class PlaybackService : MediaSessionService() {
 
 /**
  * Turning shuffle on shuffles "Next from"; turning it off puts it back in list order. Here, so a
- * flip from the app, the notification or the lock screen all rearrange the same way.
+ * flip from the app, the notification or the lock screen all rearrange the same way. The setting
+ * is saved for the next launch.
  */
-private class Shuffling(private val player: Player) : Player.Listener {
+private class Shuffling(private val player: Player, private val setting: ShuffleSetting) :
+    Player.Listener {
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+        setting.set(shuffleModeEnabled)
         val queue = player.queue()
         player.apply(if (shuffleModeEnabled) queue.shuffle(Random.Default) else queue.unshuffle())
     }
