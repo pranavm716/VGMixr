@@ -142,13 +142,15 @@ private fun PlayingFromText(playingFrom: PlayingFromUi?) {
  * title, seek bar and controls are one group, sitting low; the art is centered above it, between
  * the header's text and the title's letters (layout E of roadmap 13b's mockups).
  * Tapping the title or chips opens the track's own family ([onOpenFamily]), also when it plays
- * from a playlist, to reach the tracks around it.
+ * from a playlist, to reach the tracks around it; a user track's opens the Remixes tab
+ * ([onOpenRemixes]).
  */
 @Composable
 fun NowPlayingScreen(
     onOpenQueue: () -> Unit,
     onAddToPlaylist: () -> Unit,
     onOpenFamily: (familyId: String) -> Unit,
+    onOpenRemixes: () -> Unit,
     viewModel: NowPlayingViewModel = hiltViewModel()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -186,7 +188,13 @@ fun NowPlayingScreen(
             Modifier
                 .offset(y = INFO_NUDGE)
                 .clickable(interactionSource = null, indication = null) {
-                    visible.familyId?.let(onOpenFamily)
+                    if (visible.opensRemixes) {
+                        onOpenRemixes()
+                    } else {
+                        visible.familyId?.let(
+                            onOpenFamily
+                        )
+                    }
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

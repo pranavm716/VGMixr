@@ -11,9 +11,15 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,18 +31,35 @@ import io.github.pranavm716.vgmixr.ui.ScreenHeader
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnReselect
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
+import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
+import io.github.pranavm716.vgmixr.ui.components.centerOn
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
 
+/**
+ * The Remixes tab. [scrollsToPlaying] counts now playing's requests to show the playing track; each
+ * new one scrolls it mid-screen, as a family opened from now playing does.
+ */
 @Composable
 fun RemixesTab(
     reselects: Int,
+    scrollsToPlaying: Int,
     onAddToPlaylist: (trackId: String) -> Unit,
     viewModel: RemixesViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
     ScrollToTopOnReselect(reselects, listState)
+    var handledScrolls by rememberSaveable { mutableIntStateOf(0) }
+    val rowPx = with(LocalDensity.current) { TileRowHeight.roundToPx() }
+    LaunchedEffect(scrollsToPlaying) {
+        if (scrollsToPlaying == handledScrolls) return@LaunchedEffect
+        handledScrolls = scrollsToPlaying
+        val loaded = snapshotFlow { state }.filterIsInstance<RemixesUiState.Loaded>().first()
+        loaded.playingIndex?.let { listState.centerOn(it, rowPx) }
+    }
     RemixesScreen(
         state,
         onTrackClick = viewModel::onTrackClick,

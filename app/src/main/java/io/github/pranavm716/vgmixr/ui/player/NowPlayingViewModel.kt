@@ -12,6 +12,7 @@ import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.homeContext
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
+import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackId
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,7 +27,8 @@ sealed interface NowPlayingUiState {
     /**
      * [chips] are all of the track's games, also when it plays in every game of its family.
      * [familyId] is the track's own family, which tapping the title opens wherever it plays from
-     * (none for a user track that remixes no catalog track).
+     * (none for a user track that remixes no catalog track). A user track's title opens the Remixes
+     * tab instead ([opensRemixes]).
      */
     data class Visible(
         val title: String,
@@ -38,7 +40,8 @@ sealed interface NowPlayingUiState {
         val isFavorite: Boolean = false,
         val shuffle: Boolean = false,
         val thumbnail: String? = null,
-        val subtitle: String? = null
+        val subtitle: String? = null,
+        val opensRemixes: Boolean = false
     ) : NowPlayingUiState
 }
 
@@ -139,6 +142,7 @@ private fun Catalog.nowPlaying(
         familyId = track.familyId,
         thumbnail = track.thumbnail,
         subtitle = track.channel,
+        opensRemixes = UserTrackId.isUserTrack(track.id),
         playingFrom = playingFrom,
         isPlaying = state.isPlaying,
         isLoading = state.isLoading,

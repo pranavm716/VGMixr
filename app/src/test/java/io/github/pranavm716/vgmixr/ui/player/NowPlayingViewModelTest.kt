@@ -322,4 +322,14 @@ class NowPlayingViewModelTest {
             assertEquals(null, (awaitItem() as NowPlayingUiState.Visible).subtitle)
         }
     }
+
+    @Test
+    fun `a user track's title opens Remixes, a catalog track's its family`() = runTest {
+        playback.state.value = playing(QueueContext.Remixes, trackId = "yt:AAAAAAAAAAA")
+        viewModel.uiState.test {
+            assertEquals(true, (awaitItem() as NowPlayingUiState.Visible).opensRemixes)
+            playback.state.value = playing(QueueContext.Family("rse"))
+            assertEquals(false, (awaitItem() as NowPlayingUiState.Visible).opensRemixes)
+        }
+    }
 }

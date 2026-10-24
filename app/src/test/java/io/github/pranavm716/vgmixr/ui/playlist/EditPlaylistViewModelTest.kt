@@ -186,4 +186,32 @@ class EditPlaylistViewModelTest {
             assertTrue(awaitItem().noResults)
         }
     }
+
+    @Test
+    fun `a user track in the playlist shows its thumbnail and its channel`() = runTest {
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            null,
+            emptyList(),
+            "Some Remix",
+            0,
+            emptyList(),
+            channel = "GlitchxCity",
+            thumbnail = "thumbnails/AAAAAAAAAAA.jpg"
+        )
+        playlists.contents.value = mapOf(7L to Playlist(7, "Hype", false, listOf("yt:AAAAAAAAAAA")))
+        val viewModel = EditPlaylistViewModel(
+            SavedStateHandle(mapOf("playlistId" to 7L)),
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playlists,
+            main.dispatcher
+        )
+
+        viewModel.uiState.test {
+            var row = awaitItem().results.firstOrNull()
+            while (row == null) row = awaitItem().results.firstOrNull()
+            assertEquals("thumbnails/AAAAAAAAAAA.jpg", row.thumbnail)
+            assertEquals("GlitchxCity", row.subtitle)
+        }
+    }
 }

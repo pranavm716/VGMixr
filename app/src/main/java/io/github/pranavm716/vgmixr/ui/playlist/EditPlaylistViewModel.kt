@@ -49,7 +49,9 @@ data class EditPlaylistRowUi(
     val title: String,
     val chips: List<ChipUi>,
     val unplayable: Boolean = false,
-    val added: Boolean = false
+    val added: Boolean = false,
+    val thumbnail: String? = null,
+    val subtitle: String? = null
 )
 
 /** Finds tracks with the Search tab's search and adds them to (or takes them out of) a playlist. */
@@ -126,5 +128,7 @@ private fun CatalogTrack.toRow(added: Boolean) = EditPlaylistRowUi(
     title = title,
     chips = games.map { ChipUi(it.shortName, it.color) },
     unplayable = unplayable != null,
-    added = added
+    added = added,
+    thumbnail = thumbnail,
+    subtitle = channel
 )

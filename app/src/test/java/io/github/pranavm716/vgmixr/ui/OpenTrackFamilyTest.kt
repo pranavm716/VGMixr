@@ -47,7 +47,7 @@ class OpenTrackFamilyTest {
             VGMixrTheme {
                 VGMixrApp(
                     navController,
-                    nowPlaying = { _, _, open -> openFamily = open },
+                    nowPlaying = { _, _, open, _ -> openFamily = open },
                     nowPlayingOpen = nowPlayingOpen
                 )
             }

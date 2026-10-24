@@ -28,7 +28,10 @@ sealed interface RemixesUiState {
     data object Loading : RemixesUiState
 
     /** The user tracks, newest first; none shows the empty state. */
-    data class Loaded(val rows: List<RemixRowUi>) : RemixesUiState
+    data class Loaded(val rows: List<RemixRowUi>) : RemixesUiState {
+        /** The playing track's row, if it is one of these. */
+        val playingIndex: Int? get() = rows.indexOfFirst { it.playing }.takeIf { it >= 0 }
+    }
 }
 
 /**

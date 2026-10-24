@@ -30,9 +30,12 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -142,8 +145,9 @@ fun VGMixrApp(
     nowPlaying: @Composable (
         onOpenQueue: () -> Unit,
         onAddToPlaylist: () -> Unit,
-        onOpenFamily: (familyId: String) -> Unit
-    ) -> Unit = { _, _, _ -> PlaceholderScreen("Now playing") },
+        onOpenFamily: (familyId: String) -> Unit,
+        onOpenRemixes: () -> Unit
+    ) -> Unit = { _, _, _, _ -> PlaceholderScreen("Now playing") },
     addToPlaylist: @Composable (
         trackId: String?,
         onClose: () -> Unit
@@ -188,6 +192,14 @@ fun VGMixrApp(
         navController.navigate(FamilyRoute(familyId, fromNowPlaying = true)) {
             popUpTo<GamesRoute>()
         }
+    }
+    // Closes the sheet and opens the Remixes tab at its list, scrolled to the playing track.
+    var remixesScrolls by rememberSaveable { mutableIntStateOf(0) }
+    val openRemixes: () -> Unit = {
+        nowPlayingOpen.value = false
+        navController.navigateTo(TopLevelDestination.REMIXES)
+        navController.popBackStack<RemixesRoute>(inclusive = false)
+        remixesScrolls++
     }
     val reselects = remember { mutableStateMapOf<TopLevelDestination, Int>() }
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -242,17 +254,19 @@ fun VGMixrApp(
                 }
             }
         ) { padding ->
-            AppNavHost(
-                navController,
-                screen,
-                familyScreen,
-                playlistScreen,
-                editPlaylistScreen,
-                settingsScreen,
-                { reselects[it] ?: 0 },
-                openAddToPlaylist,
-                Modifier.padding(padding)
-            )
+            CompositionLocalProvider(LocalRemixesScrolls provides remixesScrolls) {
+                AppNavHost(
+                    navController,
+                    screen,
+                    familyScreen,
+                    playlistScreen,
+                    editPlaylistScreen,
+                    settingsScreen,
+                    { reselects[it] ?: 0 },
+                    openAddToPlaylist,
+                    Modifier.padding(padding)
+                )
+            }
         }
         // Now playing grows out of the mini player over everything, the navbar included.
         NowPlayingSheet(
@@ -279,8 +293,7 @@ fun VGMixrApp(
                                 ) { popUpTo<PlaylistsRoute>() }
                             }
 
-                            PlayingFromUi.Remixes ->
-                                navController.navigateTo(TopLevelDestination.REMIXES)
+                            PlayingFromUi.Remixes -> openRemixes()
 
                             PlayingFromUi.Queue -> Unit
                         }
@@ -288,7 +301,9 @@ fun VGMixrApp(
                 )
             },
             content = {
-                nowPlaying({ queueOpen = true }, { openAddToPlaylist(null) }, openFamily)
+                nowPlaying({
+                    queueOpen = true
+                }, { openAddToPlaylist(null) }, openFamily, openRemixes)
             }
         )
         AnimatedVisibility(
@@ -429,6 +444,12 @@ private fun Tab(
     }
 }
 
+/**
+ * How many times now playing has asked the Remixes tab to show the playing track: its title or its
+ * "Playing from Remixes" header was tapped.
+ */
+private val LocalRemixesScrolls = compositionLocalOf { 0 }
+
 /** The real root screen of each tab. */
 @Composable
 fun AppScreen(
@@ -446,7 +467,8 @@ fun AppScreen(
         TopLevelDestination.PLAYLISTS ->
             PlaylistsTab(onPlaylistClick = { navController.navigate(PlaylistRoute(it)) }, reselects)
 
-        TopLevelDestination.REMIXES -> RemixesTab(reselects, onAddToPlaylist)
+        TopLevelDestination.REMIXES ->
+            RemixesTab(reselects, LocalRemixesScrolls.current, onAddToPlaylist)
     }
 }
 
