@@ -28,7 +28,7 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
 import io.github.pranavm716.vgmixr.ui.components.CollectionRow
-import io.github.pranavm716.vgmixr.ui.components.RowTileSize
+import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
 import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnReselect
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -104,7 +104,7 @@ fun PlaylistsScreen(
                         CollectionRow(
                             playlist.name,
                             playlist.trackCount,
-                            art = { PlaylistArt(playlist.isFavorites, RowTileSize) },
+                            art = { PlaylistArt(playlist.isFavorites, RowTileHeight) },
                             onClick = { onPlaylistClick(playlist.id) },
                             onLongClick = { onPlayPlaylist(playlist.id) }
                         )

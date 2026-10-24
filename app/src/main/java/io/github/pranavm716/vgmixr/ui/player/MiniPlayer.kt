@@ -68,7 +68,7 @@ import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.PlayPauseIcon
 import io.github.pranavm716.vgmixr.ui.components.RowTileGap
-import io.github.pranavm716.vgmixr.ui.components.RowTileSize
+import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.TrackTitleChips
 import io.github.pranavm716.vgmixr.ui.components.tintColor
@@ -257,7 +257,7 @@ private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
             .padding(start = 16.dp, end = ButtonWidth),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ArtTile(RowTileSize)
+        ArtTile(RowTileHeight)
         Spacer(Modifier.width(RowTileGap))
         TrackText(track)
     }

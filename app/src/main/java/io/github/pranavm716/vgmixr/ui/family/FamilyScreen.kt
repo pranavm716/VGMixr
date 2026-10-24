@@ -35,6 +35,8 @@ import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.CollectionHeader
 import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.RowTileGap
+import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
 import io.github.pranavm716.vgmixr.ui.components.ScrollToPlayingOnce
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.components.UnplayableIcon
@@ -80,8 +82,8 @@ fun FamilyScreen(
             CollectionHeader(
                 state.name,
                 state.trackCount,
-                art = { ArtTile(LeadingColumn) },
-                gap = LeadingGap,
+                art = { ArtTile(RowTileHeight) },
+                gap = RowTileGap,
                 background = gameTint(state.games)
             )
             val listState = rememberLazyListState()

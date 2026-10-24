@@ -31,7 +31,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.CollectionRow
-import io.github.pranavm716.vgmixr.ui.components.RowTileSize
+import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
 import io.github.pranavm716.vgmixr.ui.components.ToggleAddButton
 import io.github.pranavm716.vgmixr.ui.playlists.PlaylistArt
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -100,7 +100,7 @@ private fun PlaylistToggleRow(row: AddToPlaylistRowUi, onToggle: () -> Unit) {
     CollectionRow(
         row.name,
         row.trackCount,
-        art = { PlaylistArt(row.isFavorites, RowTileSize) },
+        art = { PlaylistArt(row.isFavorites, RowTileHeight) },
         trailing = {
             ToggleAddButton(
                 row.added,

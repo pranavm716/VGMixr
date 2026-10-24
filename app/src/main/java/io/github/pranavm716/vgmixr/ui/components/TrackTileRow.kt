@@ -26,14 +26,14 @@ import androidx.compose.ui.unit.dp
  */
 val TileRowHeight = 64.dp
 
-/** The cover tile in a [TileRowHeight] row. */
-val RowTileSize = 44.dp
+/** The cover tile's height in a [TileRowHeight] row; it is 16:9, so about 78dp wide. */
+val RowTileHeight = 44.dp
 
 /** The gap between that tile and the row's text. */
 val RowTileGap = 14.dp
 
 /**
- * A track's title over its game chips, placed so the gap between the two splits a [RowTileSize]
+ * A track's title over its game chips, placed so the gap between the two splits a [RowTileHeight]
  * tile beside them in half: the title's line is trimmed to its letters, and the block sits 1.5dp
  * up, as measured on the phone for the mini player. [marquee] scrolls a long title instead of
  * cutting it short, fading its start edge while it moves.
@@ -104,7 +104,7 @@ fun TrackTileRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         val faint = Modifier.unplayable(unplayable)
-        ArtTile(RowTileSize, faint)
+        ArtTile(RowTileHeight, faint)
         Spacer(Modifier.width(RowTileGap))
         TrackTitleChips(title, chips, Modifier.weight(1f).then(faint))
         if (unplayable) {

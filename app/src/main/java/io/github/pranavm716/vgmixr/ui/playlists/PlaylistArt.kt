@@ -7,6 +7,6 @@ import io.github.pranavm716.vgmixr.ui.components.FavoritesArt
 
 /** A playlist's tile: Favorites' heart, or the blank tile until playlists get art. */
 @Composable
-fun PlaylistArt(isFavorites: Boolean, size: Dp) {
-    if (isFavorites) FavoritesArt(size) else ArtTile(size)
+fun PlaylistArt(isFavorites: Boolean, height: Dp) {
+    if (isFavorites) FavoritesArt(height) else ArtTile(height)
 }

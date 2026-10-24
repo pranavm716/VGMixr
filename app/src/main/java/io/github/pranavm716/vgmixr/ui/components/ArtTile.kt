@@ -16,10 +16,16 @@ import androidx.compose.ui.unit.dp
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 
-/** A family's cover tile: square with rounded corners. A blank tile until families get covers. */
+/**
+ * Art's shape: 16:9, YouTube's thumbnail shape, which user tracks show and family covers and
+ * playlist art take too.
+ */
+const val ART_ASPECT = 16f / 9f
+
+/** A family's cover tile, [height] tall and 16:9 with rounded corners. Blank until covers come. */
 @Composable
-fun ArtTile(size: Dp, modifier: Modifier = Modifier) {
-    ArtTile(modifier.size(size))
+fun ArtTile(height: Dp, modifier: Modifier = Modifier) {
+    ArtTile(modifier.size(width = height * ART_ASPECT, height = height))
 }
 
 /** The tile at whatever size [modifier] gives it, such as now playing's large square. */
@@ -28,18 +34,20 @@ fun ArtTile(modifier: Modifier) {
     Box(modifier.background(ArtPlaceholder, ArtShape))
 }
 
-/** The Favorites playlist's tile: the accent with a white heart, half the tile's size. */
+/** The Favorites playlist's tile, [height] tall and 16:9: the accent with a white heart. */
 @Composable
-fun FavoritesArt(size: Dp, modifier: Modifier = Modifier) {
+fun FavoritesArt(height: Dp, modifier: Modifier = Modifier) {
     Box(
-        modifier.size(size).background(MaterialTheme.colorScheme.primary, ArtShape),
+        modifier
+            .size(width = height * ART_ASPECT, height = height)
+            .background(MaterialTheme.colorScheme.primary, ArtShape),
         contentAlignment = Alignment.Center
     ) {
         Icon(
             painterResource(R.drawable.ic_favorite),
             contentDescription = null,
             tint = Color.White,
-            modifier = Modifier.size(size / 2)
+            modifier = Modifier.size(height / 2)
         )
     }
 }

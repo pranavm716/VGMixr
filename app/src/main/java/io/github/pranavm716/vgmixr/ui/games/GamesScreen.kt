@@ -24,7 +24,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.FamilySummary
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.CollectionRow
-import io.github.pranavm716.vgmixr.ui.components.RowTileSize
+import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
 import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnReselect
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -73,7 +73,7 @@ fun GamesScreen(
                                 CollectionRow(
                                     family.name,
                                     family.trackCount,
-                                    art = { ArtTile(RowTileSize) },
+                                    art = { ArtTile(RowTileHeight) },
                                     onClick = { onFamilyClick(family.id) },
                                     onLongClick = { onPlayFamily(family.id) }
                                 )
