@@ -9,6 +9,7 @@ import io.github.pranavm716.vgmixr.data.db.SourceEntity
 import io.github.pranavm716.vgmixr.data.db.TrackEntity
 import io.github.pranavm716.vgmixr.data.db.TrackGameEntity
 import io.github.pranavm716.vgmixr.data.db.UserDataDao
+import io.github.pranavm716.vgmixr.data.db.UserTrackDao
 import io.github.pranavm716.vgmixr.data.db.VGMixrDatabase
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogImportResult
 import io.github.pranavm716.vgmixr.domain.catalog.ImportError
@@ -27,6 +28,7 @@ class CatalogImporter @Inject constructor(
     private val catalogDao: CatalogDao,
     private val userDataDao: UserDataDao,
     private val importStateDao: ImportStateDao,
+    private val userTrackDao: UserTrackDao,
     private val clock: Clock
 ) {
     /**
@@ -84,12 +86,14 @@ class CatalogImporter @Inject constructor(
     }
 
     /**
-     * Re-points history and playlist entries (favorites included) from [oldId] to [newId]. If a
-     * playlist holds both, they merge into one entry with the earlier addedAt. Done in Kotlin
+     * Re-points history, playlist entries (favorites included) and the user tracks remixing it from
+     * [oldId] to [newId]. If a playlist holds both, they merge into one entry with the earlier
+     * addedAt. Done in Kotlin
      * rather than SQL because SQLite on API 26 (3.18) has no `ON CONFLICT DO UPDATE`.
      */
     private suspend fun migrateUserData(oldId: String, newId: String) {
         userDataDao.repointHistory(oldId, newId)
+        userTrackDao.repointRemixOf(oldId, newId)
         for (old in userDataDao.playlistEntriesOf(oldId)) {
             val new = userDataDao.playlistEntry(old.playlistId, newId)
             userDataDao.deletePlaylistEntry(old)

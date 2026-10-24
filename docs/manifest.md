@@ -186,7 +186,7 @@ All three fields are required when `loop` is present. Unused until v2 looping, b
 3. **Upsert by `id`.** Existing games and tracks update in place; new ones insert. Families are derived and have no stored identity of their own.
 4. **Never delete user data.** Favorites and PlayHistory are untouched by an import, except for `replaces` migration.
 5. **Missing tracks and games are retired, not deleted.** A track or game absent from a new manifest is marked retired: hidden from browse, still shown (as unavailable) in favorites and history. Games are kept so retired tracks can still render their chips. A retired track or game that reappears in a later manifest is un-retired and updated.
-6. **`replaces` migrates ids.** Favorites and history pointing at an id listed in a track's `replaces` are re-pointed to the new track. If both the old and new ids are favorited, they merge into one favorite. History rows are all re-pointed.
+6. **`replaces` migrates ids.** Playlist entries (favorites included), history and user tracks' `remixOf` pointing at an id listed in a track's `replaces` are re-pointed to the new track. If a playlist holds both the old and new ids, they merge into one entry with the earlier time added. History rows are all re-pointed.
 7. **Runtime source state** is keyed by source identity, not by array index, so reordering doesn't lose it. The broken flag for a stream is keyed by `videoId` (a dead video is dead for every slice); its cached download is keyed by `(videoId, startMs, endMs)`. Local state is keyed by `path`. After an import, broken marks of videos no stream source of an active track uses any more are cleared, in the same transaction.
 
 ## Validation errors (each needs a test)
