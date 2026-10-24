@@ -11,7 +11,6 @@ import javax.inject.Singleton
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.ServiceList
 import org.schabi.newpipe.extractor.exceptions.ContentNotAvailableException
 import org.schabi.newpipe.extractor.exceptions.ContentNotSupportedException
@@ -25,7 +24,7 @@ class NewPipeStreamResolver @Inject constructor(
     private val diagnostics: PlaybackDiagnostics = PlaybackDiagnostics.NONE
 ) : StreamResolver {
     init {
-        NewPipe.init(OkHttpDownloader(youTubeClient()))
+        NewPipeSetup.ensure()
     }
 
     override suspend fun resolve(videoId: String): StreamResolution = withContext(io) {
@@ -55,11 +54,9 @@ class NewPipeStreamResolver @Inject constructor(
             toResolution(e).also { diagnostics.log("resolve $videoId: $it from ${e.describe()}") }
         }
     }
-
-    private companion object {
-        const val WATCH_URL = "https://www.youtube.com/watch?v="
-    }
 }
+
+internal const val WATCH_URL = "https://www.youtube.com/watch?v="
 
 /** Tells a video that can't play (try the next source) from a failure that stops everything. */
 fun toResolution(e: Exception): StreamResolution = when (e) {
