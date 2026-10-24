@@ -9,6 +9,7 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.playback.homeContext
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
@@ -24,12 +25,13 @@ sealed interface NowPlayingUiState {
 
     /**
      * [chips] are all of the track's games, also when it plays in every game of its family.
-     * [familyId] is the track's own family, which tapping the title opens wherever it plays from.
+     * [familyId] is the track's own family, which tapping the title opens wherever it plays from
+     * (none for a user track that remixes no catalog track).
      */
     data class Visible(
         val title: String,
         val chips: List<ChipUi>,
-        val familyId: String,
+        val familyId: String?,
         val playingFrom: PlayingFromUi,
         val isPlaying: Boolean,
         val isLoading: Boolean,
@@ -48,6 +50,9 @@ sealed interface PlayingFromUi {
 
     /** Added with swipe to queue. */
     data object Queue : PlayingFromUi
+
+    /** Tapped in the Remixes tab; the header opens it. */
+    data object Remixes : PlayingFromUi
 }
 
 @HiltViewModel
@@ -104,12 +109,13 @@ private fun Catalog.nowPlaying(
     playlists: List<PlaylistSummary>
 ): NowPlayingUiState {
     val track = state.trackId?.let { track(it) } ?: return NowPlayingUiState.Hidden
-    // No context, or a playlist deleted since: the track plays from its family.
+    // No context, or a playlist deleted since: the track plays from its family, or from Remixes
+    // for a user track.
     val context = state.queue.entries.getOrNull(state.queue.current)?.context
         ?.takeUnless {
             it is QueueContext.Playlist && playlists.none { p -> p.id == it.playlistId }
         }
-        ?: QueueContext.Family(track.familyId)
+        ?: track.homeContext()
     val playingFrom = when (context) {
         is QueueContext.Family -> PlayingFromUi.Family(
             context.familyId,
@@ -122,6 +128,8 @@ private fun Catalog.nowPlaying(
         )
 
         QueueContext.Queue -> PlayingFromUi.Queue
+
+        QueueContext.Remixes -> PlayingFromUi.Remixes
     }
     return NowPlayingUiState.Visible(
         title = track.title,

@@ -40,6 +40,11 @@ class NowPlayingViewModelTest {
                 0,
                 emptyList()
             )
+        ),
+        userTracks = listOf(
+            // A remix of an RSE track, and a video that remixes nothing in the catalog.
+            CatalogTrack("yt:AAAAAAAAAAA", "rse", listOf(ruby), "Route 101 Remix", 0, emptyList()),
+            CatalogTrack("yt:BBBBBBBBBBB", null, emptyList(), "Some Remix", 0, emptyList())
         )
     )
 
@@ -51,9 +56,13 @@ class NowPlayingViewModelTest {
         NowPlayingViewModel(FakeCatalogRepository(catalog), playback, playlists)
     }
 
-    private fun playing(context: QueueContext, isLoading: Boolean = false) = PlaybackState(
-        queue = PlayQueue(listOf(QueueEntry("rse-a", context)), current = 0),
-        trackId = "rse-a",
+    private fun playing(
+        context: QueueContext,
+        isLoading: Boolean = false,
+        trackId: String = "rse-a"
+    ) = PlaybackState(
+        queue = PlayQueue(listOf(QueueEntry(trackId, context)), current = 0),
+        trackId = trackId,
         isPlaying = !isLoading,
         isLoading = isLoading
     )
@@ -120,6 +129,42 @@ class NowPlayingViewModelTest {
             )
         }
     }
+
+    @Test
+    fun `a remix tapped in Remixes plays from Remixes and knows its original's family`() = runTest {
+        playback.state.value = playing(QueueContext.Remixes, trackId = "yt:AAAAAAAAAAA")
+
+        viewModel.uiState.test {
+            val state = awaitItem() as NowPlayingUiState.Visible
+            assertEquals(PlayingFromUi.Remixes, state.playingFrom)
+            assertEquals("rse", state.familyId)
+            assertEquals(listOf(ChipUi("R", "#336699")), state.chips)
+        }
+    }
+
+    @Test
+    fun `a user track that remixes nothing has no family or chips`() = runTest {
+        playback.state.value = playing(QueueContext.Remixes, trackId = "yt:BBBBBBBBBBB")
+
+        viewModel.uiState.test {
+            val state = awaitItem() as NowPlayingUiState.Visible
+            assertEquals(null, state.familyId)
+            assertEquals(emptyList<ChipUi>(), state.chips)
+        }
+    }
+
+    @Test
+    fun `a user track from a deleted playlist plays from Remixes, not its original's family`() =
+        runTest {
+            playback.state.value = playing(QueueContext.Playlist(9), trackId = "yt:AAAAAAAAAAA")
+
+            viewModel.uiState.test {
+                assertEquals(
+                    PlayingFromUi.Remixes,
+                    (awaitItem() as NowPlayingUiState.Visible).playingFrom
+                )
+            }
+        }
 
     @Test
     fun `hidden while nothing plays`() = runTest {

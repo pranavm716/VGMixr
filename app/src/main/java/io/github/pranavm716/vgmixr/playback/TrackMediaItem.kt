@@ -8,6 +8,7 @@ import androidx.media3.common.MediaMetadata
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
+import io.github.pranavm716.vgmixr.domain.playback.homeContext
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
 
 /** A stream's URI in the player: resolved to a YouTube URL only when the player opens it. */
@@ -23,14 +24,15 @@ private const val LIST_INDEX = "listIndex"
 
 /**
  * The player item for [track], playing its playable source number [sourceIndex]; [context] is where
- * it plays from, by default the track's own family, and [listIndex] its place in the tapped list.
+ * it plays from, by default the track's home (its family, or Remixes for a user track), and
+ * [listIndex] its place in the tapped list.
  * [artworkUri] is the media notification's art.
  */
 fun trackMediaItem(
     track: CatalogTrack,
     familyName: String,
     sourceIndex: Int = 0,
-    context: QueueContext = QueueContext.Family(track.familyId),
+    context: QueueContext = track.homeContext(),
     retried: Boolean = false,
     artworkUri: Uri? = null,
     listIndex: Int? = null

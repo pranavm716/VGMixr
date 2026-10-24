@@ -149,7 +149,7 @@ class PlayQueueTest {
 
     @Test
     fun `a context survives being written as a key and read back`() {
-        listOf(QueueContext.Queue, QueueContext.Family("rse")).forEach {
+        listOf(QueueContext.Queue, QueueContext.Remixes, QueueContext.Family("rse")).forEach {
             assertEquals(it, QueueContext.fromKey(it.key))
         }
         assertEquals(null, QueueContext.fromKey("nonsense"))

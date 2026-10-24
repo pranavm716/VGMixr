@@ -261,8 +261,8 @@ fun VGMixrApp(
                 nowPlayingHeader(
                     { nowPlayingOpen.value = false },
                     { playingFrom ->
-                        // Closes the sheet and opens the family (Games tab) or playlist
-                        // (Playlists tab), replacing any one already open there; it scrolls to the
+                        // Closes the sheet and opens the family (Games tab), playlist
+                        // (Playlists tab) or the Remixes tab, replacing any one already open there; it scrolls to the
                         // playing track on opening.
                         nowPlayingOpen.value = false
                         when (playingFrom) {
@@ -277,6 +277,9 @@ fun VGMixrApp(
                                     PlaylistRoute(playingFrom.playlistId, fromNowPlaying = true)
                                 ) { popUpTo<PlaylistsRoute>() }
                             }
+
+                            PlayingFromUi.Remixes ->
+                                navController.navigateTo(TopLevelDestination.REMIXES)
 
                             PlayingFromUi.Queue -> Unit
                         }

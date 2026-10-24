@@ -113,9 +113,11 @@ class SearchViewModel @Inject constructor(
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
                 return@launch
             }
-            val ids = catalog.playableFamilyTrackIds(track.familyId)
+            // Search lists only catalog tracks so far, and every one has a family.
+            val familyId = track.familyId ?: return@launch
+            val ids = catalog.playableFamilyTrackIds(familyId)
             val index = ids.indexOf(trackId)
-            if (index >= 0) playback.playFrom(ids, index, QueueContext.Family(track.familyId))
+            if (index >= 0) playback.playFrom(ids, index, QueueContext.Family(familyId))
         }
     }
 

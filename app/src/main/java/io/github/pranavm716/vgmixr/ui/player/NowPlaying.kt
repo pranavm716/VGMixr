@@ -109,7 +109,7 @@ fun NowPlayingHeader(
     }
 }
 
-/** "Playing from" over the family's or playlist's name, or "Queue". */
+/** "Playing from" over the family's or playlist's name, "Queue" or "Remixes". */
 @Composable
 private fun PlayingFromText(playingFrom: PlayingFromUi?) {
     if (playingFrom == null) return
@@ -124,6 +124,7 @@ private fun PlayingFromText(playingFrom: PlayingFromUi?) {
             is PlayingFromUi.Family -> playingFrom.name
             is PlayingFromUi.Playlist -> playingFrom.name
             PlayingFromUi.Queue -> stringResource(R.string.playing_from_queue)
+            PlayingFromUi.Remixes -> stringResource(R.string.playing_from_remixes)
         },
         style = MaterialTheme.typography.titleSmall,
         fontWeight = FontWeight.Bold,
@@ -181,7 +182,7 @@ fun NowPlayingScreen(
             Modifier
                 .offset(y = INFO_NUDGE)
                 .clickable(interactionSource = null, indication = null) {
-                    onOpenFamily(visible.familyId)
+                    visible.familyId?.let(onOpenFamily)
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

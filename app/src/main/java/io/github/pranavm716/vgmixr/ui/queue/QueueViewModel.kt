@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.playback.homeContext
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
@@ -110,10 +112,11 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
     val nextFromName = when (val context = queue.nextFromContext.firstOrNull()?.context) {
         is QueueContext.Family -> families.firstOrNull { it.id == context.familyId }?.name
 
-        // A playlist deleted since: its tracks came from their family.
+        // A playlist deleted since: its tracks came from their family, or Remixes for user tracks.
         is QueueContext.Playlist -> playlists.firstOrNull { it.id == context.playlistId }?.name
-            ?: track(queue.nextFromContext.first().trackId)?.familyId
-                ?.let { id -> families.firstOrNull { it.id == id }?.name }
+            ?: track(queue.nextFromContext.first().trackId)?.let { homeName(it) }
+
+        QueueContext.Remixes -> REMIXES
 
         QueueContext.Queue, null -> null
     }
@@ -123,4 +126,12 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
         nextFromName = nextFromName,
         nextFrom = (queueEnd until queue.entries.size).mapNotNull(::row)
     )
+}
+
+private const val REMIXES = "Remixes"
+
+/** The name of [track]'s home: its family's, or Remixes for a user track. */
+private fun Catalog.homeName(track: CatalogTrack): String? = when (val home = track.homeContext()) {
+    is QueueContext.Family -> families.firstOrNull { it.id == home.familyId }?.name
+    else -> REMIXES
 }

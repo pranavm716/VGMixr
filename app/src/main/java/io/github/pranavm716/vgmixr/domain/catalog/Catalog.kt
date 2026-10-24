@@ -27,12 +27,14 @@ data class Catalog(
 data class Family(val id: String, val name: String, val label: String)
 
 /**
- * A track as the UI shows it. [games] are its chip games, in manifest order. [unplayable] is set
- * once every one of its stream sources is marked broken: the reason its first source was marked.
+ * A track as the UI shows it. [familyId] is null only for a user track that remixes no catalog
+ * track (a remix has its original's family and games). [games] are its chip games, in manifest
+ * order. [unplayable] is set once every one of its stream sources is marked broken: the reason its
+ * first source was marked.
  */
 data class CatalogTrack(
     val id: String,
-    val familyId: String,
+    val familyId: String?,
     val games: List<Game>,
     val title: String,
     val order: Int,

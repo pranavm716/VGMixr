@@ -1,5 +1,7 @@
 package io.github.pranavm716.vgmixr.domain.playback
 
+import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackId
 import kotlin.random.Random
 
 /**
@@ -22,21 +24,28 @@ sealed interface QueueContext {
     /** Added with swipe to queue. */
     data object Queue : QueueContext
 
+    /** Tapped in the Remixes tab, or a user track tapped anywhere but a playlist. */
+    data object Remixes : QueueContext
+
     /** The context as a short string, to carry it with a player item. */
     val key: String
         get() = when (this) {
             is Family -> "$FAMILY_PREFIX$familyId"
             is Playlist -> "$PLAYLIST_PREFIX$playlistId"
             Queue -> QUEUE_KEY
+            Remixes -> REMIXES_KEY
         }
 
     companion object {
         private const val FAMILY_PREFIX = "family:"
         private const val PLAYLIST_PREFIX = "playlist:"
         private const val QUEUE_KEY = "queue"
+        private const val REMIXES_KEY = "remixes"
 
         fun fromKey(key: String): QueueContext? = when {
             key == QUEUE_KEY -> Queue
+
+            key == REMIXES_KEY -> Remixes
 
             key.startsWith(FAMILY_PREFIX) -> Family(key.removePrefix(FAMILY_PREFIX))
 
@@ -45,6 +54,19 @@ sealed interface QueueContext {
 
             else -> null
         }
+    }
+}
+
+/**
+ * Where a track plays from when nothing else says: Remixes for a user track (a remix too, though
+ * it has its original's family), else its family.
+ */
+fun CatalogTrack.homeContext(): QueueContext {
+    val familyId = familyId
+    return if (familyId == null || UserTrackId.isUserTrack(id)) {
+        QueueContext.Remixes
+    } else {
+        QueueContext.Family(familyId)
     }
 }
 

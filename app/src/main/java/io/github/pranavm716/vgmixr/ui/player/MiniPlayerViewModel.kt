@@ -35,7 +35,7 @@ sealed interface MiniPlayerUiState {
 /** A track as the mini player shows it. [chips] are all of its games, also when it plays in every game. */
 data class MiniTrackUi(
     val trackId: String,
-    val familyId: String,
+    val familyId: String?,
     val title: String,
     val chips: List<ChipUi>
 )
