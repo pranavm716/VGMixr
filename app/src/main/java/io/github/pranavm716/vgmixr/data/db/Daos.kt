@@ -190,3 +190,22 @@ abstract class BrokenStreamDao {
     @Query("SELECT * FROM broken_streams ORDER BY markedAt, videoId")
     abstract fun observeAll(): Flow<List<BrokenStreamEntity>>
 }
+
+@Dao
+interface UserTrackDao {
+    /** Inserts [track]; returns -1 and changes nothing if its id is taken. */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(track: UserTrackEntity): Long
+
+    @Query("SELECT * FROM user_tracks ORDER BY addedAt DESC, id")
+    fun observeNewestFirst(): Flow<List<UserTrackEntity>>
+
+    @Query("UPDATE user_tracks SET remixOf = :remixOf WHERE id = :id")
+    suspend fun setRemixOf(id: String, remixOf: String?)
+
+    @Query("DELETE FROM user_tracks WHERE id = :id")
+    suspend fun delete(id: String)
+
+    @Query("UPDATE user_tracks SET remixOf = :newId WHERE remixOf = :oldId")
+    suspend fun repointRemixOf(oldId: String, newId: String)
+}

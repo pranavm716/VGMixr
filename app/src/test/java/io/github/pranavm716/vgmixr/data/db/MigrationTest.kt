@@ -188,6 +188,38 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `4 to 5 adds an empty user_tracks table and keeps playlists and history`() {
+        helper.createDatabase(4).use { db ->
+            db.execSQL(
+                "INSERT INTO playlist_entries (playlistId, trackId, addedAt) " +
+                    "VALUES (1, 'yt:AAAAAAAAAAA', 111)"
+            )
+            db.execSQL(
+                "INSERT INTO play_history (trackId, playedAt) VALUES ('yt:AAAAAAAAAAA', 222)"
+            )
+        }
+
+        helper.runMigrationsAndValidate(5).use { db ->
+            assertEquals(
+                listOf(
+                    "id", "videoId", "startMs", "endMs", "title", "channel", "durationMs",
+                    "addedAt", "remixOf"
+                ),
+                db.rows("PRAGMA table_info(user_tracks)").map { it[1] }
+            )
+            assertEquals(emptyList<List<String?>>(), db.rows("SELECT * FROM user_tracks"))
+            assertEquals(
+                listOf(listOf("1", "yt:AAAAAAAAAAA", "111")),
+                db.rows("SELECT playlistId, trackId, addedAt FROM playlist_entries")
+            )
+            assertEquals(
+                listOf(listOf("yt:AAAAAAAAAAA", "222")),
+                db.rows("SELECT trackId, playedAt FROM play_history")
+            )
+        }
+    }
+
     private fun SQLiteConnection.rows(sql: String): List<List<String?>> = prepare(sql).use { row ->
         buildList {
             while (row.step()) {

@@ -119,6 +119,23 @@ data class PlaylistEntryEntity(val playlistId: Long, val trackId: String, val ad
 /** A playlist with how many entries it has. */
 data class PlaylistCountRow(val id: Long, val name: String, val trackCount: Int)
 
+/**
+ * A track added from YouTube; [id] is `yt:` and [videoId]. [remixOf] is a catalog track id, with
+ * no foreign key, like every other reference from user data into the catalog.
+ */
+@Entity(tableName = "user_tracks")
+data class UserTrackEntity(
+    @PrimaryKey val id: String,
+    val videoId: String,
+    val startMs: Long,
+    val endMs: Long?,
+    val title: String,
+    val channel: String,
+    val durationMs: Long?,
+    val addedAt: Instant,
+    val remixOf: String?
+)
+
 @Entity(tableName = "play_history", indices = [Index("trackId")])
 data class PlayHistoryEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,

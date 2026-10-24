@@ -1,0 +1,39 @@
+package io.github.pranavm716.vgmixr.domain.usertrack
+
+import java.time.Instant
+import kotlinx.coroutines.flow.Flow
+
+/**
+ * A track added from YouTube, mainly a fan remix: one video, or the part of it from [startMs] to
+ * [endMs] (null: to its end). [title] and [channel] are the video's when it was added, and
+ * [remixOf] the catalog track it remixes, if any.
+ */
+data class UserTrack(
+    val videoId: String,
+    val startMs: Long = 0,
+    val endMs: Long? = null,
+    val title: String,
+    val channel: String,
+    val durationMs: Long?,
+    val addedAt: Instant,
+    val remixOf: String? = null
+) {
+    val id: String get() = UserTrackId.of(videoId)
+}
+
+interface UserTrackRepository {
+    /** Every user track, newest first. */
+    val userTracks: Flow<List<UserTrack>>
+
+    /**
+     * Adds [track] as given, or returns false and changes nothing if its video is already added.
+     * Adding a deleted track back as it was puts it back in its place.
+     */
+    suspend fun add(track: UserTrack): Boolean
+
+    /** Sets the catalog track that user track [id] remixes, or clears it with null. */
+    suspend fun setRemixOf(id: String, remixOf: String?)
+
+    /** Deletes user track [id]. Its playlist entries and history stay, for if it's added again. */
+    suspend fun delete(id: String)
+}
