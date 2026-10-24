@@ -53,6 +53,15 @@
     <string name="play">Play</string>
     <string name="pause">Pause</string>
     <string name="now_playing">Now playing</string>
+    <string name="share_label">Add to Remixes</string>
+    <string name="share_added">Added “%1$s” to Remixes</string>
+    <string name="share_already_added">“%1$s” is already in Remixes</string>
+    <string name="share_not_a_video">Not added: that isn\'t a YouTube video link</string>
+    <string name="share_no_audio">Not added: YouTube won\'t give the app this video\'s audio</string>
+    <string name="share_unavailable">Not added: the video is unavailable</string>
+    <string name="share_failed_network">Not added: no connection</string>
+    <string name="share_failed_bot_check">Not added: YouTube asked to confirm you\'re not a bot. Try again later</string>
+    <string name="share_failed_extractor">Not added: YouTube changed and the stream extractor needs an update</string>
     <string name="playing_from">Playing from</string>
     <string name="playing_from_queue">Queue</string>
     <string name="playing_from_remixes">Remixes</string>
