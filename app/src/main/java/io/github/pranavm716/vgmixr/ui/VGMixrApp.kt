@@ -446,7 +446,7 @@ fun AppScreen(
         TopLevelDestination.PLAYLISTS ->
             PlaylistsTab(onPlaylistClick = { navController.navigate(PlaylistRoute(it)) }, reselects)
 
-        TopLevelDestination.REMIXES -> RemixesTab(reselects)
+        TopLevelDestination.REMIXES -> RemixesTab(reselects, onAddToPlaylist)
     }
 }
 

@@ -157,4 +157,24 @@ class RemixesViewModelTest {
             assertEquals(emptyList<Any>(), playback.calls)
         }
     }
+
+    @Test
+    fun `swiping a track queues it and says so`() = runTest {
+        messages.messages.test {
+            viewModel().onQueueTrack("yt:CCCCCCCCCCC")
+
+            assertEquals(
+                listOf(FakePlaybackController.AddToQueue(listOf("yt:CCCCCCCCCCC"))),
+                playback.calls
+            )
+            assertEquals(UserMessage.AddedToQueue(1), awaitItem())
+        }
+    }
+
+    @Test
+    fun `a greyed track can't be queued`() = runTest {
+        viewModel().onQueueTrack("yt:BBBBBBBBBBB")
+
+        assertEquals(emptyList<Any>(), playback.calls)
+    }
 }

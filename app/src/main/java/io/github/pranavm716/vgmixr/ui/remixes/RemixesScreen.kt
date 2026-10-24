@@ -24,25 +24,39 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnReselect
+import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
-fun RemixesTab(reselects: Int, viewModel: RemixesViewModel = hiltViewModel()) {
+fun RemixesTab(
+    reselects: Int,
+    onAddToPlaylist: (trackId: String) -> Unit,
+    viewModel: RemixesViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
     ScrollToTopOnReselect(reselects, listState)
-    RemixesScreen(state, onTrackClick = viewModel::onTrackClick, listState = listState)
+    RemixesScreen(
+        state,
+        onTrackClick = viewModel::onTrackClick,
+        onQueueTrack = viewModel::onQueueTrack,
+        onTrackLongClick = onAddToPlaylist,
+        listState = listState
+    )
 }
 
 /**
  * The Remixes tab: the tracks added from YouTube, newest first, each with its video's thumbnail,
- * its original's game chips and its channel. A tap plays Remixes from that track.
+ * its original's game chips and its channel. A tap plays Remixes from that track, a swipe right
+ * queues it and a long press opens Add to playlist for it.
  */
 @Composable
 fun RemixesScreen(
     state: RemixesUiState,
     onTrackClick: (String) -> Unit,
+    onQueueTrack: (String) -> Unit,
+    onTrackLongClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState()
 ) {
@@ -65,15 +79,24 @@ fun RemixesScreen(
         }
         LazyColumn(Modifier.fillMaxSize(), state = listState) {
             items(state.rows, key = { it.id }) { row ->
-                TrackTileRow(
-                    title = row.title,
-                    chips = row.chips,
-                    unplayable = row.unplayable,
-                    current = row.playing,
-                    onClick = { onTrackClick(row.id) },
-                    thumbnail = row.thumbnail,
-                    subtitle = row.channel
-                )
+                val tile = @Composable {
+                    TrackTileRow(
+                        title = row.title,
+                        chips = row.chips,
+                        unplayable = row.unplayable,
+                        current = row.playing,
+                        onClick = { onTrackClick(row.id) },
+                        onLongClick = { onTrackLongClick(row.id) },
+                        thumbnail = row.thumbnail,
+                        subtitle = row.channel
+                    )
+                }
+                // A greyed track can't be queued, so its row doesn't swipe.
+                if (row.unplayable) {
+                    tile()
+                } else {
+                    SwipeToQueue(onQueue = { onQueueTrack(row.id) }, content = tile)
+                }
             }
         }
     }
@@ -96,7 +119,9 @@ private fun RemixesScreenPreview() {
                     RemixRowUi("yt:b", "Some Remix", emptyList(), "Someone", null, playing = true)
                 )
             ),
-            onTrackClick = {}
+            onTrackClick = {},
+            onQueueTrack = {},
+            onTrackLongClick = {}
         )
     }
 }

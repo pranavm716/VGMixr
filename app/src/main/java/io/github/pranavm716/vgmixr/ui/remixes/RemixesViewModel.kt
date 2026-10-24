@@ -81,6 +81,16 @@ class RemixesViewModel @Inject constructor(
         }
     }
 
+    /** Adds one track to "Next in queue"; a greyed track can't be queued. */
+    fun onQueueTrack(trackId: String) {
+        viewModelScope.launch {
+            val track = catalog.catalog.first().track(trackId)
+            if (track == null || track.unplayable != null) return@launch
+            playback.addToQueue(listOf(trackId))
+            messages.post(UserMessage.AddedToQueue(1))
+        }
+    }
+
     private fun CatalogTrack.toRow(playingId: String?) = RemixRowUi(
         id = id,
         title = title,
