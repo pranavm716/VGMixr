@@ -296,15 +296,10 @@ private fun Controls(
     shuffle: Boolean,
     viewModel: NowPlayingViewModel
 ) {
-    // Equal gaps between what the eye sees: each control takes its glyph's visible width (the
-    // icons have padding of their own), and the row spreads them out. Repeat is a placeholder for
-    // step 21's repeat/loop button and does nothing yet.
-    Row(
-        Modifier.fillMaxWidth().padding(horizontal = CONTROLS_INSET),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        ControlSlot(OUTER_WIDTH) {
+    // Spotify's row: each control centered a fixed distance from the middle, play/pause on it.
+    // Repeat is a placeholder for step 21's repeat/loop button and does nothing yet.
+    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        ControlSlot(-OUTER_OFFSET) {
             IconButton(onClick = viewModel::onShuffle, Modifier.requiredSize(48.dp)) {
                 Icon(
                     painterResource(R.drawable.ic_shuffle),
@@ -321,7 +316,7 @@ private fun Controls(
                 )
             }
         }
-        ControlSlot(SKIP_WIDTH) {
+        ControlSlot(-SKIP_OFFSET) {
             IconButton(onClick = viewModel::onPrevious, Modifier.requiredSize(56.dp)) {
                 Icon(
                     painterResource(R.drawable.ic_skip_previous),
@@ -330,7 +325,7 @@ private fun Controls(
                 )
             }
         }
-        ControlSlot(PLAY_SIZE) {
+        ControlSlot(0.dp) {
             Box(
                 Modifier
                     .size(PLAY_SIZE)
@@ -342,16 +337,16 @@ private fun Controls(
             ) {
                 when {
                     isLoading -> CircularProgressIndicator(
-                        modifier = Modifier.size(22.dp),
+                        modifier = Modifier.size(LOADING_SIZE),
                         color = Color.White,
-                        strokeWidth = 2.5.dp
+                        strokeWidth = 3.dp
                     )
 
-                    else -> PlayPauseIcon(isPlaying, Modifier.size(30.dp), tint = Color.White)
+                    else -> PlayPauseIcon(isPlaying, Modifier.size(PLAY_ICON), tint = Color.White)
                 }
             }
         }
-        ControlSlot(SKIP_WIDTH) {
+        ControlSlot(SKIP_OFFSET) {
             IconButton(onClick = viewModel::onNext, Modifier.requiredSize(56.dp)) {
                 Icon(
                     painterResource(R.drawable.ic_skip_next),
@@ -360,7 +355,7 @@ private fun Controls(
                 )
             }
         }
-        ControlSlot(OUTER_WIDTH) {
+        ControlSlot(OUTER_OFFSET) {
             Icon(
                 painterResource(R.drawable.ic_repeat),
                 contentDescription = null,
@@ -370,24 +365,32 @@ private fun Controls(
     }
 }
 
-/** A control [width] wide, its glyph's visible width; its touch target overflows it. */
+/** A control centered [offset] from the row's middle; its touch target may overflow the row. */
 @Composable
-private fun ControlSlot(width: Dp, content: @Composable () -> Unit) {
-    Box(Modifier.width(width), contentAlignment = Alignment.Center) { content() }
+private fun ControlSlot(offset: Dp, content: @Composable () -> Unit) {
+    Box(Modifier.offset(x = offset), contentAlignment = Alignment.Center) { content() }
 }
 
-private val SHUFFLE_ICON = 28.dp
-private val REPEAT_ICON = 28.dp
-private val SKIP_ICON = 36.dp
-private val PLAY_SIZE = 52.dp
+// Spotify's controls row, measured from a screenshot of its now playing on the phone (360dp
+// wide). Each control's center lies a fixed distance from the middle: skips 76dp, shuffle and
+// repeat 144dp. Material Symbols' glyphs have other proportions than Spotify's, so each icon is
+// sized for its glyph to cover the same area as Spotify's (glyph sizes in dp).
+private val SKIP_OFFSET = 76.dp
+private val OUTER_OFFSET = 144.dp
 
-// Material Symbols' skip glyph spans 520 of its 960 units, repeat 720 (shuffle 640). Shuffle's
-// slot takes repeat's width too, so play/pause stays centered.
-private val SKIP_WIDTH = SKIP_ICON * 520 / 960
-private val OUTER_WIDTH = REPEAT_ICON * 720 / 960
+// Glyph 21.3 x 21.3 (Spotify's 22.6 x 19.9).
+private val SHUFFLE_ICON = 32.dp
 
-// Inside the side margin, so shuffle and repeat sit about where Shuttle's do.
-private val CONTROLS_INSET = 22.dp
+// Glyph 23.8 x 22 (Spotify's 21.5 x 23.8).
+private val SKIP_ICON = 44.dp
+
+// Glyph 20.3 x 22.5 (Spotify's 21.8 x 20.7).
+private val REPEAT_ICON = 27.dp
+
+// The circle is Spotify's; its triangle 15.6 x 19.8 (Spotify's 17.2 x 19.5).
+private val PLAY_SIZE = 64.dp
+private val PLAY_ICON = 34.dp
+private val LOADING_SIZE = 27.dp
 
 private fun PlaybackProgress.fraction(): Float {
     val duration = durationMs?.takeIf { it > 0 } ?: return 0f
@@ -414,9 +417,9 @@ private val INFO_TO_SEEK = 35.dp
 // its gap, since the header's text sits high in its box and the title's letters low in theirs.
 private const val ABOVE_ART = 73.4f
 private const val BELOW_ART = 82.74f
-private const val BELOW_CONTROLS = 57.06f
+private const val BELOW_CONTROLS = 51.06f
 
-// Under the row of add to playlist, favorite and queue: it sits three quarters of its icons'
-// height (18dp) above where 8dp put it.
-private val BOTTOM_MARGIN = 26.dp
+// Under the row of add to playlist, favorite and queue: it sits two thirds of its icons' height
+// (16dp) above where 8dp put it.
+private val BOTTOM_MARGIN = 24.dp
 private const val TINT_FADE_END = 0.4f
