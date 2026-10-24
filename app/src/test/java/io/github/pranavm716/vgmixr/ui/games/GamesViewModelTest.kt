@@ -7,6 +7,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.catalog.FamilySummary
 import io.github.pranavm716.vgmixr.domain.catalog.ImportError
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakeCatalogSync
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
@@ -98,6 +99,18 @@ class GamesViewModelTest {
             sync.status.value = CatalogImportResult.Imported(Instant.EPOCH)
             expectNoEvents()
         }
+    }
+
+    @Test
+    fun `a long press plays the whole family, in family order, from the family`() = runTest {
+        viewModel().onPlayFamily("rse")
+
+        assertEquals(
+            listOf(
+                FakePlaybackController.PlayAll(listOf("rse-a", "rse-b"), QueueContext.Family("rse"))
+            ),
+            playback.calls
+        )
     }
 
     @Test

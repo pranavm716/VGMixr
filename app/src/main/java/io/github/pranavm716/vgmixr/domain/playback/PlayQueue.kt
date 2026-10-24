@@ -86,6 +86,21 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
     }
 
     /**
+     * Playing all of [trackIds] (a long-pressed family or playlist) as tapping its first track does,
+     * or with [shuffle] on, a random one: the rest then follows shuffled, so the whole list plays in
+     * a shuffled order.
+     */
+    fun playAll(
+        trackIds: List<String>,
+        context: QueueContext,
+        shuffle: Boolean,
+        random: Random = Random.Default
+    ): QueueEdit.Replace {
+        val first = if (shuffle) random.nextInt(trackIds.size) else 0
+        return playFrom(trackIds, context, first, shuffle, random)
+    }
+
+    /**
      * Adding [trackIds] puts them at the end of "Next in queue". With nothing to play (an empty
      * queue, or playback that ended) they start playing instead, since nothing would show they were
      * added.

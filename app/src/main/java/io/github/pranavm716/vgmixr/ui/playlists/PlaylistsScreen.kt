@@ -54,6 +54,7 @@ fun PlaylistsTab(
         state,
         onPlaylistClick,
         onQueuePlaylist = viewModel::onQueuePlaylist,
+        onPlayPlaylist = viewModel::onPlayPlaylist,
         onCreatePlaylist = viewModel::onCreatePlaylist,
         listState = listState
     )
@@ -69,6 +70,7 @@ fun PlaylistsScreen(
     state: PlaylistsUiState,
     onPlaylistClick: (Long) -> Unit,
     onQueuePlaylist: (Long) -> Unit,
+    onPlayPlaylist: (Long) -> Unit,
     onCreatePlaylist: (String) -> Unit,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState()
@@ -103,7 +105,8 @@ fun PlaylistsScreen(
                             playlist.name,
                             playlist.trackCount,
                             art = { PlaylistArt(playlist.isFavorites, RowTileSize) },
-                            onClick = { onPlaylistClick(playlist.id) }
+                            onClick = { onPlaylistClick(playlist.id) },
+                            onLongClick = { onPlayPlaylist(playlist.id) }
                         )
                     }
                 }
@@ -126,6 +129,7 @@ private fun PlaylistsScreenPreview() {
             ),
             onPlaylistClick = {},
             onQueuePlaylist = {},
+            onPlayPlaylist = {},
             onCreatePlaylist = {}
         )
     }

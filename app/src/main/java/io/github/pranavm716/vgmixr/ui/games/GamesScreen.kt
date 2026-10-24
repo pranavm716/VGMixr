@@ -42,6 +42,7 @@ fun GamesTab(
         state,
         onFamilyClick,
         onQueueFamily = viewModel::onQueueFamily,
+        onPlayFamily = viewModel::onPlayFamily,
         listState = listState
     )
 }
@@ -52,6 +53,7 @@ fun GamesScreen(
     state: GamesUiState,
     onFamilyClick: (String) -> Unit,
     onQueueFamily: (String) -> Unit,
+    onPlayFamily: (String) -> Unit,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState()
 ) {
@@ -72,7 +74,8 @@ fun GamesScreen(
                                     family.name,
                                     family.trackCount,
                                     art = { ArtTile(RowTileSize) },
-                                    onClick = { onFamilyClick(family.id) }
+                                    onClick = { onFamilyClick(family.id) },
+                                    onLongClick = { onPlayFamily(family.id) }
                                 )
                             }
                         }
@@ -118,7 +121,8 @@ private fun GamesScreenPreview() {
                 importFailed = true
             ),
             onFamilyClick = {},
-            onQueueFamily = {}
+            onQueueFamily = {},
+            onPlayFamily = {}
         )
     }
 }

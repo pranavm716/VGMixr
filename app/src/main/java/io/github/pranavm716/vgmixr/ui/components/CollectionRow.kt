@@ -1,6 +1,6 @@
 package io.github.pranavm716.vgmixr.ui.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,7 +22,8 @@ import io.github.pranavm716.vgmixr.R
 /**
  * A collection's row, as Shuttle's album list: its [art] tile, its name over its track count.
  * Families in the Games tab, playlists in the Playlists tab and in Add to playlist, where
- * [trailing] (the plus or check) ends it. Not clickable without [onClick].
+ * [trailing] (the plus or check) ends it. Not clickable without [onClick]; [onLongClick], if given,
+ * runs on a long press (play it all) with a haptic tick.
  */
 @Composable
 fun CollectionRow(
@@ -30,13 +31,21 @@ fun CollectionRow(
     trackCount: Int,
     art: @Composable () -> Unit,
     onClick: (() -> Unit)? = null,
+    onLongClick: (() -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(TileRowHeight)
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .then(
+                if (onClick != null) {
+                    // Ticks on a long press by itself (hapticFeedbackEnabled).
+                    Modifier.combinedClickable(onClick = onClick, onLongClick = onLongClick)
+                } else {
+                    Modifier
+                }
+            )
             .padding(start = 16.dp, end = if (trailing != null) 4.dp else 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

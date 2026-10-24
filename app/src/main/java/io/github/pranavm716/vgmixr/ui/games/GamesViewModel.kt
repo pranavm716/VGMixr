@@ -11,7 +11,9 @@ import io.github.pranavm716.vgmixr.domain.catalog.FamilySummary
 import io.github.pranavm716.vgmixr.domain.catalog.TrackFilter
 import io.github.pranavm716.vgmixr.domain.catalog.familySummaries
 import io.github.pranavm716.vgmixr.domain.catalog.filter
+import io.github.pranavm716.vgmixr.domain.catalog.playableFamilyTrackIds
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import javax.inject.Inject
@@ -46,6 +48,14 @@ class GamesViewModel @Inject constructor(
             sync.status.map { it is CatalogImportResult.Failed }
         ) { families, importFailed -> GamesUiState.Loaded(families, importFailed) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), GamesUiState.Loading)
+
+    /** Plays the whole family (a long press), leaving out tracks whose sources are all broken. */
+    fun onPlayFamily(familyId: String) {
+        viewModelScope.launch {
+            val ids = repository.catalog.first().playableFamilyTrackIds(familyId)
+            if (ids.isNotEmpty()) playback.playAll(ids, QueueContext.Family(familyId))
+        }
+    }
 
     /**
      * Adds a family's tracks, in family order, to "Next in queue", leaving out those whose sources

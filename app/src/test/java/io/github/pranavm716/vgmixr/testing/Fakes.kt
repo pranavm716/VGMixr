@@ -39,6 +39,8 @@ class FakeCatalogSync(initial: CatalogImportResult? = null) : CatalogSync {
 class FakePlaybackController : PlaybackController {
     data class PlayFrom(val trackIds: List<String>, val index: Int, val context: QueueContext)
 
+    data class PlayAll(val trackIds: List<String>, val context: QueueContext)
+
     data class AddToQueue(val trackIds: List<String>)
 
     data object TogglePlayPause
@@ -113,6 +115,10 @@ class FakePlaybackController : PlaybackController {
 
     override fun playFrom(trackIds: List<String>, index: Int, context: QueueContext) {
         calls += PlayFrom(trackIds, index, context)
+    }
+
+    override fun playAll(trackIds: List<String>, context: QueueContext) {
+        calls += PlayAll(trackIds, context)
     }
 
     override fun addToQueue(trackIds: List<String>) {

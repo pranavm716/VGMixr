@@ -6,6 +6,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
@@ -96,6 +97,31 @@ class PlaylistsViewModelTest {
         viewModel().onCreatePlaylist("   ")
 
         assertEquals(emptyList<String>(), repository.created)
+    }
+
+    @Test
+    fun `a long press plays the playable tracks, newest first, from the playlist`() = runTest {
+        repository.contents.value = mapOf(
+            1L to Playlist(1, "Favorites", true, listOf("rse-b", "rse-c", "rse-gone", "rse-a"))
+        )
+
+        viewModel().onPlayPlaylist(1)
+
+        assertEquals(
+            listOf(
+                FakePlaybackController.PlayAll(listOf("rse-b", "rse-a"), QueueContext.Playlist(1))
+            ),
+            playback.calls
+        )
+    }
+
+    @Test
+    fun `a long press on a playlist with nothing playable plays nothing`() = runTest {
+        repository.contents.value = mapOf(2L to Playlist(2, "Mix", false, listOf("rse-c")))
+
+        viewModel().onPlayPlaylist(2)
+
+        assertEquals(emptyList<Any>(), playback.calls)
     }
 
     @Test

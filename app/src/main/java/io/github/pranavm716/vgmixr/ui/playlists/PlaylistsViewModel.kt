@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.domain.playlist.playableTrackIds
@@ -56,6 +57,15 @@ class PlaylistsViewModel @Inject constructor(
         if (name.isBlank()) return
         viewModelScope.launch {
             eventChannel.send(PlaylistsEvent.Open(repository.createPlaylist(name)))
+        }
+    }
+
+    /** Plays the whole playlist (a long press), in its order, leaving out tracks that can't play. */
+    fun onPlayPlaylist(playlistId: Long) {
+        viewModelScope.launch {
+            val playlist = repository.playlist(playlistId).first() ?: return@launch
+            val ids = playlist.playableTrackIds(catalog.catalog.first())
+            if (ids.isNotEmpty()) playback.playAll(ids, QueueContext.Playlist(playlistId))
         }
     }
 
