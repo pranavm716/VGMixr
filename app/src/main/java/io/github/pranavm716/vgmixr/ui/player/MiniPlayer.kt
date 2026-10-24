@@ -69,6 +69,7 @@ import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.PlayPauseIcon
 import io.github.pranavm716.vgmixr.ui.components.RowTileGap
 import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
+import io.github.pranavm716.vgmixr.ui.components.ThumbnailTile
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.TrackTitleChips
 import io.github.pranavm716.vgmixr.ui.components.tintColor
@@ -257,7 +258,8 @@ private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
             .padding(start = 16.dp, end = ButtonWidth),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ArtTile(RowTileHeight)
+        val thumbnail = track.thumbnail
+        if (thumbnail != null) ThumbnailTile(thumbnail, RowTileHeight) else ArtTile(RowTileHeight)
         Spacer(Modifier.width(RowTileGap))
         TrackText(track)
     }
@@ -265,7 +267,7 @@ private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
 
 @Composable
 private fun TrackText(state: MiniTrackUi) =
-    TrackTitleChips(state.title, state.chips, marquee = true)
+    TrackTitleChips(state.title, state.chips, marquee = true, subtitle = state.subtitle)
 
 @Composable
 private fun PlayPauseButton(isPlaying: Boolean, isLoading: Boolean, onClick: () -> Unit) {

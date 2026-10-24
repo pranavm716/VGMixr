@@ -7,10 +7,8 @@ import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
-import io.github.pranavm716.vgmixr.domain.model.Source
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
-import io.github.pranavm716.vgmixr.domain.usertrack.ThumbnailStore
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
@@ -52,7 +50,6 @@ class RemixesViewModel @Inject constructor(
     private val catalog: CatalogRepository,
     private val playback: PlaybackController,
     private val messages: UserMessages,
-    private val thumbnails: ThumbnailStore,
     @DefaultDispatcher dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     val uiState: StateFlow<RemixesUiState> =
@@ -62,7 +59,6 @@ class RemixesViewModel @Inject constructor(
         ) { catalog, playingId ->
             RemixesUiState.Loaded(catalog.userTracks.map { it.toRow(playingId) })
         }
-            // Off the main thread: looking for thumbnail files touches the disk.
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), RemixesUiState.Loading)
 
@@ -90,7 +86,7 @@ class RemixesViewModel @Inject constructor(
         title = title,
         chips = games.map { ChipUi(it.shortName, it.color) },
         channel = channel,
-        thumbnail = videoId()?.let(thumbnails::file)?.path,
+        thumbnail = thumbnail,
         unplayable = unplayable != null,
         playing = id == playingId
     )
@@ -98,7 +94,3 @@ class RemixesViewModel @Inject constructor(
 
 private fun Catalog.playableUserTrackIds(): List<String> =
     userTracks.filter { it.unplayable == null }.map { it.id }
-
-/** A user track's video: its one source. */
-private fun CatalogTrack.videoId(): String? =
-    sources.filterIsInstance<Source.Stream>().firstOrNull()?.videoId

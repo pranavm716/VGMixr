@@ -452,7 +452,7 @@ private fun Catalog.itemFor(
             QueueEntry(trackId, context, listIndex)
         ).buildUpon().setUri(NO_SOURCE_URI).build()
     val familyName = families.firstOrNull { it.id == track.familyId }?.name.orEmpty()
-    val art = artwork.uriFor(track.games.map { it.color })
+    val art = artwork.uriFor(track)
     return trackMediaItem(track, familyName, sourceIndex, context, retried, art, listIndex)
 }
 

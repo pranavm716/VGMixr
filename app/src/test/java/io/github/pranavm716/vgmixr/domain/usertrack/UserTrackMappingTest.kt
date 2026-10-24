@@ -79,4 +79,12 @@ class UserTrackMappingTest {
             userTrack().toCatalogTrack(catalog, BrokenReason.UNAVAILABLE).unplayable
         )
     }
+
+    @Test
+    fun `it carries its thumbnail`() {
+        assertEquals(
+            "thumbnails/AAAAAAAAAAA.jpg",
+            userTrack().toCatalogTrack(catalog, null, "thumbnails/AAAAAAAAAAA.jpg").thumbnail
+        )
+    }
 }

@@ -54,14 +54,17 @@ sealed interface PlaylistEvent {
 
 /**
  * A track as search and the queue list it: title over all of its game chips. [unplayable] greys a
- * track whose sources are all broken; [playing] marks the current track.
+ * track whose sources are all broken; [playing] marks the current track. A user track has its
+ * [thumbnail]'s path and its channel as [subtitle].
  */
 data class PlaylistRowUi(
     val id: String,
     val title: String,
     val chips: List<ChipUi>,
     val unplayable: Boolean = false,
-    val playing: Boolean = false
+    val playing: Boolean = false,
+    val thumbnail: String? = null,
+    val subtitle: String? = null
 )
 
 @HiltViewModel
@@ -143,7 +146,9 @@ private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): Play
             title = track.title,
             chips = track.games.map { ChipUi(it.shortName, it.color) },
             unplayable = track.unplayable != null,
-            playing = track.id == playingId
+            playing = track.id == playingId,
+            thumbnail = track.thumbnail,
+            subtitle = track.channel
         )
     }
     return PlaylistUiState.Loaded(

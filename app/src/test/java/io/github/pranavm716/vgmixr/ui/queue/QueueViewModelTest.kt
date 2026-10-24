@@ -184,4 +184,31 @@ class QueueViewModelTest {
             assertEquals("Remixes", awaitItem().nextFromName)
         }
     }
+
+    @Test
+    fun `a user track's row shows its thumbnail and its channel`() = runTest {
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            null,
+            emptyList(),
+            "Some Remix",
+            0,
+            emptyList(),
+            channel = "GlitchxCity",
+            thumbnail = "thumbnails/AAAAAAAAAAA.jpg"
+        )
+        playback.state.value = state(listOf(QueueEntry("yt:AAAAAAAAAAA", QueueContext.Remixes)), 0)
+        val viewModel = QueueViewModel(
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playback,
+            messages,
+            playlists
+        )
+
+        viewModel.uiState.test {
+            val row = awaitItem().nowPlaying
+            assertEquals("thumbnails/AAAAAAAAAAA.jpg", row?.thumbnail)
+            assertEquals("GlitchxCity", row?.subtitle)
+        }
+    }
 }

@@ -138,5 +138,12 @@ private fun SectionHeader(title: String, action: @Composable () -> Unit = {}) {
 }
 
 @Composable
-private fun QueueRow(row: QueueRowUi, current: Boolean, onClick: () -> Unit) =
-    TrackTileRow(row.title, row.chips, row.unplayable, current, onClick)
+private fun QueueRow(row: QueueRowUi, current: Boolean, onClick: () -> Unit) = TrackTileRow(
+    row.title,
+    row.chips,
+    row.unplayable,
+    current,
+    onClick,
+    thumbnail = row.thumbnail,
+    subtitle = row.subtitle
+)

@@ -14,6 +14,7 @@ import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.model.Loop
 import io.github.pranavm716.vgmixr.domain.model.Source
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
+import io.github.pranavm716.vgmixr.domain.usertrack.ThumbnailStore
 import io.github.pranavm716.vgmixr.domain.usertrack.toCatalogTrack
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +26,8 @@ import kotlinx.coroutines.flow.map
  */
 class RoomCatalogRepository @Inject constructor(
     private val db: VGMixrDatabase,
-    private val dao: CatalogDao
+    private val dao: CatalogDao,
+    private val thumbnails: ThumbnailStore = ThumbnailStore.NONE
 ) : CatalogRepository {
     // One trigger over all catalog tables, rather than combining per-table Flows, so an import
     // (one transaction) yields one consistent snapshot. User-data tables aren't watched, but for
@@ -78,7 +80,8 @@ class RoomCatalogRepository @Inject constructor(
         val userTracks = db.userTrackDao().allNewestFirst().map { entity ->
             entity.toDomain().toCatalogTrack(
                 catalog,
-                unplayable = marks[entity.videoId]?.let { BrokenReason.fromKey(it.reason) }
+                unplayable = marks[entity.videoId]?.let { BrokenReason.fromKey(it.reason) },
+                thumbnail = thumbnails.file(entity.videoId)?.path
             )
         }
         return catalog.copy(userTracks = userTracks)

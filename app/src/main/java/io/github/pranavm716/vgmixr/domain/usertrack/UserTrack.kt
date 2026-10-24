@@ -45,9 +45,13 @@ interface UserTrackRepository {
 /**
  * The track as the UI shows it and the player plays it: its video, under the family and games of
  * the [catalog] track it remixes (none if it remixes nothing, or a track no longer in [catalog]).
- * [unplayable] is why its video is marked broken, if it is.
+ * [unplayable] is why its video is marked broken, if it is; [thumbnail] its thumbnail file's path.
  */
-fun UserTrack.toCatalogTrack(catalog: Catalog, unplayable: BrokenReason?): CatalogTrack {
+fun UserTrack.toCatalogTrack(
+    catalog: Catalog,
+    unplayable: BrokenReason?,
+    thumbnail: String? = null
+): CatalogTrack {
     val original = remixOf?.let(catalog::track)
     return CatalogTrack(
         id = id,
@@ -58,6 +62,7 @@ fun UserTrack.toCatalogTrack(catalog: Catalog, unplayable: BrokenReason?): Catal
         sources = listOf(Source.Stream(videoId, startMs, endMs)),
         unplayable = unplayable,
         channel = channel,
-        remixOf = remixOf
+        remixOf = remixOf,
+        thumbnail = thumbnail
     )
 }

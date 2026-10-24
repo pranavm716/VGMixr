@@ -58,6 +58,7 @@ import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.MarqueeText
 import io.github.pranavm716.vgmixr.ui.components.PlayPauseIcon
+import io.github.pranavm716.vgmixr.ui.components.ThumbnailArt
 
 /**
  * Now playing's header, as Spotify's: a chevron that closes the sheet, and "Playing from" over
@@ -176,7 +177,9 @@ fun NowPlayingScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.weight(ABOVE_ART))
-        ArtTile(Modifier.padding(horizontal = ART_MARGIN).fillMaxWidth().aspectRatio(ART_ASPECT))
+        val art = Modifier.padding(horizontal = ART_MARGIN).fillMaxWidth().aspectRatio(ART_ASPECT)
+        val thumbnail = visible.thumbnail
+        if (thumbnail != null) ThumbnailArt(thumbnail, art) else ArtTile(art)
         Spacer(Modifier.weight(BELOW_ART))
         // A tap target without a ripple, as the header's "Playing from".
         Column(

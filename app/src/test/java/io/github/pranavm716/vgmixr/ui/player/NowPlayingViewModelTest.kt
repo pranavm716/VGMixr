@@ -263,4 +263,31 @@ class NowPlayingViewModelTest {
         assertEquals("1:02:03", formatTime(3_723_000))
         assertEquals("0:00", formatTime(-5))
     }
+
+    @Test
+    fun `a user track's thumbnail is the art`() = runTest {
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            null,
+            emptyList(),
+            "Some Remix",
+            0,
+            emptyList(),
+            channel = "GlitchxCity",
+            thumbnail = "thumbnails/AAAAAAAAAAA.jpg"
+        )
+        playback.state.value = playing(QueueContext.Remixes, trackId = "yt:AAAAAAAAAAA")
+        val viewModel = NowPlayingViewModel(
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playback,
+            playlists
+        )
+
+        viewModel.uiState.test {
+            assertEquals(
+                "thumbnails/AAAAAAAAAAA.jpg",
+                (awaitItem() as NowPlayingUiState.Visible).thumbnail
+            )
+        }
+    }
 }

@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Shader
 import android.net.Uri
 import androidx.compose.ui.graphics.toArgb
+import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.ui.components.tintColor
 import io.github.pranavm716.vgmixr.ui.theme.Background
 import java.io.File
@@ -18,6 +19,10 @@ import java.io.File
  * background they came out a muddy brown.
  */
 class NotificationArtwork(private val dir: File) {
+    /** A file URI for [track]'s artwork: its video's thumbnail, else its games' colors. */
+    fun uriFor(track: CatalogTrack): Uri =
+        track.thumbnail?.let { Uri.fromFile(File(it)) } ?: uriFor(track.games.map { it.color })
+
     /** A file URI for the artwork of a track in games of [gameColors]; each one is drawn once. */
     fun uriFor(gameColors: List<String>): Uri {
         val colors = artworkColors(gameColors)

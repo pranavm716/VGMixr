@@ -47,7 +47,9 @@ data class QueueRowUi(
     val trackId: String,
     val title: String,
     val chips: List<ChipUi>,
-    val unplayable: Boolean = false
+    val unplayable: Boolean = false,
+    val thumbnail: String? = null,
+    val subtitle: String? = null
 )
 
 @HiltViewModel
@@ -104,7 +106,9 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
             trackId = track.id,
             title = track.title,
             chips = track.games.map { ChipUi(it.shortName, it.color) },
-            unplayable = track.unplayable != null
+            unplayable = track.unplayable != null,
+            thumbnail = track.thumbnail,
+            subtitle = track.channel
         )
     }
     val queueStart = queue.current + 1

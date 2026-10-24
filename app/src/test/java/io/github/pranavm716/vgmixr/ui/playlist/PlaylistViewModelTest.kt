@@ -200,4 +200,34 @@ class PlaylistViewModelTest {
         }
         assertEquals(null, playlists.contents.value[2])
     }
+
+    @Test
+    fun `a user track's row shows its thumbnail and its channel`() = runTest {
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            null,
+            emptyList(),
+            "Some Remix",
+            0,
+            emptyList(),
+            channel = "GlitchxCity",
+            thumbnail = "thumbnails/AAAAAAAAAAA.jpg"
+        )
+        playlists.contents.value =
+            mapOf(2L to Playlist(2, "Mix", false, listOf("yt:AAAAAAAAAAA")))
+        val viewModel = PlaylistViewModel(
+            SavedStateHandle(mapOf("playlistId" to 2L)),
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playlists,
+            playback,
+            messages,
+            main.dispatcher
+        )
+
+        viewModel.uiState.test {
+            val row = (awaitItem() as PlaylistUiState.Loaded).rows.single()
+            assertEquals("thumbnails/AAAAAAAAAAA.jpg", row.thumbnail)
+            assertEquals("GlitchxCity", row.subtitle)
+        }
+    }
 }

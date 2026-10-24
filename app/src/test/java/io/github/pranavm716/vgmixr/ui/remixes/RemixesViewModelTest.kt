@@ -11,7 +11,6 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
-import io.github.pranavm716.vgmixr.testing.FakeThumbnailStore
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
@@ -32,7 +31,8 @@ class RemixesViewModelTest {
         videoId: String,
         title: String,
         familyId: String? = null,
-        unplayable: BrokenReason? = null
+        unplayable: BrokenReason? = null,
+        thumbnail: String? = null
     ) = CatalogTrack(
         id = "yt:$videoId",
         familyId = familyId,
@@ -41,7 +41,8 @@ class RemixesViewModelTest {
         order = 0,
         sources = listOf(Source.Stream(videoId, 0, null)),
         unplayable = unplayable,
-        channel = "GlitchxCity"
+        channel = "GlitchxCity",
+        thumbnail = thumbnail
     )
 
     // Newest first, as the catalog lists them.
@@ -50,7 +51,12 @@ class RemixesViewModelTest {
         families = listOf(Family("gsc", "Gold", "G")),
         tracks = emptyList(),
         userTracks = listOf(
-            userTrack("AAAAAAAAAAA", "Olivine Lighthouse (Remix)", familyId = "gsc"),
+            userTrack(
+                "AAAAAAAAAAA",
+                "Olivine Lighthouse (Remix)",
+                familyId = "gsc",
+                thumbnail = File("thumbnails/AAAAAAAAAAA.jpg").path
+            ),
             userTrack("BBBBBBBBBBB", "Broken Remix", unplayable = BrokenReason.UNAVAILABLE),
             userTrack("CCCCCCCCCCC", "Some Remix")
         )
@@ -58,13 +64,11 @@ class RemixesViewModelTest {
 
     private val playback = FakePlaybackController()
     private val messages = UserMessages()
-    private val thumbnails = FakeThumbnailStore().apply { downloaded += "AAAAAAAAAAA" }
 
     private fun viewModel(catalog: Catalog = this.catalog) = RemixesViewModel(
         FakeCatalogRepository(catalog),
         playback,
         messages,
-        thumbnails,
         main.dispatcher
     )
 

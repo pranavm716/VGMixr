@@ -52,16 +52,25 @@ fun ArtTile(modifier: Modifier) {
  */
 @Composable
 fun ThumbnailTile(path: String, height: Dp, modifier: Modifier = Modifier) {
-    val widthPx = with(LocalDensity.current) { (height * ART_ASPECT).roundToPx() }
+    val width = height * ART_ASPECT
+    ThumbnailArt(path, modifier.size(width = width, height = height), width)
+}
+
+/**
+ * A video thumbnail at whatever 16:9 size [modifier] gives it, such as now playing's full-width
+ * one, decoded at about [width] (the full width of a phone by default).
+ */
+@Composable
+fun ThumbnailArt(path: String, modifier: Modifier, width: Dp = 360.dp) {
+    val widthPx = with(LocalDensity.current) { width.roundToPx() }
     val image by produceState<ImageBitmap?>(null, path, widthPx) {
         value = withContext(Dispatchers.IO) { decodeThumbnail(path, widthPx) }
     }
-    val tile = modifier.size(width = height * ART_ASPECT, height = height)
     val decoded = image
     if (decoded == null) {
-        ArtTile(tile)
+        ArtTile(modifier)
     } else {
-        Image(decoded, null, tile.clip(ArtShape), contentScale = ContentScale.Crop)
+        Image(decoded, null, modifier.clip(ArtShape), contentScale = ContentScale.Crop)
     }
 }
 

@@ -14,4 +14,15 @@ interface ThumbnailStore {
     suspend fun download(videoId: String): Boolean
 
     suspend fun delete(videoId: String)
+
+    companion object {
+        /** No thumbnails at all, for code that doesn't show them. */
+        val NONE = object : ThumbnailStore {
+            override fun file(videoId: String): File? = null
+
+            override suspend fun download(videoId: String) = false
+
+            override suspend fun delete(videoId: String) = Unit
+        }
+    }
 }

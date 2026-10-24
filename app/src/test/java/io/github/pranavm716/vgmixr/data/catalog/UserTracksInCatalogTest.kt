@@ -9,6 +9,8 @@ import io.github.pranavm716.vgmixr.data.stream.RoomBrokenSources
 import io.github.pranavm716.vgmixr.data.usertrack.RoomUserTrackRepository
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrack
+import io.github.pranavm716.vgmixr.testing.FakeThumbnailStore
+import java.io.File
 import java.time.Instant
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -78,6 +80,21 @@ class UserTracksInCatalogTest {
         assertEquals(
             BrokenReason.NO_AUDIO,
             repository.catalog.first().userTracks.single().unplayable
+        )
+    }
+
+    @Test
+    fun `a user track carries its thumbnail's path once it is downloaded`() = runTest(dispatcher) {
+        import()
+        val thumbnails = FakeThumbnailStore().apply { downloaded += "AAAAAAAAAAA" }
+        userTracks.add(userTrack("AAAAAAAAAAA", addedAt = 2_000))
+        userTracks.add(userTrack("BBBBBBBBBBB", addedAt = 1_000))
+
+        val catalog = RoomCatalogRepository(db, db.catalogDao(), thumbnails).catalog.first()
+
+        assertEquals(
+            listOf(File("thumbnails/AAAAAAAAAAA.jpg").path, null),
+            catalog.userTracks.map { it.thumbnail }
         )
     }
 }
