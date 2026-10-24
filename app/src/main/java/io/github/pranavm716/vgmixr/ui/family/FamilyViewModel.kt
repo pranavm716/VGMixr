@@ -93,7 +93,7 @@ class FamilyViewModel @Inject constructor(
     fun onTrackClick(trackId: String) {
         viewModelScope.launch {
             val catalog = repository.catalog.first()
-            val track = catalog.tracks.firstOrNull { it.id == trackId }
+            val track = catalog.track(trackId)
             val unplayable = track?.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -108,7 +108,7 @@ class FamilyViewModel @Inject constructor(
     /** Adds one track to "Next in queue". */
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
-            val track = repository.catalog.first().tracks.firstOrNull { it.id == trackId }
+            val track = repository.catalog.first().track(trackId)
             // A greyed row can't be swiped; this keeps any other path from queueing it.
             if (track == null || track.unplayable != null) return@launch
             playback.addToQueue(listOf(trackId))

@@ -92,7 +92,7 @@ class PlaylistViewModel @Inject constructor(
     fun onTrackClick(trackId: String) {
         viewModelScope.launch {
             val catalog = catalog.catalog.first()
-            val track = catalog.tracks.firstOrNull { it.id == trackId } ?: return@launch
+            val track = catalog.track(trackId) ?: return@launch
             val unplayable = track.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -125,7 +125,7 @@ class PlaylistViewModel @Inject constructor(
     /** Adds one track to "Next in queue"; a greyed track can't be queued. */
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
-            val track = catalog.catalog.first().tracks.firstOrNull { it.id == trackId }
+            val track = catalog.catalog.first().track(trackId)
             if (track == null || track.unplayable != null) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
@@ -136,9 +136,8 @@ class PlaylistViewModel @Inject constructor(
 // Entries whose track left the catalog (retired) aren't listed until step 14 shows them.
 private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): PlaylistUiState {
     if (playlist == null) return PlaylistUiState.NotFound
-    val tracksById = tracks.associateBy { it.id }
     val rows = playlist.trackIds.mapNotNull { id ->
-        val track = tracksById[id] ?: return@mapNotNull null
+        val track = track(id) ?: return@mapNotNull null
         PlaylistRowUi(
             id = track.id,
             title = track.title,

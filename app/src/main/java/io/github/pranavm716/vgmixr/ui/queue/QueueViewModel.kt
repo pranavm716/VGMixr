@@ -65,7 +65,7 @@ class QueueViewModel @Inject constructor(
     fun onJump(index: Int) {
         viewModelScope.launch {
             val trackId = playback.state.value.queue.entries.getOrNull(index)?.trackId
-            val track = repository.catalog.first().tracks.firstOrNull { it.id == trackId }
+            val track = trackId?.let { repository.catalog.first().track(it) }
             val unplayable = track?.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -81,7 +81,7 @@ class QueueViewModel @Inject constructor(
     fun onQueue(index: Int) {
         val trackId = playback.state.value.queue.entries.getOrNull(index)?.trackId ?: return
         viewModelScope.launch {
-            val track = repository.catalog.first().tracks.firstOrNull { it.id == trackId }
+            val track = repository.catalog.first().track(trackId)
             // A greyed row can't be swiped to the queue; this keeps any other path from it.
             if (track == null || track.unplayable != null) return@launch
             playback.addToQueue(listOf(trackId))
@@ -95,9 +95,8 @@ class QueueViewModel @Inject constructor(
 private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>): QueueUiState {
     val queue = state.queue
     if (queue.current !in queue.entries.indices) return QueueUiState.EMPTY
-    val tracksById = tracks.associateBy { it.id }
     fun row(index: Int): QueueRowUi? {
-        val track = tracksById[queue.entries[index].trackId] ?: return null
+        val track = track(queue.entries[index].trackId) ?: return null
         return QueueRowUi(
             index = index,
             trackId = track.id,
@@ -113,7 +112,7 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
 
         // A playlist deleted since: its tracks came from their family.
         is QueueContext.Playlist -> playlists.firstOrNull { it.id == context.playlistId }?.name
-            ?: tracksById[queue.nextFromContext.first().trackId]?.familyId
+            ?: track(queue.nextFromContext.first().trackId)?.familyId
                 ?.let { id -> families.firstOrNull { it.id == id }?.name }
 
         QueueContext.Queue, null -> null

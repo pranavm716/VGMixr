@@ -90,8 +90,7 @@ class EditPlaylistViewModel @Inject constructor(
             val ids = playlist?.trackIds.orEmpty()
             val added = ids.toSet()
             val tracks = if (matches.query.isBlank()) {
-                val byId = catalog.tracks.associateBy { it.id }
-                ids.mapNotNull { byId[it] }
+                ids.mapNotNull(catalog::track)
             } else {
                 matches.tracks
             }

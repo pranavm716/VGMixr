@@ -103,7 +103,7 @@ private fun Catalog.nowPlaying(
     favorites: Set<String>,
     playlists: List<PlaylistSummary>
 ): NowPlayingUiState {
-    val track = tracks.firstOrNull { it.id == state.trackId } ?: return NowPlayingUiState.Hidden
+    val track = state.trackId?.let { track(it) } ?: return NowPlayingUiState.Hidden
     // No context, or a playlist deleted since: the track plays from its family.
     val context = state.queue.entries.getOrNull(state.queue.current)?.context
         ?.takeUnless {

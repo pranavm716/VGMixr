@@ -107,7 +107,7 @@ class SearchViewModel @Inject constructor(
     fun onTrackClick(trackId: String) {
         viewModelScope.launch {
             val catalog = repository.catalog.first()
-            val track = catalog.tracks.firstOrNull { it.id == trackId } ?: return@launch
+            val track = catalog.track(trackId) ?: return@launch
             val unplayable = track.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -122,7 +122,7 @@ class SearchViewModel @Inject constructor(
     /** Adds one track to "Next in queue"; a greyed track can't be queued. */
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
-            val track = repository.catalog.first().tracks.firstOrNull { it.id == trackId }
+            val track = repository.catalog.first().track(trackId)
             if (track == null || track.unplayable != null) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))

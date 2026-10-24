@@ -26,7 +26,7 @@ class BrokenSourceCheck @Inject constructor(
     private val resolver: StreamResolver
 ) {
     suspend fun tryAgain(trackId: String): TryAgainResult {
-        val track = catalog.catalog.first().tracks.firstOrNull { it.id == trackId }
+        val track = catalog.catalog.first().track(trackId)
             ?: return TryAgainResult.Unchecked
         val marks = broken.marks.first()
         val marked = playableStreams(track.sources).map { it.videoId }.distinct()
