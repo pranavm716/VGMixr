@@ -1,4 +1,4 @@
-"""Converts the hand-cropped covers in pipeline/covers-in/ into catalog/covers/<family>.webp.
+"""Converts the hand-cropped 16:9 covers in pipeline/covers-in/ into catalog/covers/<family>.webp.
 
 Name each source after its family id (rse.jpg, dppt.png); any common image format works.
 
@@ -24,7 +24,8 @@ def main() -> int:
     except CoverError as e:
         print(f"Nothing written:\n{e}", file=sys.stderr)
         return 1
-    print(f"Wrote {len(result.written)} covers ({COVER_SIZE}px WebP): {', '.join(result.written)}")
+    size = "x".join(map(str, COVER_SIZE))
+    print(f"Wrote {len(result.written)} covers ({size} WebP): {', '.join(result.written)}")
     if result.missing:
         print(f"Families without a cover: {', '.join(result.missing)}")
     if result.orphans:
