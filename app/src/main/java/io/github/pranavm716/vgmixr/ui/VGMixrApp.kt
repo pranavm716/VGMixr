@@ -78,6 +78,7 @@ import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheet
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheetState
 import io.github.pranavm716.vgmixr.ui.player.PlayingFromUi
 import io.github.pranavm716.vgmixr.ui.playlists.PlaylistsTab
+import io.github.pranavm716.vgmixr.ui.remixes.RemixesTab
 import io.github.pranavm716.vgmixr.ui.search.SearchTab
 import io.github.pranavm716.vgmixr.ui.settings.SettingsScreen
 import io.github.pranavm716.vgmixr.ui.settings.SettingsUiState
@@ -445,7 +446,7 @@ fun AppScreen(
         TopLevelDestination.PLAYLISTS ->
             PlaylistsTab(onPlaylistClick = { navController.navigate(PlaylistRoute(it)) }, reselects)
 
-        else -> PlaceholderScreen(destination.label)
+        TopLevelDestination.REMIXES -> RemixesTab(reselects)
     }
 }
 

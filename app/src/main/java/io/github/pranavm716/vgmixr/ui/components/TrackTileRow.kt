@@ -36,14 +36,16 @@ val RowTileGap = 14.dp
  * A track's title over its game chips, placed so the gap between the two splits a [RowTileHeight]
  * tile beside them in half: the title's line is trimmed to its letters, and the block sits 1.5dp
  * up, as measured on the phone for the mini player. [marquee] scrolls a long title instead of
- * cutting it short, fading its start edge while it moves.
+ * cutting it short, fading its start edge while it moves. [subtitle] (a user track's channel)
+ * follows the chips.
  */
 @Composable
 fun TrackTitleChips(
     title: String,
     chips: List<ChipUi>,
     modifier: Modifier = Modifier,
-    marquee: Boolean = false
+    marquee: Boolean = false,
+    subtitle: String? = null
 ) {
     Column(modifier.offset(y = (-1.5).dp)) {
         val style = MaterialTheme.typography.titleMedium.trimmed()
@@ -55,7 +57,19 @@ fun TrackTitleChips(
         }
         // The trim takes the room under the title's descenders too; give the chips some back.
         Spacer(Modifier.height(4.dp))
-        GameChips(chips)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            GameChips(chips)
+            if (subtitle != null) {
+                if (chips.isNotEmpty()) Spacer(Modifier.width(8.dp))
+                Text(
+                    subtitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
     }
 }
 
@@ -73,6 +87,8 @@ private const val CURRENT_TINT = 0.12f
 /**
  * A track with its family's tile, the title over its game chips, as the queue and search list
  * them. [current] tints the playing track; [unplayable] greys a track whose sources are all broken.
+ * A user track shows its video's [thumbnail] (a file path) for the tile and its channel as
+ * [subtitle].
  * Without [onClick] the row doesn't react to taps; [onLongClick], if given, runs on a long press
  * with a haptic tick. [trailing] (a button) ends it.
  */
@@ -84,7 +100,9 @@ fun TrackTileRow(
     current: Boolean,
     onClick: (() -> Unit)?,
     onLongClick: (() -> Unit)? = null,
-    trailing: (@Composable () -> Unit)? = null
+    trailing: (@Composable () -> Unit)? = null,
+    thumbnail: String? = null,
+    subtitle: String? = null
 ) {
     val accent = MaterialTheme.colorScheme.primary
     Row(
@@ -104,9 +122,13 @@ fun TrackTileRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         val faint = Modifier.unplayable(unplayable)
-        ArtTile(RowTileHeight, faint)
+        if (thumbnail != null) {
+            ThumbnailTile(thumbnail, RowTileHeight, faint)
+        } else {
+            ArtTile(RowTileHeight, faint)
+        }
         Spacer(Modifier.width(RowTileGap))
-        TrackTitleChips(title, chips, Modifier.weight(1f).then(faint))
+        TrackTitleChips(title, chips, Modifier.weight(1f).then(faint), subtitle = subtitle)
         if (unplayable) {
             Spacer(Modifier.width(12.dp))
             UnplayableIcon()

@@ -65,6 +65,7 @@
     <string name="playing_from">Playing from</string>
     <string name="playing_from_queue">Queue</string>
     <string name="playing_from_remixes">Remixes</string>
+    <string name="remixes_empty">No remixes yet. Share a video from YouTube to VGMixr to add it here.</string>
     <string name="close_now_playing">Close now playing</string>
     <string name="queue">Queue</string>
     <string name="add_to_favorites">Add to Favorites</string>

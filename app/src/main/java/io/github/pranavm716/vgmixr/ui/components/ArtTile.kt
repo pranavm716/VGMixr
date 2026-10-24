@@ -1,5 +1,7 @@
 package io.github.pranavm716.vgmixr.ui.components
 
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -7,14 +9,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Art's shape: 16:9, YouTube's thumbnail shape, which user tracks show and family covers and
@@ -32,6 +43,37 @@ fun ArtTile(height: Dp, modifier: Modifier = Modifier) {
 @Composable
 fun ArtTile(modifier: Modifier) {
     Box(modifier.background(ArtPlaceholder, ArtShape))
+}
+
+/**
+ * A user track's video thumbnail, [height] tall and 16:9: the image file at [path], decoded off the
+ * main thread at about the size shown. Cropped to 16:9, which cuts the black bars off YouTube's
+ * smaller (4:3) thumbnail sizes. The blank tile shows until it is decoded, or if it can't be.
+ */
+@Composable
+fun ThumbnailTile(path: String, height: Dp, modifier: Modifier = Modifier) {
+    val widthPx = with(LocalDensity.current) { (height * ART_ASPECT).roundToPx() }
+    val image by produceState<ImageBitmap?>(null, path, widthPx) {
+        value = withContext(Dispatchers.IO) { decodeThumbnail(path, widthPx) }
+    }
+    val tile = modifier.size(width = height * ART_ASPECT, height = height)
+    val decoded = image
+    if (decoded == null) {
+        ArtTile(tile)
+    } else {
+        Image(decoded, null, tile.clip(ArtShape), contentScale = ContentScale.Crop)
+    }
+}
+
+/** The image at [path], scaled down by halves while it stays at least [widthPx] wide. */
+private fun decodeThumbnail(path: String, widthPx: Int): ImageBitmap? {
+    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    BitmapFactory.decodeFile(path, bounds)
+    if (bounds.outWidth <= 0) return null
+    var sample = 1
+    while (bounds.outWidth / (sample * 2) >= widthPx) sample *= 2
+    val options = BitmapFactory.Options().apply { inSampleSize = sample }
+    return BitmapFactory.decodeFile(path, options)?.asImageBitmap()
 }
 
 /** The Favorites playlist's tile, [height] tall and 16:9: the accent with a white heart. */
