@@ -20,6 +20,12 @@ import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.domain.settings.Accent
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
+import io.github.pranavm716.vgmixr.domain.usertrack.ThumbnailStore
+import io.github.pranavm716.vgmixr.domain.usertrack.UserTrack
+import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackRepository
+import io.github.pranavm716.vgmixr.domain.usertrack.VideoLookup
+import io.github.pranavm716.vgmixr.domain.usertrack.VideoLookupResult
+import java.io.File
 import java.time.Instant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -226,5 +232,58 @@ class FakeAccentSetting(initial: Accent = Accent.DEFAULT) : AccentSetting {
 
     override fun set(accent: Accent) {
         this.accent.value = accent
+    }
+}
+
+/** User tracks in memory, newest first as Room lists them. */
+class FakeUserTrackRepository(initial: List<UserTrack> = emptyList()) : UserTrackRepository {
+    private val tracks = MutableStateFlow(initial)
+
+    override val userTracks: Flow<List<UserTrack>> =
+        tracks.map { all ->
+            all.sortedWith(compareByDescending<UserTrack> { it.addedAt }.thenBy { it.id })
+        }
+
+    override suspend fun add(track: UserTrack): Boolean {
+        if (tracks.value.any { it.id == track.id }) return false
+        tracks.value += track
+        return true
+    }
+
+    override suspend fun setRemixOf(id: String, remixOf: String?) {
+        tracks.value = tracks.value.map { if (it.id == id) it.copy(remixOf = remixOf) else it }
+    }
+
+    override suspend fun delete(id: String) {
+        tracks.value = tracks.value.filterNot { it.id == id }
+    }
+}
+
+/** Answers each video id from [results]; an unknown one isn't on YouTube. */
+class FakeVideoLookup(private val results: Map<String, VideoLookupResult> = emptyMap()) :
+    VideoLookup {
+    val lookedUp = mutableListOf<String>()
+
+    override suspend fun lookUp(videoId: String): VideoLookupResult {
+        lookedUp += videoId
+        return results[videoId] ?: VideoLookupResult.Unavailable("Video unavailable")
+    }
+}
+
+/** Downloads succeed unless [failing]; [downloaded] holds the video ids that have a thumbnail. */
+class FakeThumbnailStore(private val failing: Boolean = false) : ThumbnailStore {
+    val downloaded = mutableSetOf<String>()
+
+    override fun file(videoId: String): File? =
+        if (videoId in downloaded) File("thumbnails/$videoId.jpg") else null
+
+    override suspend fun download(videoId: String): Boolean {
+        if (failing) return false
+        downloaded += videoId
+        return true
+    }
+
+    override suspend fun delete(videoId: String) {
+        downloaded -= videoId
     }
 }
