@@ -125,7 +125,8 @@ fun PlaylistScreen(
                             current = row.playing,
                             onClick = { onTrackClick(row.id) },
                             thumbnail = row.thumbnail,
-                            subtitle = row.subtitle
+                            subtitle = row.subtitle,
+                            familyId = row.familyId
                         )
                     }
                     // A greyed track can't be queued, so its row doesn't swipe.

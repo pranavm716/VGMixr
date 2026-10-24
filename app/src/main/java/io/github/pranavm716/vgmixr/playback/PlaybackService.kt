@@ -45,6 +45,7 @@ import io.github.pranavm716.vgmixr.domain.playback.nextSource
 import io.github.pranavm716.vgmixr.domain.playback.onSourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
+import io.github.pranavm716.vgmixr.ui.components.coverFamilies
 import java.io.File
 import java.time.Clock
 import javax.inject.Inject
@@ -97,7 +98,9 @@ class PlaybackService : MediaSessionService() {
     lateinit var playlists: PlaylistRepository
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-    private val artwork by lazy { NotificationArtwork(File(cacheDir, "artwork")) }
+    private val artwork by lazy {
+        NotificationArtwork(File(cacheDir, "artwork"), coverFamilies(assets))
+    }
     private val catalog = MutableStateFlow<Catalog?>(null)
     private val marks = MutableStateFlow<Map<String, BrokenMark>>(emptyMap())
     private val favorites = MutableStateFlow<Set<String>>(emptySet())

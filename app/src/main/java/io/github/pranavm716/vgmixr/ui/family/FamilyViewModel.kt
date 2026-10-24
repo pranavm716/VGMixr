@@ -43,7 +43,8 @@ sealed interface FamilyUiState {
         val trackCount: Int,
         val games: List<ChipUi>,
         val tracks: List<TrackRowUi>,
-        val playing: PlayingRowUi? = null
+        val playing: PlayingRowUi? = null,
+        val familyId: String? = null
     ) : FamilyUiState
 }
 
@@ -150,6 +151,7 @@ private fun Catalog.familyState(familyId: String): FamilyUiState {
         family.name,
         tracks.size,
         gamesInFamily.map { ChipUi(it.shortName, it.color) },
-        tracks
+        tracks,
+        familyId = familyId
     )
 }

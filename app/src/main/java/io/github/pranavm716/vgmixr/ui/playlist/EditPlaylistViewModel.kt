@@ -51,7 +51,8 @@ data class EditPlaylistRowUi(
     val unplayable: Boolean = false,
     val added: Boolean = false,
     val thumbnail: String? = null,
-    val subtitle: String? = null
+    val subtitle: String? = null,
+    val familyId: String? = null
 )
 
 /** Finds tracks with the Search tab's search and adds them to (or takes them out of) a playlist. */
@@ -130,5 +131,6 @@ private fun CatalogTrack.toRow(added: Boolean) = EditPlaylistRowUi(
     unplayable = unplayable != null,
     added = added,
     thumbnail = thumbnail,
-    subtitle = channel
+    subtitle = channel,
+    familyId = familyId
 )

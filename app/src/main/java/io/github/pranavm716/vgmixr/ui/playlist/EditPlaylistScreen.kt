@@ -156,6 +156,7 @@ fun EditPlaylistScreen(
                         onClick = null,
                         thumbnail = row.thumbnail,
                         subtitle = row.subtitle,
+                        familyId = row.familyId,
                         trailing = {
                             ToggleAddButton(
                                 row.added,

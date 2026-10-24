@@ -1,6 +1,8 @@
 package io.github.pranavm716.vgmixr.ui.components
 
+import android.content.res.AssetManager
 import android.graphics.BitmapFactory
+import android.util.LruCache
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,12 +20,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
+import java.io.IOException
+import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -33,16 +38,82 @@ import kotlinx.coroutines.withContext
  */
 const val ART_ASPECT = 16f / 9f
 
-/** A family's cover tile, [height] tall and 16:9 with rounded corners. Blank until covers come. */
+/**
+ * A family's cover tile, [height] tall and 16:9 with rounded corners: [familyId]'s cover, or blank
+ * without one.
+ */
 @Composable
-fun ArtTile(height: Dp, modifier: Modifier = Modifier) {
-    ArtTile(modifier.size(width = height * ART_ASPECT, height = height))
+fun ArtTile(height: Dp, modifier: Modifier = Modifier, familyId: String? = null) {
+    val width = height * ART_ASPECT
+    ArtTile(modifier.size(width = width, height = height), familyId, width)
 }
 
-/** The tile at whatever size [modifier] gives it, such as now playing's full-width one. */
+/**
+ * The tile at whatever size [modifier] gives it, such as now playing's full-width one, with the
+ * cover decoded at about [width] (the full width of a phone by default). Blank while it decodes.
+ */
 @Composable
-fun ArtTile(modifier: Modifier) {
-    Box(modifier.background(ArtPlaceholder, ArtShape))
+fun ArtTile(modifier: Modifier, familyId: String? = null, width: Dp = 360.dp) {
+    val assets = LocalContext.current.assets
+    val widthPx = with(LocalDensity.current) { width.roundToPx() }
+    val image by produceState(familyId?.let { Covers.cached(it, widthPx) }, familyId, widthPx) {
+        if (value == null && familyId != null) {
+            value = withContext(Dispatchers.IO) { Covers.load(assets, familyId, widthPx) }
+        }
+    }
+    val decoded = image
+    if (decoded == null) {
+        Box(modifier.background(ArtPlaceholder, ArtShape))
+    } else {
+        Image(decoded, null, modifier.clip(ArtShape), contentScale = ContentScale.Crop)
+    }
+}
+
+/**
+ * Decoded covers, kept so a list doesn't decode one family's cover again for every row. The covers
+ * are bundled, so a family without one stays without one until the app updates.
+ */
+private object Covers {
+    private val decoded = object : LruCache<String, ImageBitmap>(CACHE_BYTES) {
+        override fun sizeOf(key: String, value: ImageBitmap) = value.width * value.height * 4
+    }
+    private val missing = ConcurrentHashMap.newKeySet<String>()
+
+    fun cached(familyId: String, widthPx: Int): ImageBitmap? = decoded.get(key(familyId, widthPx))
+
+    fun load(assets: AssetManager, familyId: String, widthPx: Int): ImageBitmap? {
+        if (familyId in missing) return null
+        cached(familyId, widthPx)?.let { return it }
+        val image = try {
+            decodeCover(assets, coverAsset(familyId), widthPx)
+        } catch (_: IOException) {
+            null
+        }
+        if (image == null) missing += familyId else decoded.put(key(familyId, widthPx), image)
+        return image
+    }
+
+    private fun key(familyId: String, widthPx: Int) = "$familyId@$widthPx"
+
+    private const val CACHE_BYTES = 16 * 1024 * 1024
+}
+
+/** The cover at [path] in [assets], scaled down by halves while it stays at least [widthPx] wide. */
+private fun decodeCover(assets: AssetManager, path: String, widthPx: Int): ImageBitmap? {
+    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    assets.open(path).use { BitmapFactory.decodeStream(it, null, bounds) }
+    if (bounds.outWidth <= 0) return null
+    val options = BitmapFactory.Options().apply {
+        inSampleSize =
+            sampleSize(bounds.outWidth, widthPx)
+    }
+    return assets.open(path).use { BitmapFactory.decodeStream(it, null, options) }?.asImageBitmap()
+}
+
+private fun sampleSize(imageWidth: Int, widthPx: Int): Int {
+    var sample = 1
+    while (imageWidth / (sample * 2) >= widthPx) sample *= 2
+    return sample
 }
 
 /**
@@ -79,9 +150,10 @@ private fun decodeThumbnail(path: String, widthPx: Int): ImageBitmap? {
     val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
     BitmapFactory.decodeFile(path, bounds)
     if (bounds.outWidth <= 0) return null
-    var sample = 1
-    while (bounds.outWidth / (sample * 2) >= widthPx) sample *= 2
-    val options = BitmapFactory.Options().apply { inSampleSize = sample }
+    val options = BitmapFactory.Options().apply {
+        inSampleSize =
+            sampleSize(bounds.outWidth, widthPx)
+    }
     return BitmapFactory.decodeFile(path, options)?.asImageBitmap()
 }
 

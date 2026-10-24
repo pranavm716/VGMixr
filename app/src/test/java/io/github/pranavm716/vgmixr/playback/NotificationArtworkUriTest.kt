@@ -39,4 +39,25 @@ class NotificationArtworkUriTest {
         assertEquals(artwork.uriFor(listOf(game("ruby").color)), uri)
         assertNotEquals(null, uri.path)
     }
+
+    @Test
+    fun `a track of a family with a cover shows the cover`() {
+        val withCovers = NotificationArtwork(
+            Files.createTempDirectory("artwork").toFile(),
+            coverFamilies = setOf("rse")
+        )
+
+        assertEquals(Uri.parse("asset:///covers/rse.webp"), withCovers.uriFor(track(null)))
+    }
+
+    @Test
+    fun `a thumbnail comes before the family's cover`() {
+        val withCovers = NotificationArtwork(
+            Files.createTempDirectory("artwork").toFile(),
+            coverFamilies = setOf("rse")
+        )
+        val thumbnail = File("thumbnails/AAAAAAAAAAA.jpg").absolutePath
+
+        assertEquals(Uri.fromFile(File(thumbnail)), withCovers.uriFor(track(thumbnail)))
+    }
 }

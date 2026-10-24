@@ -88,12 +88,19 @@ class EditPlaylistViewModelTest {
             assertEquals("Hype", state.playlistName)
             assertEquals(
                 listOf(
-                    EditPlaylistRowUi("rse-route-102", "Route 102", listOf(chipR), added = true),
+                    EditPlaylistRowUi(
+                        "rse-route-102",
+                        "Route 102",
+                        listOf(chipR),
+                        added = true,
+                        familyId = "rse"
+                    ),
                     EditPlaylistRowUi(
                         "rse-littleroot",
                         "Littleroot Town",
                         listOf(chipR, chipS),
-                        added = true
+                        added = true,
+                        familyId = "rse"
                     )
                 ),
                 state.results
@@ -136,8 +143,19 @@ class EditPlaylistViewModelTest {
 
                 assertEquals(
                     listOf(
-                        EditPlaylistRowUi("rse-route-101", "Route 101", listOf(chipR, chipS)),
-                        EditPlaylistRowUi("rse-route-102", "Route 102", listOf(chipR), added = true)
+                        EditPlaylistRowUi(
+                            "rse-route-101",
+                            "Route 101",
+                            listOf(chipR, chipS),
+                            familyId = "rse"
+                        ),
+                        EditPlaylistRowUi(
+                            "rse-route-102",
+                            "Route 102",
+                            listOf(chipR),
+                            added = true,
+                            familyId = "rse"
+                        )
                     ),
                     awaitItem().results
                 )
@@ -212,6 +230,15 @@ class EditPlaylistViewModelTest {
             while (row == null) row = awaitItem().results.firstOrNull()
             assertEquals("thumbnails/AAAAAAAAAAA.jpg", row.thumbnail)
             assertEquals("GlitchxCity", row.subtitle)
+        }
+    }
+
+    @Test
+    fun `a row carries its track's family for the cover`() = runTest {
+        viewModel.uiState.test {
+            var row = awaitItem().results.firstOrNull()
+            while (row == null) row = awaitItem().results.firstOrNull()
+            assertEquals("rse", row.familyId)
         }
     }
 }

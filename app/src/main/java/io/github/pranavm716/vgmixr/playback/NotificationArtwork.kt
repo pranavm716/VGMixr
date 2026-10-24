@@ -8,20 +8,30 @@ import android.graphics.Shader
 import android.net.Uri
 import androidx.compose.ui.graphics.toArgb
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.ui.components.coverAsset
 import io.github.pranavm716.vgmixr.ui.components.tintColor
 import io.github.pranavm716.vgmixr.ui.theme.Background
 import java.io.File
 
 /**
- * The media notification's artwork until families have covers: the track's games' tint colors left
- * to right, as the app's gradient runs. The system picks the notification's colors from it and
+ * The media notification's artwork: a user track's thumbnail, else its family's cover (for the
+ * [coverFamilies] that have one), else the track's games' tint colors left to right, as the app's
+ * gradient runs. The system picks the notification's colors from it and
  * darkens them itself, so the colors are full strength: at the app's faint 25% over its dark
  * background they came out a muddy brown.
  */
-class NotificationArtwork(private val dir: File) {
-    /** A file URI for [track]'s artwork: its video's thumbnail, else its games' colors. */
-    fun uriFor(track: CatalogTrack): Uri =
-        track.thumbnail?.let { Uri.fromFile(File(it)) } ?: uriFor(track.games.map { it.color })
+class NotificationArtwork(
+    private val dir: File,
+    private val coverFamilies: Set<String> = emptySet()
+) {
+    /** A URI for [track]'s artwork: its video's thumbnail, its family's cover or its games' colors. */
+    fun uriFor(track: CatalogTrack): Uri {
+        track.thumbnail?.let { return Uri.fromFile(File(it)) }
+        track.familyId?.takeIf { it in coverFamilies }?.let {
+            return Uri.parse("asset:///${coverAsset(it)}")
+        }
+        return uriFor(track.games.map { it.color })
+    }
 
     /** A file URI for the artwork of a track in games of [gameColors]; each one is drawn once. */
     fun uriFor(gameColors: List<String>): Uri {

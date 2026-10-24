@@ -145,5 +145,6 @@ private fun QueueRow(row: QueueRowUi, current: Boolean, onClick: () -> Unit) = T
     current,
     onClick,
     thumbnail = row.thumbnail,
-    subtitle = row.subtitle
+    subtitle = row.subtitle,
+    familyId = row.familyId
 )

@@ -105,11 +105,17 @@ class SearchViewModelTest {
 
             assertEquals(
                 listOf(
-                    SearchRowUi("rse-route-101", "Route 101", listOf(chip(ruby), chip(sapphire))),
+                    SearchRowUi(
+                        "rse-route-101",
+                        "Route 101",
+                        listOf(chip(ruby), chip(sapphire)),
+                        familyId = "rse"
+                    ),
                     SearchRowUi(
                         "oras-route-101",
                         "Route 101",
-                        listOf(chip(omegaRuby), chip(alphaSapphire))
+                        listOf(chip(omegaRuby), chip(alphaSapphire)),
+                        familyId = "oras"
                     )
                 ),
                 awaitItem().results

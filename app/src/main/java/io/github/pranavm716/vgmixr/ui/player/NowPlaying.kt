@@ -181,7 +181,7 @@ fun NowPlayingScreen(
         Spacer(Modifier.weight(ABOVE_ART))
         val art = Modifier.padding(horizontal = ART_MARGIN).fillMaxWidth().aspectRatio(ART_ASPECT)
         val thumbnail = visible.thumbnail
-        if (thumbnail != null) ThumbnailArt(thumbnail, art) else ArtTile(art)
+        if (thumbnail != null) ThumbnailArt(thumbnail, art) else ArtTile(art, visible.familyId)
         Spacer(Modifier.weight(BELOW_ART))
         // A tap target without a ripple, as the header's "Playing from".
         Column(

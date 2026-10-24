@@ -77,17 +77,24 @@ class PlaylistViewModelTest {
                     name = "Favorites",
                     isFavorites = true,
                     rows = listOf(
-                        PlaylistRowUi("rse-b", "Battle! (Team Magma)", listOf(chip("R"))),
+                        PlaylistRowUi(
+                            "rse-b",
+                            "Battle! (Team Magma)",
+                            listOf(chip("R")),
+                            familyId = "rse"
+                        ),
                         PlaylistRowUi(
                             "rse-c",
                             "Battle! (Team Aqua)",
                             listOf(chip("S")),
-                            unplayable = true
+                            unplayable = true,
+                            familyId = "rse"
                         ),
                         PlaylistRowUi(
                             "rse-a",
                             "Route 101",
-                            listOf(chip("R"), chip("S"))
+                            listOf(chip("R"), chip("S")),
+                            familyId = "rse"
                         )
                     )
                 ),
@@ -228,6 +235,14 @@ class PlaylistViewModelTest {
             val row = (awaitItem() as PlaylistUiState.Loaded).rows.single()
             assertEquals("thumbnails/AAAAAAAAAAA.jpg", row.thumbnail)
             assertEquals("GlitchxCity", row.subtitle)
+        }
+    }
+
+    @Test
+    fun `a row carries its track's family for the cover`() = runTest {
+        viewModel().uiState.test {
+            val rows = (awaitItem() as PlaylistUiState.Loaded).rows
+            assertEquals(listOf("rse", "rse", "rse"), rows.map { it.familyId })
         }
     }
 }

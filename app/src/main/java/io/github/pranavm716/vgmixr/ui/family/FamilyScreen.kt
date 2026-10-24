@@ -82,7 +82,7 @@ fun FamilyScreen(
             CollectionHeader(
                 state.name,
                 state.trackCount,
-                art = { ArtTile(RowTileHeight) },
+                art = { ArtTile(RowTileHeight, familyId = state.familyId) },
                 gap = RowTileGap,
                 background = gameTint(state.games)
             )

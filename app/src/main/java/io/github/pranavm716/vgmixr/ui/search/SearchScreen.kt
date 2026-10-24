@@ -148,7 +148,8 @@ fun SearchScreen(
                             onLongClick = {
                                 hideKeyboard()
                                 onTrackLongClick(row.id)
-                            }
+                            },
+                            familyId = row.familyId
                         )
                     }
                     // A greyed track can't be queued, so its row doesn't swipe.

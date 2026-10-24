@@ -73,7 +73,7 @@ fun GamesScreen(
                                 CollectionRow(
                                     family.name,
                                     family.trackCount,
-                                    art = { ArtTile(RowTileHeight) },
+                                    art = { ArtTile(RowTileHeight, familyId = family.id) },
                                     onClick = { onFamilyClick(family.id) },
                                     onLongClick = { onPlayFamily(family.id) }
                                 )

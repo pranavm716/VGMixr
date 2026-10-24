@@ -50,7 +50,7 @@ class QueueViewModelTest {
     )
 
     private fun row(index: Int, id: String) =
-        QueueRowUi(index, id, "Title $id", listOf(ChipUi("R", "#336699")))
+        QueueRowUi(index, id, "Title $id", listOf(ChipUi("R", "#336699")), familyId = "rse")
 
     private fun state(entries: List<QueueEntry>, current: Int) = PlaybackState(
         queue = PlayQueue(entries, current),
@@ -209,6 +209,15 @@ class QueueViewModelTest {
             val row = awaitItem().nowPlaying
             assertEquals("thumbnails/AAAAAAAAAAA.jpg", row?.thumbnail)
             assertEquals("GlitchxCity", row?.subtitle)
+        }
+    }
+
+    @Test
+    fun `a row carries its track's family for the cover`() = runTest {
+        playback.state.value = state(listOf(QueueEntry("c", rse)), 0)
+
+        viewModel.uiState.test {
+            assertEquals("rse", awaitItem().nowPlaying?.familyId)
         }
     }
 }

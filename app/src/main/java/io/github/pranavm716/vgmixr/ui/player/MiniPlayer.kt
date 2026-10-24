@@ -259,7 +259,13 @@ private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         val thumbnail = track.thumbnail
-        if (thumbnail != null) ThumbnailTile(thumbnail, RowTileHeight) else ArtTile(RowTileHeight)
+        if (thumbnail !=
+            null
+        ) {
+            ThumbnailTile(thumbnail, RowTileHeight)
+        } else {
+            ArtTile(RowTileHeight, familyId = track.familyId)
+        }
         Spacer(Modifier.width(RowTileGap))
         TrackText(track)
     }

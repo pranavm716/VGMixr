@@ -107,7 +107,7 @@ private const val CURRENT_TINT = 0.12f
  * A track with its family's tile, the title over its game chips, as the queue and search list
  * them. [current] tints the playing track; [unplayable] greys a track whose sources are all broken.
  * A user track shows its video's [thumbnail] (a file path) for the tile and its channel as
- * [subtitle].
+ * [subtitle]; other tracks show their family's cover ([familyId]).
  * Without [onClick] the row doesn't react to taps; [onLongClick], if given, runs on a long press
  * with a haptic tick. [trailing] (a button) ends it.
  */
@@ -121,7 +121,8 @@ fun TrackTileRow(
     onLongClick: (() -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
     thumbnail: String? = null,
-    subtitle: String? = null
+    subtitle: String? = null,
+    familyId: String? = null
 ) {
     val accent = MaterialTheme.colorScheme.primary
     Row(
@@ -144,7 +145,7 @@ fun TrackTileRow(
         if (thumbnail != null) {
             ThumbnailTile(thumbnail, RowTileHeight, faint)
         } else {
-            ArtTile(RowTileHeight, faint)
+            ArtTile(RowTileHeight, faint, familyId)
         }
         Spacer(Modifier.width(RowTileGap))
         TrackTitleChips(title, chips, Modifier.weight(1f).then(faint), subtitle = subtitle)

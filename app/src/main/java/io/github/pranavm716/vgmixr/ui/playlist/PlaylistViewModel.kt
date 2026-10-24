@@ -64,7 +64,8 @@ data class PlaylistRowUi(
     val unplayable: Boolean = false,
     val playing: Boolean = false,
     val thumbnail: String? = null,
-    val subtitle: String? = null
+    val subtitle: String? = null,
+    val familyId: String? = null
 )
 
 @HiltViewModel
@@ -148,7 +149,8 @@ private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): Play
             unplayable = track.unplayable != null,
             playing = track.id == playingId,
             thumbnail = track.thumbnail,
-            subtitle = track.channel
+            subtitle = track.channel,
+            familyId = track.familyId
         )
     }
     return PlaylistUiState.Loaded(

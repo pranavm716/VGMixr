@@ -52,7 +52,8 @@ data class SearchRowUi(
     val title: String,
     val chips: List<ChipUi>,
     val unplayable: Boolean = false,
-    val playing: Boolean = false
+    val playing: Boolean = false,
+    val familyId: String? = null
 )
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -143,5 +144,6 @@ private fun CatalogTrack.toRow(playingId: String?) = SearchRowUi(
     title = title,
     chips = games.map { ChipUi(it.shortName, it.color) },
     unplayable = unplayable != null,
-    playing = id == playingId
+    playing = id == playingId,
+    familyId = familyId
 )
