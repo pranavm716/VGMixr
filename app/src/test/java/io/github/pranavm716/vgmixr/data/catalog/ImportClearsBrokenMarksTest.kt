@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.manifest
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.track
 import io.github.pranavm716.vgmixr.data.db.BrokenStreamEntity
+import io.github.pranavm716.vgmixr.data.db.UserTrackEntity
 import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
 import io.github.pranavm716.vgmixr.domain.manifest.ManifestError
 import io.github.pranavm716.vgmixr.domain.manifest.ManifestParseResult
@@ -79,6 +80,29 @@ class ImportClearsBrokenMarksTest {
         )
 
         assertEquals(emptyList<String>(), marked())
+    }
+
+    @Test
+    fun `a mark stays while a user track plays its video`() = runTest(dispatcher) {
+        importer.import(manifest("2026-10-13T08:00:00Z", tracks = listOf(track("rse-a"))))
+        db.userTrackDao().insert(
+            UserTrackEntity(
+                id = "yt:UUUUUUUUUUU",
+                videoId = "UUUUUUUUUUU",
+                startMs = 0,
+                endMs = null,
+                title = "Remix",
+                channel = "GlitchxCity",
+                durationMs = null,
+                addedAt = Instant.EPOCH,
+                remixOf = null
+            )
+        )
+        mark("UUUUUUUUUUU")
+
+        importer.import(manifest("2026-10-14T08:00:00Z", tracks = listOf(track("rse-a"))))
+
+        assertEquals(listOf("UUUUUUUUUUU"), marked())
     }
 
     @Test

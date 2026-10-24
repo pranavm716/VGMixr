@@ -22,7 +22,7 @@ class RoomUserTrackRepository @Inject constructor(private val dao: UserTrackDao)
     override suspend fun delete(id: String) = dao.delete(id)
 }
 
-private fun UserTrackEntity.toDomain() = UserTrack(
+internal fun UserTrackEntity.toDomain() = UserTrack(
     videoId = videoId,
     startMs = startMs,
     endMs = endMs,

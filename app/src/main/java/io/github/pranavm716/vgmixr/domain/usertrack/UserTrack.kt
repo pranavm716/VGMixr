@@ -1,5 +1,9 @@
 package io.github.pranavm716.vgmixr.domain.usertrack
 
+import io.github.pranavm716.vgmixr.domain.catalog.Catalog
+import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.domain.model.Source
+import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import java.time.Instant
 import kotlinx.coroutines.flow.Flow
 
@@ -36,4 +40,22 @@ interface UserTrackRepository {
 
     /** Deletes user track [id]. Its playlist entries and history stay, for if it's added again. */
     suspend fun delete(id: String)
+}
+
+/**
+ * The track as the UI shows it and the player plays it: its video, under the family and games of
+ * the [catalog] track it remixes (none if it remixes nothing, or a track no longer in [catalog]).
+ * [unplayable] is why its video is marked broken, if it is.
+ */
+fun UserTrack.toCatalogTrack(catalog: Catalog, unplayable: BrokenReason?): CatalogTrack {
+    val original = remixOf?.let(catalog::track)
+    return CatalogTrack(
+        id = id,
+        familyId = original?.familyId,
+        games = original?.games.orEmpty(),
+        title = title,
+        order = 0,
+        sources = listOf(Source.Stream(videoId, startMs, endMs)),
+        unplayable = unplayable
+    )
 }
