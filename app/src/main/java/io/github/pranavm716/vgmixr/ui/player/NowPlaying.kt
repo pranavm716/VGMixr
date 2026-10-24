@@ -56,6 +56,7 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.MarqueeText
+import io.github.pranavm716.vgmixr.ui.components.PlayPauseIcon
 
 /**
  * Now playing's header, as Spotify's: a chevron that closes the sheet, and "Playing from" over
@@ -344,14 +345,7 @@ private fun Controls(
                         strokeWidth = 2.5.dp
                     )
 
-                    else -> Icon(
-                        painterResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
-                        contentDescription = stringResource(
-                            if (isPlaying) R.string.pause else R.string.play
-                        ),
-                        tint = Color.White,
-                        modifier = Modifier.size(30.dp)
-                    )
+                    else -> PlayPauseIcon(isPlaying, Modifier.size(30.dp), tint = Color.White)
                 }
             }
         }

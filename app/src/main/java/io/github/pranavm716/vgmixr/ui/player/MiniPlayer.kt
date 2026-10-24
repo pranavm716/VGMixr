@@ -66,6 +66,7 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.PlayPauseIcon
 import io.github.pranavm716.vgmixr.ui.components.RowTileGap
 import io.github.pranavm716.vgmixr.ui.components.RowTileSize
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
@@ -276,15 +277,7 @@ private fun PlayPauseButton(isPlaying: Boolean, isLoading: Boolean, onClick: () 
                 strokeWidth = 2.dp
             )
 
-            isPlaying -> Icon(
-                painterResource(R.drawable.ic_pause),
-                contentDescription = stringResource(R.string.pause)
-            )
-
-            else -> Icon(
-                painterResource(R.drawable.ic_play),
-                contentDescription = stringResource(R.string.play)
-            )
+            else -> PlayPauseIcon(isPlaying, Modifier.size(24.dp))
         }
     }
 }
