@@ -230,7 +230,7 @@ fun NowPlayingScreen(
                 )
             }
         }
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(BOTTOM_MARGIN))
     }
 }
 
@@ -414,5 +414,9 @@ private val INFO_TO_SEEK = 35.dp
 // its gap, since the header's text sits high in its box and the title's letters low in theirs.
 private const val ABOVE_ART = 73.4f
 private const val BELOW_ART = 82.74f
-private const val BELOW_CONTROLS = 75.06f
+private const val BELOW_CONTROLS = 57.06f
+
+// Under the row of add to playlist, favorite and queue: it sits three quarters of its icons'
+// height (18dp) above where 8dp put it.
+private val BOTTOM_MARGIN = 26.dp
 private const val TINT_FADE_END = 0.4f
