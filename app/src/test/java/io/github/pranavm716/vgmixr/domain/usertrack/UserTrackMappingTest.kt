@@ -40,13 +40,13 @@ class UserTrackMappingTest {
     )
 
     @Test
-    fun `a remix has its original's family and games and plays its own video`() {
+    fun `a remix has its original's title, family and games and plays its own video`() {
         assertEquals(
             CatalogTrack(
                 id = "yt:AAAAAAAAAAA",
                 familyId = "rse",
                 games = listOf(ruby, emerald),
-                title = "Route 101 [Remix]",
+                title = "Route 101",
                 order = 0,
                 sources = listOf(Source.Stream("AAAAAAAAAAA", 61_000, 245_000)),
                 channel = "GlitchxCity",
@@ -85,6 +85,19 @@ class UserTrackMappingTest {
         assertEquals(
             "thumbnails/AAAAAAAAAAA.jpg",
             userTrack().toCatalogTrack(catalog, null, "thumbnails/AAAAAAAAAAA.jpg").thumbnail
+        )
+    }
+
+    @Test
+    fun `a track that remixes nothing keeps its video's title`() {
+        assertEquals("Route 101 [Remix]", userTrack().toCatalogTrack(catalog, null).title)
+    }
+
+    @Test
+    fun `a remix whose original left the catalog keeps its video's title`() {
+        assertEquals(
+            "Route 101 [Remix]",
+            userTrack(remixOf = "rse-retired").toCatalogTrack(catalog, null).title
         )
     }
 }

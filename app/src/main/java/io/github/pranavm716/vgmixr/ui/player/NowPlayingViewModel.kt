@@ -37,7 +37,8 @@ sealed interface NowPlayingUiState {
         val isLoading: Boolean,
         val isFavorite: Boolean = false,
         val shuffle: Boolean = false,
-        val thumbnail: String? = null
+        val thumbnail: String? = null,
+        val subtitle: String? = null
     ) : NowPlayingUiState
 }
 
@@ -137,6 +138,7 @@ private fun Catalog.nowPlaying(
         chips = track.games.map { ChipUi(it.shortName, it.color) },
         familyId = track.familyId,
         thumbnail = track.thumbnail,
+        subtitle = track.channel,
         playingFrom = playingFrom,
         isPlaying = state.isPlaying,
         isLoading = state.isLoading,

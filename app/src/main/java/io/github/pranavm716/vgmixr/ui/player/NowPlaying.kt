@@ -55,7 +55,7 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.ui.components.ART_ASPECT
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
-import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.ChipsLine
 import io.github.pranavm716.vgmixr.ui.components.MarqueeText
 import io.github.pranavm716.vgmixr.ui.components.PlayPauseIcon
 import io.github.pranavm716.vgmixr.ui.components.ThumbnailArt
@@ -197,7 +197,7 @@ fun NowPlayingScreen(
                 modifier = Modifier.padding(horizontal = SIDE_MARGIN)
             )
             Spacer(Modifier.height(12.dp))
-            GameChips(visible.chips)
+            ChipsLine(visible.chips, visible.subtitle)
         }
         Spacer(Modifier.height(INFO_TO_SEEK))
         Column(Modifier.padding(horizontal = SIDE_MARGIN)) {

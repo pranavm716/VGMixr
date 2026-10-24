@@ -290,4 +290,36 @@ class NowPlayingViewModelTest {
             )
         }
     }
+
+    @Test
+    fun `a user track shows its channel after its chips`() = runTest {
+        playback.state.value = playing(QueueContext.Remixes, trackId = "yt:AAAAAAAAAAA")
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            "rse",
+            listOf(ruby),
+            "Route 101",
+            0,
+            emptyList(),
+            channel = "GlitchxCity"
+        )
+        val viewModel = NowPlayingViewModel(
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playback,
+            playlists
+        )
+
+        viewModel.uiState.test {
+            assertEquals("GlitchxCity", (awaitItem() as NowPlayingUiState.Visible).subtitle)
+        }
+    }
+
+    @Test
+    fun `a catalog track has no subtitle`() = runTest {
+        playback.state.value = playing(QueueContext.Family("rse"))
+
+        viewModel.uiState.test {
+            assertEquals(null, (awaitItem() as NowPlayingUiState.Visible).subtitle)
+        }
+    }
 }

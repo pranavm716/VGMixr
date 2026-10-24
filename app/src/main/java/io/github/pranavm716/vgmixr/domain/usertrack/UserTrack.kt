@@ -43,8 +43,9 @@ interface UserTrackRepository {
 }
 
 /**
- * The track as the UI shows it and the player plays it: its video, under the family and games of
- * the [catalog] track it remixes (none if it remixes nothing, or a track no longer in [catalog]).
+ * The track as the UI shows it and the player plays it: its video, under the title, family and
+ * games of the [catalog] track it remixes. One that remixes nothing, or a track no longer in
+ * [catalog], keeps its video's title and has no family or games.
  * [unplayable] is why its video is marked broken, if it is; [thumbnail] its thumbnail file's path.
  */
 fun UserTrack.toCatalogTrack(
@@ -57,7 +58,7 @@ fun UserTrack.toCatalogTrack(
         id = id,
         familyId = original?.familyId,
         games = original?.games.orEmpty(),
-        title = title,
+        title = original?.title ?: title,
         order = 0,
         sources = listOf(Source.Stream(videoId, startMs, endMs)),
         unplayable = unplayable,

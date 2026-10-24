@@ -57,18 +57,37 @@ fun TrackTitleChips(
         }
         // The trim takes the room under the title's descenders too; give the chips some back.
         Spacer(Modifier.height(4.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            GameChips(chips)
-            if (subtitle != null) {
-                if (chips.isNotEmpty()) Spacer(Modifier.width(8.dp))
+        ChipsLine(chips, subtitle)
+    }
+}
+
+/**
+ * A track's game chips, then, for a user track, a dot and its channel ([subtitle]): chips first, so
+ * they line up with catalog tracks' in mixed lists. A user track that remixes nothing shows only
+ * its channel.
+ */
+@Composable
+fun ChipsLine(chips: List<ChipUi>, subtitle: String?, modifier: Modifier = Modifier) {
+    Row(modifier, verticalAlignment = Alignment.CenterVertically) {
+        GameChips(chips)
+        if (subtitle != null) {
+            val style = MaterialTheme.typography.bodyMedium
+            val color = MaterialTheme.colorScheme.onSurfaceVariant
+            if (chips.isNotEmpty()) {
                 Text(
-                    subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    "•",
+                    style = style,
+                    color = color,
+                    modifier = Modifier.padding(horizontal = 6.dp)
                 )
             }
+            Text(
+                subtitle,
+                style = style,
+                color = color,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
