@@ -28,7 +28,7 @@ fun ArtTile(height: Dp, modifier: Modifier = Modifier) {
     ArtTile(modifier.size(width = height * ART_ASPECT, height = height))
 }
 
-/** The tile at whatever size [modifier] gives it, such as now playing's large square. */
+/** The tile at whatever size [modifier] gives it, such as now playing's full-width one. */
 @Composable
 fun ArtTile(modifier: Modifier) {
     Box(modifier.background(ArtPlaceholder, ArtShape))

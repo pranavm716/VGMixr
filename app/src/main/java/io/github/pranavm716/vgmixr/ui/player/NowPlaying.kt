@@ -53,6 +53,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
+import io.github.pranavm716.vgmixr.ui.components.ART_ASPECT
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.MarqueeText
@@ -134,9 +135,11 @@ private fun PlayingFromText(playingFrom: PlayingFromUi?) {
 }
 
 /**
- * Now playing's body, Shuttle's look: the art, the title over its game chips, the seek
+ * Now playing's body, Shuttle's look: the 16:9 art, the title over its game chips, the seek
  * bar between the elapsed time and the length, previous / play-pause / next, and under them the
- * row of add to playlist (start), the favorite heart (centered) and the queue button (end).
+ * row of add to playlist (start), the favorite heart (centered) and the queue button (end). The
+ * title, seek bar and controls are one group, sitting low; the art is centered above it, between
+ * the header's text and the title's letters (layout E of roadmap 13b's mockups).
  * Tapping the title or chips opens the track's own family ([onOpenFamily]), also when it plays
  * from a playlist, to reach the tracks around it.
  */
@@ -172,11 +175,9 @@ fun NowPlayingScreen(
             .padding(top = 66.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.height(16.dp))
-        ArtTile(Modifier.padding(horizontal = ART_MARGIN).fillMaxWidth().aspectRatio(1f))
-        // The title and chips sit halfway between the art and the controls: equal gaps, plus a
-        // nudge for the room the text and the slider leave around what you see.
-        Spacer(Modifier.weight(INFO_GAP))
+        Spacer(Modifier.weight(ABOVE_ART))
+        ArtTile(Modifier.padding(horizontal = ART_MARGIN).fillMaxWidth().aspectRatio(ART_ASPECT))
+        Spacer(Modifier.weight(BELOW_ART))
         // A tap target without a ripple, as the header's "Playing from".
         Column(
             Modifier
@@ -195,13 +196,13 @@ fun NowPlayingScreen(
             Spacer(Modifier.height(12.dp))
             GameChips(visible.chips)
         }
-        Spacer(Modifier.weight(INFO_GAP))
+        Spacer(Modifier.height(INFO_TO_SEEK))
         Column(Modifier.padding(horizontal = SIDE_MARGIN)) {
             SeekRow(viewModel)
             Spacer(Modifier.height(16.dp))
             Controls(visible.isPlaying, visible.isLoading, visible.shuffle, viewModel)
         }
-        Spacer(Modifier.weight(BOTTOM_GAP))
+        Spacer(Modifier.weight(BELOW_CONTROLS))
         Box(Modifier.fillMaxWidth().padding(horizontal = SIDE_MARGIN)) {
             // White in both states, not the accent: filled when the track is a favorite.
             IconButton(onClick = viewModel::onToggleFavorite, Modifier.align(Alignment.Center)) {
@@ -398,14 +399,20 @@ private fun PlaybackProgress.fraction(): Float {
 private val ART_MARGIN = 20.dp
 
 // Measured on the phone: with equal gaps, the title's letters sat 11dp closer to the art than the
-// chips to the slider's thumb, since the slider leaves room above its thumb.
+// chips to the slider's thumb, since the slider leaves room above its thumb. The group keeps it.
 private val INFO_NUDGE = 6.dp
 
 // The margin of everything else.
 private val SIDE_MARGIN = 24.dp
 
-// How the free space splits: equal gaps above and below the title and chips, so they center
-// between the art and the controls, and a smaller one under the controls, so they sit low.
-private const val INFO_GAP = 0.7f
-private const val BOTTOM_GAP = 0.6f
+// From the chips to the seek bar, as far as the art was from the title before the art went 16:9.
+private val INFO_TO_SEEK = 35.dp
+
+// How the free space splits, in the dp it comes to on the phone (360x780dp): the controls start
+// where an equal split around the title would put them, and the art is centered between the
+// header's text and the title's letters (each 94dp away), which puts it 4.7dp above the middle of
+// its gap, since the header's text sits high in its box and the title's letters low in theirs.
+private const val ABOVE_ART = 73.4f
+private const val BELOW_ART = 82.74f
+private const val BELOW_CONTROLS = 75.06f
 private const val TINT_FADE_END = 0.4f
