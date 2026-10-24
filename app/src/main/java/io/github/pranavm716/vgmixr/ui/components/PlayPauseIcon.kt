@@ -21,7 +21,7 @@ import io.github.pranavm716.vgmixr.R
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
-private const val MORPH_MS = 200
+private const val MORPH_MS = 250
 
 /**
  * Pause while [isPlaying], else play, morphing between them as Shuttle's does: the bars reshape
