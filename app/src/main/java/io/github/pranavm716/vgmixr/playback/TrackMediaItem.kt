@@ -26,7 +26,8 @@ private const val LIST_INDEX = "listIndex"
  * The player item for [track], playing its playable source number [sourceIndex]; [context] is where
  * it plays from, by default the track's home (its family, or Remixes for a user track), and
  * [listIndex] its place in the tapped list.
- * [artworkUri] is the media notification's art.
+ * [artworkUri] is the media notification's art. Under the title it shows a user track's channel, or
+ * else [familyName].
  */
 fun trackMediaItem(
     track: CatalogTrack,
@@ -50,7 +51,7 @@ fun trackMediaItem(
         .setMediaMetadata(
             MediaMetadata.Builder()
                 .setTitle(track.title)
-                .setArtist(familyName)
+                .setArtist(track.channel ?: familyName)
                 .setArtworkUri(artworkUri)
                 .setExtras(
                     Bundle().apply {

@@ -56,6 +56,8 @@ fun UserTrack.toCatalogTrack(catalog: Catalog, unplayable: BrokenReason?): Catal
         title = title,
         order = 0,
         sources = listOf(Source.Stream(videoId, startMs, endMs)),
-        unplayable = unplayable
+        unplayable = unplayable,
+        channel = channel,
+        remixOf = remixOf
     )
 }

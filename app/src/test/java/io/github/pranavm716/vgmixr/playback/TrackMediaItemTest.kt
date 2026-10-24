@@ -46,6 +46,13 @@ class TrackMediaItemTest {
     }
 
     @Test
+    fun `a user track shows its channel in the notification`() {
+        val remix = track(listOf(whole)).copy(id = "yt:7a_BW6_q8P0", channel = "GlitchxCity")
+
+        assertEquals("GlitchxCity", trackMediaItem(remix, "Scarlet / Violet").mediaMetadata.artist)
+    }
+
+    @Test
     fun `a later source plays unclipped when it has no slice`() {
         val item = trackMediaItem(track(listOf(slice, whole)), "Scarlet / Violet", sourceIndex = 1)
 

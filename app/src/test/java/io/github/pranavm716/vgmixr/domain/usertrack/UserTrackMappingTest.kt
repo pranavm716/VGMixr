@@ -48,7 +48,9 @@ class UserTrackMappingTest {
                 games = listOf(ruby, emerald),
                 title = "Route 101 [Remix]",
                 order = 0,
-                sources = listOf(Source.Stream("AAAAAAAAAAA", 61_000, 245_000))
+                sources = listOf(Source.Stream("AAAAAAAAAAA", 61_000, 245_000)),
+                channel = "GlitchxCity",
+                remixOf = "rse-route-101"
             ),
             userTrack(remixOf = "rse-route-101").toCatalogTrack(catalog, unplayable = null)
         )
