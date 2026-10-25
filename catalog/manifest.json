@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-25T06:11:20Z",
+  "generatedAt": "2026-10-25T07:04:24Z",
   "games": [
     {
       "id": "red",
@@ -148,12 +148,19 @@
     },
     {
       "id": "pmd-brt",
-      "name": "Mystery Dungeon: Blue Rescue Team",
+      "name": "Blue Rescue Team",
       "shortName": "BRT",
       "color": "#0977cb",
       "generation": 4,
-      "platform": "DS",
-      "family": "pmd-brt"
+      "platform": "DS"
+    },
+    {
+      "id": "pmd-eos",
+      "name": "Explorers of Sky",
+      "shortName": "EoS",
+      "color": "#7bb54f",
+      "generation": 4,
+      "platform": "DS"
     },
     {
       "id": "black",
@@ -10938,32 +10945,6 @@
       ]
     },
     {
-      "id": "pmd-brt-rescue-team-base",
-      "family": "pmd-brt",
-      "title": "Rescue Team Base",
-      "order": 9,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "cA3jNIlPalk",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "ln29WlRQKnE",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "OrB5a-dzmjo",
-          "startMs": 0,
-          "confidence": 0.82
-        }
-      ]
-    },
-    {
       "id": "pmd-brt-insert-title",
       "family": "pmd-brt",
       "title": "Insert Title",
@@ -11182,20 +11163,6 @@
           "videoId": "3qEvadg-vZ4",
           "startMs": 0,
           "confidence": 0.99
-        }
-      ]
-    },
-    {
-      "id": "pmd-brt-danger",
-      "family": "pmd-brt",
-      "title": "Danger",
-      "order": 25,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "j5vr6Mbg9zY",
-          "startMs": 0,
-          "confidence": 0.93
         }
       ]
     },
@@ -11434,32 +11401,6 @@
       ]
     },
     {
-      "id": "pmd-brt-benevolent-spirit",
-      "family": "pmd-brt",
-      "title": "Benevolent Spirit",
-      "order": 41,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "hemwKjTTGj8",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "qja5Z4jGQGk",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "tpT4n6qthD0",
-          "startMs": 0,
-          "confidence": 0.81
-        }
-      ]
-    },
-    {
       "id": "pmd-brt-mt-freeze",
       "family": "pmd-brt",
       "title": "Mt. Freeze",
@@ -11632,20 +11573,6 @@
           "videoId": "SgIPT1esVPQ",
           "startMs": 0,
           "confidence": 0.99
-        }
-      ]
-    },
-    {
-      "id": "pmd-brt-versus-legendary",
-      "family": "pmd-brt",
-      "title": "Versus Legendary",
-      "order": 52,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "lAbL3r4-ES4",
-          "startMs": 0,
-          "confidence": 0.93
         }
       ]
     },
@@ -11926,6 +11853,2182 @@
           "videoId": "cXUko41JBMg",
           "startMs": 0,
           "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-pokemon-exploration-team-theme",
+      "family": "pmd-eos",
+      "title": "Pokémon Exploration Team Theme",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FjMymhZkUVk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-top-menu-theme",
+      "family": "pmd-eos",
+      "title": "Top Menu Theme",
+      "order": 1,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Yx1OWa8NM30",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-welcome-to-the-world-of-pokemon",
+      "family": "pmd-eos",
+      "title": "Welcome to the World of Pokémon!",
+      "order": 2,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ehI75lWfXhw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-on-the-beach-at-dusk",
+      "family": "pmd-eos",
+      "title": "On the Beach at Dusk",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_cys21Mq-Os",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-beach-cave",
+      "family": "pmd-eos",
+      "title": "Beach Cave",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YIHs9WDhulU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-in-the-depths-of-the-pit",
+      "family": "pmd-eos",
+      "title": "In the Depths of the Pit",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lSKqi-ZPLUw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-wigglytuffs-guild",
+      "family": "pmd-eos",
+      "title": "Wigglytuff's Guild",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WjvrR-5ZqR4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-guildmaster-wigglytuff",
+      "family": "pmd-eos",
+      "title": "Guildmaster Wigglytuff",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NxKEK6WoZbM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-goodnight",
+      "family": "pmd-eos",
+      "title": "Goodnight",
+      "order": 8,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CuKS4a2BQh4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-wigglytuffs-guild-remix",
+      "family": "pmd-eos",
+      "title": "Wigglytuff's Guild Remix",
+      "order": 9,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UZcjUqmdHMA",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "WjvrR-5ZqR4",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-drenched-bluff",
+      "family": "pmd-eos",
+      "title": "Drenched Bluff",
+      "order": 10,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LCVFS0r20vA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-job-clear",
+      "family": "pmd-eos",
+      "title": "Job Clear!",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "w0zpac_ATSY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-treasure-town",
+      "family": "pmd-eos",
+      "title": "Treasure Town",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "p7UVgBAZSYo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-heartwarming",
+      "family": "pmd-eos",
+      "title": "Heartwarming",
+      "order": 13,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XBdSn4KwVmI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-growing-anxiety",
+      "family": "pmd-eos",
+      "title": "Growing Anxiety",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "PBblNjCSQAU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-oh-no",
+      "family": "pmd-eos",
+      "title": "Oh No!",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "24oxGKBdGYI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-mt-bristle",
+      "family": "pmd-eos",
+      "title": "Mt. Bristle",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mW54LJSvSxM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-boss-battle",
+      "family": "pmd-eos",
+      "title": "Boss Battle!",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "r0kfCb2xTFs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-time-gear-remix",
+      "family": "pmd-eos",
+      "title": "Time Gear Remix",
+      "order": 18,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vNOp5EblQbo",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-the-gatekeepers",
+      "family": "pmd-eos",
+      "title": "The Gatekeepers",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JovcV5HsLm8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-outlaw",
+      "family": "pmd-eos",
+      "title": "Outlaw!",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "PtkI_KyUbDk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-i-saw-something-again",
+      "family": "pmd-eos",
+      "title": "I Saw Something Again...",
+      "order": 21,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0WJtVAK0ldI",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-waterfall-cave",
+      "family": "pmd-eos",
+      "title": "Waterfall Cave",
+      "order": 22,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gFUyic2jDss",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-kecleons-shop",
+      "family": "pmd-eos",
+      "title": "Kecleon's Shop",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1OkIms0FH2g",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-team-skull",
+      "family": "pmd-eos",
+      "title": "Team Skull",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LXHfKSysDyQ",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-spindas-cafe",
+      "family": "pmd-eos",
+      "title": "Spinda's Café",
+      "order": 25,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yj-4_sgZAj4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-apple-woods",
+      "family": "pmd-eos",
+      "title": "Apple Woods",
+      "order": 26,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DVAm8alt3h0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-craggy-coast",
+      "family": "pmd-eos",
+      "title": "Craggy Coast",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9x6RSnryVhQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-cave-and-side-path",
+      "family": "pmd-eos",
+      "title": "Cave and Side Path",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Z9Av4qQDlas",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-mt-horn",
+      "family": "pmd-eos",
+      "title": "Mt. Horn",
+      "order": 29,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "hERlWO_lUFY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-foggy-forest",
+      "family": "pmd-eos",
+      "title": "Foggy Forest",
+      "order": 30,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BYi3i_sYNNM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-steam-cave",
+      "family": "pmd-eos",
+      "title": "Steam Cave",
+      "order": 31,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "X7ekvLh3i1k",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "_zCLu42C9e0",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-upper-steam-cave",
+      "family": "pmd-eos",
+      "title": "Upper Steam Cave",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_zCLu42C9e0",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "X7ekvLh3i1k",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-amp-plains",
+      "family": "pmd-eos",
+      "title": "Amp Plains",
+      "order": 33,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DDz5UR-WWhY",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "WFaYF7_Ot6A",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-far-amp-plains",
+      "family": "pmd-eos",
+      "title": "Far Amp Plains",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WFaYF7_Ot6A",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "DDz5UR-WWhY",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-monster-house",
+      "family": "pmd-eos",
+      "title": "Monster House!",
+      "order": 35,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6nn8bU7CWJc",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-rising-fear",
+      "family": "pmd-eos",
+      "title": "Rising Fear",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "82OPInHunAk",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-northern-desert",
+      "family": "pmd-eos",
+      "title": "Northern Desert",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "IX4r69JvgZs",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-quicksand-cave",
+      "family": "pmd-eos",
+      "title": "Quicksand Cave",
+      "order": 38,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "zTPeA6zw2NY",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-quicksand-pit",
+      "family": "pmd-eos",
+      "title": "Quicksand Pit",
+      "order": 39,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EWrY1CNen_o",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-crystal-cave",
+      "family": "pmd-eos",
+      "title": "Crystal Cave",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SAkpfpMGV4I",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-crystal-crossing",
+      "family": "pmd-eos",
+      "title": "Crystal Crossing",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "oVHaaStGsnw",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-at-the-end-of-the-day",
+      "family": "pmd-eos",
+      "title": "At the End of the Day",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "y-1h835X6vE",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-in-the-future",
+      "family": "pmd-eos",
+      "title": "In the Future",
+      "order": 43,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "boxhke2611E",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-planets-paralysis",
+      "family": "pmd-eos",
+      "title": "Planet's Paralysis",
+      "order": 44,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MGDmukO7Bmk",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-chasm-cave",
+      "family": "pmd-eos",
+      "title": "Chasm Cave",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yXBWSGdgl0o",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-dark-hill",
+      "family": "pmd-eos",
+      "title": "Dark Hill",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ugUTCkUG2Ss",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-sealed-ruin",
+      "family": "pmd-eos",
+      "title": "Sealed Ruin",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "H5iVCWBTy1E",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "B5LQxrHSNnE",
+          "startMs": 0,
+          "confidence": 0.83
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-sealed-ruin-pit",
+      "family": "pmd-eos",
+      "title": "Sealed Ruin Pit",
+      "order": 48,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "B5LQxrHSNnE",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "H5iVCWBTy1E",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-dusk-forest",
+      "family": "pmd-eos",
+      "title": "Dusk Forest",
+      "order": 49,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "caAaMkXlLbc",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "31-rcAw4Eow",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-deep-dusk-forest",
+      "family": "pmd-eos",
+      "title": "Deep Dusk Forest",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "31-rcAw4Eow",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "caAaMkXlLbc",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-the-power-of-darkness",
+      "family": "pmd-eos",
+      "title": "The Power of Darkness",
+      "order": 51,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6BUb4JBbgKM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-treeshroud-forest",
+      "family": "pmd-eos",
+      "title": "Treeshroud Forest",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Yuk0v2UDAM0",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-brine-cave",
+      "family": "pmd-eos",
+      "title": "Brine Cave",
+      "order": 53,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "1NYyFz8vLx0",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "BZdteZH17QU",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-lower-brine-cave",
+      "family": "pmd-eos",
+      "title": "Lower Brine Cave",
+      "order": 54,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BZdteZH17QU",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "1NYyFz8vLx0",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-hidden-land",
+      "family": "pmd-eos",
+      "title": "Hidden Land",
+      "order": 55,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "sUiChfaX7Vc",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-hidden-highland",
+      "family": "pmd-eos",
+      "title": "Hidden Highland",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_M07KXwdmlE",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-battle-against-dusknoir",
+      "family": "pmd-eos",
+      "title": "Battle against Dusknoir",
+      "order": 57,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "7jaBUPBJ9DM",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-time-gear",
+      "family": "pmd-eos",
+      "title": "Time Gear",
+      "order": 58,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "afo8lPbvobc",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-through-the-sea-of-time",
+      "family": "pmd-eos",
+      "title": "Through the Sea of Time",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WKLBhjeN27o",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-in-the-hands-of-fate",
+      "family": "pmd-eos",
+      "title": "In the Hands of Fate",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "S3R-wUq-_AE",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-temporal-tower",
+      "family": "pmd-eos",
+      "title": "Temporal Tower",
+      "order": 61,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Nq2AVa1ixz8",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-temporal-spire",
+      "family": "pmd-eos",
+      "title": "Temporal Spire",
+      "order": 62,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iw3T_SMWnO4",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-temporal-pinnacle",
+      "family": "pmd-eos",
+      "title": "Temporal Pinnacle",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "a-U-4RVLzbg",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-down-a-dark-path",
+      "family": "pmd-eos",
+      "title": "Down a Dark Path",
+      "order": 64,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gNCwBZ88kmc",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-dialgas-fight-to-the-finish",
+      "family": "pmd-eos",
+      "title": "Dialga's Fight to the Finish!",
+      "order": 65,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bPGuiZ48PbA",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-time-restored",
+      "family": "pmd-eos",
+      "title": "Time Restored",
+      "order": 66,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8E6EDub1I9I",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-dont-ever-forget",
+      "family": "pmd-eos",
+      "title": "Don't Ever Forget...",
+      "order": 67,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "mH_Zl2Rgl5M",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-have-to-get-home",
+      "family": "pmd-eos",
+      "title": "Have to Get Home",
+      "order": 68,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9ajCxuOKfuo",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-farther-away",
+      "family": "pmd-eos",
+      "title": "Farther Away...",
+      "order": 69,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6XMgmuK8ldE",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-a-wish-for-peace",
+      "family": "pmd-eos",
+      "title": "A Wish for Peace",
+      "order": 70,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ODR9hu971II",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-memories-returned",
+      "family": "pmd-eos",
+      "title": "Memories Returned",
+      "order": 71,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "U7q4xQYFzAE",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-ending-theme-intro",
+      "family": "pmd-eos",
+      "title": "Ending Theme Intro",
+      "order": 72,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rAG5K-29bss",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-ending-theme",
+      "family": "pmd-eos",
+      "title": "Ending Theme",
+      "order": 73,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "m96z_IuNa40",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-epilogue-theme",
+      "family": "pmd-eos",
+      "title": "Epilogue Theme",
+      "order": 74,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LUdGopy2dgI",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-mystifying-forest",
+      "family": "pmd-eos",
+      "title": "Mystifying Forest",
+      "order": 75,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "S5gtv2NlRSM",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-do-your-best-as-always",
+      "family": "pmd-eos",
+      "title": "Do Your Best, as Always!",
+      "order": 76,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "E_l1LJWfqUc",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-shaymin-village",
+      "family": "pmd-eos",
+      "title": "Shaymin Village",
+      "order": 77,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "g2AT6wtI-Nk",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-sky-peak-forest",
+      "family": "pmd-eos",
+      "title": "Sky Peak Forest",
+      "order": 78,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Cg7AIx0C5oE",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-sky-peak-cave",
+      "family": "pmd-eos",
+      "title": "Sky Peak Cave",
+      "order": 79,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BKFvqASsalE",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-sky-peak-prairie",
+      "family": "pmd-eos",
+      "title": "Sky Peak Prairie",
+      "order": 80,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LMLqI5ZVoOY",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-sky-peak-coast",
+      "family": "pmd-eos",
+      "title": "Sky Peak Coast",
+      "order": 81,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "sFkhJMg-lwM",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-sky-peak-snowfield",
+      "family": "pmd-eos",
+      "title": "Sky Peak Snowfield",
+      "order": 82,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fcAIRPD3SyY",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-sky-peak-final-pass",
+      "family": "pmd-eos",
+      "title": "Sky Peak Final Pass",
+      "order": 83,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "KjCc5nR6tHM",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-blizzard-island-rescue-team-medley",
+      "family": "pmd-eos",
+      "title": "Blizzard Island Rescue Team Medley",
+      "order": 84,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Kd5jjnKBZNU",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-surrounded-sea",
+      "family": "pmd-eos",
+      "title": "Surrounded Sea",
+      "order": 85,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ymU2LdLcJQ0",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-miracle-sea",
+      "family": "pmd-eos",
+      "title": "Miracle Sea",
+      "order": 86,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5ovg2IV5sDo",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-aegis-cave",
+      "family": "pmd-eos",
+      "title": "Aegis Cave",
+      "order": 87,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gXBR7n6fjFE",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-defy-the-legends",
+      "family": "pmd-eos",
+      "title": "Defy the Legends",
+      "order": 88,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MvVwQ37VhkA",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-concealed-ruins",
+      "family": "pmd-eos",
+      "title": "Concealed Ruins",
+      "order": 89,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3CX_K33vIbQ",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-mt-travail",
+      "family": "pmd-eos",
+      "title": "Mt. Travail",
+      "order": 90,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WsLjtXXex1s",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-in-the-nightmare",
+      "family": "pmd-eos",
+      "title": "In the Nightmare",
+      "order": 91,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "k19kNWP1si4",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-palkias-onslaught",
+      "family": "pmd-eos",
+      "title": "Palkia's Onslaught!",
+      "order": 92,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "oUIIJXse7f8",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-dark-crater",
+      "family": "pmd-eos",
+      "title": "Dark Crater",
+      "order": 93,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Qc1bH-gcfQI",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "p8j7Pg6SSH4",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-deep-dark-crater",
+      "family": "pmd-eos",
+      "title": "Deep Dark Crater",
+      "order": 94,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "p8j7Pg6SSH4",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "Qc1bH-gcfQI",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-random-dungeon-theme-1",
+      "family": "pmd-eos",
+      "title": "Random Dungeon Theme 1",
+      "order": 95,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8Ec5zMIbREk",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-random-dungeon-theme-2",
+      "family": "pmd-eos",
+      "title": "Random Dungeon Theme 2",
+      "order": 96,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dZCWU1q3xAs",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-random-dungeon-theme-3",
+      "family": "pmd-eos",
+      "title": "Random Dungeon Theme 3",
+      "order": 97,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lI3PBm7c_0o",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-marowak-dojo",
+      "family": "pmd-eos",
+      "title": "Marowak Dojo",
+      "order": 98,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "rYg6xR6N6sw",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-pelipper-island",
+      "family": "pmd-eos",
+      "title": "Pelipper Island",
+      "order": 99,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "INBmZOQk2FE",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-sympathy",
+      "family": "pmd-eos",
+      "title": "Sympathy",
+      "order": 100,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "8pOi7AUciro",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-beyond-the-dream",
+      "family": "pmd-eos",
+      "title": "Beyond the Dream",
+      "order": 101,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-5zEl9tOjb4",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-air-of-unease",
+      "family": "pmd-eos",
+      "title": "Air of Unease",
+      "order": 102,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TTL2UmGhPnE",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-star-cave",
+      "family": "pmd-eos",
+      "title": "Star Cave",
+      "order": 103,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "DcA83ZICIyE",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-deep-star-cave",
+      "family": "pmd-eos",
+      "title": "Deep Star Cave",
+      "order": 104,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CcL1RJrCzqM",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "DcA83ZICIyE",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-one-for-all-all-for-one",
+      "family": "pmd-eos",
+      "title": "One for All, All for One!",
+      "order": 105,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yXyBAjviwQY",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-murky-forest",
+      "family": "pmd-eos",
+      "title": "Murky Forest",
+      "order": 106,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_DwCO_HycIU",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-a-fun-exploration",
+      "family": "pmd-eos",
+      "title": "A Fun Exploration",
+      "order": 107,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HztmG2tSLoA",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-fortune-ravine",
+      "family": "pmd-eos",
+      "title": "Fortune Ravine",
+      "order": 108,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aaDnODQc7ek",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-fortune-ravine-depths",
+      "family": "pmd-eos",
+      "title": "Fortune Ravine Depths",
+      "order": 109,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CkV2zy6SbG0",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "aaDnODQc7ek",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-it-cant-be",
+      "family": "pmd-eos",
+      "title": "It Can't Be...",
+      "order": 110,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lP_6woXv5MI",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-defend-globe",
+      "family": "pmd-eos",
+      "title": "Defend Globe",
+      "order": 111,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aMsJ7ATFblQ",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-defend-globe-ending",
+      "family": "pmd-eos",
+      "title": "Defend Globe (Ending)",
+      "order": 112,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4GICyI-yg_I",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "aMsJ7ATFblQ",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-spring-cave",
+      "family": "pmd-eos",
+      "title": "Spring Cave",
+      "order": 113,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "vgqBueWF98I",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-lower-spring-cave",
+      "family": "pmd-eos",
+      "title": "Lower Spring Cave",
+      "order": 114,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "OhwwuZSANYs",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "vgqBueWF98I",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-spring-cave-depths",
+      "family": "pmd-eos",
+      "title": "Spring Cave Depths",
+      "order": 115,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aM7L3wT0O8I",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "vgqBueWF98I",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-southern-jungle",
+      "family": "pmd-eos",
+      "title": "Southern Jungle",
+      "order": 116,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xMorwZskRm0",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-boulder-quarry",
+      "family": "pmd-eos",
+      "title": "Boulder Quarry",
+      "order": 117,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NGjC485Uv2s",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-illusion-stone-chamber",
+      "family": "pmd-eos",
+      "title": "Illusion Stone Chamber",
+      "order": 118,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "oKf9hVW69ps",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-limestone-cavern",
+      "family": "pmd-eos",
+      "title": "Limestone Cavern",
+      "order": 119,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "whTQW8L_T2s",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "CZZEC51kSZs",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-deep-limestone-cavern",
+      "family": "pmd-eos",
+      "title": "Deep Limestone Cavern",
+      "order": 120,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CZZEC51kSZs",
+          "startMs": 0,
+          "confidence": 0.97
+        },
+        {
+          "type": "stream",
+          "videoId": "whTQW8L_T2s",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-team-charms-theme",
+      "family": "pmd-eos",
+      "title": "Team Charm's Theme",
+      "order": 121,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EL9QbXzSCQE",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-for-a-new-life",
+      "family": "pmd-eos",
+      "title": "For a New Life",
+      "order": 122,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tYqSewWpzyA",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-barren-valley",
+      "family": "pmd-eos",
+      "title": "Barren Valley",
+      "order": 123,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JkRwnUPZdoo",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-dark-wasteland",
+      "family": "pmd-eos",
+      "title": "Dark Wasteland",
+      "order": 124,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "dacSdw-LbaU",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-spacial-cliffs",
+      "family": "pmd-eos",
+      "title": "Spacial Cliffs",
+      "order": 125,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tEJXZDYzg48",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-dark-ice-mountain",
+      "family": "pmd-eos",
+      "title": "Dark Ice Mountain",
+      "order": 126,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gBzF7qEvYGA",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-living-spirit",
+      "family": "pmd-eos",
+      "title": "Living Spirit",
+      "order": 127,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SeNVXC9IhCQ",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-icicle-forest",
+      "family": "pmd-eos",
+      "title": "Icicle Forest",
+      "order": 128,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "f_u_pKdTPRo",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-proud-accomplishment",
+      "family": "pmd-eos",
+      "title": "Proud Accomplishment",
+      "order": 129,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EEtcfuOPsG4",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-vast-ice-mountain",
+      "family": "pmd-eos",
+      "title": "Vast Ice Mountain",
+      "order": 130,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jLoz0zBCFCQ",
+          "startMs": 0,
+          "confidence": 0.96
+        },
+        {
+          "type": "stream",
+          "videoId": "nvGvLsrtTvo",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-vast-ice-mountain-peak",
+      "family": "pmd-eos",
+      "title": "Vast Ice Mountain Peak",
+      "order": 131,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "nvGvLsrtTvo",
+          "startMs": 0,
+          "confidence": 0.96
+        },
+        {
+          "type": "stream",
+          "videoId": "jLoz0zBCFCQ",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-in-the-morning-sun",
+      "family": "pmd-eos",
+      "title": "In the Morning Sun",
+      "order": 132,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "f8PDk7uA5aQ",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-a-new-world",
+      "family": "pmd-eos",
+      "title": "A New World",
+      "order": 133,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZHMq3f71RE4",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-its-not-a-miracle",
+      "family": "pmd-eos",
+      "title": "It's Not a Miracle",
+      "order": 134,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "r7vy1EY4FLY",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-thoughts-for-friends",
+      "family": "pmd-eos",
+      "title": "Thoughts for Friends",
+      "order": 135,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "epW43tlhlww",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-a-message-on-the-wind",
+      "family": "pmd-eos",
+      "title": "A Message on the Wind",
+      "order": 136,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "t58xZyp8W98",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-life-goes-on-ending",
+      "family": "pmd-eos",
+      "title": "Life Goes On! (Ending)",
+      "order": 137,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2awcH7gx0LU",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-a-grand-tale-of-time-and-darkness",
+      "family": "pmd-eos",
+      "title": "A Grand Tale of Time and Darkness",
+      "order": 138,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aEvSaTHf5DQ",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-that-shape",
+      "family": "pmd-eos",
+      "title": "That Shape...",
+      "order": 139,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "n02r83wJUMs",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-theyre-above-us",
+      "family": "pmd-eos",
+      "title": "They're Above Us!",
+      "order": 140,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "r5Dsg3lWTxQ",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-my-body-feels-heavy",
+      "family": "pmd-eos",
+      "title": "My Body...Feels Heavy...",
+      "order": 141,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_-p5hn2ae5Y",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-on-the-beach-at-dusk-intro-only",
+      "family": "pmd-eos",
+      "title": "On the Beach at Dusk (Intro only)",
+      "order": 142,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "eTG51Ry0YkY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-team-charms-theme-intro-only",
+      "family": "pmd-eos",
+      "title": "Team Charm's Theme (Intro only)",
+      "order": 143,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "k8GQpeK8lSE",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-intro-alternate-unused",
+      "family": "pmd-eos",
+      "title": "Intro Alternate (Unused)",
+      "order": 144,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TOewJGuffcA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-eos-goodnight-alternate-unused",
+      "family": "pmd-eos",
+      "title": "Goodnight Alternate (Unused)",
+      "order": 145,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "wREywqisgOk",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
