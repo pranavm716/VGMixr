@@ -389,14 +389,12 @@ private fun ControlSlot(offset: Dp, content: @Composable () -> Unit) {
 private val SKIP_OFFSET = 76.dp
 private val OUTER_OFFSET = 144.dp
 
-// Glyph 21.3 x 21.3 (Spotify's 22.6 x 19.9).
-private val SHUFFLE_ICON = 32.dp
+private val SHUFFLE_ICON = 31.5.dp
 
 // Glyph 23.8 x 22 (Spotify's 21.5 x 23.8).
 private val SKIP_ICON = 44.dp
 
-// Glyph 20.3 x 22.5 (Spotify's 21.8 x 20.7).
-private val REPEAT_ICON = 27.dp
+private val REPEAT_ICON = 29.dp
 
 // The circle is Spotify's; its triangle 15.6 x 19.8 (Spotify's 17.2 x 19.5).
 private val PLAY_SIZE = 64.dp
