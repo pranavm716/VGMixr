@@ -67,6 +67,8 @@
     <string name="playing_from_remixes">Remixes</string>
     <string name="link">Link</string>
     <string name="link_to_original">Link to original</string>
+    <string name="linked_to">Linked to</string>
+    <string name="clear_link">Clear link</string>
     <string name="done">Done</string>
     <string name="undo">Undo</string>
     <string name="remix_deleted">Deleted %1$s</string>
