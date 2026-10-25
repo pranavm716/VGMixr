@@ -113,7 +113,7 @@ _NON_WORD = re.compile(r"[^a-z0-9]+")
 # "#12" anywhere; "12." / "12 -" / "12)" at the start; disc and track markers ("(D1;T4)",
 # "Disc 1 Track 4").
 _TRACK_NUMBER = re.compile(
-    r"#\d+|^\s*\d{1,3}\s*[.):-]\s+|\(?\bD\d+\s*[;,.]?\s*T\d+\b\)?|\bdisc\s*\d+\s*track\s*\d+\b",
+    r"#\d+|^\s*\d{1,3}\s*[.):-]\s+|\(?\bD\d+\s*[;,.]?\s*T\d+\b\)?|\bdisc\s*\d+\s*track\s*\d+\b|^\s*0\d{1,2}\s+",
     re.IGNORECASE,
 )
 _NOISE = {
@@ -226,8 +226,6 @@ class Names:
             if len(members) > 1:
                 label = tuple(words("".join(g.shortName for g in members)))
                 names.append(_Name(label, family, len(label[0]) >= 3))
-                # "R/S/E", "HG/SS". Two one-letter or English-word parts ("B/W", "OR/AS") count
-                # only after "Pokémon".
                 split = tuple(w for g in members for w in words(g.shortName))
                 distinct = len(split) >= 3 or all(len(w) >= 2 and w not in _ENGLISH for w in split)
                 names.append(_Name(split, family, distinct))
@@ -235,7 +233,14 @@ class Names:
         for key, values in aliases.items():
             family = game_family.get(key, key)
             names += [_Name(tuple(words(v)), family, True) for v in values]
-        return cls(names, {f: frozenset(g.id for g in m) for f, m in family_games.items()})
+
+        # Filter out _OTHER_GAMES entries if they match a catalog game or family alias
+        name_words = {n.words for n in names}
+        other = [tuple(words(o)) for o in _OTHER_GAMES if tuple(words(o)) not in name_words]
+
+        inst = cls(names, {f: frozenset(g.id for g in m) for f, m in family_games.items()})
+        inst._other = other
+        return inst
 
     def find(self, title: str, ignore: tuple[tuple[str, ...], ...] = ()) -> _Found:
         """Names in `title`, except those in `ignore` (names that are part of a track's title)."""

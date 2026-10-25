@@ -163,6 +163,11 @@
     "hgss-pokeathlon-event-time-gb-sounds": { "streams": { "accept": [ { "videoId": "JZr7c-Se42E" } ] } },
     "hgss-pokeathlon-medal-ceremony-gb-sounds": { "streams": { "accept": [ { "videoId": "aQQR67wlQRk" } ] } },
 
+    "pmd-brt-insert-title": { "exclude": false, "note": "Short, but music, not a jingle" },
+    "pmd-brt-versus-boss": { "streams": { "accept": [ { "videoId": "xfwcL8P10Sw" } ] } },
+    "pmd-brt-farewell": { "streams": { "accept": [ { "videoId": "FsW6ftywrRU" } ] } },
+    "pmd-brt-friend-area-southern-island": { "streams": { "accept": [ { "videoId": "agKw_Q0F9y0" } ] } },
+
     "bw-opelucid-city-pokemon-black": { "games": ["black", "black-2"], "note": "Version-specific town theme" },
     "bw-opelucid-city-pokemon-white": { "games": ["white", "white-2"], "note": "Version-specific town theme" },
     "bw-black-city": { "games": ["black", "black-2"], "note": "Black City only exists in Black" },

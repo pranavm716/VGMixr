@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-22T09:48:37Z",
+  "generatedAt": "2026-10-25T06:11:20Z",
   "games": [
     {
       "id": "red",
@@ -145,6 +145,15 @@
       "generation": 4,
       "platform": "DS",
       "family": "hgss"
+    },
+    {
+      "id": "pmd-brt",
+      "name": "Mystery Dungeon: Blue Rescue Team",
+      "shortName": "BRT",
+      "color": "#0977cb",
+      "generation": 4,
+      "platform": "DS",
+      "family": "pmd-brt"
     },
     {
       "id": "black",
@@ -449,13 +458,13 @@
         },
         {
           "type": "stream",
-          "videoId": "k3UkYejB_Aw",
+          "videoId": "nOus3GPggCw",
           "startMs": 0,
           "confidence": 0.93
         },
         {
           "type": "stream",
-          "videoId": "nOus3GPggCw",
+          "videoId": "gI8UPNXcENE",
           "startMs": 0,
           "confidence": 0.93
         }
@@ -483,12 +492,6 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "k_zC38Q00LI",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
           "videoId": "hZZGXMAmomE",
           "startMs": 0,
           "confidence": 0.81
@@ -496,6 +499,12 @@
         {
           "type": "stream",
           "videoId": "Q1rPHVXywyY",
+          "startMs": 0,
+          "confidence": 0.81
+        },
+        {
+          "type": "stream",
+          "videoId": "NFch6XO5I_c",
           "startMs": 0,
           "confidence": 0.81
         }
@@ -5205,6 +5214,12 @@
           "videoId": "X1CM3Hv3iMU",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "DFBw8mRSo0E",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -5219,6 +5234,18 @@
           "videoId": "SuJnLCsXvYU",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "CsBuBiLeDIM",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "ogoy4_itPrY",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -5289,6 +5316,18 @@
           "videoId": "ezE4jdQbCzs",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "4hO1MjzYm1s",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "u8Uc8Nae2EM",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -5331,6 +5370,12 @@
           "videoId": "5YIAAmpp9e8",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "-M9T2sWy_9Y",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -5373,6 +5418,18 @@
           "videoId": "z1Gj8iikI_Y",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "KrvWRF4lZNE",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "1lxCa79EAMk",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -5401,6 +5458,18 @@
           "videoId": "R-uWa9aQkXg",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "o5ooyeEl0vk",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "uhXDcEdVCSc",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -5415,6 +5484,18 @@
           "videoId": "hRUk5F5kE3w",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "iFrC0xM-kKQ",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "FhglUUMLLJ4",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -5471,6 +5552,12 @@
           "videoId": "1DMMqaOUGlY",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "BnCviUMPQUU",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -5597,6 +5684,18 @@
           "videoId": "mkYDedR4wFU",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "qL2bBQE3TrQ",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "-i9Nfod46vQ",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -5653,6 +5752,18 @@
           "videoId": "zL8qqU-Ru6s",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "GB1nLTo68hM",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "SE5dBmWml34",
+          "startMs": 0,
+          "confidence": 0.82
         }
       ]
     },
@@ -5833,6 +5944,18 @@
           "videoId": "dbEEp5I1cTs",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "L1K15IEQDaQ",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "MCeLA-Q6uJU",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -5959,6 +6082,18 @@
           "videoId": "0AnOgTPkuas",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "SE5dBmWml34",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "AxP1HRM6bdA",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -6029,6 +6164,18 @@
           "videoId": "09VQkqHxc_A",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "LBFHsgdzql8",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "5I0i3NxY3zQ",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -6085,6 +6232,18 @@
           "videoId": "hdDxxCoX_co",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "nHjCA8IFovM",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "YRUFmo8BGrA",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -6197,6 +6356,12 @@
           "videoId": "vf9ECRNQ2Y0",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "1AN-49ObjhU",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -6323,6 +6488,18 @@
           "videoId": "TlnYhHETXyM",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "IKavNAGlzh8",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "8GhTscD_4bc",
+          "startMs": 0,
+          "confidence": 0.85
         }
       ]
     },
@@ -6365,6 +6542,18 @@
           "videoId": "m5_-CT0_rZA",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "wqKvxz-vKa4",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "64J8wz2NxgE",
+          "startMs": 0,
+          "confidence": 0.85
         }
       ]
     },
@@ -6421,6 +6610,18 @@
           "videoId": "Kh5nleOTbpo",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "dbsa0EPrCTU",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "mFQgPgxASUs",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -6505,6 +6706,18 @@
           "videoId": "bH1uhm7NNkc",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "SQtUUFYgQY8",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "J9JREWHUd2o",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -6547,6 +6760,12 @@
           "videoId": "89aOJaNMB74",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "yIVLLCEaHMU",
+          "startMs": 0,
+          "confidence": 0.85
         }
       ]
     },
@@ -6649,6 +6868,18 @@
           "videoId": "ueMEg4sEbLo",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "pGRx8N_EbAM",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "isKnKC2TIHQ",
+          "startMs": 0,
+          "confidence": 0.85
         }
       ]
     },
@@ -6691,6 +6922,18 @@
           "videoId": "x2Eg9RylksY",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "ZSGNBO9DKGY",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "7pCyXYLrqvw",
+          "startMs": 0,
+          "confidence": 0.85
         }
       ]
     },
@@ -6719,6 +6962,18 @@
           "videoId": "bXcfiDInhZs",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "dijd1vNWWMI",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "ZB3Ab0Runy8",
+          "startMs": 0,
+          "confidence": 0.85
         }
       ]
     },
@@ -6761,6 +7016,18 @@
           "videoId": "uhiPG0rV0CE",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "x8VcC9XlPic",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "CQZhqDbwE-A",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -6775,6 +7042,12 @@
           "videoId": "tO57E1afUDM",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "QzfCctPI8oQ",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -6803,6 +7076,18 @@
           "videoId": "7TgrqPHEO-M",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "AWbc2UyWjPY",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "WxBtRxbhBKw",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -6817,6 +7102,12 @@
           "videoId": "BbhynIbtsrw",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "2E2qpE8yvOU",
+          "startMs": 0,
+          "confidence": 0.85
         }
       ]
     },
@@ -6845,6 +7136,18 @@
           "videoId": "6tyVOQiIw4w",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "leT8TKFahMY",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "mYeLAWkWACg",
+          "startMs": 0,
+          "confidence": 0.85
         }
       ]
     },
@@ -7135,6 +7438,18 @@
           "videoId": "hFc066z8zGk",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "o33-x9gy6UU",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "tjRwthrQ-Tg",
+          "startMs": 0,
+          "confidence": 0.93
         }
       ]
     },
@@ -7183,6 +7498,18 @@
           "videoId": "kA_n0_QN9II",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "YsTw7mfC0Bc",
+          "startMs": 0,
+          "confidence": 0.85
+        },
+        {
+          "type": "stream",
+          "videoId": "Pl9_EiU4BkQ",
+          "startMs": 0,
+          "confidence": 0.83
         }
       ]
     },
@@ -7400,6 +7727,12 @@
           "videoId": "DiFCAMS4scI",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "Zb4O2x98zqk",
+          "startMs": 0,
+          "confidence": 0.81
         }
       ]
     },
@@ -7468,6 +7801,12 @@
           "videoId": "UhxtrUI6Njg",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "pPkV3SZ3DC0",
+          "startMs": 0,
+          "confidence": 0.85
         }
       ]
     },
@@ -7502,6 +7841,12 @@
           "videoId": "Nq74jmvr8dM",
           "startMs": 0,
           "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "vaYFPeSYWPA",
+          "startMs": 0,
+          "confidence": 0.82
         }
       ]
     },
@@ -10463,6 +10808,1124 @@
           "videoId": "aQQR67wlQRk",
           "startMs": 0,
           "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-intro",
+      "family": "pmd-brt",
+      "title": "Intro",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "CEz01xcelTw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-title",
+      "family": "pmd-brt",
+      "title": "Title",
+      "order": 1,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VxL1NCrwec0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-file-select",
+      "family": "pmd-brt",
+      "title": "File Select",
+      "order": 2,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2Fs_fcNgDQw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-personality-test",
+      "family": "pmd-brt",
+      "title": "Personality Test",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "813srVl0bWc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-awakening",
+      "family": "pmd-brt",
+      "title": "Awakening",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YMIKrdwgnj4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-theres-trouble",
+      "family": "pmd-brt",
+      "title": "There's Trouble!",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jarnnPjnlNM",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-tiny-woods",
+      "family": "pmd-brt",
+      "title": "Tiny Woods",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "24duVgnER2s",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-at-the-end-of-the-road",
+      "family": "pmd-brt",
+      "title": "At the End of the Road",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yKk7xSvC7Bk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-happiness",
+      "family": "pmd-brt",
+      "title": "Happiness",
+      "order": 8,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Yo4M_OoSRLY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-rescue-team-base",
+      "family": "pmd-brt",
+      "title": "Rescue Team Base",
+      "order": 9,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "cA3jNIlPalk",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "ln29WlRQKnE",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "OrB5a-dzmjo",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-insert-title",
+      "family": "pmd-brt",
+      "title": "Insert Title",
+      "order": 10,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JW62o3PMi6s",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-thunderwave-cave",
+      "family": "pmd-brt",
+      "title": "Thunderwave Cave",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YP0K406LcPs",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-dream",
+      "family": "pmd-brt",
+      "title": "Dream",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XWu8EwPEmfA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-pokemon-square",
+      "family": "pmd-brt",
+      "title": "Pokemon Square",
+      "order": 13,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "shZJxS-2Rrc",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-field",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Field",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "x564qtTCTH0",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "NhGawWXeuLI",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-steppe",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Steppe",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Jfnr90DDp6s",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-forest",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Forest",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MjK_AkOfjl0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-wilds",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Wilds",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NhGawWXeuLI",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "x564qtTCTH0",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-swamp",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Swamp",
+      "order": 18,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "c7JpJO8W_iA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-pond",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Pond",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qEhjPdoba7o",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-mt-steel",
+      "family": "pmd-brt",
+      "title": "Mt. Steel",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "kUgRWWiAiIA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-versus-boss",
+      "family": "pmd-brt",
+      "title": "Versus Boss",
+      "order": 21,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "xfwcL8P10Sw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-lab",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Lab",
+      "order": 22,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bdnlVOvb1Mk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-makuhita-dojo",
+      "family": "pmd-brt",
+      "title": "Makuhita Dojo",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "KKVFiW44A0s",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-sinister-woods",
+      "family": "pmd-brt",
+      "title": "Sinister Woods",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3qEvadg-vZ4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-danger",
+      "family": "pmd-brt",
+      "title": "Danger",
+      "order": 25,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "j5vr6Mbg9zY",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-silent-chasm",
+      "family": "pmd-brt",
+      "title": "Silent Chasm",
+      "order": 26,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UsFagiUidVU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-mt-thunder",
+      "family": "pmd-brt",
+      "title": "Mt. Thunder",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "qVFPb7POHiw",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "PqIlTNZgudw",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-mt-thunder-peak",
+      "family": "pmd-brt",
+      "title": "Mt. Thunder Peak",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "PqIlTNZgudw",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "qVFPb7POHiw",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-great-canyon",
+      "family": "pmd-brt",
+      "title": "Great Canyon",
+      "order": 29,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0GuYenWfB_4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-the-legend-of-ninetales",
+      "family": "pmd-brt",
+      "title": "The Legend of Ninetales",
+      "order": 30,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "6F4NK_GpNs4",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-run-away",
+      "family": "pmd-brt",
+      "title": "Run Away",
+      "order": 31,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YBXBDqaIL28",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-lapis-cave",
+      "family": "pmd-brt",
+      "title": "Lapis Cave",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Qzk1Ns3IwUs",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-the-mountain-of-fire",
+      "family": "pmd-brt",
+      "title": "The Mountain of Fire",
+      "order": 33,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ziwUCGJomzA",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-mt-blaze",
+      "family": "pmd-brt",
+      "title": "Mt. Blaze",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "5x9h_8ELES8",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "QIWjA_sEeXU",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-kecleon-shop",
+      "family": "pmd-brt",
+      "title": "Kecleon Shop",
+      "order": 35,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "h-dyt2IU-Z8",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-stop-thief",
+      "family": "pmd-brt",
+      "title": "Stop! Thief!",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "280OBZVPv84",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-mt-blaze-peak",
+      "family": "pmd-brt",
+      "title": "Mt. Blaze Peak",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QIWjA_sEeXU",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "5x9h_8ELES8",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-escape-through-the-snow",
+      "family": "pmd-brt",
+      "title": "Escape Through the Snow",
+      "order": 38,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JxJTVTQ_vIc",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-frosty-forest",
+      "family": "pmd-brt",
+      "title": "Frosty Forest",
+      "order": 39,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Oi8qFcYUWIY",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-frosty-grotto",
+      "family": "pmd-brt",
+      "title": "Frosty Grotto",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "r1Vf35hbako",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-benevolent-spirit",
+      "family": "pmd-brt",
+      "title": "Benevolent Spirit",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "hemwKjTTGj8",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "qja5Z4jGQGk",
+          "startMs": 0,
+          "confidence": 0.93
+        },
+        {
+          "type": "stream",
+          "videoId": "tpT4n6qthD0",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-mt-freeze",
+      "family": "pmd-brt",
+      "title": "Mt. Freeze",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "YlZlMb_OyI8",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "Ncp1QJocqgw",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-mt-freeze-peak",
+      "family": "pmd-brt",
+      "title": "Mt. Freeze Peak",
+      "order": 43,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Ncp1QJocqgw",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "YlZlMb_OyI8",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-magma-cavern",
+      "family": "pmd-brt",
+      "title": "Magma Cavern",
+      "order": 44,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "9GLLTKTud8M",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "yd1adPZxomo",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-monster-house",
+      "family": "pmd-brt",
+      "title": "Monster House!",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "49MGvCE5c8g",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-magma-cavern-pit",
+      "family": "pmd-brt",
+      "title": "Magma Cavern Pit",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yd1adPZxomo",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "9GLLTKTud8M",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-world-calamity",
+      "family": "pmd-brt",
+      "title": "World Calamity",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_5iNMAnk_ns",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-dream-eater",
+      "family": "pmd-brt",
+      "title": "Dream Eater",
+      "order": 48,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LL_wdIWDsRc",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-sky-tower",
+      "family": "pmd-brt",
+      "title": "Sky Tower",
+      "order": 49,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4DIxrPUnjsU",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "3CybBWIIdys",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-sky-tower-summit",
+      "family": "pmd-brt",
+      "title": "Sky Tower Summit",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3CybBWIIdys",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "4DIxrPUnjsU",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-rayquazas-domain",
+      "family": "pmd-brt",
+      "title": "Rayquaza's Domain",
+      "order": 51,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SgIPT1esVPQ",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-versus-legendary",
+      "family": "pmd-brt",
+      "title": "Versus Legendary",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "lAbL3r4-ES4",
+          "startMs": 0,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-the-other-side",
+      "family": "pmd-brt",
+      "title": "The Other Side",
+      "order": 53,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BjqbSy4st6A",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-aftermath",
+      "family": "pmd-brt",
+      "title": "Aftermath",
+      "order": 54,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fD2X-d_IotQ",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-farewell",
+      "family": "pmd-brt",
+      "title": "Farewell",
+      "order": 55,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FsW6ftywrRU",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-staff-roll",
+      "family": "pmd-brt",
+      "title": "Staff Roll",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "yUX4ldp7TmM",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-time-of-reunion",
+      "family": "pmd-brt",
+      "title": "Time of Reunion",
+      "order": 57,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3uHT1pb-xTA",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-oceanic",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Oceanic",
+      "order": 58,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "7q9vxMZSwjE",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-rainbow-peak",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Rainbow Peak",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Oa_fufjuHtU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-caves",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Caves",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NeXa3pVEHTs",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-cryptic-cave",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Cryptic Cave",
+      "order": 61,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ekbagcPEmbU",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-southern-island",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Southern Island",
+      "order": 62,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "agKw_Q0F9y0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-final-island",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Final Island",
+      "order": 63,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ef1lqyHQFdg",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-stormy-sea",
+      "family": "pmd-brt",
+      "title": "Stormy Sea",
+      "order": 64,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-9HSdRuiqPg",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-buried-relic",
+      "family": "pmd-brt",
+      "title": "Buried Relic",
+      "order": 65,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FfJfdYRRfig",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-legendary-island",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Legendary Island",
+      "order": 66,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QQOO-tvwe1Y",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-deep-sea-current",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Deep-Sea Current",
+      "order": 67,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EfFQApEwN5s",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-healing-forest",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Healing Forest",
+      "order": 68,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0wtc9E4i4A8",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-seafloor-cave",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Seafloor Cave",
+      "order": 69,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ZzCCdv2ot50",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-volcanic-pit",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Volcanic Pit",
+      "order": 70,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4T8Dkkpx2JY",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-stratos-lookout",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Stratos Lookout",
+      "order": 71,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tLddbOvqV0E",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-friend-area-enclosed-island",
+      "family": "pmd-brt",
+      "title": "Friend Area ~ Enclosed Island",
+      "order": 72,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "cXUko41JBMg",
+          "startMs": 0,
+          "confidence": 0.98
         }
       ]
     },
