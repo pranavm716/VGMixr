@@ -307,4 +307,61 @@ class SearchViewModelTest {
 
         assertEquals(emptyList<Any>(), playback.calls)
     }
+
+    private val remixes = listOf(
+        CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            "rse",
+            listOf(ruby, sapphire),
+            "Route 101",
+            0,
+            emptyList(),
+            channel = "GlitchxCity",
+            remixOf = "rse-route-101",
+            thumbnail = "thumbnails/AAAAAAAAAAA.jpg",
+            videoTitle = "Route 101 [Remix]"
+        ),
+        CatalogTrack(
+            "yt:BBBBBBBBBBB",
+            null,
+            emptyList(),
+            "Some Remix",
+            0,
+            emptyList(),
+            channel = "GlitchxCity",
+            videoTitle = "Some Remix"
+        )
+    )
+
+    @Test
+    fun `a remix is found, with its thumbnail and its channel`() = runTest {
+        catalogRepository.catalog.value = catalog.copy(userTracks = remixes)
+        viewModel.uiState.test {
+            awaitItem()
+            viewModel.onQueryChange("route 101 remix")
+
+            val row = awaitItem().results.single()
+            assertEquals("yt:AAAAAAAAAAA", row.id)
+            assertEquals("thumbnails/AAAAAAAAAAA.jpg", row.thumbnail)
+            assertEquals("GlitchxCity", row.subtitle)
+        }
+    }
+
+    @Test
+    fun `a tap on a remix plays Remixes from it`() = runTest {
+        catalogRepository.catalog.value = catalog.copy(userTracks = remixes)
+
+        viewModel.onTrackClick("yt:BBBBBBBBBBB")
+
+        assertEquals(
+            listOf(
+                FakePlaybackController.PlayFrom(
+                    listOf("yt:AAAAAAAAAAA", "yt:BBBBBBBBBBB"),
+                    1,
+                    QueueContext.Remixes
+                )
+            ),
+            playback.calls
+        )
+    }
 }

@@ -31,7 +31,8 @@ data class Family(val id: String, val name: String, val label: String)
  * track (a remix has its original's family and games). [games] are its chip games, in manifest
  * order. [unplayable] is set once every one of its stream sources is marked broken: the reason its
  * first source was marked. Only user tracks have a [channel] (the video's), a [remixOf] (the
- * catalog track they remix) and a [thumbnail] (its file's path, once downloaded).
+ * catalog track they remix), a [thumbnail] (its file's path, once downloaded) and a [videoTitle]
+ * (the video's own title, which [title] replaces with the original's while linked).
  */
 data class CatalogTrack(
     val id: String,
@@ -43,5 +44,6 @@ data class CatalogTrack(
     val unplayable: BrokenReason? = null,
     val channel: String? = null,
     val remixOf: String? = null,
-    val thumbnail: String? = null
+    val thumbnail: String? = null,
+    val videoTitle: String? = null
 )

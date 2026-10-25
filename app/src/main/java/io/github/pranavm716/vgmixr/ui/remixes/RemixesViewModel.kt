@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.di.DefaultDispatcher
-import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.domain.catalog.playableUserTrackIds
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
@@ -104,6 +104,3 @@ class RemixesViewModel @Inject constructor(
         playing = id == playingId
     )
 }
-
-private fun Catalog.playableUserTrackIds(): List<String> =
-    userTracks.filter { it.unplayable == null }.map { it.id }

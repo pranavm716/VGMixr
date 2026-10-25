@@ -6,7 +6,8 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
  * The tracks matching [query], best first. Every query word must match a word of the track's
  * title, family, games, generation or region (see [matchWord] and [SEARCH_ALIASES]); a title word
  * counts double. Tracks with the same text score are ordered by [weight] (what the user listens
- * to), then by how much of the title matched, then in Games tab order.
+ * to), then by how much of the title matched, then in Games tab order, a remix right after its
+ * original and user tracks that remix nothing last.
  */
 fun search(
     query: String,
@@ -24,7 +25,8 @@ fun search(
                 .thenByDescending { it.history }
                 .thenByDescending { it.coverage }
                 .thenBy { it.entry.familyPosition }
-                .thenBy { it.entry.track.order }
+                .thenBy { it.entry.order }
+                .thenBy { it.entry.isUserTrack }
                 .thenBy { it.entry.track.id }
         )
         .map { it.entry.track }

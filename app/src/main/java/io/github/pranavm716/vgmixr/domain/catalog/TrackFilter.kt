@@ -36,6 +36,10 @@ fun Catalog.filter(filter: TrackFilter): List<CatalogTrack> {
 fun Catalog.playableFamilyTrackIds(familyId: String): List<String> =
     filter(TrackFilter(family = familyId)).filter { it.unplayable == null }.map { it.id }
 
+/** What a tap on a user track plays: Remixes' list without its greyed tracks. */
+fun Catalog.playableUserTrackIds(): List<String> =
+    userTracks.filter { it.unplayable == null }.map { it.id }
+
 private fun CatalogTrack.matches(filter: TrackFilter): Boolean =
     (filter.game == null || games.any { it.id == filter.game }) &&
         (filter.family == null || familyId == filter.family) &&

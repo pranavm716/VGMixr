@@ -64,6 +64,7 @@ fun UserTrack.toCatalogTrack(
         unplayable = unplayable,
         channel = channel,
         remixOf = remixOf,
-        thumbnail = thumbnail
+        thumbnail = thumbnail,
+        videoTitle = title
     )
 }
