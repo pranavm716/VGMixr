@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-25T07:04:24Z",
+  "generatedAt": "2026-10-25T09:54:56Z",
   "games": [
     {
       "id": "red",
@@ -9096,15 +9096,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "J-b3C45f0yw",
+          "videoId": "rCfzcRSjyrY",
           "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
-          "videoId": "IZL8d8i36tY",
-          "startMs": 0,
-          "confidence": 0.93
+          "confidence": 1.0
         }
       ]
     },
@@ -10945,6 +10939,20 @@
       ]
     },
     {
+      "id": "pmd-brt-rescue-team-base",
+      "family": "pmd-brt",
+      "title": "Rescue Team Base",
+      "order": 9,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "cA3jNIlPalk",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "pmd-brt-insert-title",
       "family": "pmd-brt",
       "title": "Insert Title",
@@ -11163,6 +11171,20 @@
           "videoId": "3qEvadg-vZ4",
           "startMs": 0,
           "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-danger",
+      "family": "pmd-brt",
+      "title": "Danger",
+      "order": 25,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "EVOqyy_rZ20",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -11401,6 +11423,20 @@
       ]
     },
     {
+      "id": "pmd-brt-benevolent-spirit",
+      "family": "pmd-brt",
+      "title": "Benevolent Spirit",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "XEBzKRq3lNA",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
       "id": "pmd-brt-mt-freeze",
       "family": "pmd-brt",
       "title": "Mt. Freeze",
@@ -11573,6 +11609,20 @@
           "videoId": "SgIPT1esVPQ",
           "startMs": 0,
           "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "pmd-brt-versus-legendary",
+      "family": "pmd-brt",
+      "title": "Defy the Legends",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Gq4fCcwTrWs",
+          "startMs": 0,
+          "confidence": 1.0
         }
       ]
     },
@@ -18099,15 +18149,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "fcbUDJ91FaQ",
-          "startMs": 0,
-          "confidence": 0.85
-        },
-        {
-          "type": "stream",
           "videoId": "Zn89FiLiB3c",
           "startMs": 0,
-          "confidence": 0.84
+          "confidence": 1.0
         }
       ]
     },
