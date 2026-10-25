@@ -37,7 +37,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object RemixesRoute
 
-/** Settings, opened by a long press on the Remixes tab. */
+/** Settings, opened by a long press on the Games tab. */
 @Serializable data object SettingsRoute
 
 /**

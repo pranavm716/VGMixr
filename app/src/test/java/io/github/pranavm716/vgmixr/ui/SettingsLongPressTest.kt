@@ -21,7 +21,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
-/** A long press on the Remixes tab opens Settings inside that tab, from any tab. */
+/** A long press on the Games tab opens Settings inside that tab, from any tab. */
 // A plain Application, so the Hilt app's catalog import doesn't run.
 @RunWith(AndroidJUnit4::class)
 @Config(application = Application::class)
@@ -29,44 +29,45 @@ class SettingsLongPressTest {
     @get:Rule
     val compose = createComposeRule()
 
-    private val remixes = TopLevelDestination.REMIXES
+    private val games = TopLevelDestination.GAMES
 
     @Before
     fun setUp() {
         compose.setContent { VGMixrTheme { VGMixrApp() } }
+        compose.onNodeWithTag(games.navItemTag).performClick()
         // Pressed while the Games tab shows.
-        compose.onNodeWithTag(remixes.navItemTag).performTouchInput { longClick() }
+        compose.onNodeWithTag(games.navItemTag).performTouchInput { longClick() }
     }
 
     @Test
-    fun `settings opens in the Remixes tab, under its header`() {
+    fun `settings opens in the Games tab, under its header`() {
         compose.onNodeWithTag(SETTINGS_SCREEN_TAG).assertIsDisplayed()
         compose.onNodeWithText("Settings").assertIsDisplayed()
-        compose.onNodeWithTag(remixes.navItemTag).assertIsSelected()
+        compose.onNodeWithTag(games.navItemTag).assertIsSelected()
     }
 
     @Test
-    fun `back from settings goes to the Remixes tab`() {
+    fun `back from settings goes to the Games tab`() {
         compose.onNodeWithContentDescription("Back").performClick()
 
-        compose.onNodeWithTag(remixes.screenTag).assertIsDisplayed()
+        compose.onNodeWithTag(games.screenTag).assertIsDisplayed()
         compose.onNodeWithTag(SETTINGS_SCREEN_TAG).assertDoesNotExist()
     }
 
     @Test
-    fun `tapping the Remixes tab then returns to its first screen`() {
-        compose.onNodeWithTag(remixes.navItemTag).performClick()
+    fun `tapping the Games tab then returns to its first screen`() {
+        compose.onNodeWithTag(games.navItemTag).performClick()
 
-        compose.onNodeWithTag(remixes.screenTag).assertIsDisplayed()
+        compose.onNodeWithTag(games.screenTag).assertIsDisplayed()
         compose.onNodeWithTag(SETTINGS_SCREEN_TAG).assertDoesNotExist()
     }
 
     @Test
     fun `a second long press doesn't open settings twice`() {
-        compose.onNodeWithTag(remixes.navItemTag).performTouchInput { longClick() }
+        compose.onNodeWithTag(games.navItemTag).performTouchInput { longClick() }
         compose.onNodeWithContentDescription("Back").performClick()
 
-        compose.onNodeWithTag(remixes.screenTag).assertIsDisplayed()
+        compose.onNodeWithTag(games.screenTag).assertIsDisplayed()
     }
 
     @Test

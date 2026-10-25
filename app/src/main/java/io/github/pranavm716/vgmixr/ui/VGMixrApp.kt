@@ -386,6 +386,12 @@ private fun AppNavHost(
                     familyScreen(onAddToPlaylist)
                 }
             }
+            // Pads below the status bar itself, as the family screen does.
+            composable<SettingsRoute> {
+                Box(Modifier.screen().testTag(SETTINGS_SCREEN_TAG)) {
+                    settingsScreen { navController.popBackStack() }
+                }
+            }
         }
         composable<SearchRoute> {
             Tab(TopLevelDestination.SEARCH, navController, screen, reselects, onAddToPlaylist)
@@ -420,12 +426,6 @@ private fun AppNavHost(
         navigation<RemixesGraph>(startDestination = RemixesRoute) {
             composable<RemixesRoute> {
                 Tab(TopLevelDestination.REMIXES, navController, screen, reselects, onAddToPlaylist)
-            }
-            // Pads below the status bar itself, as the edit playlist screen does.
-            composable<SettingsRoute> {
-                Box(Modifier.screen().testTag(SETTINGS_SCREEN_TAG)) {
-                    settingsScreen { navController.popBackStack() }
-                }
             }
         }
     }
