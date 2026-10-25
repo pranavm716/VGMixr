@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -25,6 +23,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -34,16 +33,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
+import io.github.pranavm716.vgmixr.ui.components.Art
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
-import io.github.pranavm716.vgmixr.ui.components.CollectionHeader
-import io.github.pranavm716.vgmixr.ui.components.RowTileGap
-import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
-import io.github.pranavm716.vgmixr.ui.components.ScrollToPlayingOnce
+import io.github.pranavm716.vgmixr.ui.components.CollectionPage
+import io.github.pranavm716.vgmixr.ui.components.FavoritesHeaderArt
+import io.github.pranavm716.vgmixr.ui.components.FullWidth
+import io.github.pranavm716.vgmixr.ui.components.HeaderImage
+import io.github.pranavm716.vgmixr.ui.components.PlainBarTint
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
-import io.github.pranavm716.vgmixr.ui.playlists.PlaylistArt
+import io.github.pranavm716.vgmixr.ui.components.playlistArtAsset
+import io.github.pranavm716.vgmixr.ui.components.rememberArt
+import io.github.pranavm716.vgmixr.ui.player.colorTint
 import io.github.pranavm716.vgmixr.ui.playlists.PlaylistNameDialog
+import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
 import io.github.pranavm716.vgmixr.ui.theme.DialogBackground
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
@@ -73,7 +77,7 @@ fun PlaylistTab(
 }
 
 /**
- * A playlist's tracks under a header like a family's (on the page's own background), listed as
+ * A playlist's tracks under a header like a family's (its art, Favorites' heart), listed as
  * search lists them: the family's tile, the title over all of its game chips. The header's menu
  * edits the playlist, renames it and deletes it (Favorites: edit only); deleting one with tracks
  * asks first.
@@ -94,13 +98,36 @@ fun PlaylistScreen(
         PlaylistUiState.NotFound ->
             Message(stringResource(R.string.playlist_not_found), modifier.statusBarsPadding())
 
-        is PlaylistUiState.Loaded -> Column(modifier.fillMaxSize()) {
-            // The tile and the name line up with the rows' tiles and titles below.
-            CollectionHeader(
+        is PlaylistUiState.Loaded -> Box(modifier.fillMaxSize()) {
+            if (state.rows.isEmpty()) {
+                Message(stringResource(R.string.playlist_empty))
+            }
+            // Favorites is the accent with its heart; other playlists show their bundled art, or
+            // the blank tile's gray without it. The shut bar takes the accent, the art's average
+            // color, or no color.
+            val art = rememberArt(
+                if (state.isFavorites) null else playlistArtAsset(state.name),
+                FullWidth
+            )
+            val accent = MaterialTheme.colorScheme.primary
+            val barTint = when {
+                state.isFavorites -> remember(accent) { colorTint(accent) }
+                art is Art.Loaded -> remember(art) { colorTint(art.average) }
+                else -> PlainBarTint
+            }
+            CollectionPage(
                 state.name,
                 state.trackCount,
-                art = { PlaylistArt(state.isFavorites, RowTileHeight) },
-                gap = RowTileGap,
+                barTint = barTint,
+                playingIndex = state.playingIndex,
+                rowHeight = TileRowHeight,
+                art = {
+                    if (state.isFavorites) {
+                        FavoritesHeaderArt()
+                    } else {
+                        HeaderImage(art, missing = SolidColor(ArtPlaceholder))
+                    }
+                },
                 action = {
                     PlaylistMenu(
                         state,
@@ -109,13 +136,7 @@ fun PlaylistScreen(
                         onDelete = onDelete
                     )
                 }
-            )
-            if (state.rows.isEmpty()) {
-                Message(stringResource(R.string.playlist_empty))
-            }
-            val listState = rememberLazyListState()
-            ScrollToPlayingOnce(listState, state.playingIndex, TileRowHeight)
-            LazyColumn(Modifier.fillMaxSize(), state = listState) {
+            ) {
                 items(state.rows, key = { it.id }) { row ->
                     val content = @Composable {
                         TrackTileRow(

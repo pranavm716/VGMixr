@@ -324,6 +324,9 @@ internal fun gameTint(chips: List<ChipUi>, alpha: Float = GAME_TINT): Brush {
     }
 }
 
+/** One color's tint, as faint as a game's: a playlist's art's average color, or the accent. */
+internal fun colorTint(color: Color): Brush = SolidColor(tintColor(color).copy(alpha = GAME_TINT))
+
 // Open Sans leaves room above its letters, so a text line sits optically low; trimming the line box
 // to the glyphs centers the title and its second line on the bar.
 // A swipe this fast (px/s) counts even if it was short.

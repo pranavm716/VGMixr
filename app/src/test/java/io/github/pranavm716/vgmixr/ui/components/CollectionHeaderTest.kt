@@ -1,9 +1,9 @@
-package io.github.pranavm716.vgmixr.ui.family
+package io.github.pranavm716.vgmixr.ui.components
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class FamilyHeaderTest {
+class CollectionHeaderTest {
     @Test
     fun `the header collapses as far as its spacer row has scrolled`() {
         assertEquals(0, headerScroll(firstIndex = 0, firstOffset = 0, rangePx = 300))
