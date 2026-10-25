@@ -37,6 +37,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object RemixesRoute
 
+/** Remix [trackId]'s Link page: sets, changes or clears the catalog track it remixes. */
+@Serializable data class LinkRoute(val trackId: String)
+
 /** Settings, opened by a long press on the Games tab. */
 @Serializable data object SettingsRoute
 

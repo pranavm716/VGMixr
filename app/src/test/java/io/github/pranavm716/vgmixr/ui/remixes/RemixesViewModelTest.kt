@@ -199,7 +199,7 @@ class RemixesViewModelTest {
             assertEquals(false, (awaitItem() as RemixesUiState.Loaded).deleting)
             viewModel.onStartDeleting()
             assertEquals(true, (awaitItem() as RemixesUiState.Loaded).deleting)
-            viewModel.onDoneDeleting()
+            viewModel.onDone()
             assertEquals(false, (awaitItem() as RemixesUiState.Loaded).deleting)
         }
     }
@@ -211,6 +211,20 @@ class RemixesViewModelTest {
 
             assertEquals(UserMessage.RemixDeleted(someRemix, "Some Remix"), awaitItem())
             assertEquals(emptyList<UserTrack>(), userTracks.userTracks.first())
+        }
+    }
+
+    @Test
+    fun `the menu's Link turns link mode on, and Done turns it off`() = runTest {
+        val viewModel = viewModel()
+        viewModel.uiState.test {
+            assertEquals(false, (awaitItem() as RemixesUiState.Loaded).linking)
+            viewModel.onStartLinking()
+            val linking = awaitItem() as RemixesUiState.Loaded
+            assertEquals(true, linking.linking)
+            assertEquals(false, linking.deleting)
+            viewModel.onDone()
+            assertEquals(false, (awaitItem() as RemixesUiState.Loaded).linking)
         }
     }
 }

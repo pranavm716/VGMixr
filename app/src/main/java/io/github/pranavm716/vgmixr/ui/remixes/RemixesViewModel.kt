@@ -26,14 +26,21 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+/** What a tap on a Remixes row does: play it, open its Link page, or (its trash can) delete it. */
+enum class RemixesMode { NORMAL, LINK, DELETE }
+
 sealed interface RemixesUiState {
     data object Loading : RemixesUiState
 
     /**
-     * The user tracks, newest first; none shows the empty state. While [deleting], each row has a
-     * delete button and does nothing else.
+     * The user tracks, newest first; none shows the empty state. In a [mode] other than normal, each
+     * row ends in that mode's button: a chevron to link it, a trash can to delete it.
      */
-    data class Loaded(val rows: List<RemixRowUi>, val deleting: Boolean = false) : RemixesUiState {
+    data class Loaded(val rows: List<RemixRowUi>, val mode: RemixesMode = RemixesMode.NORMAL) :
+        RemixesUiState {
+        val linking: Boolean get() = mode == RemixesMode.LINK
+        val deleting: Boolean get() = mode == RemixesMode.DELETE
+
         /** The playing track's row, if it is one of these. */
         val playingIndex: Int? get() = rows.indexOfFirst { it.playing }.takeIf { it >= 0 }
     }
@@ -61,15 +68,15 @@ class RemixesViewModel @Inject constructor(
     private val userTracks: UserTrackRepository,
     @DefaultDispatcher dispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    private val deleting = MutableStateFlow(false)
+    private val mode = MutableStateFlow(RemixesMode.NORMAL)
 
     val uiState: StateFlow<RemixesUiState> =
         combine(
             catalog.catalog,
             playback.state.map { it.trackId }.distinctUntilChanged(),
-            deleting
-        ) { catalog, playingId, deleting ->
-            RemixesUiState.Loaded(catalog.userTracks.map { it.toRow(playingId) }, deleting)
+            mode
+        ) { catalog, playingId, mode ->
+            RemixesUiState.Loaded(catalog.userTracks.map { it.toRow(playingId) }, mode)
         }
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), RemixesUiState.Loading)
@@ -105,12 +112,17 @@ class RemixesViewModel @Inject constructor(
 
     /** The menu's Delete: every row gets a delete button. */
     fun onStartDeleting() {
-        deleting.value = true
+        mode.value = RemixesMode.DELETE
+    }
+
+    /** The menu's Link: every row gets a chevron, and a tap opens its Link page. */
+    fun onStartLinking() {
+        mode.value = RemixesMode.LINK
     }
 
     /** Done, or back: the rows go back to normal. */
-    fun onDoneDeleting() {
-        deleting.value = false
+    fun onDone() {
+        mode.value = RemixesMode.NORMAL
     }
 
     /**

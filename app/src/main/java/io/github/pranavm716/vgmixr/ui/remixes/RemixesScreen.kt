@@ -1,11 +1,23 @@
 package io.github.pranavm716.vgmixr.ui.remixes
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -33,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -58,6 +71,7 @@ fun RemixesTab(
     reselects: Int,
     scrollsToPlaying: Int,
     onAddToPlaylist: (trackId: String) -> Unit,
+    onOpenLink: (trackId: String) -> Unit,
     viewModel: RemixesViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -71,15 +85,20 @@ fun RemixesTab(
         val loaded = snapshotFlow { state }.filterIsInstance<RemixesUiState.Loaded>().first()
         loaded.playingIndex?.let { listState.centerOn(it, rowPx) }
     }
-    val deleting = (state as? RemixesUiState.Loaded)?.deleting == true
-    BackHandler(enabled = deleting, onBack = viewModel::onDoneDeleting)
+    val inMode = (state as? RemixesUiState.Loaded)?.mode.let {
+        it != null &&
+            it != RemixesMode.NORMAL
+    }
+    BackHandler(enabled = inMode, onBack = viewModel::onDone)
     RemixesScreen(
         state,
         onTrackClick = viewModel::onTrackClick,
         onQueueTrack = viewModel::onQueueTrack,
         onTrackLongClick = onAddToPlaylist,
+        onStartLinking = viewModel::onStartLinking,
         onStartDeleting = viewModel::onStartDeleting,
-        onDoneDeleting = viewModel::onDoneDeleting,
+        onDone = viewModel::onDone,
+        onLink = onOpenLink,
         onDelete = viewModel::onDelete,
         listState = listState
     )
@@ -88,8 +107,10 @@ fun RemixesTab(
 /**
  * The Remixes tab: the tracks added from YouTube, newest first, each with its video's thumbnail,
  * its original's game chips and its channel. A tap plays Remixes from that track, a swipe right
- * queues it and a long press opens Add to playlist for it. The menu by the title holds Link (not
- * wired yet) and Delete, which gives every row a delete button until Done (or back).
+ * queues it and a long press opens Add to playlist for it. The menu by the title holds Link, which
+ * gives every row a chevron and opens its Link page on a tap, and Delete, which gives every row a
+ * trash can that deletes it; either lasts until Done (or back). The buttons slide in from the
+ * right edge.
  */
 @Composable
 fun RemixesScreen(
@@ -97,8 +118,10 @@ fun RemixesScreen(
     onTrackClick: (String) -> Unit,
     onQueueTrack: (String) -> Unit,
     onTrackLongClick: (String) -> Unit,
+    onStartLinking: () -> Unit,
     onStartDeleting: () -> Unit,
-    onDoneDeleting: () -> Unit,
+    onDone: () -> Unit,
+    onLink: (String) -> Unit,
     onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState()
@@ -110,12 +133,12 @@ fun RemixesScreen(
             when {
                 loaded == null || loaded.rows.isEmpty() -> Unit
 
-                loaded.deleting -> TextButton(
-                    onClick = onDoneDeleting,
+                loaded.mode != RemixesMode.NORMAL -> TextButton(
+                    onClick = onDone,
                     modifier = Modifier.padding(end = 8.dp)
                 ) { Text(stringResource(R.string.done)) }
 
-                else -> RemixesMenu(onStartDeleting, Modifier.padding(end = 4.dp))
+                else -> RemixesMenu(onStartLinking, onStartDeleting, Modifier.padding(end = 4.dp))
             }
         }
         if (state !is RemixesUiState.Loaded) return@Column
@@ -135,36 +158,45 @@ fun RemixesScreen(
         }
         LazyColumn(Modifier.fillMaxSize(), state = listState) {
             items(state.rows, key = { it.id }) { row ->
-                if (state.deleting) {
-                    DeletableRow(row, onDelete = { onDelete(row.id) })
-                    return@items
-                }
-                val tile = @Composable {
+                val mode = state.mode
+                // One row in every mode, so its button can slide in. A greyed track can't be
+                // queued, and in a mode nothing swipes.
+                SwipeToQueue(
+                    onQueue = { onQueueTrack(row.id) },
+                    enabled = mode == RemixesMode.NORMAL && !row.unplayable
+                ) {
                     TrackTileRow(
                         title = row.title,
                         chips = row.chips,
                         unplayable = row.unplayable,
                         current = row.playing,
-                        onClick = { onTrackClick(row.id) },
-                        onLongClick = { onTrackLongClick(row.id) },
+                        onClick = when (mode) {
+                            RemixesMode.NORMAL -> ({ onTrackClick(row.id) })
+                            RemixesMode.LINK -> ({ onLink(row.id) })
+                            RemixesMode.DELETE -> null
+                        },
+                        onLongClick = if (mode == RemixesMode.NORMAL) {
+                            { onTrackLongClick(row.id) }
+                        } else {
+                            null
+                        },
                         thumbnail = row.thumbnail,
-                        subtitle = row.channel
+                        subtitle = row.channel,
+                        trailing = { ModeButton(mode, row.title, onDelete = { onDelete(row.id) }) }
                     )
-                }
-                // A greyed track can't be queued, so its row doesn't swipe.
-                if (row.unplayable) {
-                    tile()
-                } else {
-                    SwipeToQueue(onQueue = { onQueueTrack(row.id) }, content = tile)
                 }
             }
         }
     }
 }
 
-/** The header's menu: Link (not wired yet) and Delete. */
+/** The header's menu: Link and Delete. */
 @Composable
-private fun RemixesMenu(onStartDeleting: () -> Unit, modifier: Modifier = Modifier) {
+private fun RemixesMenu(
+    onStartLinking: () -> Unit,
+    onStartDeleting: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var expanded by remember { mutableStateOf(false) }
     Box(modifier) {
         IconButton(onClick = { expanded = true }) {
@@ -180,7 +212,10 @@ private fun RemixesMenu(onStartDeleting: () -> Unit, modifier: Modifier = Modifi
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.link)) },
-                onClick = { expanded = false }
+                onClick = {
+                    expanded = false
+                    onStartLinking()
+                }
             )
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete)) },
@@ -193,27 +228,62 @@ private fun RemixesMenu(onStartDeleting: () -> Unit, modifier: Modifier = Modifi
     }
 }
 
-/** A row in delete mode: only its trash button reacts, deleting the track at once. */
+/**
+ * A row's end in [mode]: nothing normally; in link mode a chevron (the row's tap opens the Link
+ * page); in delete mode a trash can, the only thing that deletes. It slides in from the right edge,
+ * and the room it takes grows with it, so the title gives way smoothly.
+ */
 @Composable
-private fun DeletableRow(row: RemixRowUi, onDelete: () -> Unit) {
-    TrackTileRow(
-        title = row.title,
-        chips = row.chips,
-        unplayable = row.unplayable,
-        current = row.playing,
-        onClick = null,
-        thumbnail = row.thumbnail,
-        subtitle = row.channel,
-        trailing = {
-            IconButton(onClick = onDelete) {
-                Icon(
-                    painterResource(R.drawable.ic_delete),
-                    contentDescription = stringResource(R.string.delete_named, row.title)
-                )
+private fun ModeButton(mode: RemixesMode, title: String, onDelete: () -> Unit) {
+    // Kept while sliding out, so the leaving button doesn't change mid-slide.
+    var shown by remember { mutableStateOf(mode) }
+    if (mode != RemixesMode.NORMAL) shown = mode
+    // With no button, the row's end keeps the 12dp more a row without one has.
+    val endGap by animateDpAsState(
+        if (mode ==
+            RemixesMode.NORMAL
+        ) {
+            12.dp
+        } else {
+            0.dp
+        },
+        tween(MODE_SLIDE_MS)
+    )
+    Row {
+        AnimatedVisibility(
+            visible = mode != RemixesMode.NORMAL,
+            enter =
+                slideInHorizontally(ModeSlideInt) {
+                    it
+                } + expandHorizontally(tween(MODE_SLIDE_MS)) +
+                    fadeIn(ModeSlide),
+            exit =
+                slideOutHorizontally(ModeSlideInt) {
+                    it
+                } + shrinkHorizontally(tween(MODE_SLIDE_MS)) +
+                    fadeOut(ModeSlide)
+        ) {
+            when (shown) {
+                RemixesMode.DELETE -> IconButton(onClick = onDelete) {
+                    Icon(
+                        painterResource(R.drawable.ic_delete),
+                        contentDescription = stringResource(R.string.delete_named, title)
+                    )
+                }
+
+                // The row's tap does the linking; the chevron only shows where it leads.
+                else -> Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                    Icon(painterResource(R.drawable.ic_chevron_right), contentDescription = null)
+                }
             }
         }
-    )
+        Spacer(Modifier.width(endGap))
+    }
 }
+
+private const val MODE_SLIDE_MS = 250
+private val ModeSlide = tween<Float>(MODE_SLIDE_MS)
+private val ModeSlideInt = tween<IntOffset>(MODE_SLIDE_MS)
 
 @Preview
 @Composable
@@ -235,8 +305,10 @@ private fun RemixesScreenPreview() {
             onTrackClick = {},
             onQueueTrack = {},
             onTrackLongClick = {},
+            onStartLinking = {},
             onStartDeleting = {},
-            onDoneDeleting = {},
+            onDone = {},
+            onLink = {},
             onDelete = {}
         )
     }

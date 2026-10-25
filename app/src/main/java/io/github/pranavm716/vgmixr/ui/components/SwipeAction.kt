@@ -56,11 +56,13 @@ private class Side(
 fun SwipeToQueue(
     onQueue: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     content: @Composable () -> Unit
 ) = SwipeAction(
     start = Side(R.drawable.ic_queue_add, stringResource(R.string.add_to_queue), onQueue),
     end = null,
     modifier = modifier,
+    enabled = enabled,
     content = content
 )
 
@@ -113,6 +115,7 @@ private fun SwipeAction(
     start: Side?,
     end: Side?,
     modifier: Modifier,
+    enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val thresholdPx = with(LocalDensity.current) { Threshold.toPx() }
@@ -140,7 +143,7 @@ private fun SwipeAction(
         }
         armed = reached
     }
-    val sides = listOfNotNull(start, end)
+    val sides = if (enabled) listOfNotNull(start, end) else emptyList()
     Box(
         modifier.onSizeChanged { width = it.width }.semantics {
             customActions = sides.map { side ->
@@ -178,6 +181,7 @@ private fun SwipeAction(
                 .draggable(
                     state = drag,
                     orientation = Orientation.Horizontal,
+                    enabled = enabled,
                     onDragStopped = {
                         val side = if (armed) (if (offset > 0f) start else end) else null
                         armed = false

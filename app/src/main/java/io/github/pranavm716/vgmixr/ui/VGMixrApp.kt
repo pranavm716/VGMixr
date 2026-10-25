@@ -67,6 +67,7 @@ import io.github.pranavm716.vgmixr.ui.navigation.EditPlaylistRoute
 import io.github.pranavm716.vgmixr.ui.navigation.FamilyRoute
 import io.github.pranavm716.vgmixr.ui.navigation.GamesGraph
 import io.github.pranavm716.vgmixr.ui.navigation.GamesRoute
+import io.github.pranavm716.vgmixr.ui.navigation.LinkRoute
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistRoute
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistsGraph
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistsRoute
@@ -126,6 +127,7 @@ fun VGMixrApp(
         onEditPlaylist: (name: String) -> Unit,
         onClose: () -> Unit
     ) -> Unit = { _, _ -> PlaceholderScreen("Playlist") },
+    linkScreen: @Composable (onBack: () -> Unit) -> Unit = { PlaceholderScreen("Link") },
     editPlaylistScreen: @Composable (
         onBack: () -> Unit
     ) -> Unit = { PlaceholderScreen("Add tracks") },
@@ -261,6 +263,7 @@ fun VGMixrApp(
                     familyScreen,
                     playlistScreen,
                     editPlaylistScreen,
+                    linkScreen,
                     settingsScreen,
                     { reselects[it] ?: 0 },
                     openAddToPlaylist,
@@ -339,6 +342,7 @@ private fun AppNavHost(
         onClose: () -> Unit
     ) -> Unit,
     editPlaylistScreen: @Composable (onBack: () -> Unit) -> Unit,
+    linkScreen: @Composable (onBack: () -> Unit) -> Unit,
     settingsScreen: @Composable (onBack: () -> Unit) -> Unit,
     reselects: (TopLevelDestination) -> Int,
     onAddToPlaylist: (trackId: String) -> Unit,
@@ -427,6 +431,12 @@ private fun AppNavHost(
             composable<RemixesRoute> {
                 Tab(TopLevelDestination.REMIXES, navController, screen, reselects, onAddToPlaylist)
             }
+            // Slides in over the Remixes list like any screen inside a tab; pads itself too.
+            composable<LinkRoute> {
+                Box(Modifier.screen()) {
+                    linkScreen { navController.popBackStack() }
+                }
+            }
         }
     }
 }
@@ -468,7 +478,12 @@ fun AppScreen(
             PlaylistsTab(onPlaylistClick = { navController.navigate(PlaylistRoute(it)) }, reselects)
 
         TopLevelDestination.REMIXES ->
-            RemixesTab(reselects, LocalRemixesScrolls.current, onAddToPlaylist)
+            RemixesTab(
+                reselects,
+                LocalRemixesScrolls.current,
+                onAddToPlaylist,
+                onOpenLink = { navController.navigate(LinkRoute(it)) }
+            )
     }
 }
 

@@ -26,6 +26,7 @@ import io.github.pranavm716.vgmixr.ui.player.NowPlayingScreen
 import io.github.pranavm716.vgmixr.ui.playlist.EditPlaylistTab
 import io.github.pranavm716.vgmixr.ui.playlist.PlaylistTab
 import io.github.pranavm716.vgmixr.ui.queue.QueueScreen
+import io.github.pranavm716.vgmixr.ui.remixes.LinkTab
 import io.github.pranavm716.vgmixr.ui.settings.SettingsTab
 import io.github.pranavm716.vgmixr.ui.theme.Background
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -64,6 +65,7 @@ class MainActivity : ComponentActivity() {
                         PlaylistTab(onEditPlaylist = edit, onClose = close)
                     },
                     editPlaylistScreen = { back -> EditPlaylistTab(onBack = back) },
+                    linkScreen = { back -> LinkTab(onBack = back) },
                     settingsScreen = { back -> SettingsTab(onBack = back) },
                     snackbars = snackbars,
                     miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },
