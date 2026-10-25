@@ -315,8 +315,8 @@ private fun Modifier.fadeOutBefore(end: Dp, fade: Dp) = this
  * through them (an RSE track runs red, blue, green).
  */
 // Used by the mini player, the family header and now playing's fade.
-internal fun gameTint(chips: List<ChipUi>): Brush {
-    val colors = chips.map { tintColor(it.color).copy(alpha = GAME_TINT) }
+internal fun gameTint(chips: List<ChipUi>, alpha: Float = GAME_TINT): Brush {
+    val colors = chips.map { tintColor(it.color).copy(alpha = alpha) }
     return when (colors.size) {
         0 -> SolidColor(Color.Transparent)
         1 -> SolidColor(colors.single())

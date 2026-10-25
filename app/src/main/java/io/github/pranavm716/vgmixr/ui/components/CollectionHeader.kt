@@ -1,6 +1,5 @@
 package io.github.pranavm716.vgmixr.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -28,9 +26,9 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.first
 
 /**
- * A family's or playlist's page header: its [art], then its name over its track count, [gap]
- * apart so the name lines up with the rows below. A [background] (a family's game colors) runs up
- * behind the status bar; without one the page's own shows. An [action] (a button) ends the row.
+ * A playlist's page header: its [art], then its name over its track count, [gap]
+ * apart so the name lines up with the rows below, on the page's own background below the status
+ * bar. An [action] (a button) ends the row.
  */
 @Composable
 fun CollectionHeader(
@@ -38,13 +36,11 @@ fun CollectionHeader(
     trackCount: Int,
     art: @Composable () -> Unit,
     gap: Dp,
-    background: Brush? = null,
     action: (@Composable () -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .then(if (background != null) Modifier.background(background) else Modifier)
             .statusBarsPadding()
             // A button keeps its own touch padding, so it sits closer to the edge.
             .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)

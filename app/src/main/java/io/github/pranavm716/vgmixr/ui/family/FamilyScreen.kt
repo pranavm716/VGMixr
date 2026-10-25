@@ -3,14 +3,17 @@ package io.github.pranavm716.vgmixr.ui.family
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,20 +35,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
-import io.github.pranavm716.vgmixr.ui.components.ArtTile
+import io.github.pranavm716.vgmixr.ui.components.ART_ASPECT
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
-import io.github.pranavm716.vgmixr.ui.components.CollectionHeader
 import io.github.pranavm716.vgmixr.ui.components.GameChips
-import io.github.pranavm716.vgmixr.ui.components.RowTileGap
-import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
 import io.github.pranavm716.vgmixr.ui.components.ScrollToPlayingOnce
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.components.UnplayableIcon
 import io.github.pranavm716.vgmixr.ui.components.unplayable
-import io.github.pranavm716.vgmixr.ui.player.gameTint
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
-// The header's art tile and the track numbers share one leading column, so their centers line up.
+// The track numbers' column.
 private val StartPadding = 16.dp
 private val LeadingColumn = 40.dp
 private val LeadingGap = 16.dp
@@ -63,7 +63,7 @@ fun FamilyTab(onAddToPlaylist: (String) -> Unit, viewModel: FamilyViewModel = hi
     )
 }
 
-/** A family's tracks, styled after Shuttle's album screen; the art tile stands in for "back". */
+/** A family's tracks under its cover, which shrinks into a bar as the list scrolls. */
 @Composable
 fun FamilyScreen(
     state: FamilyUiState,
@@ -77,18 +77,20 @@ fun FamilyScreen(
 
         FamilyUiState.NotFound -> NotFound(modifier.statusBarsPadding())
 
-        is FamilyUiState.Loaded -> Column(modifier.fillMaxSize()) {
-            // Tinted with the family's games' colors, as the mini player is.
-            CollectionHeader(
-                state.name,
-                state.trackCount,
-                art = { ArtTile(RowTileHeight, familyId = state.familyId) },
-                gap = RowTileGap,
-                background = gameTint(state.games)
-            )
+        is FamilyUiState.Loaded -> BoxWithConstraints(modifier.fillMaxSize()) {
+            // The header lies over the list, which starts with a spacer as tall as the open
+            // header, so the header shuts as far as that spacer has scrolled.
+            val expanded = maxWidth / ART_ASPECT
+            val collapsed =
+                WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + BarHeight
+            val rangePx = with(LocalDensity.current) {
+                (expanded - collapsed).roundToPx().coerceAtLeast(1)
+            }
             val listState = rememberLazyListState()
-            ScrollToPlayingOnce(listState, state.playing?.index, TrackRowHeight)
+            // The spacer is the list's first row, so the tracks start at index 1.
+            ScrollToPlayingOnce(listState, state.playing?.index?.plus(1), TrackRowHeight)
             LazyColumn(Modifier.fillMaxSize(), state = listState) {
+                item(key = HEADER_SPACER_KEY) { Spacer(Modifier.height(expanded)) }
                 items(state.tracks, key = { it.id }) { track ->
                     val playing = state.playing?.takeIf { it.trackId == track.id }
                     val row = @Composable {
@@ -108,11 +110,30 @@ fun FamilyScreen(
                     }
                 }
             }
+            FamilyHeader(
+                state.name,
+                state.trackCount,
+                state.familyId,
+                state.games,
+                expandedHeight = expanded,
+                collapsedHeight = collapsed,
+                progress = {
+                    val scrolled = headerScroll(
+                        listState.firstVisibleItemIndex,
+                        listState.firstVisibleItemScrollOffset,
+                        rangePx
+                    )
+                    scrolled / rangePx.toFloat()
+                }
+            )
         }
     }
 }
 
 private val TrackRowHeight = 48.dp
+
+// Track ids are "<family>-<slug>" or "yt:<videoId>", so no track has this key.
+private const val HEADER_SPACER_KEY = "header"
 
 /**
  * One track: its number in the list, its title and, unless it plays in every game, its games. The

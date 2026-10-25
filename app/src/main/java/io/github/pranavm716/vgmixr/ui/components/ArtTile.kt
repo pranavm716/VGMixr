@@ -57,23 +57,42 @@ fun ArtTile(height: Dp, modifier: Modifier = Modifier, familyId: String? = null)
  */
 @Composable
 fun ArtTile(modifier: Modifier, familyId: String? = null, width: Dp = 360.dp) {
+    val cover = rememberCover(familyId, width)
+    if (cover is Cover.Loaded) {
+        Image(cover.image, null, modifier.clip(ArtShape), contentScale = ContentScale.Crop)
+    } else {
+        Box(modifier.background(ArtPlaceholder, ArtShape))
+    }
+}
+
+/** A family's cover: still decoding, decoded, or [Missing] for a family without one. */
+sealed interface Cover {
+    data object Loading : Cover
+    data object Missing : Cover
+    data class Loaded(val image: ImageBitmap) : Cover
+}
+
+/** [familyId]'s cover, decoded off the main thread at about [width]; [Cover.Missing] for null. */
+@Composable
+fun rememberCover(familyId: String?, width: Dp): Cover {
     val assets = LocalContext.current.assets
     val widthPx = with(LocalDensity.current) { width.roundToPx() }
     // Keyed, so a tile that changes family (the mini player's, now playing's) drops the old cover.
-    val image = remember(familyId, widthPx) {
-        mutableStateOf(familyId?.let { Covers.cached(it, widthPx) })
+    val cover = remember(familyId, widthPx) {
+        mutableStateOf(
+            when {
+                familyId == null -> Cover.Missing
+                else -> Covers.cached(familyId, widthPx)?.let(Cover::Loaded) ?: Cover.Loading
+            }
+        )
     }
-    LaunchedEffect(image, familyId) {
-        if (image.value == null && familyId != null) {
-            image.value = withContext(Dispatchers.IO) { Covers.load(assets, familyId, widthPx) }
+    LaunchedEffect(cover, familyId) {
+        if (cover.value == Cover.Loading && familyId != null) {
+            val image = withContext(Dispatchers.IO) { Covers.load(assets, familyId, widthPx) }
+            cover.value = image?.let(Cover::Loaded) ?: Cover.Missing
         }
     }
-    val decoded = image.value
-    if (decoded == null) {
-        Box(modifier.background(ArtPlaceholder, ArtShape))
-    } else {
-        Image(decoded, null, modifier.clip(ArtShape), contentScale = ContentScale.Crop)
-    }
+    return cover.value
 }
 
 /**
