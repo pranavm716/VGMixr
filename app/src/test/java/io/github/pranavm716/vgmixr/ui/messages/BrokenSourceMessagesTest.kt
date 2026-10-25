@@ -5,6 +5,7 @@ import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackEvent
 import io.github.pranavm716.vgmixr.domain.playback.TryAgainResult
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
+import io.github.pranavm716.vgmixr.testing.FakeUserTrackRepository
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -16,7 +17,9 @@ class BrokenSourceMessagesTest {
     val main = MainDispatcherRule()
 
     private val playback = FakePlaybackController()
-    private val viewModel by lazy { MessagesViewModel(playback, UserMessages()) }
+    private val viewModel by lazy {
+        MessagesViewModel(playback, UserMessages(), FakeUserTrackRepository())
+    }
 
     private val eliteFour =
         UserMessage.TrackUnplayable("oras-b", "Battle! (Elite Four)", BrokenReason.NO_AUDIO)

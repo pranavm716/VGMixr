@@ -13,6 +13,7 @@ import io.github.pranavm716.vgmixr.data.db.PlaylistEntryEntity
 import io.github.pranavm716.vgmixr.data.db.SourceEntity
 import io.github.pranavm716.vgmixr.data.db.TrackEntity
 import io.github.pranavm716.vgmixr.data.db.UserDataDao
+import io.github.pranavm716.vgmixr.data.db.UserTrackEntity
 import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
 import io.github.pranavm716.vgmixr.data.manifest.ManifestFixtures
 import io.github.pranavm716.vgmixr.data.manifest.ManifestParser
@@ -23,6 +24,7 @@ import io.github.pranavm716.vgmixr.domain.manifest.ManifestParseResult
 import io.github.pranavm716.vgmixr.domain.model.Loop
 import io.github.pranavm716.vgmixr.domain.model.Source
 import java.time.Instant
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -446,6 +448,45 @@ class CatalogImporterTest {
             favorites()
         )
         assertEquals(null, catalogDao.track("rse-never-existed"))
+    }
+
+    @Test
+    fun `replaces re-points the user tracks that remix the old id`() = runTest(dispatcher) {
+        val userTracks = db.userTrackDao()
+        fun remix(videoId: String, remixOf: String?) = UserTrackEntity(
+            id = "yt:$videoId",
+            videoId = videoId,
+            startMs = 0,
+            endMs = null,
+            title = "Remix $videoId",
+            channel = "GlitchxCity",
+            durationMs = null,
+            addedAt = Instant.EPOCH,
+            remixOf = remixOf
+        )
+        importer.import(manifest(tracks = listOf(track("rse-weather-lab"), track("rse-route-101"))))
+        userTracks.insert(remix("AAAAAAAAAAA", "rse-weather-lab"))
+        userTracks.insert(remix("BBBBBBBBBBB", "rse-route-101"))
+        userTracks.insert(remix("CCCCCCCCCCC", null))
+
+        importer.import(
+            manifest(
+                generatedAt = "2026-10-14T08:00:00Z",
+                tracks = listOf(
+                    track("rse-weather-institute", replaces = listOf("rse-weather-lab")),
+                    track("rse-route-101")
+                )
+            )
+        )
+
+        assertEquals(
+            listOf(
+                remix("AAAAAAAAAAA", "rse-weather-institute"),
+                remix("BBBBBBBBBBB", "rse-route-101"),
+                remix("CCCCCCCCCCC", null)
+            ),
+            userTracks.observeNewestFirst().first()
+        )
     }
 
     // Import state and failures

@@ -30,17 +30,20 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
-import io.github.pranavm716.vgmixr.ui.components.RowTileGap
-import io.github.pranavm716.vgmixr.ui.components.RowTileSize
-import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
+import io.github.pranavm716.vgmixr.ui.components.CollectionRow
+import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
 import io.github.pranavm716.vgmixr.ui.components.ToggleAddButton
 import io.github.pranavm716.vgmixr.ui.playlists.PlaylistArt
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
-fun AddToPlaylist(onClose: () -> Unit, viewModel: AddToPlaylistViewModel = hiltViewModel()) {
-    // Each opening takes the track playing then.
-    LaunchedEffect(Unit) { viewModel.onOpen() }
+fun AddToPlaylist(
+    trackId: String?,
+    onClose: () -> Unit,
+    viewModel: AddToPlaylistViewModel = hiltViewModel()
+) {
+    // Each opening takes its track: the one given, or the one playing then.
+    LaunchedEffect(trackId) { viewModel.onOpen(trackId) }
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     AddToPlaylistScreen(state, onToggle = viewModel::onToggle, onClose = onClose)
 }
@@ -91,31 +94,22 @@ fun AddToPlaylistScreen(
     }
 }
 
+// The Playlists tab's row, ending in the plus or check; only the button reacts.
 @Composable
 private fun PlaylistToggleRow(row: AddToPlaylistRowUi, onToggle: () -> Unit) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .height(TileRowHeight)
-            .padding(start = 16.dp, end = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        PlaylistArt(row.isFavorites, RowTileSize)
-        Spacer(Modifier.width(RowTileGap))
-        Text(
-            row.name,
-            style = MaterialTheme.typography.titleMedium,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.weight(1f)
-        )
-        ToggleAddButton(
-            row.added,
-            onClick = onToggle,
-            addLabel = stringResource(R.string.add_to_named_playlist, row.name),
-            removeLabel = stringResource(R.string.remove_from_named_playlist, row.name)
-        )
-    }
+    CollectionRow(
+        row.name,
+        row.trackCount,
+        art = { PlaylistArt(row.isFavorites, RowTileHeight) },
+        trailing = {
+            ToggleAddButton(
+                row.added,
+                onClick = onToggle,
+                addLabel = stringResource(R.string.add_to_named_playlist, row.name),
+                removeLabel = stringResource(R.string.remove_from_named_playlist, row.name)
+            )
+        }
+    )
 }
 
 @Preview
@@ -126,8 +120,8 @@ private fun AddToPlaylistScreenPreview() {
             AddToPlaylistUiState(
                 trackTitle = "Route 101",
                 rows = listOf(
-                    AddToPlaylistRowUi(1, "Favorites", isFavorites = true, added = true),
-                    AddToPlaylistRowUi(7, "Hype", isFavorites = false, added = false)
+                    AddToPlaylistRowUi(1, "Favorites", 12, isFavorites = true, added = true),
+                    AddToPlaylistRowUi(7, "Hype", 40, isFavorites = false, added = false)
                 )
             ),
             onToggle = {},

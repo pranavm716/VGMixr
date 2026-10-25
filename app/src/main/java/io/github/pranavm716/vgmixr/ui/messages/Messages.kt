@@ -17,6 +17,8 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackEvent
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
 import io.github.pranavm716.vgmixr.domain.playback.TryAgainResult
+import io.github.pranavm716.vgmixr.domain.usertrack.UserTrack
+import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
@@ -54,6 +56,9 @@ sealed interface UserMessage {
 
     /** Try again couldn't ask YouTube about [title]; nothing changed. */
     data class Unchecked(val title: String) : UserMessage
+
+    /** User track [track], shown as [title], was deleted; offers Undo. */
+    data class RemixDeleted(val track: UserTrack, val title: String) : UserMessage
 }
 
 /** Where ViewModels post messages for the app's snackbar. */
@@ -70,7 +75,8 @@ class UserMessages @Inject constructor() {
 @HiltViewModel
 class MessagesViewModel @Inject constructor(
     private val playback: PlaybackController,
-    private val posted: UserMessages
+    private val posted: UserMessages,
+    private val userTracks: UserTrackRepository
 ) : ViewModel() {
     val messages: Flow<UserMessage> = merge(
         playback.state
@@ -86,6 +92,11 @@ class MessagesViewModel @Inject constructor(
         },
         posted.messages
     )
+
+    /** Undo on [message]: puts the deleted user track back as it was, in its place. */
+    fun onUndoDelete(message: UserMessage.RemixDeleted) {
+        viewModelScope.launch { userTracks.add(message.track) }
+    }
 
     /** Try again on [message]: checks the track's videos and says what it found. */
     fun onTryAgain(message: UserMessage.TrackUnplayable) {
@@ -110,17 +121,30 @@ fun MessagesEffect(snackbars: SnackbarHostState, viewModel: MessagesViewModel = 
             // A newer message replaces the one showing, so quick swipes don't queue up snackbars.
             snackbars.currentSnackbarData?.dismiss()
             launch {
-                if (message is UserMessage.TrackUnplayable) {
-                    val result = snackbars.showSnackbar(
-                        text,
-                        actionLabel = resources.getString(R.string.try_again),
-                        duration = SnackbarDuration.Long
-                    )
-                    if (result == SnackbarResult.ActionPerformed) {
-                        viewModel.onTryAgain(message)
+                when (message) {
+                    is UserMessage.TrackUnplayable -> {
+                        val result = snackbars.showSnackbar(
+                            text,
+                            actionLabel = resources.getString(R.string.try_again),
+                            duration = SnackbarDuration.Long
+                        )
+                        if (result == SnackbarResult.ActionPerformed) {
+                            viewModel.onTryAgain(message)
+                        }
                     }
-                } else {
-                    snackbars.showSnackbar(text)
+
+                    is UserMessage.RemixDeleted -> {
+                        val result = snackbars.showSnackbar(
+                            text,
+                            actionLabel = resources.getString(R.string.undo),
+                            duration = SnackbarDuration.Long
+                        )
+                        if (result == SnackbarResult.ActionPerformed) {
+                            viewModel.onUndoDelete(message)
+                        }
+                    }
+
+                    else -> snackbars.showSnackbar(text)
                 }
             }
         }
@@ -152,6 +176,8 @@ private fun UserMessage.text(resources: Resources): String = when (this) {
     is UserMessage.PlaysAgain -> resources.getString(R.string.plays_again, title)
 
     is UserMessage.Unchecked -> resources.getString(R.string.try_again_unchecked, title)
+
+    is UserMessage.RemixDeleted -> resources.getString(R.string.remix_deleted, title)
 
     is UserMessage.TrackUnplayable -> resources.getString(
         when (reason) {

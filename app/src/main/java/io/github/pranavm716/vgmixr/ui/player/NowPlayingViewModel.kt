@@ -9,8 +9,10 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.playback.homeContext
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
+import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackId
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,15 +24,24 @@ import kotlinx.coroutines.launch
 sealed interface NowPlayingUiState {
     data object Hidden : NowPlayingUiState
 
-    /** [chips] are all of the track's games, also when it plays in every game of its family. */
+    /**
+     * [chips] are all of the track's games, also when it plays in every game of its family.
+     * [familyId] is the track's own family, which tapping the title opens wherever it plays from
+     * (none for a user track that remixes no catalog track). A user track's title opens the Remixes
+     * tab instead ([opensRemixes]).
+     */
     data class Visible(
         val title: String,
         val chips: List<ChipUi>,
+        val familyId: String?,
         val playingFrom: PlayingFromUi,
         val isPlaying: Boolean,
         val isLoading: Boolean,
         val isFavorite: Boolean = false,
-        val shuffle: Boolean = false
+        val shuffle: Boolean = false,
+        val thumbnail: String? = null,
+        val subtitle: String? = null,
+        val opensRemixes: Boolean = false
     ) : NowPlayingUiState
 }
 
@@ -44,6 +55,9 @@ sealed interface PlayingFromUi {
 
     /** Added with swipe to queue. */
     data object Queue : PlayingFromUi
+
+    /** Tapped in the Remixes tab; the header opens it. */
+    data object Remixes : PlayingFromUi
 }
 
 @HiltViewModel
@@ -99,13 +113,14 @@ private fun Catalog.nowPlaying(
     favorites: Set<String>,
     playlists: List<PlaylistSummary>
 ): NowPlayingUiState {
-    val track = tracks.firstOrNull { it.id == state.trackId } ?: return NowPlayingUiState.Hidden
-    // No context, or a playlist deleted since: the track plays from its family.
+    val track = state.trackId?.let { track(it) } ?: return NowPlayingUiState.Hidden
+    // No context, or a playlist deleted since: the track plays from its family, or from Remixes
+    // for a user track.
     val context = state.queue.entries.getOrNull(state.queue.current)?.context
         ?.takeUnless {
             it is QueueContext.Playlist && playlists.none { p -> p.id == it.playlistId }
         }
-        ?: QueueContext.Family(track.familyId)
+        ?: track.homeContext()
     val playingFrom = when (context) {
         is QueueContext.Family -> PlayingFromUi.Family(
             context.familyId,
@@ -118,10 +133,16 @@ private fun Catalog.nowPlaying(
         )
 
         QueueContext.Queue -> PlayingFromUi.Queue
+
+        QueueContext.Remixes -> PlayingFromUi.Remixes
     }
     return NowPlayingUiState.Visible(
         title = track.title,
         chips = track.games.map { ChipUi(it.shortName, it.color) },
+        familyId = track.familyId,
+        thumbnail = track.thumbnail,
+        subtitle = track.channel,
+        opensRemixes = UserTrackId.isUserTrack(track.id),
         playingFrom = playingFrom,
         isPlaying = state.isPlaying,
         isLoading = state.isLoading,

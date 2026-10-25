@@ -81,6 +81,13 @@ class FamilyViewModelTest {
     }
 
     @Test
+    fun `the header carries the family's id for the cover`() = runTest {
+        viewModel("rse").uiState.test {
+            assertEquals("rse", (awaitItem() as FamilyUiState.Loaded).familyId)
+        }
+    }
+
+    @Test
     fun `the header is tinted with the family's games in manifest order`() = runTest {
         viewModel("rse").uiState.test {
             assertEquals(

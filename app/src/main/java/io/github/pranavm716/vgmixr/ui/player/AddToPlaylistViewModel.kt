@@ -23,17 +23,19 @@ data class AddToPlaylistUiState(
     val rows: List<AddToPlaylistRowUi> = emptyList()
 )
 
-/** A playlist row: its art (Favorites' heart or the blank tile), name, and plus or check. */
+/** A playlist row: its art (Favorites' heart or the blank tile), name over track count, and plus or check. */
 data class AddToPlaylistRowUi(
     val id: Long,
     val name: String,
+    val trackCount: Int,
     val isFavorites: Boolean,
     val added: Boolean
 )
 
 /**
- * Adds the playing track to playlists, or takes it out. The track is the one playing when the
- * screen opened ([onOpen]), so a song ending meanwhile doesn't change what the checks apply to.
+ * Adds a track to playlists, or takes it out: the one the screen was opened for (a long-pressed
+ * row), or else the one playing when it opened ([onOpen]), so a song ending meanwhile doesn't
+ * change what the checks apply to.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -55,18 +57,24 @@ class AddToPlaylistViewModel @Inject constructor(
                     playlists.playlistsContaining(id)
                 ) { catalog, summaries, containing ->
                     AddToPlaylistUiState(
-                        trackTitle = catalog.tracks.firstOrNull { it.id == id }?.title.orEmpty(),
+                        trackTitle = catalog.track(id)?.title.orEmpty(),
                         rows = summaries.map {
-                            AddToPlaylistRowUi(it.id, it.name, it.isFavorites, it.id in containing)
+                            AddToPlaylistRowUi(
+                                it.id,
+                                it.name,
+                                it.trackCount,
+                                it.isFavorites,
+                                it.id in containing
+                            )
                         }
                     )
                 }
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AddToPlaylistUiState())
 
-    /** Takes the playing track as the one to add; called each time the screen opens. */
-    fun onOpen() {
-        trackId.value = playback.state.value.trackId
+    /** Takes [trackId], or the playing track, as the one to add; called each time the screen opens. */
+    fun onOpen(trackId: String? = null) {
+        this.trackId.value = trackId ?: playback.state.value.trackId
     }
 
     /** The plus adds the track to playlist [playlistId]; the check takes it out. */

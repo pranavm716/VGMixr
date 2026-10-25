@@ -13,6 +13,7 @@ import io.github.pranavm716.vgmixr.data.db.ImportStateDao
 import io.github.pranavm716.vgmixr.data.db.MIGRATION_3_4
 import io.github.pranavm716.vgmixr.data.db.SeedFavorites
 import io.github.pranavm716.vgmixr.data.db.UserDataDao
+import io.github.pranavm716.vgmixr.data.db.UserTrackDao
 import io.github.pranavm716.vgmixr.data.db.VGMixrDatabase
 import javax.inject.Singleton
 
@@ -38,4 +39,7 @@ object DatabaseModule {
 
     @Provides
     fun provideBrokenStreamDao(db: VGMixrDatabase): BrokenStreamDao = db.brokenStreamDao()
+
+    @Provides
+    fun provideUserTrackDao(db: VGMixrDatabase): UserTrackDao = db.userTrackDao()
 }

@@ -24,7 +24,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.FamilySummary
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.CollectionRow
-import io.github.pranavm716.vgmixr.ui.components.RowTileSize
+import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
 import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnReselect
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -42,6 +42,7 @@ fun GamesTab(
         state,
         onFamilyClick,
         onQueueFamily = viewModel::onQueueFamily,
+        onPlayFamily = viewModel::onPlayFamily,
         listState = listState
     )
 }
@@ -52,6 +53,7 @@ fun GamesScreen(
     state: GamesUiState,
     onFamilyClick: (String) -> Unit,
     onQueueFamily: (String) -> Unit,
+    onPlayFamily: (String) -> Unit,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState()
 ) {
@@ -71,8 +73,9 @@ fun GamesScreen(
                                 CollectionRow(
                                     family.name,
                                     family.trackCount,
-                                    art = { ArtTile(RowTileSize) },
-                                    onClick = { onFamilyClick(family.id) }
+                                    art = { ArtTile(RowTileHeight, familyId = family.id) },
+                                    onClick = { onFamilyClick(family.id) },
+                                    onLongClick = { onPlayFamily(family.id) }
                                 )
                             }
                         }
@@ -118,7 +121,8 @@ private fun GamesScreenPreview() {
                 importFailed = true
             ),
             onFamilyClick = {},
-            onQueueFamily = {}
+            onQueueFamily = {},
+            onPlayFamily = {}
         )
     }
 }

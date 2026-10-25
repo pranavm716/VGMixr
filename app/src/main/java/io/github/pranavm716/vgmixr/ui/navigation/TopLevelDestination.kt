@@ -32,21 +32,33 @@ import kotlinx.serialization.Serializable
  */
 @Serializable data class EditPlaylistRoute(val playlistId: Long, val playlistName: String = "")
 
-@Serializable data object Tab4Route
+/** The Remixes tab: tracks added from YouTube (a placeholder until step 13b), and Settings. */
+@Serializable data object RemixesGraph
+
+@Serializable data object RemixesRoute
+
+/** Remix [trackId]'s Link page: sets, changes or clears the catalog track it remixes. */
+@Serializable data class LinkRoute(val trackId: String)
+
+/** Settings, opened by a long press on the Games tab. */
+@Serializable data object SettingsRoute
 
 /**
  * The navbar's tabs, in bar order. The first entry is the start tab, so moving a tab is moving
- * its line. Tab 4 is a placeholder until its content is built.
+ * its line. A long press on a tab with a [longPressRoute] opens that page inside the tab; on one
+ * that [longPressPlays], it plays all of the tab's tracks, as a held family or playlist does.
  */
 enum class TopLevelDestination(
     val label: String,
     @param:DrawableRes val icon: Int,
-    val route: Any
+    val route: Any,
+    val longPressRoute: Any? = null,
+    val longPressPlays: Boolean = false
 ) {
-    GAMES("Games", R.drawable.ic_games, GamesGraph),
+    GAMES("Games", R.drawable.ic_games, GamesGraph, longPressRoute = SettingsRoute),
     SEARCH("Search", R.drawable.ic_search, SearchRoute),
     PLAYLISTS("Playlists", R.drawable.ic_library_music, PlaylistsGraph),
-    TAB_4("Tab 4", R.drawable.ic_tab_square, Tab4Route);
+    REMIXES("Remixes", R.drawable.ic_equalizer, RemixesGraph, longPressPlays = true);
 
     companion object {
         val start: TopLevelDestination get() = entries.first()

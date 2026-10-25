@@ -7,12 +7,14 @@ import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.playableFamilyTrackIds
+import io.github.pranavm716.vgmixr.domain.catalog.playableUserTrackIds
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.search.SearchIndex
 import io.github.pranavm716.vgmixr.domain.search.SearchRanking
 import io.github.pranavm716.vgmixr.domain.search.frecencyWeight
 import io.github.pranavm716.vgmixr.domain.search.search
+import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackId
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
@@ -45,14 +47,18 @@ data class SearchUiState(
 
 /**
  * A result as the queue shows a track: title over all of its game chips. [unplayable] greys a
- * track whose sources are all broken; [playing] marks the current track.
+ * track whose sources are all broken; [playing] marks the current track. A user track has its
+ * [thumbnail]'s path and its channel as [subtitle].
  */
 data class SearchRowUi(
     val id: String,
     val title: String,
     val chips: List<ChipUi>,
     val unplayable: Boolean = false,
-    val playing: Boolean = false
+    val playing: Boolean = false,
+    val familyId: String? = null,
+    val thumbnail: String? = null,
+    val subtitle: String? = null
 )
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -101,28 +107,38 @@ class SearchViewModel @Inject constructor(
     fun onLeave() = onQueryChange("")
 
     /**
-     * Plays the track's family from it, as a tap in the family list does. A track whose sources
-     * are all broken says so instead, on every tap.
+     * Plays the track's family from it, as a tap in the family list does; a user track plays
+     * Remixes from it, as a tap in the Remixes tab does. A track whose sources are all broken says
+     * so instead, on every tap.
      */
     fun onTrackClick(trackId: String) {
         viewModelScope.launch {
             val catalog = repository.catalog.first()
-            val track = catalog.tracks.firstOrNull { it.id == trackId } ?: return@launch
+            val track = catalog.track(trackId) ?: return@launch
             val unplayable = track.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
                 return@launch
             }
-            val ids = catalog.playableFamilyTrackIds(track.familyId)
+            val familyId = track.familyId
+            val (ids, context) = when {
+                UserTrackId.isUserTrack(trackId) ->
+                    catalog.playableUserTrackIds() to QueueContext.Remixes
+
+                familyId != null ->
+                    catalog.playableFamilyTrackIds(familyId) to QueueContext.Family(familyId)
+
+                else -> return@launch
+            }
             val index = ids.indexOf(trackId)
-            if (index >= 0) playback.playFrom(ids, index, QueueContext.Family(track.familyId))
+            if (index >= 0) playback.playFrom(ids, index, context)
         }
     }
 
     /** Adds one track to "Next in queue"; a greyed track can't be queued. */
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
-            val track = repository.catalog.first().tracks.firstOrNull { it.id == trackId }
+            val track = repository.catalog.first().track(trackId)
             if (track == null || track.unplayable != null) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
@@ -141,5 +157,8 @@ private fun CatalogTrack.toRow(playingId: String?) = SearchRowUi(
     title = title,
     chips = games.map { ChipUi(it.shortName, it.color) },
     unplayable = unplayable != null,
-    playing = id == playingId
+    playing = id == playingId,
+    familyId = familyId,
+    thumbnail = thumbnail,
+    subtitle = channel
 )

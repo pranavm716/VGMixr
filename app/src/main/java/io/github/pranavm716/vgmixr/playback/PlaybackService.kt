@@ -45,6 +45,7 @@ import io.github.pranavm716.vgmixr.domain.playback.nextSource
 import io.github.pranavm716.vgmixr.domain.playback.onSourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
+import io.github.pranavm716.vgmixr.ui.components.coverFamilies
 import java.io.File
 import java.time.Clock
 import javax.inject.Inject
@@ -97,7 +98,9 @@ class PlaybackService : MediaSessionService() {
     lateinit var playlists: PlaylistRepository
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-    private val artwork by lazy { NotificationArtwork(File(cacheDir, "artwork")) }
+    private val artwork by lazy {
+        NotificationArtwork(File(cacheDir, "artwork"), coverFamilies(assets))
+    }
     private val catalog = MutableStateFlow<Catalog?>(null)
     private val marks = MutableStateFlow<Map<String, BrokenMark>>(emptyMap())
     private val favorites = MutableStateFlow<Set<String>>(emptySet())
@@ -273,7 +276,7 @@ class PlaybackService : MediaSessionService() {
             val failure = error.sourceFailure()
             // A failed or refused URL is never reused: the next try looks the video up again.
             if (failure !is SourceFailure.Everything) item.videoId?.let(resolver::forget)
-            val track = catalog.tracks.firstOrNull { it.id == item.mediaId }
+            val track = catalog.track(item.mediaId)
             val streams = track?.let { playableStreams(it.sources) }.orEmpty()
             val failed = FailedSource(
                 trackId = item.mediaId,
@@ -428,7 +431,7 @@ private fun Catalog.startItem(
     marks: Map<String, BrokenMark>,
     artwork: NotificationArtwork
 ): MediaItem {
-    val streams = tracks.firstOrNull { it.id == trackId }
+    val streams = track(trackId)
         ?.let { playableStreams(it.sources) }
         .orEmpty()
     val sourceIndex = nextSource(streams, 0, marks.keys) ?: streams.size
@@ -447,12 +450,12 @@ private fun Catalog.itemFor(
     artwork: NotificationArtwork,
     retried: Boolean = false
 ): MediaItem {
-    val track = tracks.firstOrNull { it.id == trackId }
+    val track = track(trackId)
         ?: return queueRequest(
             QueueEntry(trackId, context, listIndex)
         ).buildUpon().setUri(NO_SOURCE_URI).build()
     val familyName = families.firstOrNull { it.id == track.familyId }?.name.orEmpty()
-    val art = artwork.uriFor(track.games.map { it.color })
+    val art = artwork.uriFor(track)
     return trackMediaItem(track, familyName, sourceIndex, context, retried, art, listIndex)
 }
 

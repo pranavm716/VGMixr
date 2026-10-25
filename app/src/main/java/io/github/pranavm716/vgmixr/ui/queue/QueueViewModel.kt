@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.playback.homeContext
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
@@ -45,7 +47,10 @@ data class QueueRowUi(
     val trackId: String,
     val title: String,
     val chips: List<ChipUi>,
-    val unplayable: Boolean = false
+    val unplayable: Boolean = false,
+    val thumbnail: String? = null,
+    val subtitle: String? = null,
+    val familyId: String? = null
 )
 
 @HiltViewModel
@@ -65,7 +70,7 @@ class QueueViewModel @Inject constructor(
     fun onJump(index: Int) {
         viewModelScope.launch {
             val trackId = playback.state.value.queue.entries.getOrNull(index)?.trackId
-            val track = repository.catalog.first().tracks.firstOrNull { it.id == trackId }
+            val track = trackId?.let { repository.catalog.first().track(it) }
             val unplayable = track?.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -81,7 +86,7 @@ class QueueViewModel @Inject constructor(
     fun onQueue(index: Int) {
         val trackId = playback.state.value.queue.entries.getOrNull(index)?.trackId ?: return
         viewModelScope.launch {
-            val track = repository.catalog.first().tracks.firstOrNull { it.id == trackId }
+            val track = repository.catalog.first().track(trackId)
             // A greyed row can't be swiped to the queue; this keeps any other path from it.
             if (track == null || track.unplayable != null) return@launch
             playback.addToQueue(listOf(trackId))
@@ -95,15 +100,17 @@ class QueueViewModel @Inject constructor(
 private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>): QueueUiState {
     val queue = state.queue
     if (queue.current !in queue.entries.indices) return QueueUiState.EMPTY
-    val tracksById = tracks.associateBy { it.id }
     fun row(index: Int): QueueRowUi? {
-        val track = tracksById[queue.entries[index].trackId] ?: return null
+        val track = track(queue.entries[index].trackId) ?: return null
         return QueueRowUi(
             index = index,
             trackId = track.id,
             title = track.title,
             chips = track.games.map { ChipUi(it.shortName, it.color) },
-            unplayable = track.unplayable != null
+            unplayable = track.unplayable != null,
+            thumbnail = track.thumbnail,
+            subtitle = track.channel,
+            familyId = track.familyId
         )
     }
     val queueStart = queue.current + 1
@@ -111,10 +118,11 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
     val nextFromName = when (val context = queue.nextFromContext.firstOrNull()?.context) {
         is QueueContext.Family -> families.firstOrNull { it.id == context.familyId }?.name
 
-        // A playlist deleted since: its tracks came from their family.
+        // A playlist deleted since: its tracks came from their family, or Remixes for user tracks.
         is QueueContext.Playlist -> playlists.firstOrNull { it.id == context.playlistId }?.name
-            ?: tracksById[queue.nextFromContext.first().trackId]?.familyId
-                ?.let { id -> families.firstOrNull { it.id == id }?.name }
+            ?: track(queue.nextFromContext.first().trackId)?.let { homeName(it) }
+
+        QueueContext.Remixes -> REMIXES
 
         QueueContext.Queue, null -> null
     }
@@ -124,4 +132,12 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
         nextFromName = nextFromName,
         nextFrom = (queueEnd until queue.entries.size).mapNotNull(::row)
     )
+}
+
+private const val REMIXES = "Remixes"
+
+/** The name of [track]'s home: its family's, or Remixes for a user track. */
+private fun Catalog.homeName(track: CatalogTrack): String? = when (val home = track.homeContext()) {
+    is QueueContext.Family -> families.firstOrNull { it.id == home.familyId }?.name
+    else -> REMIXES
 }

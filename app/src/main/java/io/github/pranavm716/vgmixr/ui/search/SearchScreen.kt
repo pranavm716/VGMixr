@@ -44,7 +44,11 @@ import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
  * tab, focuses the field and brings up the keyboard.
  */
 @Composable
-fun SearchTab(reselects: Int, viewModel: SearchViewModel = hiltViewModel()) {
+fun SearchTab(
+    reselects: Int,
+    onAddToPlaylist: (String) -> Unit,
+    viewModel: SearchViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     // The field's text is kept here, so typing never waits on the ViewModel. Leaving the tab
     // disposes it, and the search starts empty next time.
@@ -59,7 +63,8 @@ fun SearchTab(reselects: Int, viewModel: SearchViewModel = hiltViewModel()) {
             viewModel.onQueryChange(it)
         },
         onTrackClick = viewModel::onTrackClick,
-        onQueueTrack = viewModel::onQueueTrack
+        onQueueTrack = viewModel::onQueueTrack,
+        onTrackLongClick = onAddToPlaylist
     )
 }
 
@@ -74,7 +79,8 @@ fun SearchScreen(
     reselects: Int,
     onQueryChange: (String) -> Unit,
     onTrackClick: (String) -> Unit,
-    onQueueTrack: (String) -> Unit
+    onQueueTrack: (String) -> Unit,
+    onTrackLongClick: (String) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
@@ -138,7 +144,14 @@ fun SearchScreen(
                             onClick = {
                                 hideKeyboard()
                                 onTrackClick(row.id)
-                            }
+                            },
+                            onLongClick = {
+                                hideKeyboard()
+                                onTrackLongClick(row.id)
+                            },
+                            familyId = row.familyId,
+                            thumbnail = row.thumbnail,
+                            subtitle = row.subtitle
                         )
                     }
                     // A greyed track can't be queued, so its row doesn't swipe.
@@ -176,7 +189,8 @@ private fun SearchScreenPreview() {
             reselects = 0,
             onQueryChange = {},
             onTrackClick = {},
-            onQueueTrack = {}
+            onQueueTrack = {},
+            onTrackLongClick = {}
         )
     }
 }

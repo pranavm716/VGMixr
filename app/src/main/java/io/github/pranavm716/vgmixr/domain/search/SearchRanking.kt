@@ -23,7 +23,7 @@ class SearchRanking @Inject constructor(
         playback.state.map { it.trackId }.distinctUntilChanged(),
         catalog.catalog
     ) { trackId, catalog ->
-        trackId?.let { id -> catalog.tracks.firstOrNull { it.id == id }?.familyId }
+        trackId?.let { id -> catalog.track(id)?.familyId }
     }
 
     val signals: Flow<RankingSignals> = combine(

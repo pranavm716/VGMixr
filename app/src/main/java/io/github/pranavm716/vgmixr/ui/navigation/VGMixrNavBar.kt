@@ -7,6 +7,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 
 // Long enough to be seen at a 0.5x animator scale, short enough not to feel slow at 1x.
@@ -39,11 +41,13 @@ private const val ANIMATION_MS = 300
 /**
  * Shuttle's navbar: gray icons, the selected tab in the accent with its label, no pill. Built by
  * hand instead of M3's NavigationBar so the ripple covers the icon and label and the timing is ours.
+ * A tab with a long-press page calls [onLongPress]; on the others a long press is a tap.
  */
 @Composable
 fun VGMixrNavBar(
     selected: TopLevelDestination?,
     onSelect: (TopLevelDestination) -> Unit,
+    onLongPress: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(color = MaterialTheme.colorScheme.background, modifier = modifier) {
@@ -55,7 +59,18 @@ fun VGMixrNavBar(
                 .selectableGroup()
         ) {
             TopLevelDestination.entries.forEach { destination ->
-                NavItem(destination, destination == selected, onClick = { onSelect(destination) })
+                NavItem(
+                    destination,
+                    destination == selected,
+                    onClick = { onSelect(destination) },
+                    onLongClick = if (destination.longPressRoute != null ||
+                        destination.longPressPlays
+                    ) {
+                        { onLongPress(destination) }
+                    } else {
+                        null
+                    }
+                )
             }
         }
     }
@@ -65,7 +80,8 @@ fun VGMixrNavBar(
 private fun RowScope.NavItem(
     destination: TopLevelDestination,
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: (() -> Unit)?
 ) {
     val color by animateColorAsState(
         if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
@@ -77,9 +93,10 @@ private fun RowScope.NavItem(
             .weight(1f)
             .fillMaxHeight()
             .testTag(destination.navItemTag)
-            .selectable(
-                selected = selected,
+            .semantics { this.selected = selected }
+            .combinedClickable(
                 onClick = onClick,
+                onLongClick = onLongClick,
                 role = Role.Tab,
                 interactionSource = null,
                 // Unbounded, centered on the item, wide enough to cover the icon and label.

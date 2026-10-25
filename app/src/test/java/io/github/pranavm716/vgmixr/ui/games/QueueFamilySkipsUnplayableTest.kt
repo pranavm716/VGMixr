@@ -6,6 +6,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakeCatalogSync
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
@@ -60,6 +61,28 @@ class QueueFamilySkipsUnplayableTest {
         }
         assertEquals(
             listOf(FakePlaybackController.AddToQueue(listOf("oras-a", "oras-c"))),
+            playback.calls
+        )
+    }
+
+    @Test
+    fun `a long press plays only the playable tracks, and nothing when none can play`() = runTest {
+        viewModel(
+            catalog(
+                track("oras-a", 1),
+                track("oras-b", 2, BrokenReason.UNAVAILABLE),
+                track("oras-c", 3)
+            )
+        ).onPlayFamily("oras")
+        viewModel(catalog(track("oras-b", 1, BrokenReason.UNAVAILABLE))).onPlayFamily("oras")
+
+        assertEquals(
+            listOf(
+                FakePlaybackController.PlayAll(
+                    listOf("oras-a", "oras-c"),
+                    QueueContext.Family("oras")
+                )
+            ),
             playback.calls
         )
     }

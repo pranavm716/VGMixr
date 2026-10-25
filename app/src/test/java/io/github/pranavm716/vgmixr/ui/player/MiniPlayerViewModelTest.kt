@@ -143,4 +143,32 @@ class MiniPlayerViewModelTest {
             playback.calls
         )
     }
+
+    @Test
+    fun `a user track shows its thumbnail and its channel`() = runTest {
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            null,
+            emptyList(),
+            "Some Remix",
+            0,
+            emptyList(),
+            channel = "GlitchxCity",
+            thumbnail = "thumbnails/AAAAAAAAAAA.jpg"
+        )
+        playback.state.value = PlaybackState(
+            queue = PlayQueue(listOf(QueueEntry("yt:AAAAAAAAAAA", QueueContext.Remixes)), 0),
+            trackId = "yt:AAAAAAAAAAA"
+        )
+        val viewModel = MiniPlayerViewModel(
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playback
+        )
+
+        viewModel.uiState.test {
+            val track = (awaitItem() as MiniPlayerUiState.Visible).track
+            assertEquals("thumbnails/AAAAAAAAAAA.jpg", track.thumbnail)
+            assertEquals("GlitchxCity", track.subtitle)
+        }
+    }
 }

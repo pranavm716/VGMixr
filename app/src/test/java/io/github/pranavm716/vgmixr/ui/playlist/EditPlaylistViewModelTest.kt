@@ -88,12 +88,19 @@ class EditPlaylistViewModelTest {
             assertEquals("Hype", state.playlistName)
             assertEquals(
                 listOf(
-                    EditPlaylistRowUi("rse-route-102", "Route 102", listOf(chipR), added = true),
+                    EditPlaylistRowUi(
+                        "rse-route-102",
+                        "Route 102",
+                        listOf(chipR),
+                        added = true,
+                        familyId = "rse"
+                    ),
                     EditPlaylistRowUi(
                         "rse-littleroot",
                         "Littleroot Town",
                         listOf(chipR, chipS),
-                        added = true
+                        added = true,
+                        familyId = "rse"
                     )
                 ),
                 state.results
@@ -136,8 +143,19 @@ class EditPlaylistViewModelTest {
 
                 assertEquals(
                     listOf(
-                        EditPlaylistRowUi("rse-route-101", "Route 101", listOf(chipR, chipS)),
-                        EditPlaylistRowUi("rse-route-102", "Route 102", listOf(chipR), added = true)
+                        EditPlaylistRowUi(
+                            "rse-route-101",
+                            "Route 101",
+                            listOf(chipR, chipS),
+                            familyId = "rse"
+                        ),
+                        EditPlaylistRowUi(
+                            "rse-route-102",
+                            "Route 102",
+                            listOf(chipR),
+                            added = true,
+                            familyId = "rse"
+                        )
                     ),
                     awaitItem().results
                 )
@@ -165,12 +183,62 @@ class EditPlaylistViewModelTest {
     }
 
     @Test
+    fun `the results name the query they answer, which a toggle leaves alone`() = runTest {
+        viewModel.uiState.test {
+            assertEquals("", awaitItem().resultsQuery)
+            viewModel.onQueryChange("route")
+            assertEquals("route", awaitItem().resultsQuery)
+
+            viewModel.onToggle("rse-route-101")
+
+            assertEquals("route", awaitItem().resultsQuery)
+        }
+    }
+
+    @Test
     fun `a query that matches nothing says so`() = runTest {
         viewModel.uiState.test {
             awaitItem()
             viewModel.onQueryChange("zzzz")
 
             assertTrue(awaitItem().noResults)
+        }
+    }
+
+    @Test
+    fun `a user track in the playlist shows its thumbnail and its channel`() = runTest {
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            null,
+            emptyList(),
+            "Some Remix",
+            0,
+            emptyList(),
+            channel = "GlitchxCity",
+            thumbnail = "thumbnails/AAAAAAAAAAA.jpg"
+        )
+        playlists.contents.value = mapOf(7L to Playlist(7, "Hype", false, listOf("yt:AAAAAAAAAAA")))
+        val viewModel = EditPlaylistViewModel(
+            SavedStateHandle(mapOf("playlistId" to 7L)),
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playlists,
+            main.dispatcher
+        )
+
+        viewModel.uiState.test {
+            var row = awaitItem().results.firstOrNull()
+            while (row == null) row = awaitItem().results.firstOrNull()
+            assertEquals("thumbnails/AAAAAAAAAAA.jpg", row.thumbnail)
+            assertEquals("GlitchxCity", row.subtitle)
+        }
+    }
+
+    @Test
+    fun `a row carries its track's family for the cover`() = runTest {
+        viewModel.uiState.test {
+            var row = awaitItem().results.firstOrNull()
+            while (row == null) row = awaitItem().results.firstOrNull()
+            assertEquals("rse", row.familyId)
         }
     }
 }

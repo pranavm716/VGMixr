@@ -54,14 +54,18 @@ sealed interface PlaylistEvent {
 
 /**
  * A track as search and the queue list it: title over all of its game chips. [unplayable] greys a
- * track whose sources are all broken; [playing] marks the current track.
+ * track whose sources are all broken; [playing] marks the current track. A user track has its
+ * [thumbnail]'s path and its channel as [subtitle].
  */
 data class PlaylistRowUi(
     val id: String,
     val title: String,
     val chips: List<ChipUi>,
     val unplayable: Boolean = false,
-    val playing: Boolean = false
+    val playing: Boolean = false,
+    val thumbnail: String? = null,
+    val subtitle: String? = null,
+    val familyId: String? = null
 )
 
 @HiltViewModel
@@ -92,7 +96,7 @@ class PlaylistViewModel @Inject constructor(
     fun onTrackClick(trackId: String) {
         viewModelScope.launch {
             val catalog = catalog.catalog.first()
-            val track = catalog.tracks.firstOrNull { it.id == trackId } ?: return@launch
+            val track = catalog.track(trackId) ?: return@launch
             val unplayable = track.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -125,7 +129,7 @@ class PlaylistViewModel @Inject constructor(
     /** Adds one track to "Next in queue"; a greyed track can't be queued. */
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
-            val track = catalog.catalog.first().tracks.firstOrNull { it.id == trackId }
+            val track = catalog.catalog.first().track(trackId)
             if (track == null || track.unplayable != null) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
@@ -136,15 +140,17 @@ class PlaylistViewModel @Inject constructor(
 // Entries whose track left the catalog (retired) aren't listed until step 14 shows them.
 private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): PlaylistUiState {
     if (playlist == null) return PlaylistUiState.NotFound
-    val tracksById = tracks.associateBy { it.id }
     val rows = playlist.trackIds.mapNotNull { id ->
-        val track = tracksById[id] ?: return@mapNotNull null
+        val track = track(id) ?: return@mapNotNull null
         PlaylistRowUi(
             id = track.id,
             title = track.title,
             chips = track.games.map { ChipUi(it.shortName, it.color) },
             unplayable = track.unplayable != null,
-            playing = track.id == playingId
+            playing = track.id == playingId,
+            thumbnail = track.thumbnail,
+            subtitle = track.channel,
+            familyId = track.familyId
         )
     }
     return PlaylistUiState.Loaded(

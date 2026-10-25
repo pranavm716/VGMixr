@@ -1,8 +1,9 @@
-"""Family covers: hand-cropped square images converted into catalog/covers/<family>.webp.
+"""Family covers: hand-cropped 16:9 images converted into catalog/covers/<family>.webp.
 
 The app bundles catalog/ as assets and finds a family's cover by its id, so a cover's file name
-is the link to its family: no manifest field. Sources are cropped square by hand (the alignment is
-a judgement call); this only checks, resizes and re-encodes them.
+is the link to its family: no manifest field. Sources are cropped to 16:9 by hand (the alignment
+is a judgement call); this only checks, resizes and re-encodes them, so the app bundles small
+files of one shape. 16:9 is YouTube's thumbnail shape, which user tracks show as their art.
 """
 
 from dataclasses import dataclass
@@ -11,10 +12,11 @@ from typing import Any
 
 from PIL import Image, UnidentifiedImageError
 
-COVER_SIZE = 512
+# YouTube's largest thumbnail size: sharp at the full width of a phone.
+COVER_SIZE = (1280, 720)
 QUALITY = 85
-# A hand crop a few pixels off square is fine; anything more is a mistake to fix at the source.
-SQUARE_TOLERANCE = 0.01
+# A hand crop a few pixels off 16:9 is fine; anything more is a mistake to fix at the source.
+ASPECT_TOLERANCE = 0.01
 # Transparent areas are flattened onto the app's background.
 BACKGROUND = (0x11, 0x11, 0x11)
 SOURCE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp"}
@@ -71,8 +73,8 @@ def _load(sources: list[Path], families: set[str]) -> dict[str, Image.Image]:
             errors.append(f"{path.name}: not a readable image ({e})")
             continue
         width, height = image.size
-        if abs(width - height) > SQUARE_TOLERANCE * max(width, height):
-            errors.append(f"{path.name}: {width}x{height} is not square; crop it first")
+        if abs(width / height / _ASPECT - 1) > ASPECT_TOLERANCE:
+            errors.append(f"{path.name}: {width}x{height} is not 16:9; crop it first")
             continue
         images[family] = image
     if errors:
@@ -80,10 +82,15 @@ def _load(sources: list[Path], families: set[str]) -> dict[str, Image.Image]:
     return images
 
 
+_ASPECT = COVER_SIZE[0] / COVER_SIZE[1]
+
+
 def _cover(image: Image.Image) -> Image.Image:
-    side = min(image.size)
-    left, top = (image.width - side) // 2, (image.height - side) // 2
-    square = image.crop((left, top, left + side, top + side))
-    flat = Image.new("RGB", square.size, BACKGROUND)
-    flat.paste(square, mask=square.getchannel("A"))
-    return flat.resize((COVER_SIZE, COVER_SIZE), Image.Resampling.LANCZOS)
+    # Trims the few pixels a hand crop is off 16:9, evenly from both sides.
+    width = min(image.width, round(image.height * _ASPECT))
+    height = min(image.height, round(image.width / _ASPECT))
+    left, top = (image.width - width) // 2, (image.height - height) // 2
+    cropped = image.crop((left, top, left + width, top + height))
+    flat = Image.new("RGB", cropped.size, BACKGROUND)
+    flat.paste(cropped, mask=cropped.getchannel("A"))
+    return flat.resize(COVER_SIZE, Image.Resampling.LANCZOS)

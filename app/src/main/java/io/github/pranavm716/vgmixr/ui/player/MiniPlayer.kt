@@ -66,8 +66,10 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.PlayPauseIcon
 import io.github.pranavm716.vgmixr.ui.components.RowTileGap
-import io.github.pranavm716.vgmixr.ui.components.RowTileSize
+import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
+import io.github.pranavm716.vgmixr.ui.components.ThumbnailTile
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.TrackTitleChips
 import io.github.pranavm716.vgmixr.ui.components.tintColor
@@ -256,7 +258,14 @@ private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
             .padding(start = 16.dp, end = ButtonWidth),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ArtTile(RowTileSize)
+        val thumbnail = track.thumbnail
+        if (thumbnail !=
+            null
+        ) {
+            ThumbnailTile(thumbnail, RowTileHeight)
+        } else {
+            ArtTile(RowTileHeight, familyId = track.familyId)
+        }
         Spacer(Modifier.width(RowTileGap))
         TrackText(track)
     }
@@ -264,7 +273,7 @@ private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
 
 @Composable
 private fun TrackText(state: MiniTrackUi) =
-    TrackTitleChips(state.title, state.chips, marquee = true)
+    TrackTitleChips(state.title, state.chips, marquee = true, subtitle = state.subtitle)
 
 @Composable
 private fun PlayPauseButton(isPlaying: Boolean, isLoading: Boolean, onClick: () -> Unit) {
@@ -276,15 +285,7 @@ private fun PlayPauseButton(isPlaying: Boolean, isLoading: Boolean, onClick: () 
                 strokeWidth = 2.dp
             )
 
-            isPlaying -> Icon(
-                painterResource(R.drawable.ic_pause),
-                contentDescription = stringResource(R.string.pause)
-            )
-
-            else -> Icon(
-                painterResource(R.drawable.ic_play),
-                contentDescription = stringResource(R.string.play)
-            )
+            else -> PlayPauseIcon(isPlaying, Modifier.size(24.dp))
         }
     }
 }

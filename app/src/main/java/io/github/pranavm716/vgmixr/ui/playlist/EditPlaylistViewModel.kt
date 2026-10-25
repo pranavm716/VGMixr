@@ -34,7 +34,10 @@ import kotlinx.coroutines.launch
 data class EditPlaylistUiState(
     val playlistName: String = "",
     val results: List<EditPlaylistRowUi> = emptyList(),
-    val noResults: Boolean = false
+    val noResults: Boolean = false,
+    // The query [results] answer ("" for the playlist's own tracks), so the list can tell new
+    // results from a toggle or a removal.
+    val resultsQuery: String = ""
 )
 
 /**
@@ -46,7 +49,10 @@ data class EditPlaylistRowUi(
     val title: String,
     val chips: List<ChipUi>,
     val unplayable: Boolean = false,
-    val added: Boolean = false
+    val added: Boolean = false,
+    val thumbnail: String? = null,
+    val subtitle: String? = null,
+    val familyId: String? = null
 )
 
 /** Finds tracks with the Search tab's search and adds them to (or takes them out of) a playlist. */
@@ -87,15 +93,15 @@ class EditPlaylistViewModel @Inject constructor(
             val ids = playlist?.trackIds.orEmpty()
             val added = ids.toSet()
             val tracks = if (matches.query.isBlank()) {
-                val byId = catalog.tracks.associateBy { it.id }
-                ids.mapNotNull { byId[it] }
+                ids.mapNotNull(catalog::track)
             } else {
                 matches.tracks
             }
             EditPlaylistUiState(
                 playlistName = playlist?.name ?: openedName,
                 results = tracks.map { it.toRow(it.id in added) },
-                noResults = matches.query.isNotBlank() && matches.tracks.isEmpty()
+                noResults = matches.query.isNotBlank() && matches.tracks.isEmpty(),
+                resultsQuery = matches.query
             )
         }.flowOn(dispatcher)
             .stateIn(
@@ -123,5 +129,8 @@ private fun CatalogTrack.toRow(added: Boolean) = EditPlaylistRowUi(
     title = title,
     chips = games.map { ChipUi(it.shortName, it.color) },
     unplayable = unplayable != null,
-    added = added
+    added = added,
+    thumbnail = thumbnail,
+    subtitle = channel,
+    familyId = familyId
 )

@@ -53,9 +53,12 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
+import io.github.pranavm716.vgmixr.ui.components.ART_ASPECT
 import io.github.pranavm716.vgmixr.ui.components.ArtTile
-import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.ChipsLine
 import io.github.pranavm716.vgmixr.ui.components.MarqueeText
+import io.github.pranavm716.vgmixr.ui.components.PlayPauseIcon
+import io.github.pranavm716.vgmixr.ui.components.ThumbnailArt
 
 /**
  * Now playing's header, as Spotify's: a chevron that closes the sheet, and "Playing from" over
@@ -108,7 +111,7 @@ fun NowPlayingHeader(
     }
 }
 
-/** "Playing from" over the family's or playlist's name, or "Queue". */
+/** "Playing from" over the family's or playlist's name, "Queue" or "Remixes". */
 @Composable
 private fun PlayingFromText(playingFrom: PlayingFromUi?) {
     if (playingFrom == null) return
@@ -123,6 +126,7 @@ private fun PlayingFromText(playingFrom: PlayingFromUi?) {
             is PlayingFromUi.Family -> playingFrom.name
             is PlayingFromUi.Playlist -> playingFrom.name
             PlayingFromUi.Queue -> stringResource(R.string.playing_from_queue)
+            PlayingFromUi.Remixes -> stringResource(R.string.playing_from_remixes)
         },
         style = MaterialTheme.typography.titleSmall,
         fontWeight = FontWeight.Bold,
@@ -132,14 +136,21 @@ private fun PlayingFromText(playingFrom: PlayingFromUi?) {
 }
 
 /**
- * Now playing's body, Shuttle's look: the art, the title over its game chips, the seek
+ * Now playing's body, Shuttle's look: the 16:9 art, the title over its game chips, the seek
  * bar between the elapsed time and the length, previous / play-pause / next, and under them the
- * row of add to playlist (start), the favorite heart (centered) and the queue button (end).
+ * row of add to playlist (start), the favorite heart (centered) and the queue button (end). The
+ * title, seek bar and controls are one group, sitting low; the art is centered above it, between
+ * the header's text and the title's letters (layout E of roadmap 13b's mockups).
+ * Tapping the title or chips opens the track's own family ([onOpenFamily]), also when it plays
+ * from a playlist, to reach the tracks around it; a user track's opens the Remixes tab
+ * ([onOpenRemixes]).
  */
 @Composable
 fun NowPlayingScreen(
     onOpenQueue: () -> Unit,
     onAddToPlaylist: () -> Unit,
+    onOpenFamily: (familyId: String) -> Unit,
+    onOpenRemixes: () -> Unit,
     viewModel: NowPlayingViewModel = hiltViewModel()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -167,13 +178,24 @@ fun NowPlayingScreen(
             .padding(top = 66.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.height(16.dp))
-        ArtTile(Modifier.padding(horizontal = ART_MARGIN).fillMaxWidth().aspectRatio(1f))
-        // The title and chips sit halfway between the art and the controls: equal gaps, plus a
-        // nudge for the room the text and the slider leave around what you see.
-        Spacer(Modifier.weight(INFO_GAP))
+        Spacer(Modifier.weight(ABOVE_ART))
+        val art = Modifier.padding(horizontal = ART_MARGIN).fillMaxWidth().aspectRatio(ART_ASPECT)
+        val thumbnail = visible.thumbnail
+        if (thumbnail != null) ThumbnailArt(thumbnail, art) else ArtTile(art, visible.familyId)
+        Spacer(Modifier.weight(BELOW_ART))
+        // A tap target without a ripple, as the header's "Playing from".
         Column(
-            Modifier.offset(y = INFO_NUDGE),
+            Modifier
+                .offset(y = INFO_NUDGE)
+                .clickable(interactionSource = null, indication = null) {
+                    if (visible.opensRemixes) {
+                        onOpenRemixes()
+                    } else {
+                        visible.familyId?.let(
+                            onOpenFamily
+                        )
+                    }
+                },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // A title too wide scrolls, fading at both edges.
@@ -183,15 +205,15 @@ fun NowPlayingScreen(
                 modifier = Modifier.padding(horizontal = SIDE_MARGIN)
             )
             Spacer(Modifier.height(12.dp))
-            GameChips(visible.chips)
+            ChipsLine(visible.chips, visible.subtitle)
         }
-        Spacer(Modifier.weight(INFO_GAP))
+        Spacer(Modifier.height(INFO_TO_SEEK))
         Column(Modifier.padding(horizontal = SIDE_MARGIN)) {
             SeekRow(viewModel)
             Spacer(Modifier.height(16.dp))
             Controls(visible.isPlaying, visible.isLoading, visible.shuffle, viewModel)
         }
-        Spacer(Modifier.weight(BOTTOM_GAP))
+        Spacer(Modifier.weight(BELOW_CONTROLS))
         Box(Modifier.fillMaxWidth().padding(horizontal = SIDE_MARGIN)) {
             // White in both states, not the accent: filled when the track is a favorite.
             IconButton(onClick = viewModel::onToggleFavorite, Modifier.align(Alignment.Center)) {
@@ -203,23 +225,26 @@ fun NowPlayingScreen(
                     contentDescription = stringResource(
                         if (favorite) R.string.remove_from_favorites else R.string.add_to_favorites
                     ),
-                    tint = Color.White
+                    tint = Color.White,
+                    modifier = Modifier.size(BOTTOM_ICON)
                 )
             }
             IconButton(onClick = onAddToPlaylist, Modifier.align(Alignment.CenterStart)) {
                 Icon(
                     painterResource(R.drawable.ic_add),
-                    contentDescription = stringResource(R.string.add_to_playlist)
+                    contentDescription = stringResource(R.string.add_to_playlist),
+                    modifier = Modifier.size(BOTTOM_ICON)
                 )
             }
             IconButton(onClick = onOpenQueue, Modifier.align(Alignment.CenterEnd)) {
                 Icon(
                     painterResource(R.drawable.ic_queue),
-                    contentDescription = stringResource(R.string.queue)
+                    contentDescription = stringResource(R.string.queue),
+                    modifier = Modifier.size(BOTTOM_ICON)
                 )
             }
         }
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(BOTTOM_MARGIN))
     }
 }
 
@@ -285,15 +310,10 @@ private fun Controls(
     shuffle: Boolean,
     viewModel: NowPlayingViewModel
 ) {
-    // Equal gaps between what the eye sees: each control takes its glyph's visible width (the
-    // icons have padding of their own), and the row spreads them out. Repeat is a placeholder for
-    // step 21's repeat/loop button and does nothing yet.
-    Row(
-        Modifier.fillMaxWidth().padding(horizontal = CONTROLS_INSET),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        ControlSlot(OUTER_WIDTH) {
+    // Spotify's row: each control centered a fixed distance from the middle, play/pause on it.
+    // Repeat is a placeholder for step 21's repeat/loop button and does nothing yet.
+    Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        ControlSlot(-OUTER_OFFSET) {
             IconButton(onClick = viewModel::onShuffle, Modifier.requiredSize(48.dp)) {
                 Icon(
                     painterResource(R.drawable.ic_shuffle),
@@ -310,7 +330,7 @@ private fun Controls(
                 )
             }
         }
-        ControlSlot(SKIP_WIDTH) {
+        ControlSlot(-SKIP_OFFSET) {
             IconButton(onClick = viewModel::onPrevious, Modifier.requiredSize(56.dp)) {
                 Icon(
                     painterResource(R.drawable.ic_skip_previous),
@@ -319,7 +339,7 @@ private fun Controls(
                 )
             }
         }
-        ControlSlot(PLAY_SIZE) {
+        ControlSlot(0.dp) {
             Box(
                 Modifier
                     .size(PLAY_SIZE)
@@ -331,23 +351,16 @@ private fun Controls(
             ) {
                 when {
                     isLoading -> CircularProgressIndicator(
-                        modifier = Modifier.size(22.dp),
+                        modifier = Modifier.size(LOADING_SIZE),
                         color = Color.White,
-                        strokeWidth = 2.5.dp
+                        strokeWidth = 3.dp
                     )
 
-                    else -> Icon(
-                        painterResource(if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
-                        contentDescription = stringResource(
-                            if (isPlaying) R.string.pause else R.string.play
-                        ),
-                        tint = Color.White,
-                        modifier = Modifier.size(30.dp)
-                    )
+                    else -> PlayPauseIcon(isPlaying, Modifier.size(PLAY_ICON), tint = Color.White)
                 }
             }
         }
-        ControlSlot(SKIP_WIDTH) {
+        ControlSlot(SKIP_OFFSET) {
             IconButton(onClick = viewModel::onNext, Modifier.requiredSize(56.dp)) {
                 Icon(
                     painterResource(R.drawable.ic_skip_next),
@@ -356,7 +369,7 @@ private fun Controls(
                 )
             }
         }
-        ControlSlot(OUTER_WIDTH) {
+        ControlSlot(OUTER_OFFSET) {
             Icon(
                 painterResource(R.drawable.ic_repeat),
                 contentDescription = null,
@@ -366,24 +379,30 @@ private fun Controls(
     }
 }
 
-/** A control [width] wide, its glyph's visible width; its touch target overflows it. */
+/** A control centered [offset] from the row's middle; its touch target may overflow the row. */
 @Composable
-private fun ControlSlot(width: Dp, content: @Composable () -> Unit) {
-    Box(Modifier.width(width), contentAlignment = Alignment.Center) { content() }
+private fun ControlSlot(offset: Dp, content: @Composable () -> Unit) {
+    Box(Modifier.offset(x = offset), contentAlignment = Alignment.Center) { content() }
 }
 
-private val SHUFFLE_ICON = 28.dp
-private val REPEAT_ICON = 28.dp
-private val SKIP_ICON = 36.dp
-private val PLAY_SIZE = 52.dp
+// Spotify's controls row, measured from a screenshot of its now playing on the phone (360dp
+// wide). Each control's center lies a fixed distance from the middle: skips 76dp, shuffle and
+// repeat 144dp. Material Symbols' glyphs have other proportions than Spotify's, so each icon is
+// sized for its glyph to cover the same area as Spotify's (glyph sizes in dp).
+private val SKIP_OFFSET = 76.dp
+private val OUTER_OFFSET = 144.dp
 
-// Material Symbols' skip glyph spans 520 of its 960 units, repeat 720 (shuffle 640). Shuffle's
-// slot takes repeat's width too, so play/pause stays centered.
-private val SKIP_WIDTH = SKIP_ICON * 520 / 960
-private val OUTER_WIDTH = REPEAT_ICON * 720 / 960
+private val SHUFFLE_ICON = 31.5.dp
 
-// Inside the side margin, so shuffle and repeat sit about where Shuttle's do.
-private val CONTROLS_INSET = 22.dp
+// Glyph 23.8 x 22 (Spotify's 21.5 x 23.8).
+private val SKIP_ICON = 44.dp
+
+private val REPEAT_ICON = 29.dp
+
+// The circle is Spotify's; its triangle 15.6 x 19.8 (Spotify's 17.2 x 19.5).
+private val PLAY_SIZE = 64.dp
+private val PLAY_ICON = 34.dp
+private val LOADING_SIZE = 27.dp
 
 private fun PlaybackProgress.fraction(): Float {
     val duration = durationMs?.takeIf { it > 0 } ?: return 0f
@@ -395,14 +414,27 @@ private fun PlaybackProgress.fraction(): Float {
 private val ART_MARGIN = 20.dp
 
 // Measured on the phone: with equal gaps, the title's letters sat 11dp closer to the art than the
-// chips to the slider's thumb, since the slider leaves room above its thumb.
+// chips to the slider's thumb, since the slider leaves room above its thumb. The group keeps it.
 private val INFO_NUDGE = 6.dp
 
 // The margin of everything else.
 private val SIDE_MARGIN = 24.dp
 
-// How the free space splits: equal gaps above and below the title and chips, so they center
-// between the art and the controls, and a smaller one under the controls, so they sit low.
-private const val INFO_GAP = 0.7f
-private const val BOTTOM_GAP = 0.6f
+// From the chips to the seek bar, as far as the art was from the title before the art went 16:9.
+private val INFO_TO_SEEK = 35.dp
+
+// How the free space splits, in the dp it comes to on the phone (360x780dp): the controls start
+// where an equal split around the title would put them, and the art is centered between the
+// header's text and the title's letters (each 94dp away), which puts it 4.7dp above the middle of
+// its gap, since the header's text sits high in its box and the title's letters low in theirs.
+private const val ABOVE_ART = 73.4f
+private const val BELOW_ART = 82.74f
+private const val BELOW_CONTROLS = 51.06f
+
+// Under the row of add to playlist, favorite and queue: it sits two thirds of its icons' height
+// (16dp) above where 8dp put it.
+// The bottom row's add, heart and queue: a touch over Material's 24dp, inside their 48dp buttons.
+private val BOTTOM_ICON = 26.dp
+
+private val BOTTOM_MARGIN = 24.dp
 private const val TINT_FADE_END = 0.4f

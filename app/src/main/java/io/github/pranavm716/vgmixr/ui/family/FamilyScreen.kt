@@ -1,7 +1,7 @@
 package io.github.pranavm716.vgmixr.ui.family
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,6 +35,8 @@ import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.CollectionHeader
 import io.github.pranavm716.vgmixr.ui.components.GameChips
+import io.github.pranavm716.vgmixr.ui.components.RowTileGap
+import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
 import io.github.pranavm716.vgmixr.ui.components.ScrollToPlayingOnce
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.components.UnplayableIcon
@@ -51,12 +53,13 @@ private val LeadingGap = 16.dp
 private const val PLAYING_TINT = 0.12f
 
 @Composable
-fun FamilyTab(viewModel: FamilyViewModel = hiltViewModel()) {
+fun FamilyTab(onAddToPlaylist: (String) -> Unit, viewModel: FamilyViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     FamilyScreen(
         state,
         onTrackClick = viewModel::onTrackClick,
-        onQueueTrack = viewModel::onQueueTrack
+        onQueueTrack = viewModel::onQueueTrack,
+        onTrackLongClick = onAddToPlaylist
     )
 }
 
@@ -66,6 +69,7 @@ fun FamilyScreen(
     state: FamilyUiState,
     onTrackClick: (String) -> Unit,
     onQueueTrack: (String) -> Unit,
+    onTrackLongClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -78,8 +82,8 @@ fun FamilyScreen(
             CollectionHeader(
                 state.name,
                 state.trackCount,
-                art = { ArtTile(LeadingColumn) },
-                gap = LeadingGap,
+                art = { ArtTile(RowTileHeight, familyId = state.familyId) },
+                gap = RowTileGap,
                 background = gameTint(state.games)
             )
             val listState = rememberLazyListState()
@@ -92,7 +96,8 @@ fun FamilyScreen(
                             track,
                             playing = playing != null,
                             loading = playing?.loading == true,
-                            onClick = { onTrackClick(track.id) }
+                            onClick = { onTrackClick(track.id) },
+                            onLongClick = { onTrackLongClick(track.id) }
                         )
                     }
                     // A greyed track can't be queued, so its row doesn't swipe.
@@ -120,6 +125,7 @@ fun TrackRow(
     playing: Boolean,
     loading: Boolean,
     onClick: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val accent = MaterialTheme.colorScheme.primary
@@ -128,7 +134,8 @@ fun TrackRow(
             .fillMaxWidth()
             .height(TrackRowHeight)
             .then(if (playing) Modifier.background(accent.copy(alpha = PLAYING_TINT)) else Modifier)
-            .clickable(onClick = onClick)
+            // Ticks on a long press by itself (hapticFeedbackEnabled).
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
             .padding(start = StartPadding, end = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -199,7 +206,8 @@ private fun FamilyScreenPreview() {
                 playing = PlayingRowUi("b", index = 1, loading = true)
             ),
             onTrackClick = {},
-            onQueueTrack = {}
+            onQueueTrack = {},
+            onTrackLongClick = {}
         )
     }
 }

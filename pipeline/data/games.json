@@ -16,6 +16,8 @@
     { "id": "platinum", "name": "Platinum", "shortName": "Pt", "color": "#A0A08D", "generation": 4, "platform": "DS", "family": "dppt" },
     { "id": "heartgold", "name": "HeartGold", "shortName": "HG", "color": "#E8B502", "generation": 4, "platform": "DS", "family": "hgss" },
     { "id": "soulsilver", "name": "SoulSilver", "shortName": "SS", "color": "#AAB9CF", "generation": 4, "platform": "DS", "family": "hgss" },
+    { "id": "pmd-brt", "name": "Blue Rescue Team", "shortName": "BRT", "color": "#0977cb", "generation": 4, "platform": "DS" },
+    { "id": "pmd-eos", "name": "Explorers of Sky", "shortName": "EoS", "color": "#7bb54f", "generation": 4, "platform": "DS" },
     { "id": "black", "name": "Black", "shortName": "B", "color": "#444444", "generation": 5, "platform": "DS", "family": "bw" },
     { "id": "white", "name": "White", "shortName": "W", "color": "#E1E1E1", "generation": 5, "platform": "DS", "family": "bw" },
     { "id": "black-2", "name": "Black 2", "shortName": "B2", "color": "#303E51", "generation": 5, "platform": "DS", "family": "bw" },
@@ -63,6 +65,10 @@
     { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 65, "last": 66, "titleSuffix": " (GB Sounds)" },
     { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 81, "last": 84, "titleSuffix": " (GB Sounds)" },
     { "family": "hgss", "page": "Pokémon HeartGold & Pokémon SoulSilver: Super Music Collection", "disc": "Disc 3", "first": 86, "last": 92, "titleSuffix": " (GB Sounds)" },
+
+    { "family": "pmd-brt", "file": "tracklists/pmd-brt.tsv", "disc": "Disc 1" },
+
+    { "family": "pmd-eos", "file": "tracklists/pmd-eos.tsv", "disc": "Disc 1" },
 
     { "family": "bw", "games": ["black", "white"], "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 1" },
     { "family": "bw", "games": ["black", "white"], "page": "Pokémon Black & Pokémon White: Super Music Collection", "disc": "Disc 2" },
@@ -122,6 +128,8 @@
       { "games": ["firered", "leafgreen"], "playlist": "PL2uxd6YWj7PIOaewo5Z39hSJMdUmo3taO", "note": "Daintii Music, game rip" },
       { "games": ["diamond", "pearl", "platinum"], "playlist": "PLQOt6x9a9xdSjsJbKolxZiTMiUjyZm-Xm" },
       { "games": ["heartgold", "soulsilver"], "playlist": "PL7657467B11931136", "note": "Luis Rivera, Music Super Complete (80 of the album's tracks)" },
+      { "games": ["pmd-brt"], "playlist": "PL4D8DE6BFAD3A151A", "note": "PMD Blue Rescue Team OST" },
+      { "games": ["pmd-eos"], "playlist": "PLNj_ZJF3LtBzxeoqwagc30AgrNvhSUu1L", "note": "PMD Explorers of Sky OST" },
       { "games": ["black", "white"], "playlist": "PL4DA9DFA77C8FF491" },
       { "games": ["black-2", "white-2"], "playlist": "PLMNd7l5z4pbieh3OXLc7rnFC5kxO5IlCY" },
       { "games": ["x", "y"], "playlist": "PLaKSGGxuUf7Q" },
@@ -141,7 +149,9 @@
     ],
     "albums": [],
     "aliases": {
-      "bw": ["BW", "B2W2", "BW2"]
+      "bw": ["BW", "B2W2", "BW2"],
+      "pmd-brt": ["Mystery Dungeon", "PMD", "Blue Rescue Team", "Red Rescue Team", "Rescue Team", "Mystery Dungeon Rescue Team"],
+      "pmd-eos": ["Pokemon Mystery Dungeon", "Mystery Dungeon", "PMD", "Explorers of Sky", "Explorers", "Mystery Dungeon Explorers"]
     }
   }
 }

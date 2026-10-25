@@ -13,6 +13,12 @@ interface PlaybackController {
      */
     fun playFrom(trackIds: List<String>, index: Int, context: QueueContext)
 
+    /**
+     * Plays all of [trackIds], a list long-pressed in [context]: in order from its first track, or
+     * with shuffle on in a shuffled order, from a random one (see [PlayQueue.playAll]).
+     */
+    fun playAll(trackIds: List<String>, context: QueueContext)
+
     /** Adds [trackIds] to the end of the user's queue ("Next in queue"). */
     fun addToQueue(trackIds: List<String>)
 

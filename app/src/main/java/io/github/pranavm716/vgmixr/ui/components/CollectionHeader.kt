@@ -82,7 +82,12 @@ fun ScrollToPlayingOnce(listState: LazyListState, playingIndex: Int?, rowHeight:
         if (done) return@LaunchedEffect
         done = true
         val index = playingIndex ?: return@LaunchedEffect
-        val viewport = snapshotFlow { listState.layoutInfo.viewportSize.height }.first { it > 0 }
-        listState.scrollToItem(index, scrollOffset = -(viewport - rowPx) / 2)
+        listState.centerOn(index, rowPx)
     }
+}
+
+/** Scrolls so row [index], [rowPx] tall, sits mid-screen. */
+suspend fun LazyListState.centerOn(index: Int, rowPx: Int) {
+    val viewport = snapshotFlow { layoutInfo.viewportSize.height }.first { it > 0 }
+    scrollToItem(index, scrollOffset = -(viewport - rowPx) / 2)
 }

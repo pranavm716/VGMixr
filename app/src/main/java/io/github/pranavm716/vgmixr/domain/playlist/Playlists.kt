@@ -58,7 +58,5 @@ interface PlaylistRepository {
  * The playlist's tracks found in [catalog] that can play, in its order: what a tap plays and a
  * swipe queues. Tracks no longer in the catalog and greyed tracks are left out.
  */
-fun Playlist.playableTrackIds(catalog: Catalog): List<String> {
-    val tracks = catalog.tracks.associateBy { it.id }
-    return trackIds.filter { id -> tracks[id]?.let { it.unplayable == null } == true }
-}
+fun Playlist.playableTrackIds(catalog: Catalog): List<String> =
+    trackIds.filter { id -> catalog.track(id)?.let { it.unplayable == null } == true }

@@ -35,9 +35,11 @@ sealed interface MiniPlayerUiState {
 /** A track as the mini player shows it. [chips] are all of its games, also when it plays in every game. */
 data class MiniTrackUi(
     val trackId: String,
-    val familyId: String,
+    val familyId: String?,
     val title: String,
-    val chips: List<ChipUi>
+    val chips: List<ChipUi>,
+    val thumbnail: String? = null,
+    val subtitle: String? = null
 )
 
 @HiltViewModel
@@ -83,11 +85,13 @@ private fun Catalog.miniPlayer(state: PlaybackState): MiniPlayerUiState {
 }
 
 private fun Catalog.miniTrack(trackId: String?): MiniTrackUi? {
-    val track = tracks.firstOrNull { it.id == trackId } ?: return null
+    val track = trackId?.let { track(it) } ?: return null
     return MiniTrackUi(
         trackId = track.id,
         familyId = track.familyId,
         title = track.title,
-        chips = track.games.map { ChipUi(it.shortName, it.color) }
+        chips = track.games.map { ChipUi(it.shortName, it.color) },
+        thumbnail = track.thumbnail,
+        subtitle = track.channel
     )
 }

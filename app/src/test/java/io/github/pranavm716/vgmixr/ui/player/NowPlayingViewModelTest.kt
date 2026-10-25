@@ -40,6 +40,11 @@ class NowPlayingViewModelTest {
                 0,
                 emptyList()
             )
+        ),
+        userTracks = listOf(
+            // A remix of an RSE track, and a video that remixes nothing in the catalog.
+            CatalogTrack("yt:AAAAAAAAAAA", "rse", listOf(ruby), "Route 101 Remix", 0, emptyList()),
+            CatalogTrack("yt:BBBBBBBBBBB", null, emptyList(), "Some Remix", 0, emptyList())
         )
     )
 
@@ -51,9 +56,13 @@ class NowPlayingViewModelTest {
         NowPlayingViewModel(FakeCatalogRepository(catalog), playback, playlists)
     }
 
-    private fun playing(context: QueueContext, isLoading: Boolean = false) = PlaybackState(
-        queue = PlayQueue(listOf(QueueEntry("rse-a", context)), current = 0),
-        trackId = "rse-a",
+    private fun playing(
+        context: QueueContext,
+        isLoading: Boolean = false,
+        trackId: String = "rse-a"
+    ) = PlaybackState(
+        queue = PlayQueue(listOf(QueueEntry(trackId, context)), current = 0),
+        trackId = trackId,
         isPlaying = !isLoading,
         isLoading = isLoading
     )
@@ -67,6 +76,7 @@ class NowPlayingViewModelTest {
                 NowPlayingUiState.Visible(
                     title = "Route 101",
                     chips = listOf(ChipUi("R", "#336699"), ChipUi("S", "#336699")),
+                    familyId = "rse",
                     playingFrom = PlayingFromUi.Family("rse", "Ruby / Sapphire"),
                     isPlaying = true,
                     isLoading = false
@@ -100,6 +110,15 @@ class NowPlayingViewModelTest {
     }
 
     @Test
+    fun `a track playing from a playlist still knows its own family`() = runTest {
+        playback.state.value = playing(QueueContext.Playlist(1))
+
+        viewModel.uiState.test {
+            assertEquals("rse", (awaitItem() as NowPlayingUiState.Visible).familyId)
+        }
+    }
+
+    @Test
     fun `a track from a deleted playlist plays from its family`() = runTest {
         playback.state.value = playing(QueueContext.Playlist(9))
 
@@ -110,6 +129,42 @@ class NowPlayingViewModelTest {
             )
         }
     }
+
+    @Test
+    fun `a remix tapped in Remixes plays from Remixes and knows its original's family`() = runTest {
+        playback.state.value = playing(QueueContext.Remixes, trackId = "yt:AAAAAAAAAAA")
+
+        viewModel.uiState.test {
+            val state = awaitItem() as NowPlayingUiState.Visible
+            assertEquals(PlayingFromUi.Remixes, state.playingFrom)
+            assertEquals("rse", state.familyId)
+            assertEquals(listOf(ChipUi("R", "#336699")), state.chips)
+        }
+    }
+
+    @Test
+    fun `a user track that remixes nothing has no family or chips`() = runTest {
+        playback.state.value = playing(QueueContext.Remixes, trackId = "yt:BBBBBBBBBBB")
+
+        viewModel.uiState.test {
+            val state = awaitItem() as NowPlayingUiState.Visible
+            assertEquals(null, state.familyId)
+            assertEquals(emptyList<ChipUi>(), state.chips)
+        }
+    }
+
+    @Test
+    fun `a user track from a deleted playlist plays from Remixes, not its original's family`() =
+        runTest {
+            playback.state.value = playing(QueueContext.Playlist(9), trackId = "yt:AAAAAAAAAAA")
+
+            viewModel.uiState.test {
+                assertEquals(
+                    PlayingFromUi.Remixes,
+                    (awaitItem() as NowPlayingUiState.Visible).playingFrom
+                )
+            }
+        }
 
     @Test
     fun `hidden while nothing plays`() = runTest {
@@ -207,5 +262,74 @@ class NowPlayingViewModelTest {
         assertEquals("1:49", formatTime(109_000))
         assertEquals("1:02:03", formatTime(3_723_000))
         assertEquals("0:00", formatTime(-5))
+    }
+
+    @Test
+    fun `a user track's thumbnail is the art`() = runTest {
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            null,
+            emptyList(),
+            "Some Remix",
+            0,
+            emptyList(),
+            channel = "GlitchxCity",
+            thumbnail = "thumbnails/AAAAAAAAAAA.jpg"
+        )
+        playback.state.value = playing(QueueContext.Remixes, trackId = "yt:AAAAAAAAAAA")
+        val viewModel = NowPlayingViewModel(
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playback,
+            playlists
+        )
+
+        viewModel.uiState.test {
+            assertEquals(
+                "thumbnails/AAAAAAAAAAA.jpg",
+                (awaitItem() as NowPlayingUiState.Visible).thumbnail
+            )
+        }
+    }
+
+    @Test
+    fun `a user track shows its channel after its chips`() = runTest {
+        playback.state.value = playing(QueueContext.Remixes, trackId = "yt:AAAAAAAAAAA")
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            "rse",
+            listOf(ruby),
+            "Route 101",
+            0,
+            emptyList(),
+            channel = "GlitchxCity"
+        )
+        val viewModel = NowPlayingViewModel(
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playback,
+            playlists
+        )
+
+        viewModel.uiState.test {
+            assertEquals("GlitchxCity", (awaitItem() as NowPlayingUiState.Visible).subtitle)
+        }
+    }
+
+    @Test
+    fun `a catalog track has no subtitle`() = runTest {
+        playback.state.value = playing(QueueContext.Family("rse"))
+
+        viewModel.uiState.test {
+            assertEquals(null, (awaitItem() as NowPlayingUiState.Visible).subtitle)
+        }
+    }
+
+    @Test
+    fun `a user track's title opens Remixes, a catalog track's its family`() = runTest {
+        playback.state.value = playing(QueueContext.Remixes, trackId = "yt:AAAAAAAAAAA")
+        viewModel.uiState.test {
+            assertEquals(true, (awaitItem() as NowPlayingUiState.Visible).opensRemixes)
+            playback.state.value = playing(QueueContext.Family("rse"))
+            assertEquals(false, (awaitItem() as NowPlayingUiState.Visible).opensRemixes)
+        }
     }
 }

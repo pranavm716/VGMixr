@@ -28,7 +28,7 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
 import io.github.pranavm716.vgmixr.ui.components.CollectionRow
-import io.github.pranavm716.vgmixr.ui.components.RowTileSize
+import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
 import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnReselect
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -54,6 +54,7 @@ fun PlaylistsTab(
         state,
         onPlaylistClick,
         onQueuePlaylist = viewModel::onQueuePlaylist,
+        onPlayPlaylist = viewModel::onPlayPlaylist,
         onCreatePlaylist = viewModel::onCreatePlaylist,
         listState = listState
     )
@@ -69,6 +70,7 @@ fun PlaylistsScreen(
     state: PlaylistsUiState,
     onPlaylistClick: (Long) -> Unit,
     onQueuePlaylist: (Long) -> Unit,
+    onPlayPlaylist: (Long) -> Unit,
     onCreatePlaylist: (String) -> Unit,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState()
@@ -102,8 +104,9 @@ fun PlaylistsScreen(
                         CollectionRow(
                             playlist.name,
                             playlist.trackCount,
-                            art = { PlaylistArt(playlist.isFavorites, RowTileSize) },
-                            onClick = { onPlaylistClick(playlist.id) }
+                            art = { PlaylistArt(playlist.isFavorites, RowTileHeight) },
+                            onClick = { onPlaylistClick(playlist.id) },
+                            onLongClick = { onPlayPlaylist(playlist.id) }
                         )
                     }
                 }
@@ -126,6 +129,7 @@ private fun PlaylistsScreenPreview() {
             ),
             onPlaylistClick = {},
             onQueuePlaylist = {},
+            onPlayPlaylist = {},
             onCreatePlaylist = {}
         )
     }

@@ -77,17 +77,24 @@ class PlaylistViewModelTest {
                     name = "Favorites",
                     isFavorites = true,
                     rows = listOf(
-                        PlaylistRowUi("rse-b", "Battle! (Team Magma)", listOf(chip("R"))),
+                        PlaylistRowUi(
+                            "rse-b",
+                            "Battle! (Team Magma)",
+                            listOf(chip("R")),
+                            familyId = "rse"
+                        ),
                         PlaylistRowUi(
                             "rse-c",
                             "Battle! (Team Aqua)",
                             listOf(chip("S")),
-                            unplayable = true
+                            unplayable = true,
+                            familyId = "rse"
                         ),
                         PlaylistRowUi(
                             "rse-a",
                             "Route 101",
-                            listOf(chip("R"), chip("S"))
+                            listOf(chip("R"), chip("S")),
+                            familyId = "rse"
                         )
                     )
                 ),
@@ -199,5 +206,43 @@ class PlaylistViewModelTest {
             assertEquals(PlaylistEvent.Closed, awaitItem())
         }
         assertEquals(null, playlists.contents.value[2])
+    }
+
+    @Test
+    fun `a user track's row shows its thumbnail and its channel`() = runTest {
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            null,
+            emptyList(),
+            "Some Remix",
+            0,
+            emptyList(),
+            channel = "GlitchxCity",
+            thumbnail = "thumbnails/AAAAAAAAAAA.jpg"
+        )
+        playlists.contents.value =
+            mapOf(2L to Playlist(2, "Mix", false, listOf("yt:AAAAAAAAAAA")))
+        val viewModel = PlaylistViewModel(
+            SavedStateHandle(mapOf("playlistId" to 2L)),
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playlists,
+            playback,
+            messages,
+            main.dispatcher
+        )
+
+        viewModel.uiState.test {
+            val row = (awaitItem() as PlaylistUiState.Loaded).rows.single()
+            assertEquals("thumbnails/AAAAAAAAAAA.jpg", row.thumbnail)
+            assertEquals("GlitchxCity", row.subtitle)
+        }
+    }
+
+    @Test
+    fun `a row carries its track's family for the cover`() = runTest {
+        viewModel().uiState.test {
+            val rows = (awaitItem() as PlaylistUiState.Loaded).rows
+            assertEquals(listOf("rse", "rse", "rse"), rows.map { it.familyId })
+        }
     }
 }

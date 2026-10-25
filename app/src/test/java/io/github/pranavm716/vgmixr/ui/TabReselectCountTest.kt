@@ -37,7 +37,7 @@ class TabReselectCountTest {
             VGMixrTheme {
                 VGMixrApp(
                     navController,
-                    screen = { destination, _, reselects ->
+                    screen = { destination, _, reselects, _ ->
                         Text("${destination.name} reselected $reselects")
                     }
                 )

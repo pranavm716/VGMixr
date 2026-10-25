@@ -1,7 +1,7 @@
 package io.github.pranavm716.vgmixr.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,24 +26,26 @@ import androidx.compose.ui.unit.dp
  */
 val TileRowHeight = 64.dp
 
-/** The cover tile in a [TileRowHeight] row. */
-val RowTileSize = 44.dp
+/** The cover tile's height in a [TileRowHeight] row; it is 16:9, so about 78dp wide. */
+val RowTileHeight = 44.dp
 
 /** The gap between that tile and the row's text. */
 val RowTileGap = 14.dp
 
 /**
- * A track's title over its game chips, placed so the gap between the two splits a [RowTileSize]
+ * A track's title over its game chips, placed so the gap between the two splits a [RowTileHeight]
  * tile beside them in half: the title's line is trimmed to its letters, and the block sits 1.5dp
  * up, as measured on the phone for the mini player. [marquee] scrolls a long title instead of
- * cutting it short, fading its start edge while it moves.
+ * cutting it short, fading its start edge while it moves, and a long [subtitle] (a user track's
+ * channel, after the chips) the same way.
  */
 @Composable
 fun TrackTitleChips(
     title: String,
     chips: List<ChipUi>,
     modifier: Modifier = Modifier,
-    marquee: Boolean = false
+    marquee: Boolean = false,
+    subtitle: String? = null
 ) {
     Column(modifier.offset(y = (-1.5).dp)) {
         val style = MaterialTheme.typography.titleMedium.trimmed()
@@ -55,7 +57,52 @@ fun TrackTitleChips(
         }
         // The trim takes the room under the title's descenders too; give the chips some back.
         Spacer(Modifier.height(4.dp))
+        ChipsLine(chips, subtitle, marquee = marquee)
+    }
+}
+
+/**
+ * A track's game chips, then, for a user track, a dot and its channel ([subtitle]): chips first, so
+ * they line up with catalog tracks' in mixed lists. A user track that remixes nothing shows only
+ * its channel. A channel too long for the room left is cut short, or with [marquee] scrolls as a
+ * marquee title does: its start edge, by the dot, fades only while letters move under it, and its
+ * end is left to the mini player's own fade before its button.
+ */
+@Composable
+fun ChipsLine(
+    chips: List<ChipUi>,
+    subtitle: String?,
+    modifier: Modifier = Modifier,
+    marquee: Boolean = false
+) {
+    Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         GameChips(chips)
+        if (subtitle != null) {
+            val style = MaterialTheme.typography.bodyMedium
+            val color = MaterialTheme.colorScheme.onSurfaceVariant
+            if (chips.isNotEmpty()) {
+                // Measured on the phone, the same padding both sides left the dot 7.0dp from the
+                // chips but 7.7dp from the channel (the glyphs' own side spaces differ): a third
+                // of a dp moved from end to start centres it.
+                Text(
+                    "•",
+                    style = style,
+                    color = color,
+                    modifier = Modifier.padding(start = 6.33.dp, end = 5.67.dp)
+                )
+            }
+            if (marquee) {
+                MarqueeText(subtitle, style.copy(color = color), fadeEnd = false)
+            } else {
+                Text(
+                    subtitle,
+                    style = style,
+                    color = color,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
     }
 }
 
@@ -73,7 +120,10 @@ private const val CURRENT_TINT = 0.12f
 /**
  * A track with its family's tile, the title over its game chips, as the queue and search list
  * them. [current] tints the playing track; [unplayable] greys a track whose sources are all broken.
- * Without [onClick] the row doesn't react to taps; [trailing] (a button) ends it.
+ * A user track shows its video's [thumbnail] (a file path) for the tile and its channel as
+ * [subtitle]; other tracks show their family's cover ([familyId]).
+ * Without [onClick] the row doesn't react to taps; [onLongClick], if given, runs on a long press
+ * with a haptic tick. [trailing] (a button) ends it.
  */
 @Composable
 fun TrackTileRow(
@@ -82,7 +132,11 @@ fun TrackTileRow(
     unplayable: Boolean,
     current: Boolean,
     onClick: (() -> Unit)?,
-    trailing: (@Composable () -> Unit)? = null
+    onLongClick: (() -> Unit)? = null,
+    trailing: (@Composable () -> Unit)? = null,
+    thumbnail: String? = null,
+    subtitle: String? = null,
+    familyId: String? = null
 ) {
     val accent = MaterialTheme.colorScheme.primary
     Row(
@@ -90,14 +144,25 @@ fun TrackTileRow(
             .fillMaxWidth()
             .height(TileRowHeight)
             .then(if (current) Modifier.background(accent.copy(alpha = CURRENT_TINT)) else Modifier)
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .then(
+                if (onClick != null) {
+                    // Ticks on a long press by itself (hapticFeedbackEnabled).
+                    Modifier.combinedClickable(onClick = onClick, onLongClick = onLongClick)
+                } else {
+                    Modifier
+                }
+            )
             .padding(start = 16.dp, end = if (trailing != null) 4.dp else 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         val faint = Modifier.unplayable(unplayable)
-        ArtTile(RowTileSize, faint)
+        if (thumbnail != null) {
+            ThumbnailTile(thumbnail, RowTileHeight, faint)
+        } else {
+            ArtTile(RowTileHeight, faint, familyId)
+        }
         Spacer(Modifier.width(RowTileGap))
-        TrackTitleChips(title, chips, Modifier.weight(1f).then(faint))
+        TrackTitleChips(title, chips, Modifier.weight(1f).then(faint), subtitle = subtitle)
         if (unplayable) {
             Spacer(Modifier.width(12.dp))
             UnplayableIcon()

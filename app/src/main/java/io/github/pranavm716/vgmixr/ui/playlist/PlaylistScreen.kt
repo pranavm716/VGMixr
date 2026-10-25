@@ -37,7 +37,7 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.CollectionHeader
 import io.github.pranavm716.vgmixr.ui.components.RowTileGap
-import io.github.pranavm716.vgmixr.ui.components.RowTileSize
+import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
 import io.github.pranavm716.vgmixr.ui.components.ScrollToPlayingOnce
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
@@ -99,7 +99,7 @@ fun PlaylistScreen(
             CollectionHeader(
                 state.name,
                 state.trackCount,
-                art = { PlaylistArt(state.isFavorites, RowTileSize) },
+                art = { PlaylistArt(state.isFavorites, RowTileHeight) },
                 gap = RowTileGap,
                 action = {
                     PlaylistMenu(
@@ -123,7 +123,10 @@ fun PlaylistScreen(
                             row.chips,
                             row.unplayable,
                             current = row.playing,
-                            onClick = { onTrackClick(row.id) }
+                            onClick = { onTrackClick(row.id) },
+                            thumbnail = row.thumbnail,
+                            subtitle = row.subtitle,
+                            familyId = row.familyId
                         )
                     }
                     // A greyed track can't be queued, so its row doesn't swipe.

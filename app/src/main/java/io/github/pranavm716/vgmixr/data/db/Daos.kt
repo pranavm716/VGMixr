@@ -71,13 +71,15 @@ interface CatalogDao {
     suspend fun allSources(): List<SourceEntity>
 
     /**
-     * Clears the broken marks of videos no stream source of an active track uses any more. A
-     * subquery, not a list of ids, so it stays clear of SQLite's 999-variable limit on API 26.
+     * Clears the broken marks of videos that no stream source of an active track and no user track
+     * uses any more. A subquery, not a list of ids, so it stays clear of SQLite's 999-variable
+     * limit on API 26.
      */
     @Query(
         "DELETE FROM broken_streams WHERE videoId NOT IN (" +
             "SELECT s.videoId FROM sources s JOIN tracks t ON t.id = s.trackId " +
-            "WHERE s.type = 'stream' AND t.retired = 0)"
+            "WHERE s.type = 'stream' AND t.retired = 0) " +
+            "AND videoId NOT IN (SELECT videoId FROM user_tracks)"
     )
     suspend fun clearUnusedBrokenMarks()
 }
@@ -189,4 +191,26 @@ abstract class BrokenStreamDao {
 
     @Query("SELECT * FROM broken_streams ORDER BY markedAt, videoId")
     abstract fun observeAll(): Flow<List<BrokenStreamEntity>>
+}
+
+@Dao
+interface UserTrackDao {
+    /** Inserts [track]; returns -1 and changes nothing if its id is taken. */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(track: UserTrackEntity): Long
+
+    @Query("SELECT * FROM user_tracks ORDER BY addedAt DESC, id")
+    fun observeNewestFirst(): Flow<List<UserTrackEntity>>
+
+    @Query("SELECT * FROM user_tracks ORDER BY addedAt DESC, id")
+    suspend fun allNewestFirst(): List<UserTrackEntity>
+
+    @Query("UPDATE user_tracks SET remixOf = :remixOf WHERE id = :id")
+    suspend fun setRemixOf(id: String, remixOf: String?)
+
+    @Query("DELETE FROM user_tracks WHERE id = :id")
+    suspend fun delete(id: String)
+
+    @Query("UPDATE user_tracks SET remixOf = :newId WHERE remixOf = :oldId")
+    suspend fun repointRemixOf(oldId: String, newId: String)
 }

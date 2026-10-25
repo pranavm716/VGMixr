@@ -57,6 +57,12 @@ object TestCatalog {
         tracks: List<Track> = listOf(track("rse-route-101"))
     ) = ManifestParseResult.Valid(Manifest(Instant.parse(generatedAt), games, tracks))
 
-    fun importer(db: VGMixrDatabase, userDataDao: UserDataDao = db.userDataDao()) =
-        CatalogImporter(db, db.catalogDao(), userDataDao, db.importStateDao(), clock)
+    fun importer(db: VGMixrDatabase, userDataDao: UserDataDao = db.userDataDao()) = CatalogImporter(
+        db,
+        db.catalogDao(),
+        userDataDao,
+        db.importStateDao(),
+        db.userTrackDao(),
+        clock
+    )
 }

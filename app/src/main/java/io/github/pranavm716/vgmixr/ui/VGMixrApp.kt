@@ -30,9 +30,12 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,11 +67,14 @@ import io.github.pranavm716.vgmixr.ui.navigation.EditPlaylistRoute
 import io.github.pranavm716.vgmixr.ui.navigation.FamilyRoute
 import io.github.pranavm716.vgmixr.ui.navigation.GamesGraph
 import io.github.pranavm716.vgmixr.ui.navigation.GamesRoute
+import io.github.pranavm716.vgmixr.ui.navigation.LinkRoute
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistRoute
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistsGraph
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistsRoute
+import io.github.pranavm716.vgmixr.ui.navigation.RemixesGraph
+import io.github.pranavm716.vgmixr.ui.navigation.RemixesRoute
 import io.github.pranavm716.vgmixr.ui.navigation.SearchRoute
-import io.github.pranavm716.vgmixr.ui.navigation.Tab4Route
+import io.github.pranavm716.vgmixr.ui.navigation.SettingsRoute
 import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
 import io.github.pranavm716.vgmixr.ui.navigation.VGMixrNavBar
 import io.github.pranavm716.vgmixr.ui.navigation.screenTag
@@ -76,7 +82,10 @@ import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheet
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingSheetState
 import io.github.pranavm716.vgmixr.ui.player.PlayingFromUi
 import io.github.pranavm716.vgmixr.ui.playlists.PlaylistsTab
+import io.github.pranavm716.vgmixr.ui.remixes.RemixesTab
 import io.github.pranavm716.vgmixr.ui.search.SearchTab
+import io.github.pranavm716.vgmixr.ui.settings.SettingsScreen
+import io.github.pranavm716.vgmixr.ui.settings.SettingsUiState
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
@@ -84,7 +93,12 @@ import kotlinx.coroutines.flow.distinctUntilChanged
  * up each time the tab is tapped while its root screen shows (Games then scrolls to the top, Search
  * focuses its field).
  */
-typealias TabScreen = @Composable (TopLevelDestination, NavHostController, reselects: Int) -> Unit
+typealias TabScreen = @Composable (
+    TopLevelDestination,
+    NavHostController,
+    reselects: Int,
+    onAddToPlaylist: (trackId: String) -> Unit
+) -> Unit
 
 /** Test tag of the family track screen. */
 const val FAMILY_SCREEN_TAG = "screen-family"
@@ -92,25 +106,36 @@ const val FAMILY_SCREEN_TAG = "screen-family"
 /** Test tag of a playlist's track screen. */
 const val PLAYLIST_SCREEN_TAG = "screen-playlist"
 
+/** Test tag of the settings screen. */
+const val SETTINGS_SCREEN_TAG = "screen-settings"
+
 /**
  * The app shell: the tabs' screens above the navbar. [screen] draws a tab's root,
  * [familyScreen] a family's tracks, [playlistScreen] a playlist's (its plus opens
  * [editPlaylistScreen]); all default to placeholders
  * so the shell runs without Hilt (tests), and MainActivity passes the real screens.
+ * [settingsScreen] is opened by a long press on the Remixes tab.
  */
 @Composable
 fun VGMixrApp(
     navController: NavHostController = rememberNavController(),
-    screen: TabScreen = { destination, _, _ -> PlaceholderScreen(destination.label) },
-    familyScreen: @Composable () -> Unit = { PlaceholderScreen("Family") },
+    screen: TabScreen = { destination, _, _, _ -> PlaceholderScreen(destination.label) },
+    familyScreen: @Composable (
+        onAddToPlaylist: (trackId: String) -> Unit
+    ) -> Unit = { PlaceholderScreen("Family") },
     playlistScreen: @Composable (
         onEditPlaylist: (name: String) -> Unit,
         onClose: () -> Unit
     ) -> Unit = { _, _ -> PlaceholderScreen("Playlist") },
+    linkScreen: @Composable (onBack: () -> Unit) -> Unit = { PlaceholderScreen("Link") },
     editPlaylistScreen: @Composable (
         onBack: () -> Unit
     ) -> Unit = { PlaceholderScreen("Add tracks") },
+    settingsScreen: @Composable (onBack: () -> Unit) -> Unit = {
+        SettingsScreen(SettingsUiState(), onAccentClick = {}, onBack = it)
+    },
     snackbars: SnackbarHostState = remember { SnackbarHostState() },
+    onPlayRemixes: () -> Unit = {},
     miniPlayer: @Composable (
         NowPlayingSheetState,
         onOpenNowPlaying: () -> Unit
@@ -122,11 +147,14 @@ fun VGMixrApp(
     ) -> Unit = { _, _ -> },
     nowPlaying: @Composable (
         onOpenQueue: () -> Unit,
-        onAddToPlaylist: () -> Unit
-    ) -> Unit = { _, _ -> PlaceholderScreen("Now playing") },
+        onAddToPlaylist: () -> Unit,
+        onOpenFamily: (familyId: String) -> Unit,
+        onOpenRemixes: () -> Unit
+    ) -> Unit = { _, _, _, _ -> PlaceholderScreen("Now playing") },
     addToPlaylist: @Composable (
+        trackId: String?,
         onClose: () -> Unit
-    ) -> Unit = { PlaceholderScreen("Add to playlist") },
+    ) -> Unit = { _, _ -> PlaceholderScreen("Add to playlist") },
     queue: @Composable (onClose: () -> Unit) -> Unit = { PlaceholderScreen("Queue") },
     nowPlayingOpen: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
 ) {
@@ -146,13 +174,35 @@ fun VGMixrApp(
     }
     // The queue opens over now playing and closes with it.
     var queueOpen by rememberSaveable { mutableStateOf(false) }
-    // "Add to playlist" opens over now playing the same way.
+    // "Add to playlist" opens over now playing the same way, for the playing track (null), or over
+    // the tabs for a track long-pressed in a family or in search.
     var addToPlaylistOpen by rememberSaveable { mutableStateOf(false) }
+    var addToPlaylistTrack by rememberSaveable { mutableStateOf<String?>(null) }
+    val openAddToPlaylist = { trackId: String? ->
+        addToPlaylistTrack = trackId
+        addToPlaylistOpen = true
+    }
     LaunchedEffect(nowPlayingOpen.value) {
         if (!nowPlayingOpen.value) {
             queueOpen = false
             addToPlaylistOpen = false
         }
+    }
+    // Closes the sheet and opens a family in the Games tab, replacing any one already open there;
+    // it scrolls to the playing track on opening.
+    val openFamily = { familyId: String ->
+        nowPlayingOpen.value = false
+        navController.navigate(FamilyRoute(familyId, fromNowPlaying = true)) {
+            popUpTo<GamesRoute>()
+        }
+    }
+    // Closes the sheet and opens the Remixes tab at its list, scrolled to the playing track.
+    var remixesScrolls by rememberSaveable { mutableIntStateOf(0) }
+    val openRemixes: () -> Unit = {
+        nowPlayingOpen.value = false
+        navController.navigateTo(TopLevelDestination.REMIXES)
+        navController.popBackStack<RemixesRoute>(inclusive = false)
+        remixesScrolls++
     }
     val reselects = remember { mutableStateMapOf<TopLevelDestination, Int>() }
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -196,20 +246,36 @@ fun VGMixrApp(
                             } else {
                                 navController.navigateTo(tab)
                             }
+                        },
+                        // Plays the tab's tracks (Remixes), or opens the tab's page inside it,
+                        // over whatever the tab shows (Games: Settings).
+                        onLongPress = { tab ->
+                            if (tab.longPressPlays) {
+                                onPlayRemixes()
+                                return@VGMixrNavBar
+                            }
+                            val page = tab.longPressRoute ?: return@VGMixrNavBar
+                            if (tab != selected) navController.navigateTo(tab)
+                            navController.navigate(page) { launchSingleTop = true }
                         }
                     )
                 }
             }
         ) { padding ->
-            AppNavHost(
-                navController,
-                screen,
-                familyScreen,
-                playlistScreen,
-                editPlaylistScreen,
-                { reselects[it] ?: 0 },
-                Modifier.padding(padding)
-            )
+            CompositionLocalProvider(LocalRemixesScrolls provides remixesScrolls) {
+                AppNavHost(
+                    navController,
+                    screen,
+                    familyScreen,
+                    playlistScreen,
+                    editPlaylistScreen,
+                    linkScreen,
+                    settingsScreen,
+                    { reselects[it] ?: 0 },
+                    openAddToPlaylist,
+                    Modifier.padding(padding)
+                )
+            }
         }
         // Now playing grows out of the mini player over everything, the navbar included.
         NowPlayingSheet(
@@ -219,14 +285,12 @@ fun VGMixrApp(
                 nowPlayingHeader(
                     { nowPlayingOpen.value = false },
                     { playingFrom ->
-                        // Closes the sheet and opens the family (Games tab) or playlist
-                        // (Playlists tab), replacing any one already open there; it scrolls to the
+                        // Closes the sheet and opens the family (Games tab), playlist
+                        // (Playlists tab) or the Remixes tab, replacing any one already open there; it scrolls to the
                         // playing track on opening.
                         nowPlayingOpen.value = false
                         when (playingFrom) {
-                            is PlayingFromUi.Family -> navController.navigate(
-                                FamilyRoute(playingFrom.familyId, fromNowPlaying = true)
-                            ) { popUpTo<GamesRoute>() }
+                            is PlayingFromUi.Family -> openFamily(playingFrom.familyId)
 
                             // Unlike the Games tab's list, the playlist list isn't under every
                             // tab's screens: switch to its tab first, so the playlist opens over
@@ -238,12 +302,18 @@ fun VGMixrApp(
                                 ) { popUpTo<PlaylistsRoute>() }
                             }
 
+                            PlayingFromUi.Remixes -> openRemixes()
+
                             PlayingFromUi.Queue -> Unit
                         }
                     }
                 )
             },
-            content = { nowPlaying({ queueOpen = true }, { addToPlaylistOpen = true }) }
+            content = {
+                nowPlaying({
+                    queueOpen = true
+                }, { openAddToPlaylist(null) }, openFamily, openRemixes)
+            }
         )
         AnimatedVisibility(
             visible = queueOpen,
@@ -262,7 +332,7 @@ fun VGMixrApp(
         ) {
             Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                 BackHandler { addToPlaylistOpen = false }
-                addToPlaylist { addToPlaylistOpen = false }
+                addToPlaylist(addToPlaylistTrack) { addToPlaylistOpen = false }
             }
         }
     }
@@ -272,13 +342,16 @@ fun VGMixrApp(
 private fun AppNavHost(
     navController: NavHostController,
     screen: TabScreen,
-    familyScreen: @Composable () -> Unit,
+    familyScreen: @Composable (onAddToPlaylist: (String) -> Unit) -> Unit,
     playlistScreen: @Composable (
         onEditPlaylist: (name: String) -> Unit,
         onClose: () -> Unit
     ) -> Unit,
     editPlaylistScreen: @Composable (onBack: () -> Unit) -> Unit,
+    linkScreen: @Composable (onBack: () -> Unit) -> Unit,
+    settingsScreen: @Composable (onBack: () -> Unit) -> Unit,
     reselects: (TopLevelDestination) -> Int,
+    onAddToPlaylist: (trackId: String) -> Unit,
     modifier: Modifier
 ) {
     NavHost(
@@ -315,21 +388,33 @@ private fun AppNavHost(
         // One entry per tab; the bar's order comes from TopLevelDestination, not from here.
         navigation<GamesGraph>(startDestination = GamesRoute) {
             composable<GamesRoute> {
-                Tab(TopLevelDestination.GAMES, navController, screen, reselects)
+                Tab(TopLevelDestination.GAMES, navController, screen, reselects, onAddToPlaylist)
             }
             // The family screen pads below the status bar itself, under its tinted header.
             composable<FamilyRoute> {
                 Box(Modifier.screen().testTag(FAMILY_SCREEN_TAG)) {
-                    familyScreen()
+                    familyScreen(onAddToPlaylist)
+                }
+            }
+            // Pads below the status bar itself, as the family screen does.
+            composable<SettingsRoute> {
+                Box(Modifier.screen().testTag(SETTINGS_SCREEN_TAG)) {
+                    settingsScreen { navController.popBackStack() }
                 }
             }
         }
         composable<SearchRoute> {
-            Tab(TopLevelDestination.SEARCH, navController, screen, reselects)
+            Tab(TopLevelDestination.SEARCH, navController, screen, reselects, onAddToPlaylist)
         }
         navigation<PlaylistsGraph>(startDestination = PlaylistsRoute) {
             composable<PlaylistsRoute> {
-                Tab(TopLevelDestination.PLAYLISTS, navController, screen, reselects)
+                Tab(
+                    TopLevelDestination.PLAYLISTS,
+                    navController,
+                    screen,
+                    reselects,
+                    onAddToPlaylist
+                )
             }
             // Pads below the status bar itself, as the family screen does.
             composable<PlaylistRoute> { entry ->
@@ -348,7 +433,17 @@ private fun AppNavHost(
                 }
             }
         }
-        composable<Tab4Route> { Tab(TopLevelDestination.TAB_4, navController, screen, reselects) }
+        navigation<RemixesGraph>(startDestination = RemixesRoute) {
+            composable<RemixesRoute> {
+                Tab(TopLevelDestination.REMIXES, navController, screen, reselects, onAddToPlaylist)
+            }
+            // Slides in over the Remixes list like any screen inside a tab; pads itself too.
+            composable<LinkRoute> {
+                Box(Modifier.screen()) {
+                    linkScreen { navController.popBackStack() }
+                }
+            }
+        }
     }
 }
 
@@ -357,26 +452,44 @@ private fun Tab(
     destination: TopLevelDestination,
     navController: NavHostController,
     screen: TabScreen,
-    reselects: (TopLevelDestination) -> Int
+    reselects: (TopLevelDestination) -> Int,
+    onAddToPlaylist: (trackId: String) -> Unit
 ) {
     Box(Modifier.screen().statusBarsPadding().testTag(destination.screenTag)) {
-        screen(destination, navController, reselects(destination))
+        screen(destination, navController, reselects(destination), onAddToPlaylist)
     }
 }
 
+/**
+ * How many times now playing has asked the Remixes tab to show the playing track: its title or its
+ * "Playing from Remixes" header was tapped.
+ */
+private val LocalRemixesScrolls = compositionLocalOf { 0 }
+
 /** The real root screen of each tab. */
 @Composable
-fun AppScreen(destination: TopLevelDestination, navController: NavHostController, reselects: Int) {
+fun AppScreen(
+    destination: TopLevelDestination,
+    navController: NavHostController,
+    reselects: Int,
+    onAddToPlaylist: (trackId: String) -> Unit
+) {
     when (destination) {
         TopLevelDestination.GAMES ->
             GamesTab(onFamilyClick = { navController.navigate(FamilyRoute(it)) }, reselects)
 
-        TopLevelDestination.SEARCH -> SearchTab(reselects)
+        TopLevelDestination.SEARCH -> SearchTab(reselects, onAddToPlaylist)
 
         TopLevelDestination.PLAYLISTS ->
             PlaylistsTab(onPlaylistClick = { navController.navigate(PlaylistRoute(it)) }, reselects)
 
-        else -> PlaceholderScreen(destination.label)
+        TopLevelDestination.REMIXES ->
+            RemixesTab(
+                reselects,
+                LocalRemixesScrolls.current,
+                onAddToPlaylist,
+                onOpenLink = { navController.navigate(LinkRoute(it)) }
+            )
     }
 }
 

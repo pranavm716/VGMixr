@@ -1,5 +1,6 @@
 package io.github.pranavm716.vgmixr.domain.playback
 
+import kotlin.random.Random
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -45,6 +46,36 @@ class PlayQueueTest {
             QueueEdit.Replace(listed(0, "a") + queued("next") + listed(1, "b", "c", "d"), 0),
             edit
         )
+    }
+
+    @Test
+    fun `playing a whole list with shuffle off starts at its first track, in order`() {
+        val queue = PlayQueue(context("x") + queued("q1"), current = 0)
+
+        val edit = queue.playAll(family, rse, shuffle = false)
+
+        assertEquals(
+            QueueEdit.Replace(listed(0, "a") + queued("q1") + listed(1, "b", "c", "d"), 0),
+            edit
+        )
+    }
+
+    @Test
+    fun `playing a whole list with shuffle on starts at a random track, the rest shuffled`() {
+        val queue = PlayQueue(context("x") + queued("q1"), current = 0)
+
+        val firsts = (0 until 20).map { seed ->
+            val edit = queue.playAll(family, rse, shuffle = true, random = Random(seed))
+            assertEquals(0, edit.startIndex)
+            // The queue still waits right after the first track; every list track plays once.
+            assertEquals(queued("q1"), edit.entries.subList(1, 2))
+            val listed = edit.entries.filter { it.listIndex != null }
+            assertEquals(family.sorted(), listed.map { it.trackId }.sorted())
+            listed.forEach { assertEquals(family.indexOf(it.trackId), it.listIndex) }
+            edit.entries.first().trackId
+        }
+
+        assertEquals(family.toSet(), firsts.toSet())
     }
 
     @Test
@@ -118,7 +149,7 @@ class PlayQueueTest {
 
     @Test
     fun `a context survives being written as a key and read back`() {
-        listOf(QueueContext.Queue, QueueContext.Family("rse")).forEach {
+        listOf(QueueContext.Queue, QueueContext.Remixes, QueueContext.Family("rse")).forEach {
             assertEquals(it, QueueContext.fromKey(it.key))
         }
         assertEquals(null, QueueContext.fromKey("nonsense"))

@@ -34,7 +34,8 @@ class QueueViewModelTest {
     private val catalog = Catalog(
         games = listOf(ruby),
         families = listOf(Family("rse", "Ruby / Sapphire / Emerald", "RSE")),
-        tracks = listOf("h", "c", "q1", "q2", "x", "y").map(::track)
+        tracks = listOf("h", "c", "q1", "q2", "x", "y").map(::track),
+        userTracks = listOf("yt:AAAAAAAAAAA", "yt:BBBBBBBBBBB").map(::track)
     )
 
     private val rse = QueueContext.Family("rse")
@@ -49,7 +50,7 @@ class QueueViewModelTest {
     )
 
     private fun row(index: Int, id: String) =
-        QueueRowUi(index, id, "Title $id", listOf(ChipUi("R", "#336699")))
+        QueueRowUi(index, id, "Title $id", listOf(ChipUi("R", "#336699")), familyId = "rse")
 
     private fun state(entries: List<QueueEntry>, current: Int) = PlaybackState(
         queue = PlayQueue(entries, current),
@@ -155,6 +156,68 @@ class QueueViewModelTest {
 
         viewModel.uiState.test {
             assertEquals("Ruby / Sapphire / Emerald", awaitItem().nextFromName)
+        }
+    }
+
+    @Test
+    fun `next from Remixes names it`() = runTest {
+        val remixes = QueueContext.Remixes
+        playback.state.value = state(
+            listOf(QueueEntry("yt:AAAAAAAAAAA", remixes), QueueEntry("yt:BBBBBBBBBBB", remixes)),
+            current = 0
+        )
+
+        viewModel.uiState.test {
+            assertEquals("Remixes", awaitItem().nextFromName)
+        }
+    }
+
+    @Test
+    fun `user tracks from a deleted playlist come from Remixes`() = runTest {
+        val gone = QueueContext.Playlist(9)
+        playback.state.value = state(
+            listOf(QueueEntry("c", gone), QueueEntry("yt:AAAAAAAAAAA", gone)),
+            current = 0
+        )
+
+        viewModel.uiState.test {
+            assertEquals("Remixes", awaitItem().nextFromName)
+        }
+    }
+
+    @Test
+    fun `a user track's row shows its thumbnail and its channel`() = runTest {
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            null,
+            emptyList(),
+            "Some Remix",
+            0,
+            emptyList(),
+            channel = "GlitchxCity",
+            thumbnail = "thumbnails/AAAAAAAAAAA.jpg"
+        )
+        playback.state.value = state(listOf(QueueEntry("yt:AAAAAAAAAAA", QueueContext.Remixes)), 0)
+        val viewModel = QueueViewModel(
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playback,
+            messages,
+            playlists
+        )
+
+        viewModel.uiState.test {
+            val row = awaitItem().nowPlaying
+            assertEquals("thumbnails/AAAAAAAAAAA.jpg", row?.thumbnail)
+            assertEquals("GlitchxCity", row?.subtitle)
+        }
+    }
+
+    @Test
+    fun `a row carries its track's family for the cover`() = runTest {
+        playback.state.value = state(listOf(QueueEntry("c", rse)), 0)
+
+        viewModel.uiState.test {
+            assertEquals("rse", awaitItem().nowPlaying?.familyId)
         }
     }
 }
