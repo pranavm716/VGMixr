@@ -65,6 +65,11 @@
     <string name="playing_from">Playing from</string>
     <string name="playing_from_queue">Queue</string>
     <string name="playing_from_remixes">Remixes</string>
+    <string name="link">Link</string>
+    <string name="done">Done</string>
+    <string name="undo">Undo</string>
+    <string name="remix_deleted">Deleted %1$s</string>
+    <string name="delete_named">Delete %1$s</string>
     <string name="remixes_empty">No remixes yet. Share a video from YouTube to VGMixr to add it here.</string>
     <string name="close_now_playing">Close now playing</string>
     <string name="queue">Queue</string>

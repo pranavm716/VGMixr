@@ -9,11 +9,13 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.playableUserTrackIds
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackRepository
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -27,8 +29,11 @@ import kotlinx.coroutines.launch
 sealed interface RemixesUiState {
     data object Loading : RemixesUiState
 
-    /** The user tracks, newest first; none shows the empty state. */
-    data class Loaded(val rows: List<RemixRowUi>) : RemixesUiState {
+    /**
+     * The user tracks, newest first; none shows the empty state. While [deleting], each row has a
+     * delete button and does nothing else.
+     */
+    data class Loaded(val rows: List<RemixRowUi>, val deleting: Boolean = false) : RemixesUiState {
         /** The playing track's row, if it is one of these. */
         val playingIndex: Int? get() = rows.indexOfFirst { it.playing }.takeIf { it >= 0 }
     }
@@ -53,14 +58,18 @@ class RemixesViewModel @Inject constructor(
     private val catalog: CatalogRepository,
     private val playback: PlaybackController,
     private val messages: UserMessages,
+    private val userTracks: UserTrackRepository,
     @DefaultDispatcher dispatcher: CoroutineDispatcher
 ) : ViewModel() {
+    private val deleting = MutableStateFlow(false)
+
     val uiState: StateFlow<RemixesUiState> =
         combine(
             catalog.catalog,
-            playback.state.map { it.trackId }.distinctUntilChanged()
-        ) { catalog, playingId ->
-            RemixesUiState.Loaded(catalog.userTracks.map { it.toRow(playingId) })
+            playback.state.map { it.trackId }.distinctUntilChanged(),
+            deleting
+        ) { catalog, playingId, deleting ->
+            RemixesUiState.Loaded(catalog.userTracks.map { it.toRow(playingId) }, deleting)
         }
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), RemixesUiState.Loading)
@@ -91,6 +100,31 @@ class RemixesViewModel @Inject constructor(
             if (track == null || track.unplayable != null) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
+        }
+    }
+
+    /** The menu's Delete: every row gets a delete button. */
+    fun onStartDeleting() {
+        deleting.value = true
+    }
+
+    /** Done, or back: the rows go back to normal. */
+    fun onDoneDeleting() {
+        deleting.value = false
+    }
+
+    /**
+     * Deletes user track [trackId] at once, offering to undo it. Its playlist entries, history and
+     * thumbnail stay, so undoing (or sharing the video again) brings it all back.
+     */
+    fun onDelete(trackId: String) {
+        viewModelScope.launch {
+            val track = userTracks.userTracks.first().firstOrNull { it.id == trackId }
+                ?: return@launch
+            // The title as the row showed it: the original's, while linked.
+            val shown = catalog.catalog.first().track(trackId)?.title ?: track.title
+            userTracks.delete(trackId)
+            messages.post(UserMessage.RemixDeleted(track, shown))
         }
     }
 

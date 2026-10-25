@@ -9,13 +9,17 @@ import io.github.pranavm716.vgmixr.domain.model.Source
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.usertrack.UserTrack
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
+import io.github.pranavm716.vgmixr.testing.FakeUserTrackRepository
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import java.io.File
+import java.time.Instant
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -65,10 +69,20 @@ class RemixesViewModelTest {
     private val playback = FakePlaybackController()
     private val messages = UserMessages()
 
+    private val someRemix = UserTrack(
+        videoId = "CCCCCCCCCCC",
+        title = "Some Remix",
+        channel = "GlitchxCity",
+        durationMs = null,
+        addedAt = Instant.EPOCH
+    )
+    private val userTracks = FakeUserTrackRepository(listOf(someRemix))
+
     private fun viewModel(catalog: Catalog = this.catalog) = RemixesViewModel(
         FakeCatalogRepository(catalog),
         playback,
         messages,
+        userTracks,
         main.dispatcher
     )
 
@@ -176,5 +190,27 @@ class RemixesViewModelTest {
         viewModel().onQueueTrack("yt:BBBBBBBBBBB")
 
         assertEquals(emptyList<Any>(), playback.calls)
+    }
+
+    @Test
+    fun `the menu's Delete turns delete mode on, and Done turns it off`() = runTest {
+        val viewModel = viewModel()
+        viewModel.uiState.test {
+            assertEquals(false, (awaitItem() as RemixesUiState.Loaded).deleting)
+            viewModel.onStartDeleting()
+            assertEquals(true, (awaitItem() as RemixesUiState.Loaded).deleting)
+            viewModel.onDoneDeleting()
+            assertEquals(false, (awaitItem() as RemixesUiState.Loaded).deleting)
+        }
+    }
+
+    @Test
+    fun `deleting a remix removes it at once and offers to undo it`() = runTest {
+        messages.messages.test {
+            viewModel().onDelete("yt:CCCCCCCCCCC")
+
+            assertEquals(UserMessage.RemixDeleted(someRemix, "Some Remix"), awaitItem())
+            assertEquals(emptyList<UserTrack>(), userTracks.userTracks.first())
+        }
     }
 }
