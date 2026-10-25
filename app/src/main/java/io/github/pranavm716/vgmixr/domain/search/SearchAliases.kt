@@ -14,7 +14,10 @@ val SEARCH_ALIASES: Map<String, List<String>> = mapOf(
     "b2w2" to listOf("b2"),
     "bw2" to listOf("b2"),
     // Ultra Sun and Ultra Moon's tracks carry US.
-    "usum" to listOf("us")
+    "usum" to listOf("us"),
+    "pmd" to listOf("mystery", "dungeon"),
+    "brt" to listOf("blue", "rescue", "team"),
+    "eos" to listOf("explorers", "sky")
 )
 
 /**
