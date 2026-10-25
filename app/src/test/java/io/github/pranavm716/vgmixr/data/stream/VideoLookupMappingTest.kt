@@ -46,6 +46,16 @@ class VideoLookupMappingTest {
     }
 
     @Test
+    fun `a Topic channel is named after its artist`() {
+        val topic = info().apply { uploaderName = "GlitchxCity - Topic" }
+
+        assertEquals(
+            VideoLookupResult.Found(VideoDetails("Route 101 [Remix]", "GlitchxCity", 185_000)),
+            lookupResult(topic)
+        )
+    }
+
+    @Test
     fun `an unknown length is null`() {
         assertEquals(
             VideoLookupResult.Found(VideoDetails("Route 101 [Remix]", "GlitchxCity", null)),

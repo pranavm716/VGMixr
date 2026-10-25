@@ -43,7 +43,9 @@ fun lookupResult(info: StreamInfo): VideoLookupResult =
         VideoLookupResult.Found(
             VideoDetails(
                 title = info.name,
-                channel = info.uploaderName.orEmpty(),
+                // An artist's auto-generated YouTube Music channel ("GlitchxCity - Topic") is
+                // named after the artist.
+                channel = info.uploaderName.orEmpty().removeSuffix(TOPIC_SUFFIX),
                 durationMs = info.duration.takeIf { it > 0 }?.let { it * 1_000 }
             )
         )
@@ -60,3 +62,5 @@ fun lookupFailure(e: Exception): VideoLookupResult = when (val resolution = toRe
 
     is StreamResolution.Resolved -> error("an exception never resolves")
 }
+
+private const val TOPIC_SUFFIX = " - Topic"
