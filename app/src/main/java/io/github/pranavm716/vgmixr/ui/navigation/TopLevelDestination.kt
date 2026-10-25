@@ -50,10 +50,10 @@ enum class TopLevelDestination(
     val route: Any,
     val longPressRoute: Any? = null
 ) {
-    GAMES("Games", R.drawable.ic_games, GamesGraph),
+    GAMES("Games", R.drawable.ic_games, GamesGraph, longPressRoute = SettingsRoute),
     SEARCH("Search", R.drawable.ic_search, SearchRoute),
     PLAYLISTS("Playlists", R.drawable.ic_library_music, PlaylistsGraph),
-    REMIXES("Remixes", R.drawable.ic_instant_mix, RemixesGraph, longPressRoute = SettingsRoute);
+    REMIXES("Remixes", R.drawable.ic_equalizer, RemixesGraph);
 
     companion object {
         val start: TopLevelDestination get() = entries.first()
