@@ -74,11 +74,14 @@ fun ChipsLine(chips: List<ChipUi>, subtitle: String?, modifier: Modifier = Modif
             val style = MaterialTheme.typography.bodyMedium
             val color = MaterialTheme.colorScheme.onSurfaceVariant
             if (chips.isNotEmpty()) {
+                // Measured on the phone, the same padding both sides left the dot 7.0dp from the
+                // chips but 7.7dp from the channel (the glyphs' own side spaces differ): a third
+                // of a dp moved from end to start centres it.
                 Text(
                     "•",
                     style = style,
                     color = color,
-                    modifier = Modifier.padding(horizontal = 6.dp)
+                    modifier = Modifier.padding(start = 6.33.dp, end = 5.67.dp)
                 )
             }
             Text(
