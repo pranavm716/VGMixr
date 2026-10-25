@@ -225,19 +225,22 @@ fun NowPlayingScreen(
                     contentDescription = stringResource(
                         if (favorite) R.string.remove_from_favorites else R.string.add_to_favorites
                     ),
-                    tint = Color.White
+                    tint = Color.White,
+                    modifier = Modifier.size(BOTTOM_ICON)
                 )
             }
             IconButton(onClick = onAddToPlaylist, Modifier.align(Alignment.CenterStart)) {
                 Icon(
                     painterResource(R.drawable.ic_add),
-                    contentDescription = stringResource(R.string.add_to_playlist)
+                    contentDescription = stringResource(R.string.add_to_playlist),
+                    modifier = Modifier.size(BOTTOM_ICON)
                 )
             }
             IconButton(onClick = onOpenQueue, Modifier.align(Alignment.CenterEnd)) {
                 Icon(
                     painterResource(R.drawable.ic_queue),
-                    contentDescription = stringResource(R.string.queue)
+                    contentDescription = stringResource(R.string.queue),
+                    modifier = Modifier.size(BOTTOM_ICON)
                 )
             }
         }
@@ -430,5 +433,8 @@ private const val BELOW_CONTROLS = 51.06f
 
 // Under the row of add to playlist, favorite and queue: it sits two thirds of its icons' height
 // (16dp) above where 8dp put it.
+// The bottom row's add, heart and queue: a touch over Material's 24dp, inside their 48dp buttons.
+private val BOTTOM_ICON = 26.dp
+
 private val BOTTOM_MARGIN = 24.dp
 private const val TINT_FADE_END = 0.4f
