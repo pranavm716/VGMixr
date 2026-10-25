@@ -63,7 +63,13 @@ fun VGMixrNavBar(
                     destination,
                     destination == selected,
                     onClick = { onSelect(destination) },
-                    onLongClick = destination.longPressRoute?.let { { onLongPress(destination) } }
+                    onLongClick = if (destination.longPressRoute != null ||
+                        destination.longPressPlays
+                    ) {
+                        { onLongPress(destination) }
+                    } else {
+                        null
+                    }
                 )
             }
         }

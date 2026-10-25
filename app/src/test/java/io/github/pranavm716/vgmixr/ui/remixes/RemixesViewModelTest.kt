@@ -227,4 +227,26 @@ class RemixesViewModelTest {
             assertEquals(false, (awaitItem() as RemixesUiState.Loaded).linking)
         }
     }
+
+    @Test
+    fun `holding the tab plays every remix that can play, from Remixes`() = runTest {
+        viewModel().onPlayAll()
+
+        assertEquals(
+            listOf(
+                FakePlaybackController.PlayAll(
+                    listOf("yt:AAAAAAAAAAA", "yt:CCCCCCCCCCC"),
+                    QueueContext.Remixes
+                )
+            ),
+            playback.calls
+        )
+    }
+
+    @Test
+    fun `holding the tab with no remixes plays nothing`() = runTest {
+        viewModel(catalog.copy(userTracks = emptyList())).onPlayAll()
+
+        assertEquals(emptyList<Any>(), playback.calls)
+    }
 }

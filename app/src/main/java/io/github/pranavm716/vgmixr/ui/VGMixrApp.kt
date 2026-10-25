@@ -135,6 +135,7 @@ fun VGMixrApp(
         SettingsScreen(SettingsUiState(), onAccentClick = {}, onBack = it)
     },
     snackbars: SnackbarHostState = remember { SnackbarHostState() },
+    onPlayRemixes: () -> Unit = {},
     miniPlayer: @Composable (
         NowPlayingSheetState,
         onOpenNowPlaying: () -> Unit
@@ -246,8 +247,13 @@ fun VGMixrApp(
                                 navController.navigateTo(tab)
                             }
                         },
-                        // Opens the tab's page inside it, over whatever the tab shows.
+                        // Plays the tab's tracks (Remixes), or opens the tab's page inside it,
+                        // over whatever the tab shows (Games: Settings).
                         onLongPress = { tab ->
+                            if (tab.longPressPlays) {
+                                onPlayRemixes()
+                                return@VGMixrNavBar
+                            }
                             val page = tab.longPressRoute ?: return@VGMixrNavBar
                             if (tab != selected) navController.navigateTo(tab)
                             navController.navigate(page) { launchSingleTop = true }

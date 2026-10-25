@@ -100,6 +100,17 @@ class RemixesViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Plays every remix (a long press on the Remixes tab), leaving out those whose video is broken:
+     * in order, or shuffled from a random one with shuffle on, as a held family or playlist plays.
+     */
+    fun onPlayAll() {
+        viewModelScope.launch {
+            val ids = catalog.catalog.first().playableUserTrackIds()
+            if (ids.isNotEmpty()) playback.playAll(ids, QueueContext.Remixes)
+        }
+    }
+
     /** Adds one track to "Next in queue"; a greyed track can't be queued. */
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {

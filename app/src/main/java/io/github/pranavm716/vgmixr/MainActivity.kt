@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toArgb
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
@@ -27,6 +28,7 @@ import io.github.pranavm716.vgmixr.ui.playlist.EditPlaylistTab
 import io.github.pranavm716.vgmixr.ui.playlist.PlaylistTab
 import io.github.pranavm716.vgmixr.ui.queue.QueueScreen
 import io.github.pranavm716.vgmixr.ui.remixes.LinkTab
+import io.github.pranavm716.vgmixr.ui.remixes.RemixesViewModel
 import io.github.pranavm716.vgmixr.ui.settings.SettingsTab
 import io.github.pranavm716.vgmixr.ui.theme.Background
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -56,6 +58,8 @@ class MainActivity : ComponentActivity() {
             VGMixrTheme(accent.color) {
                 val snackbars = remember { SnackbarHostState() }
                 MessagesEffect(snackbars)
+                // A long press on the Remixes tab plays them from any tab.
+                val remixes: RemixesViewModel = hiltViewModel()
                 VGMixrApp(
                     screen = { destination, nav, reselects, addToPlaylist ->
                         AppScreen(destination, nav, reselects, addToPlaylist)
@@ -68,6 +72,7 @@ class MainActivity : ComponentActivity() {
                     linkScreen = { back -> LinkTab(onBack = back) },
                     settingsScreen = { back -> SettingsTab(onBack = back) },
                     snackbars = snackbars,
+                    onPlayRemixes = remixes::onPlayAll,
                     miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },
                     miniPlayerInSheet = { MiniPlayerInSheet() },
                     nowPlayingHeader = { close, open -> NowPlayingHeader(close, open) },
