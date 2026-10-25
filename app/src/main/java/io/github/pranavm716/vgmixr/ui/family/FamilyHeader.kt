@@ -155,7 +155,7 @@ private fun fadeStops(color: Color) = arrayOf(
 /**
  * The name over its track count. The name takes the largest size from 22 sp down to 18 sp that
  * fits it on one line (wrapping only if even 18 sp is too wide); as the header shuts it shrinks to
- * 18 sp and drops to the middle of the bar while the count fades out.
+ * 18 sp and slides from the left to the middle of the bar while the count fades out.
  */
 @Composable
 private fun Label(
@@ -167,6 +167,7 @@ private fun Label(
 ) {
     val style = MaterialTheme.typography.titleLarge.copy(shadow = TextShadow)
     val measurer = rememberTextMeasurer()
+    var nameWidth by remember { mutableIntStateOf(0) }
     var nameHeight by remember { mutableIntStateOf(0) }
     var countHeight by remember { mutableIntStateOf(0) }
     BoxWithConstraints(
@@ -196,15 +197,19 @@ private fun Label(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .onSizeChanged { nameHeight = it.height }
+                    .onSizeChanged {
+                        nameWidth = it.width
+                        nameHeight = it.height
+                    }
                     .graphicsLayer {
                         val p = progress()
                         val scale = 1 + (BAR_TITLE_SIZE / size - 1) * p
                         scaleX = scale
                         scaleY = scale
                         transformOrigin = TransformOrigin(0f, 1f)
-                        // The name's bottom moves from above the count to where the shrunk name
-                        // sits centered in the bar below the status bar.
+                        // The name moves from the left, above the count, to the middle of the bar
+                        // below the status bar.
+                        translationX = p * (maxWidth - nameWidth * scale) / 2
                         val barBottom = (BarHeight.toPx() - nameHeight * scale) / 2
                         translationY = p * (countHeight + 12.dp.toPx() - barBottom)
                     }
