@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -143,9 +144,12 @@ private fun CollectionHeader(
                 drawRect(barTint, alpha = progress())
             }
     ) {
+        // The art keeps its open height while the header shrinks around it (the header clips it),
+        // so it slides up without leaving a gap below it.
         Box(
             Modifier
                 .fillMaxWidth()
+                .wrapContentHeight(Alignment.Top, unbounded = true)
                 .height(expandedHeight)
                 .graphicsLayer {
                     val p = progress()
