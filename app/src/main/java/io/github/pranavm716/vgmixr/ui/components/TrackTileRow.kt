@@ -36,8 +36,8 @@ val RowTileGap = 14.dp
  * A track's title over its game chips, placed so the gap between the two splits a [RowTileHeight]
  * tile beside them in half: the title's line is trimmed to its letters, and the block sits 1.5dp
  * up, as measured on the phone for the mini player. [marquee] scrolls a long title instead of
- * cutting it short, fading its start edge while it moves. [subtitle] (a user track's channel)
- * follows the chips.
+ * cutting it short, fading its start edge while it moves, and a long [subtitle] (a user track's
+ * channel, after the chips) the same way.
  */
 @Composable
 fun TrackTitleChips(
@@ -57,17 +57,24 @@ fun TrackTitleChips(
         }
         // The trim takes the room under the title's descenders too; give the chips some back.
         Spacer(Modifier.height(4.dp))
-        ChipsLine(chips, subtitle)
+        ChipsLine(chips, subtitle, marquee = marquee)
     }
 }
 
 /**
  * A track's game chips, then, for a user track, a dot and its channel ([subtitle]): chips first, so
  * they line up with catalog tracks' in mixed lists. A user track that remixes nothing shows only
- * its channel.
+ * its channel. A channel too long for the room left is cut short, or with [marquee] scrolls as a
+ * marquee title does: its start edge, by the dot, fades only while letters move under it, and its
+ * end is left to the mini player's own fade before its button.
  */
 @Composable
-fun ChipsLine(chips: List<ChipUi>, subtitle: String?, modifier: Modifier = Modifier) {
+fun ChipsLine(
+    chips: List<ChipUi>,
+    subtitle: String?,
+    modifier: Modifier = Modifier,
+    marquee: Boolean = false
+) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         GameChips(chips)
         if (subtitle != null) {
@@ -84,13 +91,17 @@ fun ChipsLine(chips: List<ChipUi>, subtitle: String?, modifier: Modifier = Modif
                     modifier = Modifier.padding(start = 6.33.dp, end = 5.67.dp)
                 )
             }
-            Text(
-                subtitle,
-                style = style,
-                color = color,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            if (marquee) {
+                MarqueeText(subtitle, style.copy(color = color), fadeEnd = false)
+            } else {
+                Text(
+                    subtitle,
+                    style = style,
+                    color = color,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }
