@@ -7,6 +7,9 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
+import io.github.pranavm716.vgmixr.domain.sort.SortDirection
+import io.github.pranavm716.vgmixr.domain.sort.SortKey
+import io.github.pranavm716.vgmixr.domain.sort.SortSetting
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaylistRepository
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
@@ -106,6 +109,26 @@ class EditPlaylistViewModelTest {
                 state.results
             )
             assertFalse(state.noResults)
+        }
+    }
+
+    @Test
+    fun `an empty field lists the playlist's tracks in the playlist's sort`() = runTest {
+        playlists.contents.value = mapOf(
+            7L to Playlist(
+                7,
+                "Hype",
+                false,
+                listOf("rse-route-102", "rse-littleroot", "rse-route-101"),
+                sort = SortSetting(SortKey.Title, SortDirection.Ascending)
+            )
+        )
+
+        viewModel.uiState.test {
+            assertEquals(
+                listOf("Littleroot Town", "Route 101", "Route 102"),
+                awaitItem().results.map { it.title }
+            )
         }
     }
 
