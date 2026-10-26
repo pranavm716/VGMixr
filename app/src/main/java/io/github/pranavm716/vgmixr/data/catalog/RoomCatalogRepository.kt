@@ -18,6 +18,7 @@ import io.github.pranavm716.vgmixr.domain.usertrack.ThumbnailStore
 import io.github.pranavm716.vgmixr.domain.usertrack.toCatalogTrack
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 /**
@@ -46,6 +47,8 @@ class RoomCatalogRepository @Inject constructor(
                 "offline_videos"
             )
             .map { db.withTransaction { load() } }
+            // A download's progress touches offline_videos without changing the catalog.
+            .distinctUntilChanged()
 
     private suspend fun load(): Catalog {
         val games = dao.activeGames().map { it.toDomain() }

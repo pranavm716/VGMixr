@@ -111,4 +111,5 @@
         <item quantity="one">%d track</item>
         <item quantity="other">%d tracks</item>
     </plurals>
+    <string name="downloads_channel">Downloads</string>
 </resources>

@@ -140,7 +140,11 @@ class PlaybackService : MediaSessionService() {
                         .setCache(mediaCache)
                         .setCacheKeyFactory { streamCacheKey(it.uri.toString()) }
                         .setUpstreamDataSourceFactory(streams)
-                        .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+                        // Wait for a download writing the same video rather than streaming it twice.
+                        .setFlags(
+                            CacheDataSource.FLAG_BLOCK_ON_CACHE or
+                                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
+                        )
                 )
                     .setLoadErrorHandlingPolicy(FailFastLoadErrorPolicy())
             )

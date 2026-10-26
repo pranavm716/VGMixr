@@ -2,7 +2,7 @@ package io.github.pranavm716.vgmixr.playback
 
 import android.content.Context
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.database.StandaloneDatabaseProvider
+import androidx.media3.database.DatabaseProvider
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.NoOpCacheEvictor
 import androidx.media3.datasource.cache.SimpleCache
@@ -21,8 +21,8 @@ fun streamCacheKey(uri: String): String =
  * Only one instance may exist per folder.
  */
 @UnstableApi
-fun mediaCache(context: Context): Cache = SimpleCache(
+fun mediaCache(context: Context, database: DatabaseProvider): Cache = SimpleCache(
     File(context.filesDir, "media-cache"),
     NoOpCacheEvictor(),
-    StandaloneDatabaseProvider(context)
+    database
 )

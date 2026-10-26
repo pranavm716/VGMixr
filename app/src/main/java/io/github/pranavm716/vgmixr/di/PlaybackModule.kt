@@ -3,6 +3,7 @@ package io.github.pranavm716.vgmixr.di
 import android.content.Context
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.database.DatabaseProvider
 import androidx.media3.datasource.cache.Cache
 import dagger.Module
 import dagger.Provides
@@ -60,7 +61,8 @@ object PlaybackModule {
     @OptIn(UnstableApi::class)
     @Provides
     @Singleton
-    fun provideMediaCache(@ApplicationContext context: Context): Cache = mediaCache(context)
+    fun provideMediaCache(@ApplicationContext context: Context, database: DatabaseProvider): Cache =
+        mediaCache(context, database)
 
     @Provides
     fun provideStreamResolver(resolver: CachingStreamResolver): StreamResolver = resolver

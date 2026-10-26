@@ -10,6 +10,7 @@ import io.github.pranavm716.vgmixr.domain.offline.OfflineUsage
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 class RoomOfflineStore @Inject constructor(private val dao: OfflineDao) : OfflineStore {
@@ -38,17 +39,18 @@ class RoomOfflineStore @Inject constructor(private val dao: OfflineDao) : Offlin
         )
     }
 
-    override val onPhone: Flow<Set<String>> = dao.observeOnPhone().map { it.toSet() }
+    override val onPhone: Flow<Set<String>> = dao.observeOnPhone().map {
+        it.toSet()
+    }.distinctUntilChanged()
 
-    override suspend fun apply(plan: OfflinePlan) {
-        if (plan.remove.isNotEmpty()) dao.deleteVideos(plan.remove)
-        plan.upsert.forEach {
-            dao.put(
-                OfflineVideoEntity(it.videoId, it.kind.name, complete = false, bytes = 0),
-                it.trackIds
-            )
+    override suspend fun apply(plan: OfflinePlan) = dao.apply(
+        plan.remove,
+        plan.upsert.map {
+            OfflineVideoEntity(it.videoId, it.kind.name, complete = false, bytes = 0) to it.trackIds
         }
-    }
+    )
 
     override suspend fun setComplete(videoId: String, bytes: Long) = dao.setComplete(videoId, bytes)
+
+    override suspend fun setIncomplete(videoId: String) = dao.setIncomplete(videoId)
 }

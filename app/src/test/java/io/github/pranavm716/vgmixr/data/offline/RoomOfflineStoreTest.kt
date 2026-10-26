@@ -99,4 +99,18 @@ class RoomOfflineStoreTest {
 
         assertEquals(setOf("vb"), store.onPhone.first())
     }
+
+    @Test
+    fun `a finished video whose audio is gone is downloaded again`() = runTest(dispatcher) {
+        store.apply(OfflinePlan(listOf(OfflineWant("va", DOWNLOADED, listOf("a"))), emptyList()))
+        store.setComplete("va", 1_000)
+
+        store.setIncomplete("va")
+
+        assertEquals(
+            mapOf("va" to OfflineEntry("va", DOWNLOADED, false, setOf("a"))),
+            store.entries.first()
+        )
+        assertEquals(OfflineUsage(0, 0), store.usage.first())
+    }
 }

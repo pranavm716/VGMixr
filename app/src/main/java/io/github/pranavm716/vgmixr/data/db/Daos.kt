@@ -255,8 +255,21 @@ abstract class OfflineDao {
     @Query("DELETE FROM offline_videos WHERE videoId IN (:videoIds)")
     abstract suspend fun deleteVideos(videoIds: List<String>)
 
+    @Query("UPDATE offline_videos SET complete = 0, bytes = 0 WHERE videoId = :videoId")
+    abstract suspend fun setIncomplete(videoId: String)
+
     @Query("UPDATE offline_videos SET complete = 1, bytes = :bytes WHERE videoId = :videoId")
     abstract suspend fun setComplete(videoId: String, bytes: Long)
+
+    /** Deletes [remove] and writes [puts], in one transaction, so watchers see one change. */
+    @Transaction
+    open suspend fun apply(
+        remove: List<String>,
+        puts: List<Pair<OfflineVideoEntity, List<String>>>
+    ) {
+        if (remove.isNotEmpty()) deleteVideos(remove)
+        puts.forEach { (video, trackIds) -> put(video, trackIds) }
+    }
 
     /** Writes [video] with exactly [trackIds], keeping it finished if it already was. */
     @Transaction

@@ -23,4 +23,7 @@ interface OfflineStore {
 
     /** Records that [videoId] is fully on the phone, taking [bytes]. */
     suspend fun setComplete(videoId: String, bytes: Long)
+
+    /** Records that [videoId]'s audio is missing after all, so it is downloaded again. */
+    suspend fun setIncomplete(videoId: String)
 }

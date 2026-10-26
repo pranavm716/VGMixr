@@ -74,6 +74,19 @@ class OfflineSyncTest {
             }
         }
 
+        override suspend fun setIncomplete(videoId: String) {
+            state.value =
+                state.value.mapValues { (id, e) ->
+                    if (id ==
+                        videoId
+                    ) {
+                        e.copy(complete = false)
+                    } else {
+                        e
+                    }
+                }
+        }
+
         override suspend fun setComplete(videoId: String, bytes: Long) {
             state.value =
                 state.value.mapValues { (id, e) ->
