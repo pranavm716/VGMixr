@@ -1,5 +1,7 @@
 package io.github.pranavm716.vgmixr.ui.components
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -27,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +47,7 @@ data class SortUi(val selected: SortSetting, val keys: List<SortKey>)
 
 /**
  * The sort row above a collection's first track, left-aligned as One UI's My Files has it: the
- * sort icon and the key's name with a chevron, all in white, which opens a menu of keys anchored to it (the selected one in the
+ * sort icon and the key's name with a chevron, which opens a menu of keys anchored to it (the selected one in the
  * accent with a check), a thin divider, then an arrow, up for ascending, that reverses the
  * direction in one tap.
  */
@@ -55,8 +58,6 @@ fun SortRow(
     onReverse: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Full white, as One UI draws it: grey read as a caption, not a control.
-    val color = MaterialTheme.colorScheme.onSurface
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
     Row(
         modifier.fillMaxWidth().height(SortRowHeight).padding(start = 8.dp),
@@ -74,20 +75,21 @@ fun SortRow(
                 Icon(
                     painterResource(R.drawable.ic_sort),
                     contentDescription = null,
-                    tint = color,
+                    tint = muted,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     stringResource(sort.selected.key.label),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = color
+                    color = muted
                 )
                 // Marks the name as a menu.
+                Spacer(Modifier.width(4.dp))
                 Icon(
                     painterResource(R.drawable.ic_chevron_down),
                     contentDescription = null,
-                    tint = color,
+                    tint = muted,
                     modifier = Modifier.size(18.dp)
                 )
             }
@@ -105,14 +107,20 @@ fun SortRow(
         // divider is then as far from the arrow as from the chevron (measured on the phone).
         VerticalDivider(Modifier.height(16.dp).padding(start = 4.dp, end = 2.dp), color = muted)
         val ascending = sort.selected.direction == SortDirection.Ascending
+        // One up arrow that turns over, so reversing the direction animates.
+        val turn by animateFloatAsState(
+            if (ascending) 0f else HALF_TURN,
+            tween(ARROW_TURN_MS),
+            label = "sort arrow"
+        )
         IconButton(onClick = onReverse, modifier = Modifier.size(40.dp)) {
             Icon(
-                painterResource(if (ascending) R.drawable.ic_sort_up else R.drawable.ic_sort_down),
+                painterResource(R.drawable.ic_sort_up),
                 contentDescription = stringResource(
                     if (ascending) R.string.sort_ascending else R.string.sort_descending
                 ),
-                tint = color,
-                modifier = Modifier.size(20.dp)
+                tint = muted,
+                modifier = Modifier.size(20.dp).rotate(turn)
             )
         }
     }
@@ -186,6 +194,9 @@ fun ScrollToTopOnSortChange(sort: SortUi?, listState: LazyListState) {
         shown = selected
     }
 }
+
+private const val HALF_TURN = 180f
+private const val ARROW_TURN_MS = 250
 
 /** The sort row's height, for scrolling past it. */
 val SortRowHeight = 48.dp
