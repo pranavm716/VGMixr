@@ -1,5 +1,6 @@
 package io.github.pranavm716.vgmixr.domain.offline
 
+import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.history.Play
 import java.time.Instant
@@ -38,6 +39,24 @@ interface RecentCutoff {
             override val since: StateFlow<Instant> = MutableStateFlow(Instant.EPOCH)
 
             override fun clearNow() = Unit
+        }
+    }
+}
+
+/**
+ * What the download notification calls a video: its track's title, or for a video several tracks
+ * play (an album), its family's name and "album".
+ */
+fun downloadLabel(trackIds: Set<String>, catalog: Catalog): String {
+    val tracks = trackIds.mapNotNull(catalog::track)
+    return when {
+        tracks.size == 1 -> tracks.single().title
+
+        tracks.isEmpty() -> "a track"
+
+        else -> {
+            val family = catalog.families.firstOrNull { it.id == tracks.first().familyId }
+            "${family?.name ?: tracks.first().title} album"
         }
     }
 }

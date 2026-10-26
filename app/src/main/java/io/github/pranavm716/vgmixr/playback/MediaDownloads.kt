@@ -5,11 +5,12 @@ import android.content.Context
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import androidx.core.app.NotificationCompat
+import androidx.media3.common.C
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.cache.Cache
 import androidx.media3.exoplayer.offline.Download
 import androidx.media3.exoplayer.offline.DownloadManager
-import androidx.media3.exoplayer.offline.DownloadNotificationHelper
 import androidx.media3.exoplayer.offline.DownloadRequest
 import androidx.media3.exoplayer.offline.DownloadService
 import androidx.media3.exoplayer.scheduler.Scheduler
@@ -18,16 +19,21 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.di.ApplicationScope
 import io.github.pranavm716.vgmixr.di.IoDispatcher
+import io.github.pranavm716.vgmixr.domain.catalog.Catalog
+import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.offline.OfflineDownloader
 import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
 import io.github.pranavm716.vgmixr.domain.offline.OfflineSync
+import io.github.pranavm716.vgmixr.domain.offline.downloadLabel
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -44,33 +50,52 @@ class MediaDownloader @Inject constructor(
     private val cache: Cache,
     private val store: OfflineStore,
     private val brokenSources: BrokenSources,
+    catalogRepository: CatalogRepository,
     private val diagnostics: PlaybackDiagnostics,
     @ApplicationScope private val scope: CoroutineScope,
     @IoDispatcher private val io: CoroutineDispatcher
 ) : OfflineDownloader {
     private val main = Handler(Looper.getMainLooper())
 
+    // Read by the notification, which is built on the main thread.
+    private val catalog = catalogRepository.catalog
+        .stateIn(scope, SharingStarted.Eagerly, Catalog(emptyList(), emptyList(), emptyList()))
+    private val entries = store.entries.stateIn(scope, SharingStarted.Eagerly, emptyMap())
+
+    @Volatile
+    private var pending: List<String> = emptyList()
+
     init {
         main.post { manager.addListener(Listener()) }
     }
 
+    /** The notification's title and text while [videoId] downloads. */
+    fun describe(videoId: String?): Pair<String, String> {
+        val label =
+            downloadLabel(videoId?.let { entries.value[it]?.trackIds }.orEmpty(), catalog.value)
+        val after = (pending.size - 1).coerceAtLeast(0)
+        return "Downloading $label" to if (after == 0) "Last one" else "$after more after this"
+    }
+
     /**
-     * Only the first of [videoIds] may run; the rest wait, held with their bytes kept, so the fill
-     * order holds (the manager runs downloads in the order they were added) and a prefetch can
-     * overtake a long album download without losing it.
+     * Only the first two of [videoIds] may run, one at a time; the rest wait, held with their
+     * bytes kept, so the fill order holds (the manager runs downloads in the order they were
+     * added) and a prefetch can overtake a long album download without losing it. The second
+     * keeps the manager busy between one download and the next, so the notification stays up.
      */
     override fun download(videoIds: List<String>) {
+        pending = videoIds
         main.post {
-            val first = videoIds.firstOrNull()
+            val next = videoIds.take(2).toSet()
             manager.currentDownloads
-                .filter { it.request.id != first && it.stopReason == Download.STOP_REASON_NONE }
+                .filter { it.request.id !in next && it.stopReason == Download.STOP_REASON_NONE }
                 .forEach { manager.setStopReason(it.request.id, WAITING) }
             videoIds.forEach {
                 manager.addDownload(
                     DownloadRequest.Builder(it, Uri.parse(STREAM_URI_PREFIX + it))
                         .setCustomCacheKey(it)
                         .build(),
-                    if (it == first) Download.STOP_REASON_NONE else WAITING
+                    if (it in next) Download.STOP_REASON_NONE else WAITING
                 )
             }
             startService()
@@ -188,6 +213,9 @@ class VGMixrDownloadService :
     @Inject
     lateinit var manager: DownloadManager
 
+    @Inject
+    lateinit var downloader: MediaDownloader
+
     override fun getDownloadManager(): DownloadManager = manager
 
     override fun getScheduler(): Scheduler? = null
@@ -195,14 +223,23 @@ class VGMixrDownloadService :
     override fun getForegroundNotification(
         downloads: MutableList<Download>,
         notMetRequirements: Int
-    ): Notification = DownloadNotificationHelper(this, CHANNEL_ID).buildProgressNotification(
-        this,
-        R.drawable.ic_download,
-        null,
-        null,
-        downloads,
-        notMetRequirements
-    )
+    ): Notification {
+        // The one running: the manager downloads one at a time.
+        val current = downloads.firstOrNull { it.state == Download.STATE_DOWNLOADING }
+        val (title, text) = downloader.describe(current?.request?.id)
+        val percent = current?.percentDownloaded ?: C.PERCENTAGE_UNSET.toFloat()
+        val known = percent != C.PERCENTAGE_UNSET.toFloat()
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_download)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setProgress(100, if (known) percent.toInt() else 0, !known)
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setSilent(true)
+            .setShowWhen(false)
+            .build()
+    }
 
     private companion object {
         const val NOTIFICATION_ID = 2
