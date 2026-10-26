@@ -20,6 +20,7 @@ import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.domain.settings.Accent
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
+import io.github.pranavm716.vgmixr.domain.sort.SortSetting
 import io.github.pranavm716.vgmixr.domain.usertrack.ThumbnailStore
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrack
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackRepository
@@ -214,6 +215,11 @@ class FakePlaylistRepository(
 
     override suspend fun deletePlaylist(id: Long) {
         contents.value -= id
+    }
+
+    override suspend fun setSort(id: Long, sort: SortSetting) {
+        val playlist = contents.value[id] ?: return
+        contents.value += id to playlist.copy(sort = sort)
     }
 
     /** The names passed to [createPlaylist], in order; new ids count up from 100. */

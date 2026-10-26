@@ -24,7 +24,7 @@ import java.time.Instant
         BrokenStreamEntity::class,
         UserTrackEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2, spec = DropTrackCategory::class),
@@ -32,7 +32,9 @@ import java.time.Instant
         AutoMigration(from = 2, to = 3),
         // 3 to 4: MIGRATION_3_4, by hand.
         // 4 to 5: tracks added from YouTube (roadmap step 13b), a new table.
-        AutoMigration(from = 4, to = 5)
+        AutoMigration(from = 4, to = 5),
+        // 5 to 6: each playlist's sort (roadmap step 15b), two nullable columns.
+        AutoMigration(from = 5, to = 6)
     ]
 )
 @TypeConverters(Converters::class)
