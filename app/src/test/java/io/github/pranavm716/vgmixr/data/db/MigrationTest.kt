@@ -220,6 +220,28 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `5 to 6 adds a playlist's sort, unset, and keeps its rows`() {
+        helper.createDatabase(5).use { db ->
+            db.execSQL("INSERT INTO playlists (id, name, createdAt) VALUES (7, 'Hype', 333)")
+            db.execSQL(
+                "INSERT INTO playlist_entries (playlistId, trackId, addedAt) " +
+                    "VALUES (7, 'rse-route-101', 111)"
+            )
+        }
+
+        helper.runMigrationsAndValidate(6).use { db ->
+            assertEquals(
+                listOf(listOf("7", "Hype", null, null)),
+                db.rows("SELECT id, name, sortKey, sortDirection FROM playlists ORDER BY id")
+            )
+            assertEquals(
+                listOf(listOf("7", "rse-route-101", "111")),
+                db.rows("SELECT playlistId, trackId, addedAt FROM playlist_entries")
+            )
+        }
+    }
+
     private fun SQLiteConnection.rows(sql: String): List<List<String?>> = prepare(sql).use { row ->
         buildList {
             while (row.step()) {

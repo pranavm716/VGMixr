@@ -102,4 +102,8 @@ val MediaItem.isQueued: Boolean get() = context == QueueContext.Queue
 val MediaItem.listIndex: Int?
     get() = requestMetadata.extras?.takeIf { it.containsKey(LIST_INDEX) }?.getInt(LIST_INDEX)
 
+/** This item with [listIndex] as its place in its list, playing as it did. */
+fun MediaItem.withListIndex(listIndex: Int?): MediaItem =
+    buildUpon().setRequestMetadata(contextRequest(context, listIndex)).build()
+
 fun MediaItem.queueEntry(): QueueEntry = QueueEntry(mediaId, context, listIndex)

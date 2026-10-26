@@ -85,13 +85,16 @@ data class SourceEntity(
 
 /**
  * A playlist. Favorites is built in: the row with [FAVORITES_PLAYLIST_ID], created with the
- * database, which can't be renamed or deleted.
+ * database, which can't be renamed or deleted. [sortKey] and [sortDirection] are its page's sort,
+ * by name (`SortKey`, `SortDirection`), null until the user picks one.
  */
 @Entity(tableName = "playlists")
 data class PlaylistEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
-    val createdAt: Instant
+    val createdAt: Instant,
+    val sortKey: String? = null,
+    val sortDirection: String? = null
 )
 
 /** The built-in Favorites playlist's id. */

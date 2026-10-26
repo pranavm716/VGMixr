@@ -121,10 +121,14 @@ interface UserDataDao {
     fun observePlaylist(id: Long): Flow<PlaylistEntity?>
 
     @Query(
-        "SELECT trackId FROM playlist_entries WHERE playlistId = :playlistId " +
+        "SELECT * FROM playlist_entries WHERE playlistId = :playlistId " +
             "ORDER BY addedAt DESC, trackId"
     )
-    fun observePlaylistTrackIdsNewestFirst(playlistId: Long): Flow<List<String>>
+    fun observePlaylistEntriesNewestFirst(playlistId: Long): Flow<List<PlaylistEntryEntity>>
+
+    /** Saves playlist [id]'s sort, Favorites' too. */
+    @Query("UPDATE playlists SET sortKey = :key, sortDirection = :direction WHERE id = :id")
+    suspend fun setPlaylistSort(id: Long, key: String, direction: String)
 
     @Query("SELECT playlistId FROM playlist_entries WHERE trackId = :trackId")
     fun observePlaylistIdsContaining(trackId: String): Flow<List<Long>>

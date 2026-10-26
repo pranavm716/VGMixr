@@ -89,6 +89,11 @@ class MediaControllerPlaybackController @Inject constructor(
         it.apply(it.queue().playAll(trackIds, context, it.shuffleModeEnabled))
     }
 
+    // In the service, which updates its items in place, so the playing track isn't rebuilt.
+    override fun resort(trackIds: List<String>, context: QueueContext) = withController {
+        it.sendCustomCommand(resortCommand, resortArgs(trackIds, context))
+    }
+
     override fun addToQueue(trackIds: List<String>) = withController {
         it.apply(it.queue().add(trackIds, hasEnded = it.playbackState == Player.STATE_ENDED))
     }

@@ -11,6 +11,7 @@ import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakeCatalogSync
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
+import io.github.pranavm716.vgmixr.testing.FakeSortSettings
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
@@ -22,6 +23,8 @@ import org.junit.Rule
 import org.junit.Test
 
 class GamesViewModelTest {
+    private val sortSettings = FakeSortSettings()
+
     @get:Rule
     val main = MainDispatcherRule()
 
@@ -42,7 +45,8 @@ class GamesViewModelTest {
     private val playback = FakePlaybackController()
     private val messages = UserMessages()
 
-    private fun viewModel() = GamesViewModel(repository, sync, playback, messages, main.dispatcher)
+    private fun viewModel() =
+        GamesViewModel(repository, sync, playback, messages, sortSettings, main.dispatcher)
 
     private fun loaded(vararg families: FamilySummary, importFailed: Boolean = false) =
         GamesUiState.Loaded(families.toList(), importFailed)
@@ -62,7 +66,14 @@ class GamesViewModelTest {
         val pending = object : io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository {
             override val catalog = MutableSharedFlow<Catalog>()
         }
-        GamesViewModel(pending, sync, playback, messages, main.dispatcher).uiState.test {
+        GamesViewModel(
+            pending,
+            sync,
+            playback,
+            messages,
+            sortSettings,
+            main.dispatcher
+        ).uiState.test {
             assertEquals(GamesUiState.Loading, awaitItem())
             pending.catalog.emit(Catalog(emptyList(), emptyList(), emptyList()))
             assertEquals(loaded(), awaitItem())

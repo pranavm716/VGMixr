@@ -6,14 +6,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
-import io.github.pranavm716.vgmixr.domain.catalog.playableFamilyTrackIds
-import io.github.pranavm716.vgmixr.domain.catalog.playableUserTrackIds
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.search.SearchIndex
 import io.github.pranavm716.vgmixr.domain.search.SearchRanking
 import io.github.pranavm716.vgmixr.domain.search.frecencyWeight
 import io.github.pranavm716.vgmixr.domain.search.search
+import io.github.pranavm716.vgmixr.domain.settings.SortSettings
+import io.github.pranavm716.vgmixr.domain.sort.playableFamilyTrackIds
+import io.github.pranavm716.vgmixr.domain.sort.playableUserTrackIds
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackId
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
@@ -69,6 +70,7 @@ class SearchViewModel @Inject constructor(
     private val playback: PlaybackController,
     private val messages: UserMessages,
     private val clock: Clock,
+    private val sortSettings: SortSettings,
     @DefaultDispatcher dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val query = MutableStateFlow("")
@@ -107,8 +109,8 @@ class SearchViewModel @Inject constructor(
     fun onLeave() = onQueryChange("")
 
     /**
-     * Plays the track's family from it, as a tap in the family list does; a user track plays
-     * Remixes from it, as a tap in the Remixes tab does. A track whose sources are all broken says
+     * Plays the track's family from it, as a tap in the family list does (in its saved sort); a
+     * user track plays Remixes from it, as a tap in the Remixes tab does. A track whose sources are all broken says
      * so instead, on every tap.
      */
     fun onTrackClick(trackId: String) {
@@ -123,10 +125,11 @@ class SearchViewModel @Inject constructor(
             val familyId = track.familyId
             val (ids, context) = when {
                 UserTrackId.isUserTrack(trackId) ->
-                    catalog.playableUserTrackIds() to QueueContext.Remixes
+                    catalog.playableUserTrackIds(sortSettings.remixes.value) to QueueContext.Remixes
 
                 familyId != null ->
-                    catalog.playableFamilyTrackIds(familyId) to QueueContext.Family(familyId)
+                    catalog.playableFamilyTrackIds(familyId, sortSettings.games.value) to
+                        QueueContext.Family(familyId)
 
                 else -> return@launch
             }

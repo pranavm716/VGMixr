@@ -12,6 +12,7 @@ import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.search.BrowsedFamily
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
+import io.github.pranavm716.vgmixr.testing.FakeSortSettings
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
@@ -22,6 +23,8 @@ import org.junit.Rule
 import org.junit.Test
 
 class FamilyViewModelTest {
+    private val sortSettings = FakeSortSettings()
+
     @get:Rule
     val main = MainDispatcherRule()
 
@@ -59,6 +62,7 @@ class FamilyViewModelTest {
         playback,
         messages,
         browsed,
+        sortSettings,
         main.dispatcher
     )
 

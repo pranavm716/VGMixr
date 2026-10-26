@@ -1,6 +1,8 @@
 package io.github.pranavm716.vgmixr.domain.playlist
 
-import io.github.pranavm716.vgmixr.domain.catalog.Catalog
+import io.github.pranavm716.vgmixr.domain.sort.SortKeys
+import io.github.pranavm716.vgmixr.domain.sort.SortSetting
+import java.time.Instant
 import kotlinx.coroutines.flow.Flow
 
 /** One row of the Playlists tab. [isFavorites]: the built-in Favorites playlist. */
@@ -11,12 +13,17 @@ data class PlaylistSummary(
     val isFavorites: Boolean
 )
 
-/** A playlist's page: its tracks, newest first. */
+/**
+ * A playlist's page: its tracks, newest first, with when each was added ([addedAt], by track id)
+ * and the page's [sort].
+ */
 data class Playlist(
     val id: Long,
     val name: String,
     val isFavorites: Boolean,
-    val trackIds: List<String>
+    val trackIds: List<String>,
+    val addedAt: Map<String, Instant> = emptyMap(),
+    val sort: SortSetting = SortKeys.playlistDefault
 )
 
 interface PlaylistRepository {
@@ -50,13 +57,9 @@ interface PlaylistRepository {
     /** Deletes playlist [id] with its entries; Favorites can't be deleted. */
     suspend fun deletePlaylist(id: Long)
 
+    /** Saves playlist [id]'s sort. */
+    suspend fun setSort(id: Long, sort: SortSetting)
+
     /** Makes an empty playlist named [name] (trimmed) and returns its id. */
     suspend fun createPlaylist(name: String): Long
 }
-
-/**
- * The playlist's tracks found in [catalog] that can play, in its order: what a tap plays and a
- * swipe queues. Tracks no longer in the catalog and greyed tracks are left out.
- */
-fun Playlist.playableTrackIds(catalog: Catalog): List<String> =
-    trackIds.filter { id -> catalog.track(id)?.let { it.unplayable == null } == true }

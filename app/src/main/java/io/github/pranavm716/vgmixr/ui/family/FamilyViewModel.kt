@@ -9,12 +9,18 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.TrackFilter
 import io.github.pranavm716.vgmixr.domain.catalog.filter
-import io.github.pranavm716.vgmixr.domain.catalog.playableFamilyTrackIds
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.search.BrowsedFamily
+import io.github.pranavm716.vgmixr.domain.settings.SortSettings
+import io.github.pranavm716.vgmixr.domain.sort.SortKey
+import io.github.pranavm716.vgmixr.domain.sort.SortKeys
+import io.github.pranavm716.vgmixr.domain.sort.SortSetting
+import io.github.pranavm716.vgmixr.domain.sort.familyTracks
+import io.github.pranavm716.vgmixr.domain.sort.playableFamilyTrackIds
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import io.github.pranavm716.vgmixr.ui.components.SortUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import javax.inject.Inject
@@ -44,7 +50,8 @@ sealed interface FamilyUiState {
         val games: List<ChipUi>,
         val tracks: List<TrackRowUi>,
         val playing: PlayingRowUi? = null,
-        val familyId: String? = null
+        val familyId: String? = null,
+        val sort: SortUi = SortUi(SortKeys.familyDefault, SortKeys.family)
     ) : FamilyUiState
 }
 
@@ -52,7 +59,7 @@ sealed interface FamilyUiState {
 data class PlayingRowUi(val trackId: String, val index: Int, val loading: Boolean)
 
 /**
- * [number] is the track's position in the list. [chips] is empty for a track in all games.
+ * [number] is the track's place in the family's own order, whatever the sort. [chips] is empty for a track in all games.
  * [unplayable] greys a track whose sources are all broken.
  */
 data class TrackRowUi(
@@ -70,6 +77,7 @@ class FamilyViewModel @Inject constructor(
     private val playback: PlaybackController,
     private val messages: UserMessages,
     browsed: BrowsedFamily,
+    private val sortSettings: SortSettings,
     @DefaultDispatcher dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     // The FamilyRoute's argument, stored by type-safe navigation under its property name.
@@ -81,14 +89,15 @@ class FamilyViewModel @Inject constructor(
     }
 
     val uiState: StateFlow<FamilyUiState> =
-        repository.catalog
-            .map { it.familyState(familyId) }
+        combine(repository.catalog, sortSettings.games) { catalog, sort ->
+            catalog.familyState(familyId, sort)
+        }
             .combine(playback.state) { state, playback -> state.withPlaying(playback) }
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FamilyUiState.Loading)
 
     /**
-     * Plays the family's list from the tapped track, as shown. A track whose sources are all
+     * Plays the family's list from the tapped track, in its sort. A track whose sources are all
      * broken says so instead, on every tap.
      */
     fun onTrackClick(trackId: String) {
@@ -100,9 +109,32 @@ class FamilyViewModel @Inject constructor(
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
                 return@launch
             }
-            val ids = catalog.playableFamilyTrackIds(familyId)
+            val ids = catalog.playableFamilyTrackIds(familyId, sortSettings.games.value)
             val index = ids.indexOf(trackId)
             if (index >= 0) playback.playFrom(ids, index, QueueContext.Family(familyId))
+        }
+    }
+
+    /** The sort menu: picking another key sorts by it, ascending. */
+    fun onSortKey(key: SortKey) {
+        val sort = sortSettings.games.value
+        if (key != sort.key) changeSort(sort.withKey(key))
+    }
+
+    /** The sort arrow: the same key the other way. */
+    fun onReverseSort() = changeSort(sortSettings.games.value.reversed())
+
+    /**
+     * Every family page shares the sort, so the family playing (or else this one) follows it: its
+     * "Next from" takes the new order.
+     */
+    private fun changeSort(sort: SortSetting) {
+        sortSettings.setGames(sort)
+        viewModelScope.launch {
+            val playing = playback.state.value.queue.playingContext as? QueueContext.Family
+            val context = playing ?: QueueContext.Family(familyId)
+            val ids = repository.catalog.first().playableFamilyTrackIds(context.familyId, sort)
+            playback.resort(ids, context)
         }
     }
 
@@ -129,15 +161,18 @@ private fun FamilyUiState.withPlaying(playback: PlaybackState): FamilyUiState {
     return copy(playing = playing)
 }
 
-private fun Catalog.familyState(familyId: String): FamilyUiState {
+private fun Catalog.familyState(familyId: String, sort: SortSetting): FamilyUiState {
     val family = families.firstOrNull { it.id == familyId } ?: return FamilyUiState.NotFound
     val gamesInFamily = games.filter { it.familyId == familyId }
     val familyGames = gamesInFamily.map { it.id }.toSet()
-    val tracks = filter(TrackFilter(family = familyId)).mapIndexed { index, track ->
+    val number = filter(TrackFilter(family = familyId))
+        .withIndex()
+        .associate { (index, track) -> track.id to index + 1 }
+    val tracks = familyTracks(familyId, sort).map { track ->
         val playsEverywhere = track.games.map { it.id }.toSet() == familyGames
         TrackRowUi(
             id = track.id,
-            number = index + 1,
+            number = number.getValue(track.id),
             title = track.title,
             chips = if (playsEverywhere) {
                 emptyList()
@@ -152,6 +187,7 @@ private fun Catalog.familyState(familyId: String): FamilyUiState {
         tracks.size,
         gamesInFamily.map { ChipUi(it.shortName, it.color) },
         tracks,
-        familyId = familyId
+        familyId = familyId,
+        sort = SortUi(sort, SortKeys.family)
     )
 }

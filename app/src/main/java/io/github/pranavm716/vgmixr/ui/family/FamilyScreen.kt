@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
+import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.CollectionPage
 import io.github.pranavm716.vgmixr.ui.components.FullWidth
@@ -57,7 +58,9 @@ fun FamilyTab(onAddToPlaylist: (String) -> Unit, viewModel: FamilyViewModel = hi
         state,
         onTrackClick = viewModel::onTrackClick,
         onQueueTrack = viewModel::onQueueTrack,
-        onTrackLongClick = onAddToPlaylist
+        onTrackLongClick = onAddToPlaylist,
+        onSortKey = viewModel::onSortKey,
+        onReverseSort = viewModel::onReverseSort
     )
 }
 
@@ -68,7 +71,9 @@ fun FamilyScreen(
     onTrackClick: (String) -> Unit,
     onQueueTrack: (String) -> Unit,
     onTrackLongClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSortKey: (SortKey) -> Unit = {},
+    onReverseSort: () -> Unit = {}
 ) {
     when (state) {
         FamilyUiState.Loading -> Unit
@@ -86,7 +91,10 @@ fun FamilyScreen(
                 playingIndex = state.playing?.index,
                 rowHeight = TrackRowHeight,
                 art = { HeaderImage(cover, missing = noCover) },
-                modifier = modifier
+                modifier = modifier,
+                sort = state.sort,
+                onSortKey = onSortKey,
+                onReverseSort = onReverseSort
             ) {
                 items(state.tracks, key = { it.id }) { track ->
                     val playing = state.playing?.takeIf { it.trackId == track.id }

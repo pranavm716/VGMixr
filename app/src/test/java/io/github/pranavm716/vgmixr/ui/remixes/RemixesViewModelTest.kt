@@ -12,6 +12,7 @@ import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrack
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
+import io.github.pranavm716.vgmixr.testing.FakeSortSettings
 import io.github.pranavm716.vgmixr.testing.FakeUserTrackRepository
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
@@ -26,6 +27,8 @@ import org.junit.Rule
 import org.junit.Test
 
 class RemixesViewModelTest {
+    private val sortSettings = FakeSortSettings()
+
     @get:Rule
     val main = MainDispatcherRule()
 
@@ -83,6 +86,7 @@ class RemixesViewModelTest {
         playback,
         messages,
         userTracks,
+        sortSettings,
         main.dispatcher
     )
 

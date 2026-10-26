@@ -28,6 +28,12 @@ fun Player.apply(edit: QueueEdit) {
         is QueueEdit.Rearrange ->
             replaceMediaItems(edit.from, edit.to, edit.sourceIndices.map(::getMediaItemAt))
 
+        // Only the list positions change; the items keep their streams and keep playing.
+        is QueueEdit.Relist -> edit.listIndices.forEachIndexed { i, listIndex ->
+            val item = getMediaItemAt(i)
+            if (item.listIndex != listIndex) replaceMediaItem(i, item.withListIndex(listIndex))
+        }
+
         is QueueEdit.Seek -> {
             seekTo(edit.index, 0)
             playFromHere()

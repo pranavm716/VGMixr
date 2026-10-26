@@ -20,6 +20,9 @@ import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.domain.settings.Accent
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
+import io.github.pranavm716.vgmixr.domain.settings.SortSettings
+import io.github.pranavm716.vgmixr.domain.sort.SortKeys
+import io.github.pranavm716.vgmixr.domain.sort.SortSetting
 import io.github.pranavm716.vgmixr.domain.usertrack.ThumbnailStore
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrack
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackRepository
@@ -49,6 +52,8 @@ class FakePlaybackController : PlaybackController {
 
     data class AddToQueue(val trackIds: List<String>)
 
+    data class Resort(val trackIds: List<String>, val context: QueueContext)
+
     data object TogglePlayPause
 
     data class SetShuffle(val on: Boolean)
@@ -73,6 +78,10 @@ class FakePlaybackController : PlaybackController {
     override val progress = MutableStateFlow(PlaybackProgress(positionMs = 0, durationMs = null))
     override val events = MutableSharedFlow<PlaybackEvent>(extraBufferCapacity = 16)
     val calls = mutableListOf<Any>()
+
+    override fun resort(trackIds: List<String>, context: QueueContext) {
+        calls += Resort(trackIds, context)
+    }
 
     override fun togglePlayPause() {
         calls += TogglePlayPause
@@ -216,6 +225,11 @@ class FakePlaylistRepository(
         contents.value -= id
     }
 
+    override suspend fun setSort(id: Long, sort: SortSetting) {
+        val playlist = contents.value[id] ?: return
+        contents.value += id to playlist.copy(sort = sort)
+    }
+
     /** The names passed to [createPlaylist], in order; new ids count up from 100. */
     val created = mutableListOf<String>()
 
@@ -224,6 +238,22 @@ class FakePlaylistRepository(
         val id = 99L + created.size
         contents.value += id to Playlist(id, name, isFavorites = false, trackIds = emptyList())
         return id
+    }
+}
+
+class FakeSortSettings(
+    games: SortSetting = SortKeys.familyDefault,
+    remixes: SortSetting = SortKeys.remixesDefault
+) : SortSettings {
+    override val games = MutableStateFlow(games)
+    override val remixes = MutableStateFlow(remixes)
+
+    override fun setGames(sort: SortSetting) {
+        games.value = sort
+    }
+
+    override fun setRemixes(sort: SortSetting) {
+        remixes.value = sort
     }
 }
 

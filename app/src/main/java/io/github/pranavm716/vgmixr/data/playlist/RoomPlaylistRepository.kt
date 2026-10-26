@@ -7,6 +7,9 @@ import io.github.pranavm716.vgmixr.data.db.UserDataDao
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
+import io.github.pranavm716.vgmixr.domain.sort.SortKeys
+import io.github.pranavm716.vgmixr.domain.sort.SortSetting
+import io.github.pranavm716.vgmixr.domain.sort.sortSettingOf
 import java.time.Clock
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,10 +32,27 @@ class RoomPlaylistRepository @Inject constructor(
 
     override fun playlist(id: Long): Flow<Playlist?> = combine(
         dao.observePlaylist(id),
-        dao.observePlaylistTrackIdsNewestFirst(id)
-    ) { playlist, trackIds ->
-        playlist?.let { Playlist(it.id, it.name, it.id == FAVORITES_PLAYLIST_ID, trackIds) }
+        dao.observePlaylistEntriesNewestFirst(id)
+    ) { playlist, entries ->
+        playlist?.let {
+            Playlist(
+                id = it.id,
+                name = it.name,
+                isFavorites = it.id == FAVORITES_PLAYLIST_ID,
+                trackIds = entries.map { entry -> entry.trackId },
+                addedAt = entries.associate { entry -> entry.trackId to entry.addedAt },
+                sort = sortSettingOf(
+                    it.sortKey,
+                    it.sortDirection,
+                    SortKeys.playlist,
+                    SortKeys.playlistDefault
+                )
+            )
+        }
     }
+
+    override suspend fun setSort(id: Long, sort: SortSetting) =
+        dao.setPlaylistSort(id, sort.key.name, sort.direction.name)
 
     override fun playlistsContaining(trackId: String): Flow<Set<Long>> =
         // Room re-emits on any entry change; only a change for this track gets through.

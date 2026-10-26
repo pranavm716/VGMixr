@@ -8,6 +8,10 @@ import io.github.pranavm716.vgmixr.data.db.PlaylistEntryEntity
 import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
+import io.github.pranavm716.vgmixr.domain.sort.SortDirection
+import io.github.pranavm716.vgmixr.domain.sort.SortKey
+import io.github.pranavm716.vgmixr.domain.sort.SortKeys
+import io.github.pranavm716.vgmixr.domain.sort.SortSetting
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
@@ -119,7 +123,12 @@ class RoomPlaylistRepositoryTest {
                     FAVORITES_PLAYLIST_ID,
                     "Favorites",
                     isFavorites = true,
-                    trackIds = listOf("frlg-pallet-town", "rse-route-101")
+                    trackIds = listOf("frlg-pallet-town", "rse-route-101"),
+                    addedAt = mapOf(
+                        "frlg-pallet-town" to Instant.ofEpochMilli(2_000),
+                        "rse-route-101" to Instant.ofEpochMilli(1_000)
+                    ),
+                    sort = SortKeys.playlistDefault
                 ),
                 awaitItem()
             )
@@ -241,7 +250,13 @@ class RoomPlaylistRepositoryTest {
         repository.deletePlaylist(FAVORITES_PLAYLIST_ID)
 
         assertEquals(
-            Playlist(FAVORITES_PLAYLIST_ID, "Favorites", true, listOf("rse-route-101")),
+            Playlist(
+                FAVORITES_PLAYLIST_ID,
+                "Favorites",
+                true,
+                listOf("rse-route-101"),
+                addedAt = mapOf("rse-route-101" to Instant.ofEpochMilli(1_000))
+            ),
             repository.playlist(FAVORITES_PLAYLIST_ID).first()
         )
     }
@@ -288,6 +303,35 @@ class RoomPlaylistRepositoryTest {
                 assertEquals(setOf("rse-route-101"), awaitItem())
             }
         }
+
+    @Test
+    fun `a playlist keeps its own sort, and others keep the default`() = runTest(dispatcher) {
+        val mix = repository.createPlaylist("Mix")
+        val title = SortSetting(SortKey.Title, SortDirection.Descending)
+
+        repository.setSort(mix, title)
+
+        assertEquals(title, repository.playlist(mix).first()?.sort)
+        assertEquals(
+            SortKeys.playlistDefault,
+            repository.playlist(FAVORITES_PLAYLIST_ID).first()?.sort
+        )
+    }
+
+    @Test
+    fun `a sort the app no longer knows reads as the default`() = runTest(dispatcher) {
+        dao.insertPlaylist(
+            PlaylistEntity(
+                id = 9,
+                name = "Old",
+                createdAt = Instant.EPOCH,
+                sortKey = "Mood",
+                sortDirection = "Sideways"
+            )
+        )
+
+        assertEquals(SortKeys.playlistDefault, repository.playlist(9).first()?.sort)
+    }
 
     private class MutableClock(var instant: Instant) : Clock() {
         override fun instant(): Instant = instant

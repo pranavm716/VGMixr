@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -50,9 +52,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
+import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import io.github.pranavm716.vgmixr.ui.components.SORT_ROW_KEY
 import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnReselect
+import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnSortChange
+import io.github.pranavm716.vgmixr.ui.components.SortRow
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
@@ -61,6 +67,7 @@ import io.github.pranavm716.vgmixr.ui.theme.DialogBackground
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 /**
  * The Remixes tab. [scrollsToPlaying] counts now playing's requests to show the playing track; each
@@ -83,7 +90,8 @@ fun RemixesTab(
         if (scrollsToPlaying == handledScrolls) return@LaunchedEffect
         handledScrolls = scrollsToPlaying
         val loaded = snapshotFlow { state }.filterIsInstance<RemixesUiState.Loaded>().first()
-        loaded.playingIndex?.let { listState.centerOn(it, rowPx) }
+        // The sort row comes first, so the tracks start at index 1.
+        loaded.playingIndex?.let { listState.centerOn(it + 1, rowPx) }
     }
     val inMode = (state as? RemixesUiState.Loaded)?.mode.let {
         it != null &&
@@ -100,7 +108,9 @@ fun RemixesTab(
         onDone = viewModel::onDone,
         onLink = onOpenLink,
         onDelete = viewModel::onDelete,
-        listState = listState
+        listState = listState,
+        onSortKey = viewModel::onSortKey,
+        onReverseSort = viewModel::onReverseSort
     )
 }
 
@@ -124,12 +134,24 @@ fun RemixesScreen(
     onLink: (String) -> Unit,
     onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
-    listState: LazyListState = rememberLazyListState()
+    listState: LazyListState = rememberLazyListState(),
+    onSortKey: (SortKey) -> Unit = {},
+    onReverseSort: () -> Unit = {}
 ) {
+    val scope = rememberCoroutineScope()
     Column(modifier.fillMaxSize()) {
         val loaded = state as? RemixesUiState.Loaded
+        ScrollToTopOnSortChange(loaded?.sort, listState)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            ScreenHeader(stringResource(R.string.playing_from_remixes), Modifier.weight(1f))
+            // Tapping the title scrolls the list back to the top.
+            ScreenHeader(
+                stringResource(R.string.playing_from_remixes),
+                Modifier
+                    .weight(1f)
+                    .clickable(interactionSource = null, indication = null) {
+                        scope.launch { listState.animateScrollToItem(0) }
+                    }
+            )
             when {
                 loaded == null || loaded.rows.isEmpty() -> Unit
 
@@ -157,6 +179,7 @@ fun RemixesScreen(
             return@Column
         }
         LazyColumn(Modifier.fillMaxSize(), state = listState) {
+            item(key = SORT_ROW_KEY) { SortRow(state.sort, onSortKey, onReverseSort) }
             items(state.rows, key = { it.id }) { row ->
                 val mode = state.mode
                 // One row in every mode, so its button can slide in. A greyed track can't be
