@@ -12,7 +12,7 @@ import io.github.pranavm716.vgmixr.domain.settings.Accent
 val Accent.color: Color
     get() = when (this) {
         Accent.RED -> DefaultAccent
-        Accent.ORANGE -> Color(0xFFE65100)
+        Accent.ORANGE -> Color(0xFFF44336)
         Accent.GOLD -> Color(0xFFFF9800)
         Accent.GREEN -> Color(0xFF388E3C)
         Accent.TEAL -> Color(0xFF00838F)
