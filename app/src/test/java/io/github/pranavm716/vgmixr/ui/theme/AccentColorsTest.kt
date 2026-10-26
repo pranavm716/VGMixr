@@ -9,8 +9,8 @@ import org.junit.Test
 
 class AccentColorsTest {
     @Test
-    fun `the default accent is the red the app started with`() {
-        assertEquals(Color(0xFFF44336), Accent.DEFAULT.color)
+    fun `the default accent is the crimson of the app icon`() {
+        assertEquals(Color(0xFFBF0C3E), Accent.DEFAULT.color)
     }
 
     @Test
