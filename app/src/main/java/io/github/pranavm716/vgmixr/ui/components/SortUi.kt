@@ -44,7 +44,7 @@ data class SortUi(val selected: SortSetting, val keys: List<SortKey>)
 
 /**
  * The sort row above a collection's first track, left-aligned as One UI's My Files has it: the
- * sort icon and the key's name, which opens a menu of keys anchored to it (the selected one in the
+ * sort icon and the key's name with a chevron, all in white, which opens a menu of keys anchored to it (the selected one in the
  * accent with a check), a thin divider, then an arrow, up for ascending, that reverses the
  * direction in one tap.
  */
@@ -55,6 +55,8 @@ fun SortRow(
     onReverse: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Full white, as One UI draws it: grey read as a caption, not a control.
+    val color = MaterialTheme.colorScheme.onSurface
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
     Row(
         modifier.fillMaxWidth().height(SortRowHeight).padding(start = 8.dp),
@@ -72,14 +74,21 @@ fun SortRow(
                 Icon(
                     painterResource(R.drawable.ic_sort),
                     contentDescription = null,
-                    tint = muted,
+                    tint = color,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     stringResource(sort.selected.key.label),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = muted
+                    color = color
+                )
+                // Marks the name as a menu.
+                Icon(
+                    painterResource(R.drawable.ic_chevron_down),
+                    contentDescription = null,
+                    tint = color,
+                    modifier = Modifier.size(18.dp)
                 )
             }
             SortMenu(
@@ -92,7 +101,9 @@ fun SortRow(
                 onDismiss = { expanded = false }
             )
         }
-        VerticalDivider(Modifier.height(16.dp).padding(horizontal = 4.dp), color = muted)
+        // The arrow's button pads its glyph by 10 dp, so the divider sits 2 dp closer to it: the
+        // divider is then as far from the arrow as from the chevron (measured on the phone).
+        VerticalDivider(Modifier.height(16.dp).padding(start = 4.dp, end = 2.dp), color = muted)
         val ascending = sort.selected.direction == SortDirection.Ascending
         IconButton(onClick = onReverse, modifier = Modifier.size(40.dp)) {
             Icon(
@@ -100,7 +111,7 @@ fun SortRow(
                 contentDescription = stringResource(
                     if (ascending) R.string.sort_ascending else R.string.sort_descending
                 ),
-                tint = muted,
+                tint = color,
                 modifier = Modifier.size(20.dp)
             )
         }
