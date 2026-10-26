@@ -117,6 +117,6 @@ internal fun resisted(raw: Float, limit: Float): Float {
 // A swipe this fast (px/s) counts even if it was short.
 private const val FLING_VELOCITY = 1500f
 
-// Toward no neighbour, the content grows at most a tenth wider.
-internal const val MAX_STRETCH = 0.1f
-private const val RESISTANCE = 0.55f
+// Toward no neighbour, the content grows at most 5% wider.
+internal const val MAX_STRETCH = 0.05f
+private const val RESISTANCE = 0.65f
