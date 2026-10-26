@@ -82,6 +82,19 @@ class ResortTest {
     }
 
     @Test
+    fun `next from is rebuilt from the whole list, not just what the queue still holds`() {
+        // c and d were taken out of the queue; the new order brings them back.
+        val trimmed = PlayQueue(listOf(at("a", 0), at("b", 1), at("e", 4)), current = 0)
+
+        val after = trimmed.applying(
+            trimmed.resort(rse, listOf("a", "b", "c", "d", "e"), shuffle = false)
+        )
+
+        assertEquals(listOf("a", "b", "c", "d", "e"), after.ids())
+        assertEquals(listOf(0, 1, 2, 3, 4), after.entries.map { it.listIndex })
+    }
+
+    @Test
     fun `the same order changes nothing`() {
         val ids = listOf("a", "b", "c", "d", "e")
 

@@ -37,6 +37,7 @@ import io.github.pranavm716.vgmixr.domain.playback.FailoverAction
 import io.github.pranavm716.vgmixr.domain.playback.NewMark
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.playback.QueueEdit
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
 import io.github.pranavm716.vgmixr.domain.playback.ShuffleSetting
@@ -222,9 +223,8 @@ class PlaybackService : MediaSessionService() {
                 TOGGLE_SHUFFLE -> player.shuffleModeEnabled = !player.shuffleModeEnabled
 
                 RESORT -> resortOf(args)?.let { (trackIds, context) ->
-                    player.apply(
-                        player.queue().resort(context, trackIds, player.shuffleModeEnabled)
-                    )
+                    val edits = player.queue().resort(context, trackIds, player.shuffleModeEnabled)
+                    if (edits.isNotEmpty()) scope.launch { player.applyResolving(edits) }
                 }
 
                 TOGGLE_FAVORITE -> player.currentMediaItem?.mediaId?.let { trackId ->
@@ -255,6 +255,28 @@ class PlaybackService : MediaSessionService() {
                 )
             }
             return items
+        }
+    }
+
+    /**
+     * Applies [edits] to the session's own player. Its new entries are built here, as
+     * [Callback.onAddMediaItems] builds the app's; the rest keep their items, so nothing playing
+     * restarts.
+     */
+    private suspend fun Player.applyResolving(edits: List<QueueEdit>) {
+        val catalog = catalog.filterNotNull().first()
+        val fresh = brokenSources.marks.first().also { marks.value = it }
+        edits.forEach { edit ->
+            if (edit is QueueEdit.Insert) {
+                addMediaItems(
+                    edit.index,
+                    edit.entries.map {
+                        catalog.startItem(it.trackId, it.context, it.listIndex, fresh, artwork)
+                    }
+                )
+            } else {
+                apply(edit)
+            }
         }
     }
 

@@ -223,7 +223,7 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
      * The collection tapped in [context] was sorted anew into [trackIds]. If it is the one playing
      * (the context of the last list track played), its entries take their new list positions, so
      * turning shuffle off later follows the new order. With [shuffle] off, "Next from" becomes
-     * the tracks after the current one in the new order, as [unshuffle] builds it; with it on, the
+     * every track after the current one in the new order; with it on, the
      * shuffled order stays. Queued tracks are untouched.
      */
     fun resort(context: QueueContext, trackIds: List<String>, shuffle: Boolean): List<QueueEdit> {
@@ -236,7 +236,22 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
             listOf(QueueEdit.Relist(listIndices))
         }
         if (shuffle) return relist
-        return relist + applying(relist).unshuffle()
+        val relisted = applying(relist)
+        val anchor = relisted.entries.take(current + 1).lastOrNull { it.listIndex != null }
+            ?.listIndex ?: return relist
+        // The whole rest of the list, not only the tracks the queue still holds; queued tracks
+        // left in "Next from" (by going back past them) stay, ahead of it.
+        val start = relisted.nextFromStart
+        val stranded = relisted.entries.drop(start).filter { it.queued }
+        val rest = trackIds.withIndex().drop(anchor + 1).map { (i, id) ->
+            QueueEntry(id, context, i)
+        }
+        val next = stranded + rest
+        if (next == relisted.entries.drop(start)) return relist
+        return relist + buildList<QueueEdit> {
+            if (start < entries.size) add(QueueEdit.Remove(start, entries.size))
+            if (next.isNotEmpty()) add(QueueEdit.Insert(start, next))
+        }
     }
 
     /** The queue after [edits], applied in order as the player applies them. */
