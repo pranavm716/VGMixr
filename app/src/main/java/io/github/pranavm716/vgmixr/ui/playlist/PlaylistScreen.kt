@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
+import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import io.github.pranavm716.vgmixr.ui.components.Art
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.CollectionPage
@@ -72,7 +73,9 @@ fun PlaylistTab(
         onQueueTrack = viewModel::onQueueTrack,
         onEditPlaylist = onEditPlaylist,
         onRename = viewModel::onRename,
-        onDelete = viewModel::onDelete
+        onDelete = viewModel::onDelete,
+        onSortKey = viewModel::onSortKey,
+        onReverseSort = viewModel::onReverseSort
     )
 }
 
@@ -90,7 +93,9 @@ fun PlaylistScreen(
     onEditPlaylist: (name: String) -> Unit,
     onRename: (String) -> Unit,
     onDelete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSortKey: (SortKey) -> Unit = {},
+    onReverseSort: () -> Unit = {}
 ) {
     when (state) {
         PlaylistUiState.Loading -> Unit
@@ -135,7 +140,10 @@ fun PlaylistScreen(
                         onRename = onRename,
                         onDelete = onDelete
                     )
-                }
+                },
+                sort = state.sort.takeIf { state.rows.isNotEmpty() },
+                onSortKey = onSortKey,
+                onReverseSort = onReverseSort
             ) {
                 items(state.rows, key = { it.id }) { row ->
                     val content = @Composable {

@@ -2,6 +2,7 @@ package io.github.pranavm716.vgmixr.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -23,10 +24,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -54,12 +57,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
+import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 /**
- * A family's or playlist's page: its rows ([content], [rowHeight] tall) under its header. The
- * header lies over the list, which starts with a spacer as tall as the open header, so the header
- * shuts as far as that spacer has scrolled. Opening the page shows the playing row
+ * A family's or playlist's page: its rows ([content], [rowHeight] tall) under its header and its
+ * [sort] row. The header lies over the list, which starts with a spacer as tall as the open
+ * header, so the header shuts as far as that spacer has scrolled; tapping the shut header's name
+ * scrolls back to the top, as a sort change does. Opening the page shows the playing row
  * ([playingIndex] in [content]) mid-screen, once.
  */
 @Composable
@@ -72,6 +78,9 @@ fun CollectionPage(
     art: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     action: (@Composable () -> Unit)? = null,
+    sort: SortUi? = null,
+    onSortKey: (SortKey) -> Unit = {},
+    onReverseSort: () -> Unit = {},
     content: LazyListScope.() -> Unit
 ) {
     BoxWithConstraints(modifier.fillMaxSize()) {
@@ -82,10 +91,16 @@ fun CollectionPage(
             (expanded - collapsed).roundToPx().coerceAtLeast(1)
         }
         val listState = rememberLazyListState()
-        // The spacer is the list's first row, so the page's rows start at index 1.
-        ScrollToPlayingOnce(listState, playingIndex?.plus(1), rowHeight)
+        val scope = rememberCoroutineScope()
+        // The spacer and the sort row come first, so the page's rows start after them.
+        val firstRow = if (sort == null) 1 else 2
+        ScrollToPlayingOnce(listState, playingIndex?.plus(firstRow), rowHeight)
+        ScrollToTopOnSortChange(sort, listState)
         LazyColumn(Modifier.fillMaxSize(), state = listState) {
             item(key = HEADER_SPACER_KEY) { Spacer(Modifier.height(expanded)) }
+            if (sort != null) {
+                item(key = SORT_ROW_KEY) { SortRow(sort, onSortKey, onReverseSort) }
+            }
             content()
         }
         CollectionHeader(
@@ -103,7 +118,8 @@ fun CollectionPage(
                 )
                 scrolled / rangePx.toFloat()
             },
-            action = action
+            action = action,
+            onTitleClick = { scope.launch { listState.animateScrollToItem(0) } }
         )
     }
 }
@@ -125,7 +141,8 @@ private fun CollectionHeader(
     expandedHeight: Dp,
     collapsedHeight: Dp,
     progress: () -> Float,
-    action: (@Composable () -> Unit)?
+    action: (@Composable () -> Unit)?,
+    onTitleClick: () -> Unit
 ) {
     val background = MaterialTheme.colorScheme.background
     Box(
@@ -160,7 +177,27 @@ private fun CollectionHeader(
             art()
         }
         Scrims(barTint, progress, Modifier.matchParentSize())
-        Label(name, trackCount, progress, Modifier.align(Alignment.BottomStart))
+        // Only a shut header's name scrolls up: an open one is at the top already, and a tappable
+        // name would keep a drag that starts on it from scrolling the list underneath.
+        val shut by remember { derivedStateOf { progress() > SHUT_ENOUGH } }
+        Label(
+            name,
+            trackCount,
+            progress,
+            Modifier
+                .align(Alignment.BottomStart)
+                .then(
+                    if (shut) {
+                        Modifier.clickable(
+                            interactionSource = null,
+                            indication = null,
+                            onClick = onTitleClick
+                        )
+                    } else {
+                        Modifier
+                    }
+                )
+        )
         if (action != null) {
             // Centered in the bar under the status bar, open or shut.
             Box(
@@ -348,6 +385,7 @@ private val BarHeight = 56.dp
 private const val HEADER_SPACER_KEY = "header"
 
 private const val BAR_TITLE_SIZE = 18f
+private const val SHUT_ENOUGH = 0.5f
 private const val FIT_STEP = 0.5f
 private const val TOP_SHADE = 0.45f
 private val TopShadeHeight = 56.dp
