@@ -20,6 +20,8 @@ import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.domain.settings.Accent
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
+import io.github.pranavm716.vgmixr.domain.settings.SortSettings
+import io.github.pranavm716.vgmixr.domain.sort.SortKeys
 import io.github.pranavm716.vgmixr.domain.sort.SortSetting
 import io.github.pranavm716.vgmixr.domain.usertrack.ThumbnailStore
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrack
@@ -236,6 +238,22 @@ class FakePlaylistRepository(
         val id = 99L + created.size
         contents.value += id to Playlist(id, name, isFavorites = false, trackIds = emptyList())
         return id
+    }
+}
+
+class FakeSortSettings(
+    games: SortSetting = SortKeys.familyDefault,
+    remixes: SortSetting = SortKeys.remixesDefault
+) : SortSettings {
+    override val games = MutableStateFlow(games)
+    override val remixes = MutableStateFlow(remixes)
+
+    override fun setGames(sort: SortSetting) {
+        games.value = sort
+    }
+
+    override fun setRemixes(sort: SortSetting) {
+        remixes.value = sort
     }
 }
 

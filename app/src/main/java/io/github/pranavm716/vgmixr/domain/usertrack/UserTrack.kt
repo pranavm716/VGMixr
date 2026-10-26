@@ -65,6 +65,7 @@ fun UserTrack.toCatalogTrack(
         channel = channel,
         remixOf = remixOf,
         thumbnail = thumbnail,
-        videoTitle = title
+        videoTitle = title,
+        addedAt = addedAt
     )
 }

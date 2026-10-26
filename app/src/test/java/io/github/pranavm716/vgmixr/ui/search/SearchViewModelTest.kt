@@ -17,6 +17,7 @@ import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlayHistory
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.FakePlaylistRepository
+import io.github.pranavm716.vgmixr.testing.FakeSortSettings
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
@@ -31,6 +32,8 @@ import org.junit.Rule
 import org.junit.Test
 
 class SearchViewModelTest {
+    private val sortSettings = FakeSortSettings()
+
     @get:Rule
     val main = MainDispatcherRule()
 
@@ -82,6 +85,7 @@ class SearchViewModelTest {
             playback,
             messages,
             TestCatalog.clock,
+            sortSettings,
             main.dispatcher
         )
     }

@@ -51,7 +51,8 @@ class UserTrackMappingTest {
                 sources = listOf(Source.Stream("AAAAAAAAAAA", 61_000, 245_000)),
                 channel = "GlitchxCity",
                 remixOf = "rse-route-101",
-                videoTitle = "Route 101 [Remix]"
+                videoTitle = "Route 101 [Remix]",
+                addedAt = Instant.EPOCH
             ),
             userTrack(remixOf = "rse-route-101").toCatalogTrack(catalog, unplayable = null)
         )

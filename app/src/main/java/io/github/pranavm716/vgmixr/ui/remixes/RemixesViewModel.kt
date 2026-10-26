@@ -6,11 +6,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
-import io.github.pranavm716.vgmixr.domain.catalog.playableUserTrackIds
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.settings.SortSettings
+import io.github.pranavm716.vgmixr.domain.sort.SortKey
+import io.github.pranavm716.vgmixr.domain.sort.SortKeys
+import io.github.pranavm716.vgmixr.domain.sort.SortSetting
+import io.github.pranavm716.vgmixr.domain.sort.playableUserTrackIds
+import io.github.pranavm716.vgmixr.domain.sort.sortedUserTracks
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackRepository
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import io.github.pranavm716.vgmixr.ui.components.SortUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import javax.inject.Inject
@@ -33,11 +39,14 @@ sealed interface RemixesUiState {
     data object Loading : RemixesUiState
 
     /**
-     * The user tracks, newest first; none shows the empty state. In a [mode] other than normal, each
+     * The user tracks in [sort]; none shows the empty state. In a [mode] other than normal, each
      * row ends in that mode's button: a chevron to link it, a trash can to delete it.
      */
-    data class Loaded(val rows: List<RemixRowUi>, val mode: RemixesMode = RemixesMode.NORMAL) :
-        RemixesUiState {
+    data class Loaded(
+        val rows: List<RemixRowUi>,
+        val mode: RemixesMode = RemixesMode.NORMAL,
+        val sort: SortUi = SortUi(SortKeys.remixesDefault, SortKeys.remixes)
+    ) : RemixesUiState {
         val linking: Boolean get() = mode == RemixesMode.LINK
         val deleting: Boolean get() = mode == RemixesMode.DELETE
 
@@ -66,6 +75,7 @@ class RemixesViewModel @Inject constructor(
     private val playback: PlaybackController,
     private val messages: UserMessages,
     private val userTracks: UserTrackRepository,
+    private val sortSettings: SortSettings,
     @DefaultDispatcher dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val mode = MutableStateFlow(RemixesMode.NORMAL)
@@ -74,15 +84,20 @@ class RemixesViewModel @Inject constructor(
         combine(
             catalog.catalog,
             playback.state.map { it.trackId }.distinctUntilChanged(),
-            mode
-        ) { catalog, playingId, mode ->
-            RemixesUiState.Loaded(catalog.userTracks.map { it.toRow(playingId) }, mode)
+            mode,
+            sortSettings.remixes
+        ) { catalog, playingId, mode, sort ->
+            RemixesUiState.Loaded(
+                catalog.sortedUserTracks(sort).map { it.toRow(playingId) },
+                mode,
+                SortUi(sort, SortKeys.remixes)
+            )
         }
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), RemixesUiState.Loading)
 
     /**
-     * Plays Remixes from the tapped track, as listed, leaving out tracks that can't play. A track
+     * Plays Remixes from the tapped track, in their sort, leaving out tracks that can't play. A track
      * whose video is broken says so instead, on every tap.
      */
     fun onTrackClick(trackId: String) {
@@ -94,7 +109,7 @@ class RemixesViewModel @Inject constructor(
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
                 return@launch
             }
-            val ids = catalog.playableUserTrackIds()
+            val ids = catalog.playableUserTrackIds(sortSettings.remixes.value)
             val index = ids.indexOf(trackId)
             if (index >= 0) playback.playFrom(ids, index, QueueContext.Remixes)
         }
@@ -106,8 +121,26 @@ class RemixesViewModel @Inject constructor(
      */
     fun onPlayAll() {
         viewModelScope.launch {
-            val ids = catalog.catalog.first().playableUserTrackIds()
+            val ids = catalog.catalog.first().playableUserTrackIds(sortSettings.remixes.value)
             if (ids.isNotEmpty()) playback.playAll(ids, QueueContext.Remixes)
+        }
+    }
+
+    /** The sort menu: picking another key sorts by it, ascending. */
+    fun onSortKey(key: SortKey) {
+        val sort = sortSettings.remixes.value
+        if (key != sort.key) changeSort(sort.withKey(key))
+    }
+
+    /** The sort arrow: the same key the other way. */
+    fun onReverseSort() = changeSort(sortSettings.remixes.value.reversed())
+
+    /** Saves the new sort; if Remixes is playing, its "Next from" takes the new order. */
+    private fun changeSort(sort: SortSetting) {
+        sortSettings.setRemixes(sort)
+        viewModelScope.launch {
+            val ids = catalog.catalog.first().playableUserTrackIds(sort)
+            playback.resort(ids, QueueContext.Remixes)
         }
     }
 

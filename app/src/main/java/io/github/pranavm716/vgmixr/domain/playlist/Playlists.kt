@@ -1,6 +1,5 @@
 package io.github.pranavm716.vgmixr.domain.playlist
 
-import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.sort.SortKeys
 import io.github.pranavm716.vgmixr.domain.sort.SortSetting
 import java.time.Instant
@@ -64,10 +63,3 @@ interface PlaylistRepository {
     /** Makes an empty playlist named [name] (trimmed) and returns its id. */
     suspend fun createPlaylist(name: String): Long
 }
-
-/**
- * The playlist's tracks found in [catalog] that can play, in its order: what a tap plays and a
- * swipe queues. Tracks no longer in the catalog and greyed tracks are left out.
- */
-fun Playlist.playableTrackIds(catalog: Catalog): List<String> =
-    trackIds.filter { id -> catalog.track(id)?.let { it.unplayable == null } == true }

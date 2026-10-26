@@ -11,8 +11,13 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
-import io.github.pranavm716.vgmixr.domain.playlist.playableTrackIds
+import io.github.pranavm716.vgmixr.domain.sort.SortKey
+import io.github.pranavm716.vgmixr.domain.sort.SortKeys
+import io.github.pranavm716.vgmixr.domain.sort.SortSetting
+import io.github.pranavm716.vgmixr.domain.sort.playablePlaylistTrackIds
+import io.github.pranavm716.vgmixr.domain.sort.playlistTracks
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
+import io.github.pranavm716.vgmixr.ui.components.SortUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import javax.inject.Inject
@@ -40,7 +45,8 @@ sealed interface PlaylistUiState {
         val name: String,
         val isFavorites: Boolean,
         val rows: List<PlaylistRowUi>,
-        val playingIndex: Int? = null
+        val playingIndex: Int? = null,
+        val sort: SortUi = SortUi(SortKeys.playlistDefault, SortKeys.playlist)
     ) : PlaylistUiState {
         val trackCount: Int get() = rows.size
     }
@@ -90,7 +96,7 @@ class PlaylistViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PlaylistUiState.Loading)
 
     /**
-     * Plays the playlist from the tapped track, as listed, leaving out tracks that can't play. A
+     * Plays the playlist from the tapped track, in its sort, leaving out tracks that can't play. A
      * track whose sources are all broken says so instead, on every tap.
      */
     fun onTrackClick(trackId: String) {
@@ -103,9 +109,27 @@ class PlaylistViewModel @Inject constructor(
                 return@launch
             }
             val playlist = playlists.playlist(playlistId).first() ?: return@launch
-            val ids = playlist.playableTrackIds(catalog)
+            val ids = catalog.playablePlaylistTrackIds(playlist)
             val index = ids.indexOf(trackId)
             if (index >= 0) playback.playFrom(ids, index, QueueContext.Playlist(playlistId))
+        }
+    }
+
+    /** The sort menu: picking another key sorts by it, ascending. */
+    fun onSortKey(key: SortKey) = changeSort { if (key == it.key) it else it.withKey(key) }
+
+    /** The sort arrow: the same key the other way. */
+    fun onReverseSort() = changeSort { it.reversed() }
+
+    /** Saves the playlist's new sort; if it is playing, its "Next from" takes the new order. */
+    private fun changeSort(change: (SortSetting) -> SortSetting) {
+        viewModelScope.launch {
+            val playlist = playlists.playlist(playlistId).first() ?: return@launch
+            val sort = change(playlist.sort)
+            if (sort == playlist.sort) return@launch
+            playlists.setSort(playlistId, sort)
+            val ids = catalog.catalog.first().playablePlaylistTrackIds(playlist.copy(sort = sort))
+            playback.resort(ids, QueueContext.Playlist(playlistId))
         }
     }
 
@@ -140,8 +164,7 @@ class PlaylistViewModel @Inject constructor(
 // Entries whose track left the catalog (retired) aren't listed until step 14 shows them.
 private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): PlaylistUiState {
     if (playlist == null) return PlaylistUiState.NotFound
-    val rows = playlist.trackIds.mapNotNull { id ->
-        val track = track(id) ?: return@mapNotNull null
+    val rows = playlistTracks(playlist).map { track ->
         PlaylistRowUi(
             id = track.id,
             title = track.title,
@@ -157,6 +180,7 @@ private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): Play
         name = playlist.name,
         isFavorites = playlist.isFavorites,
         rows = rows,
-        playingIndex = rows.indexOfFirst { it.playing }.takeIf { it >= 0 }
+        playingIndex = rows.indexOfFirst { it.playing }.takeIf { it >= 0 },
+        sort = SortUi(playlist.sort, SortKeys.playlist)
     )
 }

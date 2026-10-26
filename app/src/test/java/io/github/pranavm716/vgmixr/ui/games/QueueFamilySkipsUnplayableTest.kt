@@ -10,6 +10,7 @@ import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakeCatalogSync
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
+import io.github.pranavm716.vgmixr.testing.FakeSortSettings
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
@@ -19,6 +20,8 @@ import org.junit.Rule
 import org.junit.Test
 
 class QueueFamilySkipsUnplayableTest {
+    private val sortSettings = FakeSortSettings()
+
     @get:Rule
     val main = MainDispatcherRule()
 
@@ -41,6 +44,7 @@ class QueueFamilySkipsUnplayableTest {
         FakeCatalogSync(),
         playback,
         messages,
+        sortSettings,
         main.dispatcher
     )
 

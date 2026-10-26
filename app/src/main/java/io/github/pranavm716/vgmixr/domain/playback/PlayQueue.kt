@@ -215,6 +215,10 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
         }
     }
 
+    /** The collection playing: the context of the last list track played, if any. */
+    val playingContext: QueueContext?
+        get() = entries.take(current + 1).lastOrNull { it.listIndex != null }?.context
+
     /**
      * The collection tapped in [context] was sorted anew into [trackIds]. If it is the one playing
      * (the context of the last list track played), its entries take their new list positions, so
@@ -223,8 +227,7 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
      * shuffled order stays. Queued tracks are untouched.
      */
     fun resort(context: QueueContext, trackIds: List<String>, shuffle: Boolean): List<QueueEdit> {
-        val playing = entries.take(current + 1).lastOrNull { it.listIndex != null }?.context
-        if (playing != context) return emptyList()
+        if (playingContext != context) return emptyList()
         val position = trackIds.withIndex().associate { (i, id) -> id to i }
         val listIndices = entries.map { if (it.context == context) position[it.trackId] else null }
         val relist = if (listIndices == entries.map { it.listIndex }) {

@@ -3,6 +3,7 @@ package io.github.pranavm716.vgmixr.domain.catalog
 import io.github.pranavm716.vgmixr.domain.model.Game
 import io.github.pranavm716.vgmixr.domain.model.Source
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
+import java.time.Instant
 
 /**
  * The browsable catalog: non-retired games and tracks only. [games] are in manifest order, and
@@ -32,7 +33,8 @@ data class Family(val id: String, val name: String, val label: String)
  * order. [unplayable] is set once every one of its stream sources is marked broken: the reason its
  * first source was marked. Only user tracks have a [channel] (the video's), a [remixOf] (the
  * catalog track they remix), a [thumbnail] (its file's path, once downloaded) and a [videoTitle]
- * (the video's own title, which [title] replaces with the original's while linked).
+ * (the video's own title, which [title] replaces with the original's while linked) and an [addedAt]
+ * (when its link was pasted).
  */
 data class CatalogTrack(
     val id: String,
@@ -45,5 +47,6 @@ data class CatalogTrack(
     val channel: String? = null,
     val remixOf: String? = null,
     val thumbnail: String? = null,
-    val videoTitle: String? = null
+    val videoTitle: String? = null,
+    val addedAt: Instant? = null
 )
