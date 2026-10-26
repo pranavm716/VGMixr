@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,8 +51,7 @@ import io.github.pranavm716.vgmixr.ui.theme.label
 
 // Smaller than Shuttle's 32 dp, so all eight fit in one row across a 360 dp phone.
 private val CircleSize = 28.dp
-private val RingWidth = 2.5.dp
-private val DotSize = 19.dp
+private val CheckSize = 18.dp
 
 // Each circle's cell reaches past it, so the row starts this far before the title's edge (24 dp)
 // and the first circle lines up with it.
@@ -73,8 +73,8 @@ fun SettingsTab(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel
 
 /**
  * Settings under a back arrow, as Edit playlist's header. Laid out as Shuttle's Appearance page:
- * a section title, then its options. Accent is a ring per color, the current one filled in;
- * Background a filled circle per color, the current one ringed; a tap applies either at once.
+ * a section title, then its options. Accent and Background are a solid circle per color, the
+ * current one with a white check; a tap applies either at once.
  */
 @Composable
 fun SettingsScreen(
@@ -104,16 +104,25 @@ fun SettingsScreen(
             // One row, spread evenly: every circle gets an equal share of the width.
             Row(Modifier.fillMaxWidth().padding(horizontal = RowPadding).selectableGroup()) {
                 state.accents.forEach { accent ->
-                    AccentCircle(accent, accent == state.accent) { onAccentClick(accent) }
+                    Swatch(
+                        accent.color,
+                        stringResource(accent.label),
+                        accent == state.accent,
+                        onClick = { onAccentClick(accent) }
+                    )
                 }
             }
             SectionTitle(stringResource(R.string.background))
             // The accent row's grid, so the circles line up under the accents.
             Row(Modifier.fillMaxWidth().padding(horizontal = RowPadding).selectableGroup()) {
                 state.backgrounds.forEach { background ->
-                    BackgroundCircle(background, background == state.background) {
-                        onBackgroundClick(background)
-                    }
+                    Swatch(
+                        background.color,
+                        stringResource(background.label),
+                        background == state.background,
+                        onClick = { onBackgroundClick(background) },
+                        outlined = true
+                    )
                 }
                 repeat(state.accents.size - state.backgrounds.size) {
                     Spacer(Modifier.weight(1f))
@@ -163,44 +172,18 @@ private fun SectionTitle(title: String) {
     )
 }
 
-@Composable
-private fun RowScope.AccentCircle(accent: Accent, selected: Boolean, onClick: () -> Unit) {
-    val color = accent.color
-    val name = stringResource(accent.label)
-    Box(
-        Modifier
-            .weight(1f)
-            .height(48.dp)
-            .semantics { contentDescription = name }
-            .selectable(
-                selected = selected,
-                onClick = onClick,
-                role = Role.RadioButton,
-                interactionSource = null,
-                indication = ripple(bounded = false, radius = 20.dp)
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            Modifier.size(CircleSize).border(RingWidth, color, CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            if (selected) Box(Modifier.size(DotSize).background(color, CircleShape))
-        }
-    }
-}
-
 /**
- * A background: a circle filled with it and outlined in grey, since black on the black page would
- * vanish; the current one has a light ring around it.
+ * One color to pick: a solid circle, with a white check inside when it is the current one. A
+ * background's circle is [outlined] in grey, since black on the black page would vanish.
  */
 @Composable
-private fun RowScope.BackgroundCircle(
-    background: Background,
+private fun RowScope.Swatch(
+    color: Color,
+    name: String,
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    outlined: Boolean = false
 ) {
-    val name = stringResource(background.label)
     Box(
         Modifier
             .weight(1f)
@@ -218,25 +201,24 @@ private fun RowScope.BackgroundCircle(
         Box(
             Modifier
                 .size(CircleSize)
+                .background(color, CircleShape)
                 .then(
-                    if (selected) {
-                        Modifier.border(
-                            RingWidth,
-                            MaterialTheme.colorScheme.onBackground,
-                            CircleShape
-                        )
+                    if (outlined) {
+                        Modifier.border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
                     } else {
                         Modifier
                     }
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Box(
-                Modifier
-                    .size(DotSize)
-                    .background(background.color, CircleShape)
-                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
-            )
+            if (selected) {
+                Icon(
+                    painterResource(R.drawable.ic_check),
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(CheckSize)
+                )
+            }
         }
     }
 }
