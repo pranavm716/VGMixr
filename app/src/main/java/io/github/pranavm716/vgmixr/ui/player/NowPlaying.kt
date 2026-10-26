@@ -207,7 +207,10 @@ fun NowPlayingScreen(
         Box(swipeArea.clipToBounds().onSizeChanged { swipe.widthPx = it.width.toFloat() }) {
             fun slot(side: Int) = IntOffset((swipe.offset + side * swipe.widthPx).roundToInt(), 0)
             visible.previous?.let { TrackArt(it) { slot(-1) } }
-            TrackArt(NowPlayingArt(visible.familyId, visible.thumbnail)) { slot(0) }
+            TrackArt(
+                NowPlayingArt(visible.familyId, visible.thumbnail),
+                Modifier.trackStretch(swipe)
+            ) { slot(0) }
             visible.next?.let { TrackArt(it) { slot(1) } }
         }
         Spacer(Modifier.weight(BELOW_ART).then(swipeArea))
@@ -276,12 +279,16 @@ fun NowPlayingScreen(
     }
 }
 
-/** A track's 16:9 art, moved sideways by [offset] while the art is swiped. */
+/**
+ * A track's 16:9 art, moved sideways by [offset] while the art is swiped; [stretch] is the
+ * current track's [trackStretch].
+ */
 @Composable
-private fun TrackArt(art: NowPlayingArt, offset: () -> IntOffset) {
+private fun TrackArt(art: NowPlayingArt, stretch: Modifier = Modifier, offset: () -> IntOffset) {
     val modifier = Modifier
         .offset { offset() }
         .padding(horizontal = ART_MARGIN)
+        .then(stretch)
         .fillMaxWidth()
         .aspectRatio(ART_ASPECT)
     val thumbnail = art.thumbnail

@@ -201,7 +201,10 @@ fun MiniPlayer(
                 // The tiles and text slide too, but fade out just before the button, which stays
                 // put, so nothing passes under it.
                 Box(Modifier.fillMaxSize().fadeOutBefore(ButtonWidth, FadeWidth)) {
-                    tracks.forEach { (track, side) -> TrackContent(track) { slot(side) } }
+                    tracks.forEach { (track, side) ->
+                        val stretch = if (side == 0) Modifier.trackStretch(swipe) else Modifier
+                        TrackContent(track, stretch) { slot(side) }
+                    }
                 }
                 Box(Modifier.align(Alignment.CenterEnd).padding(end = 4.dp)) {
                     PlayPauseButton(state.isPlaying, state.isLoading, onPlayPause)
@@ -222,13 +225,18 @@ private fun TrackTint(track: MiniTrackUi, offset: () -> IntOffset) {
 }
 
 @Composable
-private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
+private fun TrackContent(
+    track: MiniTrackUi,
+    stretch: Modifier = Modifier,
+    offset: () -> IntOffset
+) {
     Row(
         Modifier
             .fillMaxSize()
             .offset { offset() }
             // Room on the right for the play/pause button floating above.
-            .padding(start = 16.dp, end = ButtonWidth),
+            .padding(start = 16.dp, end = ButtonWidth)
+            .then(stretch),
         verticalAlignment = Alignment.CenterVertically
     ) {
         val thumbnail = track.thumbnail

@@ -6,7 +6,7 @@ import org.junit.Test
 
 class TrackSwipeStateTest {
     private val width = 800f
-    private val limit = width / 8
+    private val limit = 100f
 
     private fun swipe(hasPrevious: Boolean, hasNext: Boolean) = TrackSwipeState().apply {
         this.hasPrevious = hasPrevious
@@ -26,30 +26,40 @@ class TrackSwipeStateTest {
     }
 
     @Test
-    fun `past the last track the content only stretches a little`() {
+    fun `toward a neighbour nothing stretches`() {
+        val swipe = swipe(hasPrevious = false, hasNext = true)
+        swipe.draggable.dispatchRawDelta(-300f)
+        assertEquals(0f, swipe.stretch)
+    }
+
+    @Test
+    fun `past the last track the content stays put and stretches a little toward the finger`() {
         val swipe = swipe(hasPrevious = true, hasNext = false)
         swipe.draggable.dispatchRawDelta(-1000f)
-        val stretched = swipe.offset
-        assertTrue(stretched < 0f && stretched > -limit)
+        assertEquals(0f, swipe.offset)
+        val stretched = swipe.stretch
+        assertTrue(stretched < 0f && stretched > -MAX_STRETCH)
 
         swipe.draggable.dispatchRawDelta(-200f)
-        assertTrue(swipe.offset < stretched && swipe.offset > stretched - 200f)
-        assertTrue(swipe.offset > -limit)
+        assertTrue(swipe.stretch < stretched && swipe.stretch > -MAX_STRETCH)
+        assertEquals(0f, swipe.offset)
     }
 
     @Test
-    fun `before the first track the content only stretches a little`() {
+    fun `before the first track the content stays put and stretches a little toward the finger`() {
         val swipe = swipe(hasPrevious = false, hasNext = true)
         swipe.draggable.dispatchRawDelta(1000f)
-        assertTrue(swipe.offset > 0f && swipe.offset < limit)
+        assertEquals(0f, swipe.offset)
+        assertTrue(swipe.stretch > 0f && swipe.stretch < MAX_STRETCH)
     }
 
     @Test
-    fun `dragging back across the middle follows the finger again`() {
+    fun `dragging back across the middle slides with the finger again`() {
         val swipe = swipe(hasPrevious = false, hasNext = true)
         swipe.draggable.dispatchRawDelta(200f)
         swipe.draggable.dispatchRawDelta(-500f)
         assertEquals(-300f, swipe.offset)
+        assertEquals(0f, swipe.stretch)
     }
 
     @Test
