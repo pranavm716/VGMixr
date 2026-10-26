@@ -3,6 +3,8 @@ package io.github.pranavm716.vgmixr.ui.player
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,19 +37,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,6 +65,7 @@ import io.github.pranavm716.vgmixr.ui.components.ChipsLine
 import io.github.pranavm716.vgmixr.ui.components.MarqueeText
 import io.github.pranavm716.vgmixr.ui.components.PlayPauseIcon
 import io.github.pranavm716.vgmixr.ui.components.ThumbnailArt
+import kotlin.math.roundToInt
 
 /**
  * Now playing's header, as Spotify's: a chevron that closes the sheet, and "Playing from" over
@@ -143,7 +150,8 @@ private fun PlayingFromText(playingFrom: PlayingFromUi?) {
  * the header's text and the title's letters (layout E of roadmap 13b's mockups).
  * Tapping the title or chips opens the track's own family ([onOpenFamily]), also when it plays
  * from a playlist, to reach the tracks around it; a user track's opens the Remixes tab
- * ([onOpenRemixes]).
+ * ([onOpenRemixes]). Swiping anywhere from the header to the title goes to the next track (left)
+ * or always back to the previous one (right), sliding only the art until the track changes.
  */
 @Composable
 fun NowPlayingScreen(
@@ -178,11 +186,34 @@ fun NowPlayingScreen(
             .padding(top = 66.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.weight(ABOVE_ART))
-        val art = Modifier.padding(horizontal = ART_MARGIN).fillMaxWidth().aspectRatio(ART_ASPECT)
-        val thumbnail = visible.thumbnail
-        if (thumbnail != null) ThumbnailArt(thumbnail, art) else ArtTile(art, visible.familyId)
-        Spacer(Modifier.weight(BELOW_ART))
+        // Everything between the header and the title swipes: left for the next track, right for
+        // the previous one. One drag state over the three pieces makes them one touch area.
+        val trackId by viewModel.trackId.collectAsStateWithLifecycle()
+        val currentTrackId by rememberUpdatedState(trackId)
+        val swipe = rememberTrackSwipeState(visible.previous != null, visible.next != null)
+        val swipeArea = Modifier
+            .fillMaxWidth()
+            .draggable(
+                state = swipe.draggable,
+                orientation = Orientation.Horizontal,
+                onDragStopped = { velocity ->
+                    swipe.settle(velocity, viewModel::onSwipePrevious, viewModel::onNext) {
+                        currentTrackId
+                    }
+                }
+            )
+        Spacer(Modifier.weight(ABOVE_ART).then(swipeArea))
+        // Only the art slides; the title and tint switch once the player has.
+        Box(swipeArea.clipToBounds().onSizeChanged { swipe.widthPx = it.width.toFloat() }) {
+            fun slot(side: Int) = IntOffset((swipe.offset + side * swipe.widthPx).roundToInt(), 0)
+            visible.previous?.let { TrackArt(it) { slot(-1) } }
+            TrackArt(
+                NowPlayingArt(visible.familyId, visible.thumbnail),
+                Modifier.trackStretch(swipe)
+            ) { slot(0) }
+            visible.next?.let { TrackArt(it) { slot(1) } }
+        }
+        Spacer(Modifier.weight(BELOW_ART).then(swipeArea))
         // A tap target without a ripple, as the header's "Playing from".
         Column(
             Modifier
@@ -246,6 +277,22 @@ fun NowPlayingScreen(
         }
         Spacer(Modifier.height(BOTTOM_MARGIN))
     }
+}
+
+/**
+ * A track's 16:9 art, moved sideways by [offset] while the art is swiped; [stretch] is the
+ * current track's [trackStretch].
+ */
+@Composable
+private fun TrackArt(art: NowPlayingArt, stretch: Modifier = Modifier, offset: () -> IntOffset) {
+    val modifier = Modifier
+        .offset { offset() }
+        .padding(horizontal = ART_MARGIN)
+        .then(stretch)
+        .fillMaxWidth()
+        .aspectRatio(ART_ASPECT)
+    val thumbnail = art.thumbnail
+    if (thumbnail != null) ThumbnailArt(thumbnail, modifier) else ArtTile(modifier, art.familyId)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

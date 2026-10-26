@@ -1,6 +1,5 @@
 package io.github.pranavm716.vgmixr.ui.player
 
-import androidx.compose.animation.core.animate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
@@ -28,12 +27,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,8 +71,6 @@ import io.github.pranavm716.vgmixr.ui.components.TrackTitleChips
 import io.github.pranavm716.vgmixr.ui.components.tintColor
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import kotlin.math.roundToInt
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * The mini player for the current track, or nothing while no track is loaded. It reports where it
@@ -148,9 +142,7 @@ fun MiniPlayer(
 ) {
     val accent = MaterialTheme.colorScheme.primary
     val current by rememberUpdatedState(state)
-    var widthPx by remember { mutableIntStateOf(0) }
-    var offset by remember { mutableFloatStateOf(0f) }
-    val swipe = rememberDraggableState { offset += it }
+    val swipe = rememberTrackSwipeState(state.previous != null, state.next != null)
     val lift = rememberDraggableState(onLift)
 
     val lineHeightPx = with(LocalDensity.current) { 2.dp.toPx() }
@@ -183,34 +175,14 @@ fun MiniPlayer(
                     onDragStopped = { onLiftStopped(it) }
                 )
                 .draggable(
-                    state = swipe,
+                    state = swipe.draggable,
                     orientation = Orientation.Horizontal,
                     enabled = interactive,
                     onDragStopped = { velocity ->
-                        val width = widthPx.toFloat()
-                        val before = current.track.trackId
-                        val towardNext = offset < -width / 3 || velocity < -FLING_VELOCITY
-                        val towardPrevious = offset > width / 3 || velocity > FLING_VELOCITY
-                        val skip = when {
-                            towardNext && current.next != null -> -width to onNext
-                            towardPrevious && current.previous != null -> width to onPrevious
-                            else -> null
-                        }
-                        if (skip == null) {
-                            animate(offset, 0f) { value, _ -> offset = value }
-                        } else {
-                            // The neighbour slides fully in, then becomes the current track in
-                            // place once the player has switched (or after a second regardless).
-                            animate(offset, skip.first) { value, _ -> offset = value }
-                            skip.second()
-                            withTimeoutOrNull(1_000) {
-                                snapshotFlow { current.track.trackId }.first { it != before }
-                            }
-                            offset = 0f
-                        }
+                        swipe.settle(velocity, onPrevious, onNext) { current.track.trackId }
                     }
                 )
-                .onSizeChanged { widthPx = it.width },
+                .onSizeChanged { swipe.widthPx = it.width.toFloat() },
             verticalAlignment = Alignment.CenterVertically
         ) {
             // The current track, with its neighbours just out of view on either side. Each spans
@@ -222,13 +194,17 @@ fun MiniPlayer(
                     state.track to 0,
                     state.next?.let { it to 1 }
                 )
-                fun slot(side: Int) = IntOffset((offset + side * widthPx).roundToInt(), 0)
+                fun slot(side: Int) =
+                    IntOffset((swipe.offset + side * swipe.widthPx).roundToInt(), 0)
                 // The tints slide whole, under everything.
                 tracks.forEach { (track, side) -> TrackTint(track) { slot(side) } }
                 // The tiles and text slide too, but fade out just before the button, which stays
                 // put, so nothing passes under it.
                 Box(Modifier.fillMaxSize().fadeOutBefore(ButtonWidth, FadeWidth)) {
-                    tracks.forEach { (track, side) -> TrackContent(track) { slot(side) } }
+                    tracks.forEach { (track, side) ->
+                        val stretch = if (side == 0) Modifier.trackStretch(swipe) else Modifier
+                        TrackContent(track, stretch) { slot(side) }
+                    }
                 }
                 Box(Modifier.align(Alignment.CenterEnd).padding(end = 4.dp)) {
                     PlayPauseButton(state.isPlaying, state.isLoading, onPlayPause)
@@ -249,13 +225,18 @@ private fun TrackTint(track: MiniTrackUi, offset: () -> IntOffset) {
 }
 
 @Composable
-private fun TrackContent(track: MiniTrackUi, offset: () -> IntOffset) {
+private fun TrackContent(
+    track: MiniTrackUi,
+    stretch: Modifier = Modifier,
+    offset: () -> IntOffset
+) {
     Row(
         Modifier
             .fillMaxSize()
             .offset { offset() }
             // Room on the right for the play/pause button floating above.
-            .padding(start = 16.dp, end = ButtonWidth),
+            .padding(start = 16.dp, end = ButtonWidth)
+            .then(stretch),
         verticalAlignment = Alignment.CenterVertically
     ) {
         val thumbnail = track.thumbnail
@@ -315,8 +296,8 @@ private fun Modifier.fadeOutBefore(end: Dp, fade: Dp) = this
  * through them (an RSE track runs red, blue, green).
  */
 // Used by the mini player, the family header and now playing's fade.
-internal fun gameTint(chips: List<ChipUi>): Brush {
-    val colors = chips.map { tintColor(it.color).copy(alpha = GAME_TINT) }
+internal fun gameTint(chips: List<ChipUi>, alpha: Float = GAME_TINT): Brush {
+    val colors = chips.map { tintColor(it.color).copy(alpha = alpha) }
     return when (colors.size) {
         0 -> SolidColor(Color.Transparent)
         1 -> SolidColor(colors.single())
@@ -324,12 +305,10 @@ internal fun gameTint(chips: List<ChipUi>): Brush {
     }
 }
 
-// Open Sans leaves room above its letters, so a text line sits optically low; trimming the line box
-// to the glyphs centers the title and its second line on the bar.
-// A swipe this fast (px/s) counts even if it was short.
-private const val GAME_TINT = 0.25f
+/** One color's tint, as faint as a game's: a playlist's art's average color, or the accent. */
+internal fun colorTint(color: Color): Brush = SolidColor(tintColor(color).copy(alpha = GAME_TINT))
 
-private const val FLING_VELOCITY = 1500f
+private const val GAME_TINT = 0.25f
 
 @Preview
 @Composable

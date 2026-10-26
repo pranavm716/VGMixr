@@ -66,8 +66,10 @@ fun GameChips(chips: List<ChipUi>, modifier: Modifier = Modifier) {
  * pale and dark games (White and Black 2) tint a gradient evenly instead of in light and dark
  * bands, and a pale color like White 2's stays muted instead of turning into a strong red.
  */
-fun tintColor(hex: String): Color {
-    val color = chipColor(hex)
+fun tintColor(hex: String): Color = tintColor(chipColor(hex))
+
+/** [tintColor] of any color, such as playlist art's average or the accent. */
+fun tintColor(color: Color): Color {
     val max = maxOf(color.red, color.green, color.blue)
     val min = minOf(color.red, color.green, color.blue)
     val chroma = max - min

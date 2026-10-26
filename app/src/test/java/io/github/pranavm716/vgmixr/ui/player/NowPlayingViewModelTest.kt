@@ -257,6 +257,67 @@ class NowPlayingViewModelTest {
     }
 
     @Test
+    fun `the swipe's previous always goes back a track, never restarting this one`() {
+        viewModel.onSwipePrevious()
+        viewModel.onPrevious()
+
+        assertEquals(
+            listOf(
+                FakePlaybackController.SkipToPrevious,
+                FakePlaybackController.RestartOrSkipToPrevious
+            ),
+            playback.calls
+        )
+    }
+
+    @Test
+    fun `the art beside the current one is the previous and next tracks' art`() = runTest {
+        val remix = CatalogTrack(
+            "yt:AAAAAAAAAAA",
+            null,
+            emptyList(),
+            "Some Remix",
+            0,
+            emptyList(),
+            thumbnail = "thumbnails/AAAAAAAAAAA.jpg"
+        )
+        val viewModel = NowPlayingViewModel(
+            FakeCatalogRepository(catalog.copy(userTracks = listOf(remix))),
+            playback,
+            playlists
+        )
+        val entries = listOf("yt:AAAAAAAAAAA", "rse-a", "rse-a").map {
+            QueueEntry(it, QueueContext.Queue)
+        }
+        fun at(current: Int) = PlaybackState(
+            queue = PlayQueue(entries, current),
+            trackId = entries[current].trackId
+        )
+        playback.state.value = at(1)
+
+        viewModel.uiState.test {
+            val middle = awaitItem() as NowPlayingUiState.Visible
+            assertEquals(NowPlayingArt(null, "thumbnails/AAAAAAAAAAA.jpg"), middle.previous)
+            assertEquals(NowPlayingArt("rse", null), middle.next)
+
+            playback.state.value = at(0)
+            assertEquals(null, (awaitItem() as NowPlayingUiState.Visible).previous)
+
+            playback.state.value = at(2)
+            assertEquals(null, (awaitItem() as NowPlayingUiState.Visible).next)
+        }
+    }
+
+    @Test
+    fun `knows the playing track's id`() = runTest {
+        playback.state.value = playing(QueueContext.Family("rse"))
+
+        viewModel.trackId.test {
+            assertEquals("rse-a", awaitItem())
+        }
+    }
+
+    @Test
     fun `times read as minutes and seconds, with hours only when needed`() {
         assertEquals("0:07", formatTime(7_400))
         assertEquals("1:49", formatTime(109_000))

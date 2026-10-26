@@ -13,3 +13,9 @@ fun coverFamilies(assets: AssetManager): Set<String> = assets.list(COVERS_DIR).o
     .filter { it.endsWith(".webp") }
     .map { it.removeSuffix(".webp") }
     .toSet()
+
+/** The folder of bundled playlist art, one image per playlist named after it. */
+const val PLAYLIST_ART_DIR = "playlist-art"
+
+/** The asset path of the playlist [name]'s art: its name in lowercase, which exists only if added. */
+fun playlistArtAsset(name: String): String = "$PLAYLIST_ART_DIR/${name.lowercase()}.webp"

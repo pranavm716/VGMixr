@@ -3,7 +3,6 @@ package io.github.pranavm716.vgmixr.ui.family
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,14 +12,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,20 +29,20 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
-import io.github.pranavm716.vgmixr.ui.components.ArtTile
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
-import io.github.pranavm716.vgmixr.ui.components.CollectionHeader
+import io.github.pranavm716.vgmixr.ui.components.CollectionPage
+import io.github.pranavm716.vgmixr.ui.components.FullWidth
 import io.github.pranavm716.vgmixr.ui.components.GameChips
-import io.github.pranavm716.vgmixr.ui.components.RowTileGap
-import io.github.pranavm716.vgmixr.ui.components.RowTileHeight
-import io.github.pranavm716.vgmixr.ui.components.ScrollToPlayingOnce
+import io.github.pranavm716.vgmixr.ui.components.HeaderImage
 import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.components.UnplayableIcon
+import io.github.pranavm716.vgmixr.ui.components.coverAsset
+import io.github.pranavm716.vgmixr.ui.components.rememberArt
 import io.github.pranavm716.vgmixr.ui.components.unplayable
 import io.github.pranavm716.vgmixr.ui.player.gameTint
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
-// The header's art tile and the track numbers share one leading column, so their centers line up.
+// The track numbers' column.
 private val StartPadding = 16.dp
 private val LeadingColumn = 40.dp
 private val LeadingGap = 16.dp
@@ -63,7 +61,7 @@ fun FamilyTab(onAddToPlaylist: (String) -> Unit, viewModel: FamilyViewModel = hi
     )
 }
 
-/** A family's tracks, styled after Shuttle's album screen; the art tile stands in for "back". */
+/** A family's tracks under its cover, which shrinks into a bar as the list scrolls. */
 @Composable
 fun FamilyScreen(
     state: FamilyUiState,
@@ -77,18 +75,19 @@ fun FamilyScreen(
 
         FamilyUiState.NotFound -> NotFound(modifier.statusBarsPadding())
 
-        is FamilyUiState.Loaded -> Column(modifier.fillMaxSize()) {
-            // Tinted with the family's games' colors, as the mini player is.
-            CollectionHeader(
+        is FamilyUiState.Loaded -> {
+            val cover = rememberArt(state.familyId?.let(::coverAsset), FullWidth)
+            // Without a cover, the family's games' colors stand in for it.
+            val noCover = remember(state.games) { gameTint(state.games, NO_COVER_TINT) }
+            CollectionPage(
                 state.name,
                 state.trackCount,
-                art = { ArtTile(RowTileHeight, familyId = state.familyId) },
-                gap = RowTileGap,
-                background = gameTint(state.games)
-            )
-            val listState = rememberLazyListState()
-            ScrollToPlayingOnce(listState, state.playing?.index, TrackRowHeight)
-            LazyColumn(Modifier.fillMaxSize(), state = listState) {
+                barTint = remember(state.games) { gameTint(state.games) },
+                playingIndex = state.playing?.index,
+                rowHeight = TrackRowHeight,
+                art = { HeaderImage(cover, missing = noCover) },
+                modifier = modifier
+            ) {
                 items(state.tracks, key = { it.id }) { track ->
                     val playing = state.playing?.takeIf { it.trackId == track.id }
                     val row = @Composable {
@@ -113,6 +112,9 @@ fun FamilyScreen(
 }
 
 private val TrackRowHeight = 48.dp
+
+// A family without a cover shows its games' colors at this strength instead.
+private const val NO_COVER_TINT = 0.55f
 
 /**
  * One track: its number in the list, its title and, unless it plays in every game, its games. The
