@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -132,9 +133,11 @@ fun SortRow(
     }
 }
 
+private val DownloadIconSize = 22.dp
+
 /**
  * At the sort row's right margin: "3 of 81 · " and a ring while a collection downloads, then a
- * filled download icon once all of it is on the phone.
+ * filled accent circle with a down arrow once all of it is on the phone (Spotify's look).
  */
 @Composable
 private fun DownloadStatus(progress: OfflineProgress, modifier: Modifier = Modifier) {
@@ -148,13 +151,15 @@ private fun DownloadStatus(progress: OfflineProgress, modifier: Modifier = Modif
         modifier.semantics(mergeDescendants = true) { contentDescription = description },
         verticalAlignment = Alignment.CenterVertically
     ) {
+        val accent = MaterialTheme.colorScheme.primary
         if (progress.complete) {
+            // Spotify's: a filled accent circle with a plain down arrow.
             Box(
-                Modifier.size(20.dp).clip(CircleShape).background(muted),
+                Modifier.size(DownloadIconSize).clip(CircleShape).background(accent),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painterResource(R.drawable.ic_download),
+                    painterResource(R.drawable.ic_arrow_downward),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.background,
                     modifier = Modifier.size(14.dp)
@@ -166,13 +171,23 @@ private fun DownloadStatus(progress: OfflineProgress, modifier: Modifier = Modif
                 style = MaterialTheme.typography.bodyMedium,
                 color = muted
             )
-            CircularProgressIndicator(
-                progress = { progress.done.toFloat() / progress.total },
-                modifier = Modifier.size(18.dp),
-                color = muted,
-                strokeWidth = 2.dp,
-                trackColor = muted.copy(alpha = 0.25f)
-            )
+            // The ring fills in the accent around a grey down arrow.
+            Box(Modifier.size(DownloadIconSize), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(
+                    progress = { progress.done.toFloat() / progress.total },
+                    modifier = Modifier.fillMaxSize(),
+                    color = accent,
+                    strokeWidth = 2.dp,
+                    trackColor = muted.copy(alpha = 0.35f),
+                    gapSize = 0.dp
+                )
+                Icon(
+                    painterResource(R.drawable.ic_arrow_downward),
+                    contentDescription = null,
+                    tint = muted,
+                    modifier = Modifier.size(12.dp)
+                )
+            }
         }
     }
 }
