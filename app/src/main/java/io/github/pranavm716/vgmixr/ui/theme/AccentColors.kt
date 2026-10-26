@@ -6,14 +6,14 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.settings.Accent
 
 /**
- * Each accent's color. All are dark enough for the white icons drawn on the accent (no lighter
- * behind them than the default red) and bright enough to stand out on the background.
+ * Each accent's color. All are dark enough for the white icons drawn on the accent (at least 2:1
+ * against white) and bright enough to stand out on the background.
  */
 val Accent.color: Color
     get() = when (this) {
         Accent.RED -> DefaultAccent
         Accent.ORANGE -> Color(0xFFE65100)
-        Accent.GOLD -> Color(0xFFA67C00)
+        Accent.GOLD -> Color(0xFFFF9800)
         Accent.GREEN -> Color(0xFF388E3C)
         Accent.TEAL -> Color(0xFF00838F)
         Accent.BLUE -> Color(0xFF1E86E2)

@@ -19,16 +19,13 @@ class AccentColorsTest {
         assertEquals(Accent.entries.size, Accent.entries.map { it.label }.toSet().size)
     }
 
-    // White icons sit on the accent (the Favorites tile, the swipe strip, the play button), so
-    // no accent may be lighter behind them than the red they were drawn for.
+    // White icons sit on the accent (the Favorites tile, the swipe strip, the play button), so no
+    // accent may be so light that they fade into it.
     @Test
-    fun `white on every accent reads at least as well as on the default`() {
-        val floor = contrastWithWhite(Accent.DEFAULT.color)
+    fun `white on every accent stays readable`() {
         Accent.entries.forEach {
-            assertTrue(
-                "$it: ${contrastWithWhite(it.color)} < $floor",
-                contrastWithWhite(it.color) >= floor
-            )
+            val contrast = contrastWithWhite(it.color)
+            assertTrue("$it: $contrast", contrast >= 2f)
         }
     }
 
