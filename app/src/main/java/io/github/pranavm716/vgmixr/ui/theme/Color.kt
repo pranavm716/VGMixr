@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 val Background = Color(0xFF111111)
 
 /** The default accent (Accent.RED), for the selected tab and other current elements. */
-val DefaultAccent = Color(0xFFF44336)
+val DefaultAccent = Color(0xFFbf0c3e)
 
 val TextPrimary = Color(0xFFE6E6E6)
 val TextSecondary = Color(0xFFA6A6A6)
