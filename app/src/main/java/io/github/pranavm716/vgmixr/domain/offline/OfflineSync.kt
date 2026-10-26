@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 
 /** Fetches and deletes the audio of videos; the work runs elsewhere, one video at a time. */
 interface OfflineDownloader {
@@ -37,7 +38,8 @@ fun downloadOrder(
 }
 
 /**
- * Keeps the phone's videos in line with the playlists, Remixes and broken marks: whenever one of
+ * Keeps the phone's videos in line with the playlists, Remixes, recent plays, the next track and
+ * broken marks: whenever one of
  * them (or a finished download) changes, it works out the plan, records it in [store] and hands the
  * downloads and deletions to [downloader].
  */
@@ -47,17 +49,25 @@ class OfflineSync(
     private val remixSort: Flow<SortSetting>,
     private val brokenVideos: Flow<Set<String>>,
     private val store: OfflineStore,
-    private val downloader: OfflineDownloader
+    private val downloader: OfflineDownloader,
+    /** Play history, newest first, repeats allowed. */
+    private val recentlyPlayed: Flow<List<String>> = flowOf(emptyList()),
+    /** The track after the playing one in the queue, prefetched whole. */
+    private val next: Flow<String?> = flowOf(null)
 ) {
     suspend fun run() {
-        combine(catalog, playlists, remixSort, brokenVideos, store.onPhone) { c, p, s, b, _ ->
-            OfflineInputs(
-                tracks = (c.tracks + c.userTracks).associateBy { it.id },
-                downloadOrder = downloadOrder(c, p, s),
-                recentlyPlayed = emptyList(),
-                next = null,
-                broken = b
-            )
+        val kept =
+            combine(catalog, playlists, remixSort, brokenVideos, store.onPhone) { c, p, s, b, _ ->
+                OfflineInputs(
+                    tracks = (c.tracks + c.userTracks).associateBy { it.id },
+                    downloadOrder = downloadOrder(c, p, s),
+                    recentlyPlayed = emptyList(),
+                    next = null,
+                    broken = b
+                )
+            }
+        combine(kept, recentlyPlayed, next) { inputs, recent, nextId ->
+            inputs.copy(recentlyPlayed = recent, next = nextId)
         }.collectLatest { inputs ->
             val existing = store.entries.first()
             val wanted = wantedOffline(inputs, existing)

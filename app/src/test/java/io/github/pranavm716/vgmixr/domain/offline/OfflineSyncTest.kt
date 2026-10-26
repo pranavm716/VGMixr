@@ -143,4 +143,30 @@ class OfflineSyncTest {
             assertEquals(listOf("v-a"), downloader.removals.last())
             assertEquals(setOf("v-b", "v-yt:new", "v-yt:old"), store.state.value.keys)
         }
+
+    @Test
+    fun `the next track and recent plays are cached around the playlist downloads`() = runTest {
+        val store = FakeStore()
+        val downloader = FakeDownloader()
+        val sync = OfflineSync(
+            catalog = MutableStateFlow(catalog),
+            playlists = MutableStateFlow(listOf(playlist(1, true, "a"))),
+            remixSort = MutableStateFlow(byTitle),
+            brokenVideos = MutableStateFlow(emptySet()),
+            store = store,
+            downloader = downloader,
+            recentlyPlayed = MutableStateFlow(listOf("d", "a")),
+            next = MutableStateFlow("c")
+        )
+        backgroundScope.launch { sync.run() }
+        runCurrent()
+
+        assertEquals(
+            listOf("v-c", "v-a", "v-yt:new", "v-yt:old", "v-d"),
+            downloader.downloads.last()
+        )
+        assertEquals(OfflineKind.CACHED, store.state.value.getValue("v-c").kind)
+        assertEquals(OfflineKind.CACHED, store.state.value.getValue("v-d").kind)
+        assertEquals(OfflineKind.DOWNLOADED, store.state.value.getValue("v-a").kind)
+    }
 }

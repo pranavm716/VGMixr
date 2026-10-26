@@ -17,12 +17,15 @@ import dagger.hilt.components.SingletonComponent
 import io.github.pranavm716.vgmixr.data.offline.RoomOfflineStore
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.history.PlayHistory
 import io.github.pranavm716.vgmixr.domain.offline.LookupPacer
 import io.github.pranavm716.vgmixr.domain.offline.OfflineDownloader
 import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
 import io.github.pranavm716.vgmixr.domain.offline.OfflineSync
 import io.github.pranavm716.vgmixr.domain.offline.PacedStreamResolver
+import io.github.pranavm716.vgmixr.domain.offline.RECENT_LIMIT
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.settings.SortSettings
@@ -34,9 +37,11 @@ import java.util.concurrent.Executors
 import javax.inject.Singleton
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 
 @OptIn(UnstableApi::class)
 @Module
@@ -89,7 +94,10 @@ object OfflineModule {
         sortSettings: SortSettings,
         brokenSources: BrokenSources,
         store: OfflineStore,
-        downloader: OfflineDownloader
+        downloader: OfflineDownloader,
+        history: PlayHistory,
+        playback: PlaybackController,
+        diagnostics: PlaybackDiagnostics
     ) = OfflineSync(
         catalog = catalog.catalog,
         // Every playlist in full, in the Playlists tab's order.
@@ -103,6 +111,13 @@ object OfflineModule {
         remixSort = sortSettings.remixes,
         brokenVideos = brokenSources.marks.map { it.keys },
         store = store,
-        downloader = downloader
+        downloader = downloader,
+        recentlyPlayed = history.plays
+            .map { plays -> plays.asReversed().map { it.trackId }.distinct().take(RECENT_LIMIT) }
+            .distinctUntilChanged(),
+        next = playback.state
+            .map { it.queue.entries.getOrNull(it.queue.current + 1)?.trackId }
+            .distinctUntilChanged()
+            .onEach { diagnostics.log("offline: next $it") }
     )
 }

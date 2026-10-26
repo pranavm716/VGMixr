@@ -54,13 +54,23 @@ class MediaDownloader @Inject constructor(
         main.post { manager.addListener(Listener()) }
     }
 
+    /**
+     * Only the first of [videoIds] may run; the rest wait, held with their bytes kept, so the fill
+     * order holds (the manager runs downloads in the order they were added) and a prefetch can
+     * overtake a long album download without losing it.
+     */
     override fun download(videoIds: List<String>) {
         main.post {
+            val first = videoIds.firstOrNull()
+            manager.currentDownloads
+                .filter { it.request.id != first && it.stopReason == Download.STOP_REASON_NONE }
+                .forEach { manager.setStopReason(it.request.id, WAITING) }
             videoIds.forEach {
                 manager.addDownload(
                     DownloadRequest.Builder(it, Uri.parse(STREAM_URI_PREFIX + it))
                         .setCustomCacheKey(it)
-                        .build()
+                        .build(),
+                    if (it == first) Download.STOP_REASON_NONE else WAITING
                 )
             }
             startService()
@@ -77,7 +87,7 @@ class MediaDownloader @Inject constructor(
     /**
      * Brings Room in line with the downloads after a crash or a cleared folder: a video Room thinks
      * finished whose download isn't is fetched again, a finished download Room missed is recorded,
-     * and a download Room doesn't know is removed.
+     * and a download Room doesn't know is removed, as is audio playback stored that nothing keeps.
      */
     suspend fun reconcile() {
         val entries = store.entries.first()
@@ -96,6 +106,9 @@ class MediaDownloader @Inject constructor(
         }
         val unknown = downloads.keys - entries.keys
         if (unknown.isNotEmpty()) remove(unknown.toList())
+        // Audio playback stored for videos nothing keeps (a track played under 10 s, or skipped).
+        val stray = withContext(io) { cache.keys } - entries.keys - unknown
+        if (stray.isNotEmpty()) remove(stray.toList())
     }
 
     private fun startService() {
@@ -139,6 +152,9 @@ class MediaDownloader @Inject constructor(
         }
     }
 }
+
+/** The stop reason of a download held back for an earlier one in the fill order. */
+private const val WAITING = 1
 
 /** Starts the offline sync once the downloads and Room agree. */
 @UnstableApi

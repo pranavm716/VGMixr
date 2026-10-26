@@ -140,6 +140,9 @@ class PlaybackService : MediaSessionService() {
                         .setCache(mediaCache)
                         .setCacheKeyFactory { streamCacheKey(it.uri.toString()) }
                         .setUpstreamDataSourceFactory(streams)
+                        // Read only: downloads alone write, so the player never holds a video a
+                        // download is waiting for (recent plays are downloaded as cached entries).
+                        .setCacheWriteDataSinkFactory(null)
                         // Wait for a download writing the same video rather than streaming it twice.
                         .setFlags(
                             CacheDataSource.FLAG_BLOCK_ON_CACHE or
