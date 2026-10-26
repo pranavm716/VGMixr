@@ -30,8 +30,10 @@ import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.describe
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
 import io.github.pranavm716.vgmixr.domain.history.PlayCounter
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
+import io.github.pranavm716.vgmixr.domain.offline.Connectivity
 import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
 import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
@@ -107,6 +109,9 @@ class PlaybackService : MediaSessionService() {
 
     @Inject
     lateinit var mediaCache: Cache
+
+    @Inject
+    lateinit var connectivity: Connectivity
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val artwork by lazy {
@@ -346,7 +351,13 @@ class PlaybackService : MediaSessionService() {
                 videoId = item.videoId,
                 retried = item.retried
             )
-            val outcome = onSourceFailure(failure, failed, streams, marks.value)
+            val outcome = onSourceFailure(
+                failure,
+                failed,
+                streams,
+                marks.value,
+                offline = !connectivity.online.value
+            )
             val action = outcome.action
             diagnostics.log(
                 "error ${item.mediaId} source ${item.sourceIndex}/${streams.size}: " +
@@ -492,10 +503,14 @@ private fun Catalog.startItem(
     marks: Map<String, BrokenMark>,
     artwork: NotificationArtwork
 ): MediaItem {
-    val streams = track(trackId)
-        ?.let { playableStreams(it.sources) }
-        .orEmpty()
-    val sourceIndex = nextSource(streams, 0, marks.keys) ?: streams.size
+    val track = track(trackId)
+    val streams = track?.let { playableStreams(it.sources) }.orEmpty()
+    // A dimmed track (broken, or offline and not on the phone) gets no source, so it is skipped.
+    val sourceIndex = if (track?.dimmed == true) {
+        streams.size
+    } else {
+        nextSource(streams, 0, marks.keys) ?: streams.size
+    }
     return itemFor(trackId, context, listIndex, sourceIndex, artwork)
 }
 

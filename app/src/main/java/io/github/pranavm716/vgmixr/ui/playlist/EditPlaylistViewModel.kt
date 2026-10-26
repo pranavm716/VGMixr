@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.search.SearchIndex
 import io.github.pranavm716.vgmixr.domain.search.search
@@ -128,7 +129,7 @@ private fun CatalogTrack.toRow(added: Boolean) = EditPlaylistRowUi(
     id = id,
     title = title,
     chips = games.map { ChipUi(it.shortName, it.color) },
-    unplayable = unplayable != null,
+    unplayable = dimmed,
     added = added,
     thumbnail = thumbnail,
     subtitle = channel,

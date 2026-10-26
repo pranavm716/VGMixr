@@ -14,10 +14,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.github.pranavm716.vgmixr.data.offline.AndroidConnectivity
 import io.github.pranavm716.vgmixr.data.offline.RoomOfflineStore
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
+import io.github.pranavm716.vgmixr.domain.offline.Connectivity
 import io.github.pranavm716.vgmixr.domain.offline.LookupPacer
 import io.github.pranavm716.vgmixr.domain.offline.OfflineDownloader
 import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
@@ -49,6 +51,9 @@ import kotlinx.coroutines.flow.onEach
 object OfflineModule {
     @Provides
     fun provideOfflineStore(store: RoomOfflineStore): OfflineStore = store
+
+    @Provides
+    fun provideConnectivity(connectivity: AndroidConnectivity): Connectivity = connectivity
 
     @Provides
     fun provideOfflineDownloader(downloader: MediaDownloader): OfflineDownloader = downloader

@@ -3,6 +3,7 @@ package io.github.pranavm716.vgmixr.domain.sort
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.TrackFilter
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
 import io.github.pranavm716.vgmixr.domain.catalog.filter
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import java.time.Instant
@@ -37,7 +38,7 @@ fun Catalog.playableUserTrackIds(sort: SortSetting): List<String> =
 fun Catalog.playablePlaylistTrackIds(playlist: Playlist): List<String> =
     playlistTracks(playlist).playableIds()
 
-private fun List<CatalogTrack>.playableIds() = filter { it.unplayable == null }.map { it.id }
+private fun List<CatalogTrack>.playableIds() = filterNot { it.dimmed }.map { it.id }
 
 /**
  * [tracks] in [sort]. [tracks] come newest first, so where a time is missing (a family's tracks,

@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.settings.SortSettings
@@ -104,6 +105,10 @@ class RemixesViewModel @Inject constructor(
         viewModelScope.launch {
             val catalog = catalog.catalog.first()
             val track = catalog.track(trackId) ?: return@launch
+            if (track.offline == true) {
+                messages.post(UserMessage.TrackOffline(track.title))
+                return@launch
+            }
             val unplayable = track.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -148,7 +153,7 @@ class RemixesViewModel @Inject constructor(
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
             val track = catalog.catalog.first().track(trackId)
-            if (track == null || track.unplayable != null) return@launch
+            if (track == null || track.dimmed) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
         }
@@ -190,7 +195,7 @@ class RemixesViewModel @Inject constructor(
         chips = games.map { ChipUi(it.shortName, it.color) },
         channel = channel,
         thumbnail = thumbnail,
-        unplayable = unplayable != null,
+        unplayable = dimmed,
         playing = id == playingId
     )
 }

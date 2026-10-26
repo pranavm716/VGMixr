@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
@@ -103,6 +104,10 @@ class PlaylistViewModel @Inject constructor(
         viewModelScope.launch {
             val catalog = catalog.catalog.first()
             val track = catalog.track(trackId) ?: return@launch
+            if (track.offline == true) {
+                messages.post(UserMessage.TrackOffline(track.title))
+                return@launch
+            }
             val unplayable = track.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -154,7 +159,7 @@ class PlaylistViewModel @Inject constructor(
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
             val track = catalog.catalog.first().track(trackId)
-            if (track == null || track.unplayable != null) return@launch
+            if (track == null || track.dimmed) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
         }
@@ -169,7 +174,7 @@ private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): Play
             id = track.id,
             title = track.title,
             chips = track.games.map { ChipUi(it.shortName, it.color) },
-            unplayable = track.unplayable != null,
+            unplayable = track.dimmed,
             playing = track.id == playingId,
             thumbnail = track.thumbnail,
             subtitle = track.channel,

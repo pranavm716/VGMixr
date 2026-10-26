@@ -141,4 +141,25 @@ class FailureOutcomeTest {
         assertNull(result.mark)
         assertNull(result.event)
     }
+
+    @Test
+    fun `with no connection a track that isn't on the phone is skipped quietly`() {
+        val streams = listOf(a, b)
+        val network = SourceFailure.Everything(ResolveFailure.NETWORK)
+
+        assertEquals(
+            FailureOutcome(FailoverAction.SkipTrack, null, null),
+            onSourceFailure(network, failed(0, streams), streams, emptyMap(), offline = true)
+        )
+        assertEquals(
+            FailoverAction.Stop(ResolveFailure.NETWORK),
+            onSourceFailure(
+                network,
+                failed(0, streams),
+                streams,
+                emptyMap(),
+                offline = false
+            ).action
+        )
+    }
 }
