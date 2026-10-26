@@ -18,6 +18,8 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -28,7 +30,8 @@ sealed interface NowPlayingUiState {
      * [chips] are all of the track's games, also when it plays in every game of its family.
      * [familyId] is the track's own family, which tapping the title opens wherever it plays from
      * (none for a user track that remixes no catalog track). A user track's title opens the Remixes
-     * tab instead ([opensRemixes]).
+     * tab instead ([opensRemixes]). [previous] and [next] are the neighbouring queue items' art,
+     * which slides in while the art is swiped; null at the queue's ends.
      */
     data class Visible(
         val title: String,
@@ -41,9 +44,14 @@ sealed interface NowPlayingUiState {
         val shuffle: Boolean = false,
         val thumbnail: String? = null,
         val subtitle: String? = null,
-        val opensRemixes: Boolean = false
+        val opensRemixes: Boolean = false,
+        val previous: NowPlayingArt? = null,
+        val next: NowPlayingArt? = null
     ) : NowPlayingUiState
 }
+
+/** A track's art: its [thumbnail] if it has one, else its family's tile. */
+data class NowPlayingArt(val familyId: String?, val thumbnail: String?)
 
 /** Where the current track plays from, for the header's "Playing from". */
 sealed interface PlayingFromUi {
@@ -89,10 +97,19 @@ class NowPlayingViewModel @Inject constructor(
             PlaybackProgress(positionMs = 0, durationMs = null)
         )
 
+    /** The playing track's id, which a swipe waits on to change before the art settles. */
+    val trackId: StateFlow<String?> =
+        playback.state.map { it.trackId }
+            .distinctUntilChanged()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
     fun onPlayPause() = playback.togglePlayPause()
 
     /** Restarts the track a few seconds in, else goes back one (the mini player's swipe always does). */
     fun onPrevious() = playback.restartOrSkipToPrevious()
+
+    /** Swiping the art back always plays the previous track, however much of this one has played. */
+    fun onSwipePrevious() = playback.skipToPrevious()
 
     fun onNext() = playback.skipToNext()
 
@@ -147,8 +164,15 @@ private fun Catalog.nowPlaying(
         isPlaying = state.isPlaying,
         isLoading = state.isLoading,
         isFavorite = track.id in favorites,
-        shuffle = state.shuffle
+        shuffle = state.shuffle,
+        previous = art(state.queue.entries.getOrNull(state.queue.current - 1)?.trackId),
+        next = art(state.queue.entries.getOrNull(state.queue.current + 1)?.trackId)
     )
+}
+
+private fun Catalog.art(trackId: String?): NowPlayingArt? {
+    val track = trackId?.let { track(it) } ?: return null
+    return NowPlayingArt(track.familyId, track.thumbnail)
 }
 
 /** A time as `m:ss`, or `h:mm:ss` from an hour on. */
