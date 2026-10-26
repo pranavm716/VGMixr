@@ -27,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
@@ -143,8 +142,7 @@ fun MiniPlayer(
 ) {
     val accent = MaterialTheme.colorScheme.primary
     val current by rememberUpdatedState(state)
-    var widthPx by remember { mutableIntStateOf(0) }
-    val swipe = rememberTrackSwipeState()
+    val swipe = rememberTrackSwipeState(state.previous != null, state.next != null)
     val lift = rememberDraggableState(onLift)
 
     val lineHeightPx = with(LocalDensity.current) { 2.dp.toPx() }
@@ -181,16 +179,10 @@ fun MiniPlayer(
                     orientation = Orientation.Horizontal,
                     enabled = interactive,
                     onDragStopped = { velocity ->
-                        swipe.settle(
-                            velocity,
-                            widthPx.toFloat(),
-                            onPrevious = onPrevious.takeIf { current.previous != null },
-                            onNext = onNext.takeIf { current.next != null },
-                            trackId = { current.track.trackId }
-                        )
+                        swipe.settle(velocity, onPrevious, onNext) { current.track.trackId }
                     }
                 )
-                .onSizeChanged { widthPx = it.width },
+                .onSizeChanged { swipe.widthPx = it.width.toFloat() },
             verticalAlignment = Alignment.CenterVertically
         ) {
             // The current track, with its neighbours just out of view on either side. Each spans
@@ -202,7 +194,8 @@ fun MiniPlayer(
                     state.track to 0,
                     state.next?.let { it to 1 }
                 )
-                fun slot(side: Int) = IntOffset((swipe.offset + side * widthPx).roundToInt(), 0)
+                fun slot(side: Int) =
+                    IntOffset((swipe.offset + side * swipe.widthPx).roundToInt(), 0)
                 // The tints slide whole, under everything.
                 tracks.forEach { (track, side) -> TrackTint(track) { slot(side) } }
                 // The tiles and text slide too, but fade out just before the button, which stays

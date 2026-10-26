@@ -35,7 +35,6 @@ import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -189,30 +188,24 @@ fun NowPlayingScreen(
     ) {
         // Everything between the header and the title swipes: left for the next track, right for
         // the previous one. One drag state over the three pieces makes them one touch area.
-        val current by rememberUpdatedState(visible)
         val trackId by viewModel.trackId.collectAsStateWithLifecycle()
         val currentTrackId by rememberUpdatedState(trackId)
-        val swipe = rememberTrackSwipeState()
-        var widthPx by remember { mutableIntStateOf(0) }
+        val swipe = rememberTrackSwipeState(visible.previous != null, visible.next != null)
         val swipeArea = Modifier
             .fillMaxWidth()
             .draggable(
                 state = swipe.draggable,
                 orientation = Orientation.Horizontal,
                 onDragStopped = { velocity ->
-                    swipe.settle(
-                        velocity,
-                        widthPx.toFloat(),
-                        onPrevious = viewModel::onSwipePrevious.takeIf { current.previous != null },
-                        onNext = viewModel::onNext.takeIf { current.next != null },
-                        trackId = { currentTrackId }
-                    )
+                    swipe.settle(velocity, viewModel::onSwipePrevious, viewModel::onNext) {
+                        currentTrackId
+                    }
                 }
             )
         Spacer(Modifier.weight(ABOVE_ART).then(swipeArea))
         // Only the art slides; the title and tint switch once the player has.
-        Box(swipeArea.clipToBounds().onSizeChanged { widthPx = it.width }) {
-            fun slot(side: Int) = IntOffset((swipe.offset + side * widthPx).roundToInt(), 0)
+        Box(swipeArea.clipToBounds().onSizeChanged { swipe.widthPx = it.width.toFloat() }) {
+            fun slot(side: Int) = IntOffset((swipe.offset + side * swipe.widthPx).roundToInt(), 0)
             visible.previous?.let { TrackArt(it) { slot(-1) } }
             TrackArt(NowPlayingArt(visible.familyId, visible.thumbnail)) { slot(0) }
             visible.next?.let { TrackArt(it) { slot(1) } }
