@@ -11,6 +11,7 @@ import io.github.pranavm716.vgmixr.data.db.BrokenStreamDao
 import io.github.pranavm716.vgmixr.data.db.CatalogDao
 import io.github.pranavm716.vgmixr.data.db.ImportStateDao
 import io.github.pranavm716.vgmixr.data.db.MIGRATION_3_4
+import io.github.pranavm716.vgmixr.data.db.OfflineDao
 import io.github.pranavm716.vgmixr.data.db.SeedFavorites
 import io.github.pranavm716.vgmixr.data.db.UserDataDao
 import io.github.pranavm716.vgmixr.data.db.UserTrackDao
@@ -42,4 +43,7 @@ object DatabaseModule {
 
     @Provides
     fun provideUserTrackDao(db: VGMixrDatabase): UserTrackDao = db.userTrackDao()
+
+    @Provides
+    fun provideOfflineDao(db: VGMixrDatabase): OfflineDao = db.offlineDao()
 }

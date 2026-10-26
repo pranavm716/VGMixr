@@ -22,9 +22,11 @@ import java.time.Instant
         PlayHistoryEntity::class,
         ImportStateEntity::class,
         BrokenStreamEntity::class,
-        UserTrackEntity::class
+        UserTrackEntity::class,
+        OfflineVideoEntity::class,
+        OfflineVideoTrackEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2, spec = DropTrackCategory::class),
@@ -34,7 +36,9 @@ import java.time.Instant
         // 4 to 5: tracks added from YouTube (roadmap step 13b), a new table.
         AutoMigration(from = 4, to = 5),
         // 5 to 6: each playlist's sort (roadmap step 15b), two nullable columns.
-        AutoMigration(from = 5, to = 6)
+        AutoMigration(from = 5, to = 6),
+        // 6 to 7: downloaded and cached videos (roadmap step 13), two new tables.
+        AutoMigration(from = 6, to = 7)
     ]
 )
 @TypeConverters(Converters::class)
@@ -48,6 +52,8 @@ abstract class VGMixrDatabase : RoomDatabase() {
     abstract fun brokenStreamDao(): BrokenStreamDao
 
     abstract fun userTrackDao(): UserTrackDao
+
+    abstract fun offlineDao(): OfflineDao
 }
 
 /** Creates the built-in Favorites playlist in a new database (an existing one gets it by migration). */
