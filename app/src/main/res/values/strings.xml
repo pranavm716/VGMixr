@@ -52,6 +52,12 @@
     <string name="back">Back</string>
     <string name="settings">Settings</string>
     <string name="accent">Accent</string>
+    <string name="background">Background</string>
+    <string name="background_black">Black</string>
+    <string name="background_navy">Navy</string>
+    <string name="background_teal">Deep teal</string>
+    <string name="background_slate">Slate</string>
+    <string name="background_plum">Midnight plum</string>
     <string name="accent_red">Red</string>
     <string name="accent_orange">Orange</string>
     <string name="accent_gold">Gold</string>

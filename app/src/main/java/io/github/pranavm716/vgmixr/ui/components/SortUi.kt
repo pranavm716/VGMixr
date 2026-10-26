@@ -46,7 +46,7 @@ import io.github.pranavm716.vgmixr.domain.sort.SortDirection
 import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import io.github.pranavm716.vgmixr.domain.sort.SortKeys
 import io.github.pranavm716.vgmixr.domain.sort.SortSetting
-import io.github.pranavm716.vgmixr.ui.theme.DialogBackground
+import io.github.pranavm716.vgmixr.ui.theme.VGMixrColors
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 /** A collection's sort row: the [selected] sort and the [keys] its menu offers. */
@@ -205,7 +205,7 @@ private fun SortMenu(
         expanded = expanded,
         onDismissRequest = onDismiss,
         shape = RoundedCornerShape(24.dp),
-        containerColor = DialogBackground
+        containerColor = VGMixrColors.dialog
     ) {
         sort.keys.forEach { key ->
             val selected = key == sort.selected.key

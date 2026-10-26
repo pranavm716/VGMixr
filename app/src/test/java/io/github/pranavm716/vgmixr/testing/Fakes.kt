@@ -25,6 +25,8 @@ import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.domain.settings.Accent
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
+import io.github.pranavm716.vgmixr.domain.settings.Background
+import io.github.pranavm716.vgmixr.domain.settings.BackgroundSetting
 import io.github.pranavm716.vgmixr.domain.settings.SortSettings
 import io.github.pranavm716.vgmixr.domain.sort.SortKeys
 import io.github.pranavm716.vgmixr.domain.sort.SortSetting
@@ -267,6 +269,14 @@ class FakeAccentSetting(initial: Accent = Accent.DEFAULT) : AccentSetting {
 
     override fun set(accent: Accent) {
         this.accent.value = accent
+    }
+}
+
+class FakeBackgroundSetting(initial: Background = Background.DEFAULT) : BackgroundSetting {
+    override val background = MutableStateFlow(initial)
+
+    override fun set(background: Background) {
+        this.background.value = background
     }
 }
 

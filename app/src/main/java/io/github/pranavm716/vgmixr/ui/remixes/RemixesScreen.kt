@@ -64,7 +64,7 @@ import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
 import io.github.pranavm716.vgmixr.ui.components.centerOn
-import io.github.pranavm716.vgmixr.ui.theme.DialogBackground
+import io.github.pranavm716.vgmixr.ui.theme.VGMixrColors
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
@@ -237,7 +237,7 @@ private fun RemixesMenu(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            containerColor = DialogBackground
+            containerColor = VGMixrColors.dialog
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.link)) },

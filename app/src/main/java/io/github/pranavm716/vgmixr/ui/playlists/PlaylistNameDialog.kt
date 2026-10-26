@@ -22,7 +22,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import io.github.pranavm716.vgmixr.R
-import io.github.pranavm716.vgmixr.ui.theme.DialogBackground
+import io.github.pranavm716.vgmixr.ui.theme.VGMixrColors
 
 /**
  * Asks for a playlist's name, to make one ("New playlist") or rename one ("Rename playlist"),
@@ -45,7 +45,7 @@ fun PlaylistNameDialog(
     val confirm = { if (name.text.isNotBlank()) onConfirm(name.text) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = DialogBackground,
+        containerColor = VGMixrColors.dialog,
         title = { Text(title) },
         text = {
             OutlinedTextField(

@@ -49,8 +49,7 @@ import io.github.pranavm716.vgmixr.ui.components.playlistArtAsset
 import io.github.pranavm716.vgmixr.ui.components.rememberArt
 import io.github.pranavm716.vgmixr.ui.player.colorTint
 import io.github.pranavm716.vgmixr.ui.playlists.PlaylistNameDialog
-import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
-import io.github.pranavm716.vgmixr.ui.theme.DialogBackground
+import io.github.pranavm716.vgmixr.ui.theme.VGMixrColors
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 @Composable
@@ -134,7 +133,7 @@ fun PlaylistScreen(
                     if (state.isFavorites) {
                         FavoritesHeaderArt()
                     } else {
-                        HeaderImage(art, missing = SolidColor(ArtPlaceholder))
+                        HeaderImage(art, missing = SolidColor(VGMixrColors.artPlaceholder))
                     }
                 },
                 action = {
@@ -200,7 +199,7 @@ private fun PlaylistMenu(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            containerColor = DialogBackground
+            containerColor = VGMixrColors.dialog
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.edit)) },
@@ -242,7 +241,7 @@ private fun PlaylistMenu(
     if (confirmingDelete) {
         AlertDialog(
             onDismissRequest = { confirmingDelete = false },
-            containerColor = DialogBackground,
+            containerColor = VGMixrColors.dialog,
             title = { Text(stringResource(R.string.delete_playlist_title, state.name)) },
             text = {
                 Text(

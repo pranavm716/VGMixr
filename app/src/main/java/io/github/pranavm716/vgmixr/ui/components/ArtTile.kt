@@ -32,7 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.github.pranavm716.vgmixr.R
-import io.github.pranavm716.vgmixr.ui.theme.ArtPlaceholder
+import io.github.pranavm716.vgmixr.ui.theme.VGMixrColors
 import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.Dispatchers
@@ -81,7 +81,7 @@ private fun AssetTile(modifier: Modifier, path: String?, width: Dp) {
     if (art is Art.Loaded) {
         Image(art.image, null, modifier.clip(ArtShape), contentScale = ContentScale.Crop)
     } else {
-        Box(modifier.background(ArtPlaceholder, ArtShape))
+        Box(modifier.background(VGMixrColors.artPlaceholder, ArtShape))
     }
 }
 

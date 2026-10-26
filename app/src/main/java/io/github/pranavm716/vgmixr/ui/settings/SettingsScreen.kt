@@ -43,6 +43,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.domain.offline.OfflineUsage
 import io.github.pranavm716.vgmixr.domain.settings.Accent
+import io.github.pranavm716.vgmixr.domain.settings.Background
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import io.github.pranavm716.vgmixr.ui.theme.color
 import io.github.pranavm716.vgmixr.ui.theme.label
@@ -64,6 +65,7 @@ fun SettingsTab(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel
         state,
         onAccentClick = viewModel::onAccentClick,
         onBack = onBack,
+        onBackgroundClick = viewModel::onBackgroundClick,
         storage = storage,
         onClearRecent = viewModel::onClearRecent
     )
@@ -72,13 +74,14 @@ fun SettingsTab(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel
 /**
  * Settings under a back arrow, as Edit playlist's header. Laid out as Shuttle's Appearance page:
  * a section title, then its options. Accent is a ring per color, the current one filled in;
- * a tap applies it at once.
+ * Background a filled circle per color, the current one ringed; a tap applies either at once.
  */
 @Composable
 fun SettingsScreen(
     state: SettingsUiState,
     onAccentClick: (Accent) -> Unit,
     onBack: () -> Unit,
+    onBackgroundClick: (Background) -> Unit = {},
     storage: OfflineUsage? = null,
     onClearRecent: () -> Unit = {}
 ) {
@@ -102,6 +105,18 @@ fun SettingsScreen(
             Row(Modifier.fillMaxWidth().padding(horizontal = RowPadding).selectableGroup()) {
                 state.accents.forEach { accent ->
                     AccentCircle(accent, accent == state.accent) { onAccentClick(accent) }
+                }
+            }
+            SectionTitle(stringResource(R.string.background))
+            // The accent row's grid, so the circles line up under the accents.
+            Row(Modifier.fillMaxWidth().padding(horizontal = RowPadding).selectableGroup()) {
+                state.backgrounds.forEach { background ->
+                    BackgroundCircle(background, background == state.background) {
+                        onBackgroundClick(background)
+                    }
+                }
+                repeat(state.accents.size - state.backgrounds.size) {
+                    Spacer(Modifier.weight(1f))
                 }
             }
             if (storage != null) Storage(storage, onClearRecent)
@@ -171,6 +186,57 @@ private fun RowScope.AccentCircle(accent: Accent, selected: Boolean, onClick: ()
             contentAlignment = Alignment.Center
         ) {
             if (selected) Box(Modifier.size(DotSize).background(color, CircleShape))
+        }
+    }
+}
+
+/**
+ * A background: a circle filled with it and outlined in grey, since black on the black page would
+ * vanish; the current one has a light ring around it.
+ */
+@Composable
+private fun RowScope.BackgroundCircle(
+    background: Background,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    val name = stringResource(background.label)
+    Box(
+        Modifier
+            .weight(1f)
+            .height(48.dp)
+            .semantics { contentDescription = name }
+            .selectable(
+                selected = selected,
+                onClick = onClick,
+                role = Role.RadioButton,
+                interactionSource = null,
+                indication = ripple(bounded = false, radius = 20.dp)
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            Modifier
+                .size(CircleSize)
+                .then(
+                    if (selected) {
+                        Modifier.border(
+                            RingWidth,
+                            MaterialTheme.colorScheme.onBackground,
+                            CircleShape
+                        )
+                    } else {
+                        Modifier
+                    }
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                Modifier
+                    .size(DotSize)
+                    .background(background.color, CircleShape)
+                    .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape)
+            )
         }
     }
 }
