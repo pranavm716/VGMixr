@@ -47,7 +47,7 @@ data class SortUi(val selected: SortSetting, val keys: List<SortKey>)
 
 /**
  * The sort row above a collection's first track, left-aligned as One UI's My Files has it: the
- * sort icon and the key's name with a chevron, which opens a menu of keys anchored to it (the selected one in the
+ * sort icon and the key's name, which opens a menu of keys anchored to it (the selected one in the
  * accent with a check), a thin divider, then an arrow, up for ascending, that reverses the
  * direction in one tap.
  */
@@ -84,14 +84,6 @@ fun SortRow(
                     style = MaterialTheme.typography.bodyMedium,
                     color = muted
                 )
-                // Marks the name as a menu.
-                Spacer(Modifier.width(4.dp))
-                Icon(
-                    painterResource(R.drawable.ic_chevron_down),
-                    contentDescription = null,
-                    tint = muted,
-                    modifier = Modifier.size(18.dp)
-                )
             }
             SortMenu(
                 expanded,
@@ -103,9 +95,9 @@ fun SortRow(
                 onDismiss = { expanded = false }
             )
         }
-        // The arrow's button pads its glyph by 10 dp, so the divider sits 2 dp closer to it: the
-        // divider is then as far from the arrow as from the chevron (measured on the phone).
-        VerticalDivider(Modifier.height(16.dp).padding(start = 4.dp, end = 2.dp), color = muted)
+        // The arrow's 36 dp button pads its glyph by 8 dp and the key's text has 8 dp after it, so
+        // the divider sits as far from the arrow as from the text (measured on the phone).
+        VerticalDivider(Modifier.height(16.dp).padding(start = 4.dp), color = muted)
         val ascending = sort.selected.direction == SortDirection.Ascending
         // One up arrow that turns over, so reversing the direction animates.
         val turn by animateFloatAsState(
@@ -113,7 +105,7 @@ fun SortRow(
             tween(ARROW_TURN_MS),
             label = "sort arrow"
         )
-        IconButton(onClick = onReverse, modifier = Modifier.size(40.dp)) {
+        IconButton(onClick = onReverse, modifier = Modifier.size(36.dp)) {
             Icon(
                 painterResource(R.drawable.ic_sort_up),
                 contentDescription = stringResource(
