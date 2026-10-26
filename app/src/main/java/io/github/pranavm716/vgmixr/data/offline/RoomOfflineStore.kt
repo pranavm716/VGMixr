@@ -38,6 +38,8 @@ class RoomOfflineStore @Inject constructor(private val dao: OfflineDao) : Offlin
         )
     }
 
+    override val onPhone: Flow<Set<String>> = dao.observeOnPhone().map { it.toSet() }
+
     override suspend fun apply(plan: OfflinePlan) {
         if (plan.remove.isNotEmpty()) dao.deleteVideos(plan.remove)
         plan.upsert.forEach {

@@ -234,6 +234,12 @@ abstract class OfflineDao {
     )
     abstract fun observePlayableTracks(): Flow<List<String>>
 
+    @Query("SELECT videoId FROM offline_videos WHERE complete")
+    abstract fun observeOnPhone(): Flow<List<String>>
+
+    @Query("SELECT videoId FROM offline_videos WHERE complete")
+    abstract suspend fun onPhone(): List<String>
+
     @Query("SELECT * FROM offline_videos WHERE videoId = :videoId")
     abstract suspend fun video(videoId: String): OfflineVideoEntity?
 

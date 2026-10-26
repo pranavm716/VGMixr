@@ -12,6 +12,8 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.ResolvingDataSource
+import androidx.media3.datasource.cache.Cache
+import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.ShuffleOrder
@@ -30,6 +32,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.history.PlayCounter
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
+import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
 import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.FailedSource
@@ -58,6 +61,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
@@ -98,6 +102,12 @@ class PlaybackService : MediaSessionService() {
     @Inject
     lateinit var playlists: PlaylistRepository
 
+    @Inject
+    lateinit var offline: OfflineStore
+
+    @Inject
+    lateinit var mediaCache: Cache
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val artwork by lazy {
         NotificationArtwork(File(cacheDir, "artwork"), coverFamilies(assets))
@@ -110,7 +120,11 @@ class PlaybackService : MediaSessionService() {
     override fun onCreate() {
         super.onCreate()
         scope.launch { catalogRepository.catalog.collect { catalog.value = it } }
-        scope.launch { brokenSources.marks.collect { marks.value = it } }
+        // A downloaded video plays from the phone whatever its mark says.
+        scope.launch {
+            combine(brokenSources.marks, offline.onPhone) { marks, onPhone -> marks - onPhone }
+                .collect { marks.value = it }
+        }
 
         val http = DefaultHttpDataSource.Factory().setAllowCrossProtocolRedirects(true)
         // The resolver runs on the loading thread; a StateFlow's value is safe to read there.
@@ -120,7 +134,14 @@ class PlaybackService : MediaSessionService() {
         )
         val player = ExoPlayer.Builder(this)
             .setMediaSourceFactory(
-                DefaultMediaSourceFactory(streams)
+                DefaultMediaSourceFactory(
+                    // Downloaded and cached audio first; streams only for what isn't on the phone.
+                    CacheDataSource.Factory()
+                        .setCache(mediaCache)
+                        .setCacheKeyFactory { streamCacheKey(it.uri.toString()) }
+                        .setUpstreamDataSourceFactory(streams)
+                        .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+                )
                     .setLoadErrorHandlingPolicy(FailFastLoadErrorPolicy())
             )
             .setAudioAttributes(
@@ -246,7 +267,7 @@ class PlaybackService : MediaSessionService() {
             scope.launch {
                 val catalog = catalog.filterNotNull().first()
                 // Read fresh, so a track whose marks were just cleared (Try again) plays its sources.
-                val fresh = brokenSources.marks.first().also { marks.value = it }
+                val fresh = freshMarks().also { marks.value = it }
                 mediaSession.setStoppedBy(null)
                 items.set(
                     mediaItems.map {
@@ -258,6 +279,10 @@ class PlaybackService : MediaSessionService() {
         }
     }
 
+    /** The marks as they are now, minus downloaded videos (which play whatever their mark). */
+    private suspend fun freshMarks(): Map<String, BrokenMark> =
+        brokenSources.marks.first() - offline.onPhone.first()
+
     /**
      * Applies [edits] to the session's own player. Its new entries are built here, as
      * [Callback.onAddMediaItems] builds the app's; the rest keep their items, so nothing playing
@@ -265,7 +290,7 @@ class PlaybackService : MediaSessionService() {
      */
     private suspend fun Player.applyResolving(edits: List<QueueEdit>) {
         val catalog = catalog.filterNotNull().first()
-        val fresh = brokenSources.marks.first().also { marks.value = it }
+        val fresh = freshMarks().also { marks.value = it }
         edits.forEach { edit ->
             if (edit is QueueEdit.Insert) {
                 addMediaItems(

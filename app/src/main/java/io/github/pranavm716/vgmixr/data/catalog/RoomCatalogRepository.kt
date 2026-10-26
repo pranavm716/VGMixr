@@ -22,7 +22,8 @@ import kotlinx.coroutines.flow.map
 
 /**
  * Reads the whole catalog, with the user tracks, from Room and re-reads it whenever a catalog
- * table, a user track or a broken mark changes.
+ * table, a user track, a broken mark or
+ * a finished download changes.
  */
 class RoomCatalogRepository @Inject constructor(
     private val db: VGMixrDatabase,
@@ -41,7 +42,8 @@ class RoomCatalogRepository @Inject constructor(
                 "track_games",
                 "sources",
                 "broken_streams",
-                "user_tracks"
+                "user_tracks",
+                "offline_videos"
             )
             .map { db.withTransaction { load() } }
 
@@ -57,7 +59,11 @@ class RoomCatalogRepository @Inject constructor(
         }
         val subsets = dao.allTrackGames().groupBy({ it.trackId }, { it.gameId })
         val sources = dao.allSources().groupBy { it.trackId }
-        val marks = db.brokenStreamDao().all().associateBy { it.videoId }
+        // A downloaded video plays from the phone, so its mark doesn't make its tracks unplayable.
+        val onPhone = db.offlineDao().onPhone().toSet()
+        val marks = db.brokenStreamDao().all()
+            .filter { it.videoId !in onPhone }
+            .associateBy { it.videoId }
         val tracks = dao.activeTracks().map { track ->
             val subset = subsets[track.id]
             val streams = sources[track.id].orEmpty().filter { it.type == SourceEntity.TYPE_STREAM }

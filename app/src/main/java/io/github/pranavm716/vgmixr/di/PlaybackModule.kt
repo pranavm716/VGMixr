@@ -1,6 +1,9 @@
 package io.github.pranavm716.vgmixr.di
 
 import android.content.Context
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.cache.Cache
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +21,7 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import io.github.pranavm716.vgmixr.domain.playback.ShuffleSetting
 import io.github.pranavm716.vgmixr.domain.playback.StreamResolver
 import io.github.pranavm716.vgmixr.playback.MediaControllerPlaybackController
+import io.github.pranavm716.vgmixr.playback.mediaCache
 import java.io.File
 import java.time.Clock
 import javax.inject.Singleton
@@ -52,6 +56,11 @@ object PlaybackModule {
     /** The app's external files folder, which adb can read from a release build. */
     private fun diagnosticsFolder(context: Context): File =
         context.getExternalFilesDir(null) ?: context.filesDir
+
+    @OptIn(UnstableApi::class)
+    @Provides
+    @Singleton
+    fun provideMediaCache(@ApplicationContext context: Context): Cache = mediaCache(context)
 
     @Provides
     fun provideStreamResolver(resolver: CachingStreamResolver): StreamResolver = resolver

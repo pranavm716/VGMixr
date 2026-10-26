@@ -83,4 +83,20 @@ class RoomOfflineStoreTest {
         assertEquals(emptySet<String>(), store.playableOffline.first())
         assertEquals(OfflineUsage(0, 0), store.usage.first())
     }
+
+    @Test
+    fun `only finished videos count as downloaded`() = runTest(dispatcher) {
+        store.apply(
+            OfflinePlan(
+                listOf(
+                    OfflineWant("va", DOWNLOADED, listOf("a")),
+                    OfflineWant("vb", CACHED, listOf("b"))
+                ),
+                emptyList()
+            )
+        )
+        store.setComplete("vb", 1_000)
+
+        assertEquals(setOf("vb"), store.onPhone.first())
+    }
 }

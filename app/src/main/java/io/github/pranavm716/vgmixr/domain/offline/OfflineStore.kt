@@ -15,6 +15,9 @@ interface OfflineStore {
 
     val usage: Flow<OfflineUsage>
 
+    /** The finished videos: they play from the phone, even once marked broken. */
+    val onPhone: Flow<Set<String>>
+
     /** Adds or updates [OfflinePlan.upsert] (a finished video stays finished) and deletes the rest. */
     suspend fun apply(plan: OfflinePlan)
 
