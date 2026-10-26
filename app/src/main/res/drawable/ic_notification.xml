@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The playback notification's icon (the status bar chip): the app icon's D-pad as one silhouette,
+  with its play dish and previous / next marks cut out ("D" in the step 13 mockups).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="68"
+    android:viewportHeight="68">
+    <group
+        android:translateX="-20"
+        android:translateY="-20">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:fillType="evenOdd"
+            android:pathData="M44 28.8A4.8 4.8 0 0 1 48.8 24L59.2 24A4.8 4.8 0 0 1 64 28.8L64 42A2 2 0 0 0 66 44L79.2 44A4.8 4.8 0 0 1 84 48.8L84 59.2A4.8 4.8 0 0 1 79.2 64L66 64A2 2 0 0 0 64 66L64 79.2A4.8 4.8 0 0 1 59.2 84L48.8 84A4.8 4.8 0 0 1 44 79.2L44 66A2 2 0 0 0 42 64L28.8 64A4.8 4.8 0 0 1 24 59.2L24 48.8A4.8 4.8 0 0 1 28.8 44L42 44A2 2 0 0 0 44 42Z M45.5 54a8.5 8.5 0 1 0 17 0a8.5 8.5 0 1 0 -17 0Z M50.6 49L50.6 59L59.2 54Z M68.6 49.5L68.6 58.5L75 54Z M76.2 49.5L78.4 49.5L78.4 58.5L76.2 58.5Z M39.4 49.5L39.4 58.5L33 54Z M29.6 49.5L31.8 49.5L31.8 58.5L29.6 58.5Z" />
+    </group>
+</vector>

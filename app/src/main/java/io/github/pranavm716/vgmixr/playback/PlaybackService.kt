@@ -17,6 +17,7 @@ import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.ShuffleOrder
+import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import androidx.media3.session.SessionCommand
@@ -26,6 +27,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.SettableFuture
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.pranavm716.vgmixr.MainActivity
+import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.describe
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
@@ -178,6 +180,12 @@ class PlaybackService : MediaSessionService() {
                 .setAction(MainActivity.ACTION_OPEN_NOW_PLAYING)
                 .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        setMediaNotificationProvider(
+            DefaultMediaNotificationProvider.Builder(this).build().apply {
+                // The status bar chip's icon: the app icon's D-pad.
+                setSmallIcon(R.drawable.ic_notification)
+            }
         )
         val session = MediaSession.Builder(this, player)
             .setCallback(Callback())
