@@ -136,7 +136,7 @@ fun SortRow(
 private val DownloadIconSize = 22.dp
 
 /**
- * At the sort row's right margin: "3 of 81 · " and a ring while a collection downloads, then a
+ * At the sort row's right margin: "3 of 81" and a ring while a collection downloads, then a
  * filled accent circle with a down arrow once all of it is on the phone (Spotify's look).
  */
 @Composable
@@ -167,10 +167,11 @@ private fun DownloadStatus(progress: OfflineProgress, modifier: Modifier = Modif
             }
         } else {
             Text(
-                stringResource(R.string.download_progress, progress.done, progress.total) + " · ",
+                stringResource(R.string.download_progress, progress.done, progress.total),
                 style = MaterialTheme.typography.bodyMedium,
                 color = muted
             )
+            Spacer(Modifier.width(8.dp))
             // The ring fills in the accent around a grey down arrow.
             Box(Modifier.size(DownloadIconSize), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(
