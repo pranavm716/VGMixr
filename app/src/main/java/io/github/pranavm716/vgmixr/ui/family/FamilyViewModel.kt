@@ -8,6 +8,7 @@ import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.TrackFilter
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
 import io.github.pranavm716.vgmixr.domain.catalog.filter
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
@@ -104,6 +105,10 @@ class FamilyViewModel @Inject constructor(
         viewModelScope.launch {
             val catalog = repository.catalog.first()
             val track = catalog.track(trackId)
+            if (track?.offline == true) {
+                messages.post(UserMessage.TrackOffline(track.title))
+                return@launch
+            }
             val unplayable = track?.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -143,7 +148,7 @@ class FamilyViewModel @Inject constructor(
         viewModelScope.launch {
             val track = repository.catalog.first().track(trackId)
             // A greyed row can't be swiped; this keeps any other path from queueing it.
-            if (track == null || track.unplayable != null) return@launch
+            if (track == null || track.dimmed) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
         }
@@ -179,7 +184,7 @@ private fun Catalog.familyState(familyId: String, sort: SortSetting): FamilyUiSt
             } else {
                 track.games.map { ChipUi(it.shortName, it.color) }
             },
-            unplayable = track.unplayable != null
+            unplayable = track.dimmed
         )
     }
     return FamilyUiState.Loaded(

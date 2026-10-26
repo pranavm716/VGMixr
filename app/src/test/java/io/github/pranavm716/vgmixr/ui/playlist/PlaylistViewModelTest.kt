@@ -6,6 +6,9 @@ import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.game
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
+import io.github.pranavm716.vgmixr.domain.offline.OfflineEntry
+import io.github.pranavm716.vgmixr.domain.offline.OfflineKind
+import io.github.pranavm716.vgmixr.domain.offline.OfflineProgress
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.playback.PlayQueue
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
@@ -13,6 +16,7 @@ import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
+import io.github.pranavm716.vgmixr.testing.FakeOfflineStore
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.FakePlaylistRepository
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
@@ -243,6 +247,27 @@ class PlaylistViewModelTest {
         viewModel().uiState.test {
             val rows = (awaitItem() as PlaylistUiState.Loaded).rows
             assertEquals(listOf("rse", "rse", "rse"), rows.map { it.familyId })
+        }
+    }
+
+    @Test
+    fun `the sort row shows how much of the playlist is on the phone`() = runTest {
+        val store = FakeOfflineStore(
+            mapOf("v-a" to OfflineEntry("v-a", OfflineKind.DOWNLOADED, true, setOf("rse-a")))
+        )
+        val viewModel = PlaylistViewModel(
+            SavedStateHandle(mapOf("playlistId" to 1L)),
+            FakeCatalogRepository(catalog),
+            playlists,
+            playback,
+            messages,
+            main.dispatcher,
+            store
+        )
+
+        // rse-c is broken and was never downloaded, so it isn't counted.
+        viewModel.download.test {
+            assertEquals(OfflineProgress(1, 2), awaitItem())
         }
     }
 }

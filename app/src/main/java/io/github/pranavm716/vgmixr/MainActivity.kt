@@ -7,6 +7,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,6 +16,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
+import io.github.pranavm716.vgmixr.domain.settings.BackgroundSetting
 import io.github.pranavm716.vgmixr.ui.AppScreen
 import io.github.pranavm716.vgmixr.ui.VGMixrApp
 import io.github.pranavm716.vgmixr.ui.family.FamilyTab
@@ -40,6 +42,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var accentSetting: AccentSetting
 
+    @Inject
+    lateinit var backgroundSetting: BackgroundSetting
+
     // Held here so the notification's intent (onNewIntent) can open it.
     private val nowPlayingOpen = mutableStateOf(false)
 
@@ -55,7 +60,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             // A pick in Settings recolors the whole app at once.
             val accent by accentSetting.accent.collectAsStateWithLifecycle()
-            VGMixrTheme(accent.color) {
+            val background by backgroundSetting.background.collectAsStateWithLifecycle()
+            // The navigation bar takes the picked background too.
+            LaunchedEffect(background) {
+                enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+                    navigationBarStyle = SystemBarStyle.dark(background.color.toArgb())
+                )
+            }
+            VGMixrTheme(accent.color, background.color) {
                 val snackbars = remember { SnackbarHostState() }
                 MessagesEffect(snackbars)
                 // A long press on the Remixes tab plays them from any tab.

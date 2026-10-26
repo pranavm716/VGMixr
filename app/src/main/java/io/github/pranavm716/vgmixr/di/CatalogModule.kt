@@ -8,7 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.pranavm716.vgmixr.data.catalog.AssetsManifestSource
 import io.github.pranavm716.vgmixr.data.catalog.DefaultCatalogSync
-import io.github.pranavm716.vgmixr.data.catalog.RoomCatalogRepository
+import io.github.pranavm716.vgmixr.data.offline.OfflineCatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogSync
 import io.github.pranavm716.vgmixr.domain.catalog.ManifestSource
@@ -24,5 +24,6 @@ object CatalogModule {
     fun provideCatalogSync(sync: DefaultCatalogSync): CatalogSync = sync
 
     @Provides
-    fun provideCatalogRepository(repository: RoomCatalogRepository): CatalogRepository = repository
+    fun provideCatalogRepository(repository: OfflineCatalogRepository): CatalogRepository =
+        repository
 }

@@ -5,9 +5,13 @@ import app.cash.turbine.test
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.manifest
 import io.github.pranavm716.vgmixr.data.catalog.TestCatalog.track
 import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
+import io.github.pranavm716.vgmixr.data.offline.RoomOfflineStore
 import io.github.pranavm716.vgmixr.data.stream.RoomBrokenSources
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.model.Source
+import io.github.pranavm716.vgmixr.domain.offline.OfflineKind
+import io.github.pranavm716.vgmixr.domain.offline.OfflinePlan
+import io.github.pranavm716.vgmixr.domain.offline.OfflineWant
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -84,6 +88,23 @@ class UnplayableTracksTest {
         broken.clear("AAAAAAAAAAA")
 
         assertEquals(setOf("BBBBBBBBBBB"), broken.marks.first().keys)
+        assertEquals(null, repository.catalog.first().unplayable()["rse-one"])
+    }
+
+    @Test
+    fun `a marked video that is downloaded still plays`() = runTest(dispatcher) {
+        import()
+        val offline = RoomOfflineStore(db.offlineDao())
+        offline.apply(
+            OfflinePlan(
+                listOf(OfflineWant("AAAAAAAAAAA", OfflineKind.DOWNLOADED, listOf("rse-one"))),
+                emptyList()
+            )
+        )
+        offline.setComplete("AAAAAAAAAAA", 1_000)
+
+        broken.mark("AAAAAAAAAAA", "rse-one", BrokenReason.NO_AUDIO, null)
+
         assertEquals(null, repository.catalog.first().unplayable()["rse-one"])
     }
 }

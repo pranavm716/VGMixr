@@ -48,5 +48,10 @@ data class CatalogTrack(
     val remixOf: String? = null,
     val thumbnail: String? = null,
     val videoTitle: String? = null,
-    val addedAt: Instant? = null
+    val addedAt: Instant? = null,
+    /** No connection, and the track isn't on the phone (roadmap step 13). */
+    val offline: Boolean = false
 )
+
+/** Whether the track is greyed and skipped: broken, or offline and not on the phone. */
+val CatalogTrack.dimmed: Boolean get() = unplayable != null || offline

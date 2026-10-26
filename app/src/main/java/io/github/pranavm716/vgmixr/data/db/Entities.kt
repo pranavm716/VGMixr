@@ -168,3 +168,31 @@ data class BrokenStreamEntity(
     val markedAt: Instant,
     val catalogGeneratedAt: String?
 )
+
+/**
+ * A video on the phone or on its way (roadmap step 13): [kind] is an `OfflineKind` name, [bytes]
+ * its size once [complete]. The audio lives in Media3's download store, keyed by the video.
+ */
+@Entity(tableName = "offline_videos")
+data class OfflineVideoEntity(
+    @PrimaryKey val videoId: String,
+    val kind: String,
+    val complete: Boolean,
+    val bytes: Long
+)
+
+/** A track an offline video plays (an album video plays many). */
+@Entity(
+    tableName = "offline_video_tracks",
+    primaryKeys = ["videoId", "trackId"],
+    foreignKeys = [
+        ForeignKey(
+            entity = OfflineVideoEntity::class,
+            parentColumns = ["videoId"],
+            childColumns = ["videoId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ],
+    indices = [Index("trackId")]
+)
+data class OfflineVideoTrackEntity(val videoId: String, val trackId: String)

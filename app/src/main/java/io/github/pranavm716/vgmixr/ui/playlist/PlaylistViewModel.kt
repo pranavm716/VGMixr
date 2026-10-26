@@ -7,6 +7,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
+import io.github.pranavm716.vgmixr.domain.offline.OfflineProgress
+import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
+import io.github.pranavm716.vgmixr.domain.offline.offlineProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
@@ -81,7 +85,8 @@ class PlaylistViewModel @Inject constructor(
     private val playlists: PlaylistRepository,
     private val playback: PlaybackController,
     private val messages: UserMessages,
-    @DefaultDispatcher dispatcher: CoroutineDispatcher
+    @DefaultDispatcher dispatcher: CoroutineDispatcher,
+    offline: OfflineStore = OfflineStore.NONE
 ) : ViewModel() {
     // The PlaylistRoute's argument, stored by type-safe navigation under its property name.
     private val playlistId: Long = checkNotNull(savedStateHandle["playlistId"])
@@ -95,6 +100,18 @@ class PlaylistViewModel @Inject constructor(
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PlaylistUiState.Loading)
 
+    /** How much of the playlist is downloaded, for the sort row's icon; null while loading. */
+    val download: StateFlow<OfflineProgress?> =
+        combine(catalog.catalog, playlists.playlist(playlistId), offline.playableOffline) {
+                catalog,
+                playlist,
+                onPhone
+            ->
+            playlist?.let { offlineProgress(catalog.playlistTracks(it), onPhone) }
+        }
+            .flowOn(dispatcher)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
     /**
      * Plays the playlist from the tapped track, in its sort, leaving out tracks that can't play. A
      * track whose sources are all broken says so instead, on every tap.
@@ -103,6 +120,10 @@ class PlaylistViewModel @Inject constructor(
         viewModelScope.launch {
             val catalog = catalog.catalog.first()
             val track = catalog.track(trackId) ?: return@launch
+            if (track.offline == true) {
+                messages.post(UserMessage.TrackOffline(track.title))
+                return@launch
+            }
             val unplayable = track.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -154,7 +175,7 @@ class PlaylistViewModel @Inject constructor(
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
             val track = catalog.catalog.first().track(trackId)
-            if (track == null || track.unplayable != null) return@launch
+            if (track == null || track.dimmed) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
         }
@@ -169,7 +190,7 @@ private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): Play
             id = track.id,
             title = track.title,
             chips = track.games.map { ChipUi(it.shortName, it.color) },
-            unplayable = track.unplayable != null,
+            unplayable = track.dimmed,
             playing = track.id == playingId,
             thumbnail = track.thumbnail,
             subtitle = track.channel,

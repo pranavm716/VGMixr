@@ -47,6 +47,9 @@ sealed interface UserMessage {
         val trackSkipped: Boolean
     ) : UserMessage
 
+    /** A tap on [title] with no connection, which isn't on the phone. */
+    data class TrackOffline(val title: String) : UserMessage
+
     /** A tap on [title], whose sources are all broken (the first for [reason]); offers Try again. */
     data class TrackUnplayable(val trackId: String, val title: String, val reason: BrokenReason) :
         UserMessage
@@ -178,6 +181,8 @@ private fun UserMessage.text(resources: Resources): String = when (this) {
     is UserMessage.Unchecked -> resources.getString(R.string.try_again_unchecked, title)
 
     is UserMessage.RemixDeleted -> resources.getString(R.string.remix_deleted, title)
+
+    is UserMessage.TrackOffline -> resources.getString(R.string.track_unplayable_offline, title)
 
     is UserMessage.TrackUnplayable -> resources.getString(
         when (reason) {

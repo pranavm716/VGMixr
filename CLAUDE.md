@@ -46,11 +46,11 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - Tracks in one family that share a name are told apart by their versions in parentheses, joined with "&": "Opening Movie (Ruby & Sapphire)" and "Opening Movie (Emerald)", "Title Screen (Black & White)" and "Title Screen (Black 2 & White 2)". Both sides get the qualifier.
 - Import rules (details in `docs/manifest.md`): validate fully before writing, upsert by id, never delete user data, retire tracks and games missing from a new manifest instead of deleting them (un-retire if they reappear), honor `replaces` by re-pointing playlist entries (favorites included), history and `remixOf`. A failed import keeps the existing catalog and shows a warning.
 - Each track has an ordered `sources` list of `local` files, then `stream` candidates. The player tries local files (skipping missing ones), then a cached download of a stream source, then streams, and marks sources that exist but fail to play as broken. The cache is runtime state, never a manifest source. Unknown source types are a validation error; adding one bumps `schemaVersion`.
-- Runtime source state lives in Room, keyed by source identity, never by list index: local by `path`; stream broken flag by `videoId`; stream cache by `(videoId, startMs, endMs)`. A stream video is marked broken only for no playable audio or unavailable, never for network trouble or a 403 (`docs/broken.md`).
-- Local files live in a fixed app-specific folder (`files/music/`), copied there by hand.
+- Runtime source state lives in Room, keyed by source identity, never by list index: local by `path`; stream broken flag by `videoId`; stream downloads by `videoId` (a download is always a video's whole audio; slices, an album's included, play from it clipped). A stream video is marked broken only for no playable audio or unavailable, never for network trouble or a 403 (`docs/broken.md`).
+- Local files live in a fixed app-specific folder (`files/music/`), copied there by hand. `local` sources are for ROM rips (with loop points); audio from YouTube stays a `stream` source, downloaded by the app.
 - A stream source stores a video ID, never a URL (URLs expire). Resolve to a URL at play time via `StreamResolver`. Optional `startMs`/`endMs` for tracks inside whole-album videos.
 - Loop points (`loop`) are optional and only on `local` sources, since they describe one exact file. Loop cycle count is a global app setting.
-- Prefetch the next queued track; auto-cache favorites and recently played.
+- Offline (roadmap step 13): **downloaded** = every track in a playlist or Remixes, kept; **cached** = the last 200 played and the next queued track, evicted. The rules are plain Kotlin in `domain/offline/` (`OfflineSync` plans, Room's `offline_videos` records); Media3's download manager fills one store (`files/media-cache/`, keyed by video id) that playback only reads. Offline, a track plays when the video playback would pick is on the phone; the rest are dimmed and skipped.
 - Deferred, do not build yet: an optional `franchise` field on games for multi-franchise grouping (see `docs/manifest.md`).
 - Adding a game or family (or a spin-off, or another franchise): follow the checklist in `docs/adding-games.md`, which lists the data files and every place in the code that knows about Pokémon.
 
@@ -75,6 +75,8 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - When compacting, preserve the list of modified files and the test commands.
 
 ## Gotchas (add as discovered)
+- YouTube's media servers slow an open-ended request to about playback speed (35 KB/s), but serve bounded byte ranges at full speed (MB/s): downloads read through `ChunkedDataSource` (4 MB ranges).
+- Only downloads write the media store. If playback wrote too, the player (holding a stream open while it buffers) and a download of the same video would wait on each other forever, stalling every download.
 - The extractor breaks when YouTube changes. Cached downloads must keep playing without it.
 - Lossy codecs (Opus/MP3) can leave gaps at loop seams. Use FLAC or verify before building v2 looping.
 - YouTube answers a burst of yt-dlp requests with "Sign in to confirm you're not a bot". Cached responses keep builds offline (`--cached-only`); space out fresh runs. The block lifts after a while. `--cookies-from-browser` fails on Windows while Edge or Chrome is running (it locks its cookie database).

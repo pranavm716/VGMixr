@@ -7,9 +7,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.search.SearchIndex
 import io.github.pranavm716.vgmixr.domain.search.search
+import io.github.pranavm716.vgmixr.domain.sort.playlistTracks
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.search.SEARCH_DELAY_MS
 import javax.inject.Inject
@@ -82,8 +84,8 @@ class EditPlaylistViewModel @Inject constructor(
     ) { query, index -> Matches(query, search(query, index)) }
         .flowOn(dispatcher)
 
-    // An empty field lists the playlist's own tracks (newest first, all checked), so unchecking one
-    // takes its row away; a typed query lists the matches instead.
+    // An empty field lists the playlist's own tracks in its sort, as its page lists them, all
+    // checked, so unchecking one takes its row away; a typed query lists the matches instead.
     val uiState: StateFlow<EditPlaylistUiState> =
         combine(matches, playlists.playlist(playlistId), repository.catalog) {
                 matches,
@@ -93,7 +95,7 @@ class EditPlaylistViewModel @Inject constructor(
             val ids = playlist?.trackIds.orEmpty()
             val added = ids.toSet()
             val tracks = if (matches.query.isBlank()) {
-                ids.mapNotNull(catalog::track)
+                playlist?.let(catalog::playlistTracks).orEmpty()
             } else {
                 matches.tracks
             }
@@ -128,7 +130,7 @@ private fun CatalogTrack.toRow(added: Boolean) = EditPlaylistRowUi(
     id = id,
     title = title,
     chips = games.map { ChipUi(it.shortName, it.color) },
-    unplayable = unplayable != null,
+    unplayable = dimmed,
     added = added,
     thumbnail = thumbnail,
     subtitle = channel,

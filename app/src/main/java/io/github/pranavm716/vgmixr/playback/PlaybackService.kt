@@ -12,9 +12,12 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.ResolvingDataSource
+import androidx.media3.datasource.cache.Cache
+import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.ShuffleOrder
+import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import androidx.media3.session.SessionCommand
@@ -24,12 +27,16 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.SettableFuture
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.pranavm716.vgmixr.MainActivity
+import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.describe
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
 import io.github.pranavm716.vgmixr.domain.history.PlayCounter
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
+import io.github.pranavm716.vgmixr.domain.offline.Connectivity
+import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
 import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.FailedSource
@@ -58,6 +65,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
@@ -98,6 +106,15 @@ class PlaybackService : MediaSessionService() {
     @Inject
     lateinit var playlists: PlaylistRepository
 
+    @Inject
+    lateinit var offline: OfflineStore
+
+    @Inject
+    lateinit var mediaCache: Cache
+
+    @Inject
+    lateinit var connectivity: Connectivity
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val artwork by lazy {
         NotificationArtwork(File(cacheDir, "artwork"), coverFamilies(assets))
@@ -110,7 +127,11 @@ class PlaybackService : MediaSessionService() {
     override fun onCreate() {
         super.onCreate()
         scope.launch { catalogRepository.catalog.collect { catalog.value = it } }
-        scope.launch { brokenSources.marks.collect { marks.value = it } }
+        // A downloaded video plays from the phone whatever its mark says.
+        scope.launch {
+            combine(brokenSources.marks, offline.onPhone) { marks, onPhone -> marks - onPhone }
+                .collect { marks.value = it }
+        }
 
         val http = DefaultHttpDataSource.Factory().setAllowCrossProtocolRedirects(true)
         // The resolver runs on the loading thread; a StateFlow's value is safe to read there.
@@ -120,7 +141,21 @@ class PlaybackService : MediaSessionService() {
         )
         val player = ExoPlayer.Builder(this)
             .setMediaSourceFactory(
-                DefaultMediaSourceFactory(streams)
+                DefaultMediaSourceFactory(
+                    // Downloaded and cached audio first; streams only for what isn't on the phone.
+                    CacheDataSource.Factory()
+                        .setCache(mediaCache)
+                        .setCacheKeyFactory { streamCacheKey(it.uri.toString()) }
+                        .setUpstreamDataSourceFactory(streams)
+                        // Read only: downloads alone write, so the player never holds a video a
+                        // download is waiting for (recent plays are downloaded as cached entries).
+                        .setCacheWriteDataSinkFactory(null)
+                        // Wait for a download writing the same video rather than streaming it twice.
+                        .setFlags(
+                            CacheDataSource.FLAG_BLOCK_ON_CACHE or
+                                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
+                        )
+                )
                     .setLoadErrorHandlingPolicy(FailFastLoadErrorPolicy())
             )
             .setAudioAttributes(
@@ -145,6 +180,12 @@ class PlaybackService : MediaSessionService() {
                 .setAction(MainActivity.ACTION_OPEN_NOW_PLAYING)
                 .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        setMediaNotificationProvider(
+            DefaultMediaNotificationProvider.Builder(this).build().apply {
+                // The status bar chip's icon: the app icon's D-pad.
+                setSmallIcon(R.drawable.ic_notification)
+            }
         )
         val session = MediaSession.Builder(this, player)
             .setCallback(Callback())
@@ -246,7 +287,7 @@ class PlaybackService : MediaSessionService() {
             scope.launch {
                 val catalog = catalog.filterNotNull().first()
                 // Read fresh, so a track whose marks were just cleared (Try again) plays its sources.
-                val fresh = brokenSources.marks.first().also { marks.value = it }
+                val fresh = freshMarks().also { marks.value = it }
                 mediaSession.setStoppedBy(null)
                 items.set(
                     mediaItems.map {
@@ -258,6 +299,10 @@ class PlaybackService : MediaSessionService() {
         }
     }
 
+    /** The marks as they are now, minus downloaded videos (which play whatever their mark). */
+    private suspend fun freshMarks(): Map<String, BrokenMark> =
+        brokenSources.marks.first() - offline.onPhone.first()
+
     /**
      * Applies [edits] to the session's own player. Its new entries are built here, as
      * [Callback.onAddMediaItems] builds the app's; the rest keep their items, so nothing playing
@@ -265,7 +310,7 @@ class PlaybackService : MediaSessionService() {
      */
     private suspend fun Player.applyResolving(edits: List<QueueEdit>) {
         val catalog = catalog.filterNotNull().first()
-        val fresh = brokenSources.marks.first().also { marks.value = it }
+        val fresh = freshMarks().also { marks.value = it }
         edits.forEach { edit ->
             if (edit is QueueEdit.Insert) {
                 addMediaItems(
@@ -314,7 +359,13 @@ class PlaybackService : MediaSessionService() {
                 videoId = item.videoId,
                 retried = item.retried
             )
-            val outcome = onSourceFailure(failure, failed, streams, marks.value)
+            val outcome = onSourceFailure(
+                failure,
+                failed,
+                streams,
+                marks.value,
+                offline = !connectivity.online.value
+            )
             val action = outcome.action
             diagnostics.log(
                 "error ${item.mediaId} source ${item.sourceIndex}/${streams.size}: " +
@@ -460,10 +511,14 @@ private fun Catalog.startItem(
     marks: Map<String, BrokenMark>,
     artwork: NotificationArtwork
 ): MediaItem {
-    val streams = track(trackId)
-        ?.let { playableStreams(it.sources) }
-        .orEmpty()
-    val sourceIndex = nextSource(streams, 0, marks.keys) ?: streams.size
+    val track = track(trackId)
+    val streams = track?.let { playableStreams(it.sources) }.orEmpty()
+    // A dimmed track (broken, or offline and not on the phone) gets no source, so it is skipped.
+    val sourceIndex = if (track?.dimmed == true) {
+        streams.size
+    } else {
+        nextSource(streams, 0, marks.keys) ?: streams.size
+    }
     return itemFor(trackId, context, listIndex, sourceIndex, artwork)
 }
 

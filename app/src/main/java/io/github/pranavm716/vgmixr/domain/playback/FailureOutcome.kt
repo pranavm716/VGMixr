@@ -34,13 +34,21 @@ data class NewMark(val videoId: String, val reason: BrokenReason, val detail: St
  */
 data class FailureOutcome(val action: FailoverAction, val mark: NewMark?, val event: PlaybackEvent?)
 
-/** Decides what follows [failure] of [failed], one of [streams], with the videos in [marks] marked. */
+/**
+ * Decides what follows [failure] of [failed], one of [streams], with the videos in [marks] marked;
+ * [offline] when the phone has no connection.
+ */
 fun onSourceFailure(
     failure: SourceFailure,
     failed: FailedSource,
     streams: List<Source.Stream>,
-    marks: Map<String, BrokenMark>
+    marks: Map<String, BrokenMark>,
+    offline: Boolean = false
 ): FailureOutcome {
+    // With no connection, a track that isn't on the phone is passed over, as it is dimmed.
+    if (offline && failure == SourceFailure.Everything(ResolveFailure.NETWORK)) {
+        return FailureOutcome(FailoverAction.SkipTrack, null, null)
+    }
     val videoId = failed.videoId
     val broken = failure as? SourceFailure.Broken
     val alreadyMarked = videoId != null && videoId in marks

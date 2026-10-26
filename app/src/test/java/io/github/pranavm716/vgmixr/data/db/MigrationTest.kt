@@ -242,6 +242,29 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `6 to 7 adds empty offline tables and keeps playlists`() {
+        helper.createDatabase(6).use { db ->
+            db.execSQL("INSERT INTO playlists (id, name, createdAt) VALUES (7, 'Hype', 333)")
+        }
+
+        helper.runMigrationsAndValidate(7).use { db ->
+            assertEquals(
+                listOf("videoId", "kind", "complete", "bytes"),
+                db.rows("PRAGMA table_info(offline_videos)").map { it[1] }
+            )
+            assertEquals(
+                listOf("videoId", "trackId"),
+                db.rows("PRAGMA table_info(offline_video_tracks)").map { it[1] }
+            )
+            assertEquals(emptyList<List<String?>>(), db.rows("SELECT * FROM offline_videos"))
+            assertEquals(
+                listOf(listOf("7", "Hype")),
+                db.rows("SELECT id, name FROM playlists ORDER BY id")
+            )
+        }
+    }
+
     private fun SQLiteConnection.rows(sql: String): List<List<String?>> = prepare(sql).use { row ->
         buildList {
             while (row.step()) {

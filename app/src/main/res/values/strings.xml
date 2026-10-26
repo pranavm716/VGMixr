@@ -37,6 +37,7 @@
     <string name="source_failed_skipped">Skipped %s: its stream didn\'t play</string>
     <string name="source_failed_other_upload">Playing another upload of %s: the first one didn\'t play</string>
     <string name="track_unplayable_no_audio">%s can\'t play: YouTube won\'t give the app its audio</string>
+    <string name="track_unplayable_offline">%s can\'t play: it isn\'t downloaded, and there\'s no connection</string>
     <string name="track_unplayable_unavailable">%s can\'t play: its video is unavailable</string>
     <string name="try_again">Try again</string>
     <string name="plays_again">%s can play again</string>
@@ -51,6 +52,12 @@
     <string name="back">Back</string>
     <string name="settings">Settings</string>
     <string name="accent">Accent</string>
+    <string name="background">Background</string>
+    <string name="background_black">Black</string>
+    <string name="background_navy">Navy</string>
+    <string name="background_teal">Deep teal</string>
+    <string name="background_slate">Slate</string>
+    <string name="background_plum">Midnight plum</string>
     <string name="accent_red">Red</string>
     <string name="accent_orange">Orange</string>
     <string name="accent_gold">Gold</string>
@@ -111,4 +118,12 @@
         <item quantity="one">%d track</item>
         <item quantity="other">%d tracks</item>
     </plurals>
+    <string name="downloads_channel">Downloads</string>
+    <string name="download_progress">%1$d of %2$d</string>
+    <string name="downloading">Downloading, %1$d of %2$d</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="storage">Storage</string>
+    <string name="storage_downloaded">Downloaded: %s</string>
+    <string name="storage_cached">Recent plays: %s</string>
+    <string name="clear_recent">Clear recent</string>
 </resources>

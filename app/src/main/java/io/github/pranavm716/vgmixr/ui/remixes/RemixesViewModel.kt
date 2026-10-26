@@ -6,6 +6,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
+import io.github.pranavm716.vgmixr.domain.offline.OfflineProgress
+import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
+import io.github.pranavm716.vgmixr.domain.offline.offlineProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.settings.SortSettings
@@ -76,7 +80,8 @@ class RemixesViewModel @Inject constructor(
     private val messages: UserMessages,
     private val userTracks: UserTrackRepository,
     private val sortSettings: SortSettings,
-    @DefaultDispatcher dispatcher: CoroutineDispatcher
+    @DefaultDispatcher dispatcher: CoroutineDispatcher,
+    offline: OfflineStore = OfflineStore.NONE
 ) : ViewModel() {
     private val mode = MutableStateFlow(RemixesMode.NORMAL)
 
@@ -96,6 +101,14 @@ class RemixesViewModel @Inject constructor(
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), RemixesUiState.Loading)
 
+    /** How much of Remixes is downloaded, for the sort row's icon. */
+    val download: StateFlow<OfflineProgress?> =
+        combine(catalog.catalog, offline.playableOffline) { catalog, onPhone ->
+            offlineProgress(catalog.userTracks, onPhone)
+        }
+            .flowOn(dispatcher)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
     /**
      * Plays Remixes from the tapped track, in their sort, leaving out tracks that can't play. A track
      * whose video is broken says so instead, on every tap.
@@ -104,6 +117,10 @@ class RemixesViewModel @Inject constructor(
         viewModelScope.launch {
             val catalog = catalog.catalog.first()
             val track = catalog.track(trackId) ?: return@launch
+            if (track.offline == true) {
+                messages.post(UserMessage.TrackOffline(track.title))
+                return@launch
+            }
             val unplayable = track.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -148,7 +165,7 @@ class RemixesViewModel @Inject constructor(
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
             val track = catalog.catalog.first().track(trackId)
-            if (track == null || track.unplayable != null) return@launch
+            if (track == null || track.dimmed) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
         }
@@ -190,7 +207,7 @@ class RemixesViewModel @Inject constructor(
         chips = games.map { ChipUi(it.shortName, it.color) },
         channel = channel,
         thumbnail = thumbnail,
-        unplayable = unplayable != null,
+        unplayable = dimmed,
         playing = id == playingId
     )
 }

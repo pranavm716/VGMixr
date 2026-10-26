@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
@@ -217,4 +218,67 @@ interface UserTrackDao {
 
     @Query("UPDATE user_tracks SET remixOf = :newId WHERE remixOf = :oldId")
     suspend fun repointRemixOf(oldId: String, newId: String)
+}
+
+@Dao
+abstract class OfflineDao {
+    @Query("SELECT * FROM offline_videos")
+    abstract fun observeVideos(): Flow<List<OfflineVideoEntity>>
+
+    @Query("SELECT * FROM offline_video_tracks")
+    abstract fun observeTracks(): Flow<List<OfflineVideoTrackEntity>>
+
+    @Query(
+        "SELECT DISTINCT t.trackId FROM offline_video_tracks t " +
+            "JOIN offline_videos v ON v.videoId = t.videoId WHERE v.complete"
+    )
+    abstract fun observePlayableTracks(): Flow<List<String>>
+
+    @Query("SELECT videoId FROM offline_videos WHERE complete")
+    abstract fun observeOnPhone(): Flow<List<String>>
+
+    @Query("SELECT videoId FROM offline_videos WHERE complete")
+    abstract suspend fun onPhone(): List<String>
+
+    @Query("SELECT * FROM offline_videos WHERE videoId = :videoId")
+    abstract suspend fun video(videoId: String): OfflineVideoEntity?
+
+    @Upsert
+    abstract suspend fun upsertVideo(video: OfflineVideoEntity)
+
+    @Query("DELETE FROM offline_video_tracks WHERE videoId = :videoId")
+    abstract suspend fun deleteTracks(videoId: String)
+
+    @Insert
+    abstract suspend fun insertTracks(tracks: List<OfflineVideoTrackEntity>)
+
+    @Query("DELETE FROM offline_videos WHERE videoId IN (:videoIds)")
+    abstract suspend fun deleteVideos(videoIds: List<String>)
+
+    @Query("UPDATE offline_videos SET complete = 0, bytes = 0 WHERE videoId = :videoId")
+    abstract suspend fun setIncomplete(videoId: String)
+
+    @Query("UPDATE offline_videos SET complete = 1, bytes = :bytes WHERE videoId = :videoId")
+    abstract suspend fun setComplete(videoId: String, bytes: Long)
+
+    /** Deletes [remove] and writes [puts], in one transaction, so watchers see one change. */
+    @Transaction
+    open suspend fun apply(
+        remove: List<String>,
+        puts: List<Pair<OfflineVideoEntity, List<String>>>
+    ) {
+        if (remove.isNotEmpty()) deleteVideos(remove)
+        puts.forEach { (video, trackIds) -> put(video, trackIds) }
+    }
+
+    /** Writes [video] with exactly [trackIds], keeping it finished if it already was. */
+    @Transaction
+    open suspend fun put(video: OfflineVideoEntity, trackIds: List<String>) {
+        val old = video(video.videoId)
+        upsertVideo(
+            if (old?.complete == true) video.copy(complete = true, bytes = old.bytes) else video
+        )
+        deleteTracks(video.videoId)
+        insertTracks(trackIds.distinct().map { OfflineVideoTrackEntity(video.videoId, it) })
+    }
 }

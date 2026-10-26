@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
@@ -71,6 +72,10 @@ class QueueViewModel @Inject constructor(
         viewModelScope.launch {
             val trackId = playback.state.value.queue.entries.getOrNull(index)?.trackId
             val track = trackId?.let { repository.catalog.first().track(it) }
+            if (track?.offline == true) {
+                messages.post(UserMessage.TrackOffline(track.title))
+                return@launch
+            }
             val unplayable = track?.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -88,7 +93,7 @@ class QueueViewModel @Inject constructor(
         viewModelScope.launch {
             val track = repository.catalog.first().track(trackId)
             // A greyed row can't be swiped to the queue; this keeps any other path from it.
-            if (track == null || track.unplayable != null) return@launch
+            if (track == null || track.dimmed) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
         }
@@ -107,7 +112,7 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
             trackId = track.id,
             title = track.title,
             chips = track.games.map { ChipUi(it.shortName, it.color) },
-            unplayable = track.unplayable != null,
+            unplayable = track.dimmed,
             thumbnail = track.thumbnail,
             subtitle = track.channel,
             familyId = track.familyId

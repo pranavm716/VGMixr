@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
+import io.github.pranavm716.vgmixr.domain.offline.OfflineProgress
 import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import io.github.pranavm716.vgmixr.ui.ScreenHeader
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
@@ -63,7 +64,7 @@ import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
 import io.github.pranavm716.vgmixr.ui.components.centerOn
-import io.github.pranavm716.vgmixr.ui.theme.DialogBackground
+import io.github.pranavm716.vgmixr.ui.theme.VGMixrColors
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
@@ -82,6 +83,7 @@ fun RemixesTab(
     viewModel: RemixesViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val download by viewModel.download.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
     ScrollToTopOnReselect(reselects, listState)
     var handledScrolls by rememberSaveable { mutableIntStateOf(0) }
@@ -110,7 +112,8 @@ fun RemixesTab(
         onDelete = viewModel::onDelete,
         listState = listState,
         onSortKey = viewModel::onSortKey,
-        onReverseSort = viewModel::onReverseSort
+        onReverseSort = viewModel::onReverseSort,
+        download = download
     )
 }
 
@@ -136,7 +139,8 @@ fun RemixesScreen(
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
     onSortKey: (SortKey) -> Unit = {},
-    onReverseSort: () -> Unit = {}
+    onReverseSort: () -> Unit = {},
+    download: OfflineProgress? = null
 ) {
     val scope = rememberCoroutineScope()
     Column(modifier.fillMaxSize()) {
@@ -179,7 +183,9 @@ fun RemixesScreen(
             return@Column
         }
         LazyColumn(Modifier.fillMaxSize(), state = listState) {
-            item(key = SORT_ROW_KEY) { SortRow(state.sort, onSortKey, onReverseSort) }
+            item(key = SORT_ROW_KEY) {
+                SortRow(state.sort, onSortKey, onReverseSort, download = download)
+            }
             items(state.rows, key = { it.id }) { row ->
                 val mode = state.mode
                 // One row in every mode, so its button can slide in. A greyed track can't be
@@ -231,7 +237,7 @@ private fun RemixesMenu(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            containerColor = DialogBackground
+            containerColor = VGMixrColors.dialog
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.link)) },

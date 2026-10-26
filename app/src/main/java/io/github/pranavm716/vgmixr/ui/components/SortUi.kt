@@ -2,17 +2,21 @@ package io.github.pranavm716.vgmixr.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -32,14 +36,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.pranavm716.vgmixr.R
+import io.github.pranavm716.vgmixr.domain.offline.OfflineProgress
 import io.github.pranavm716.vgmixr.domain.sort.SortDirection
 import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import io.github.pranavm716.vgmixr.domain.sort.SortKeys
 import io.github.pranavm716.vgmixr.domain.sort.SortSetting
-import io.github.pranavm716.vgmixr.ui.theme.DialogBackground
+import io.github.pranavm716.vgmixr.ui.theme.VGMixrColors
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
 /** A collection's sort row: the [selected] sort and the [keys] its menu offers. */
@@ -56,7 +63,8 @@ fun SortRow(
     sort: SortUi,
     onKey: (SortKey) -> Unit,
     onReverse: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    download: OfflineProgress? = null
 ) {
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
     Row(
@@ -118,6 +126,70 @@ fun SortRow(
                 modifier = Modifier.size(20.dp).rotate(turn)
             )
         }
+        if (download != null && download.total > 0) {
+            Spacer(Modifier.weight(1f))
+            DownloadStatus(download, Modifier.padding(end = 16.dp))
+        }
+    }
+}
+
+private val DownloadIconSize = 22.dp
+
+/**
+ * At the sort row's right margin: "3 of 81" and a ring while a collection downloads, then a
+ * filled accent circle with a down arrow once all of it is on the phone (Spotify's look).
+ */
+@Composable
+private fun DownloadStatus(progress: OfflineProgress, modifier: Modifier = Modifier) {
+    val muted = MaterialTheme.colorScheme.onSurfaceVariant
+    val description = if (progress.complete) {
+        stringResource(R.string.downloaded)
+    } else {
+        stringResource(R.string.downloading, progress.done, progress.total)
+    }
+    Row(
+        modifier.semantics(mergeDescendants = true) { contentDescription = description },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val accent = MaterialTheme.colorScheme.primary
+        if (progress.complete) {
+            // Spotify's: a filled accent circle with a plain down arrow.
+            Box(
+                Modifier.size(DownloadIconSize).clip(CircleShape).background(accent),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painterResource(R.drawable.ic_arrow_downward),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.background,
+                    modifier = Modifier.size(14.dp)
+                )
+            }
+        } else {
+            Text(
+                stringResource(R.string.download_progress, progress.done, progress.total),
+                style = MaterialTheme.typography.bodyMedium,
+                color = muted
+            )
+            Spacer(Modifier.width(8.dp))
+            // The ring fills in the accent around a grey down arrow.
+            Box(Modifier.size(DownloadIconSize), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(
+                    progress = { progress.done.toFloat() / progress.total },
+                    modifier = Modifier.fillMaxSize(),
+                    color = accent,
+                    strokeWidth = 2.dp,
+                    trackColor = muted.copy(alpha = 0.35f),
+                    gapSize = 0.dp
+                )
+                Icon(
+                    painterResource(R.drawable.ic_arrow_downward),
+                    contentDescription = null,
+                    tint = muted,
+                    modifier = Modifier.size(12.dp)
+                )
+            }
+        }
     }
 }
 
@@ -133,7 +205,7 @@ private fun SortMenu(
         expanded = expanded,
         onDismissRequest = onDismiss,
         shape = RoundedCornerShape(24.dp),
-        containerColor = DialogBackground
+        containerColor = VGMixrColors.dialog
     ) {
         sort.keys.forEach { key ->
             val selected = key == sort.selected.key

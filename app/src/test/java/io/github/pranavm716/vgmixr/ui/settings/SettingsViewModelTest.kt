@@ -1,9 +1,15 @@
 package io.github.pranavm716.vgmixr.ui.settings
 
 import app.cash.turbine.test
+import io.github.pranavm716.vgmixr.domain.offline.OfflineUsage
 import io.github.pranavm716.vgmixr.domain.settings.Accent
+import io.github.pranavm716.vgmixr.domain.settings.Background
 import io.github.pranavm716.vgmixr.testing.FakeAccentSetting
+import io.github.pranavm716.vgmixr.testing.FakeBackgroundSetting
+import io.github.pranavm716.vgmixr.testing.FakeOfflineStore
+import io.github.pranavm716.vgmixr.testing.FakeRecentCutoff
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
+import java.time.Instant
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -33,6 +39,39 @@ class SettingsViewModelTest {
 
             assertEquals(Accent.GREEN, awaitItem().accent)
             assertEquals(Accent.GREEN, setting.accent.value)
+        }
+    }
+
+    @Test
+    fun `storage shows the space taken, and clearing recent plays moves the cutoff`() = runTest {
+        val cutoff = FakeRecentCutoff()
+        val viewModel = SettingsViewModel(
+            FakeAccentSetting(),
+            FakeOfflineStore(usage = OfflineUsage(1_200_000_000, 200_000_000)),
+            cutoff
+        )
+
+        viewModel.storage.test {
+            assertEquals(OfflineUsage(1_200_000_000, 200_000_000), awaitItem())
+        }
+        viewModel.onClearRecent()
+        assertEquals(Instant.parse("2026-10-26T12:00:00Z"), cutoff.since.value)
+    }
+
+    @Test
+    fun `picking a background saves it and shows it picked, black by default`() = runTest {
+        val setting = FakeBackgroundSetting()
+        val viewModel = SettingsViewModel(FakeAccentSetting(), backgroundSetting = setting)
+
+        viewModel.uiState.test {
+            val first = awaitItem()
+            assertEquals(Background.entries, first.backgrounds)
+            assertEquals(Background.BLACK, first.background)
+
+            viewModel.onBackgroundClick(Background.NAVY)
+
+            assertEquals(Background.NAVY, awaitItem().background)
+            assertEquals(Background.NAVY, setting.background.value)
         }
     }
 }

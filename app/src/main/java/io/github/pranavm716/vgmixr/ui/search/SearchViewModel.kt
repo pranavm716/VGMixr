@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
+import io.github.pranavm716.vgmixr.domain.catalog.dimmed
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.search.SearchIndex
@@ -117,6 +118,10 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             val catalog = repository.catalog.first()
             val track = catalog.track(trackId) ?: return@launch
+            if (track.offline == true) {
+                messages.post(UserMessage.TrackOffline(track.title))
+                return@launch
+            }
             val unplayable = track.unplayable
             if (unplayable != null) {
                 messages.post(UserMessage.TrackUnplayable(track.id, track.title, unplayable))
@@ -142,7 +147,7 @@ class SearchViewModel @Inject constructor(
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
             val track = repository.catalog.first().track(trackId)
-            if (track == null || track.unplayable != null) return@launch
+            if (track == null || track.dimmed) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
         }
@@ -159,7 +164,7 @@ private fun CatalogTrack.toRow(playingId: String?) = SearchRowUi(
     id = id,
     title = title,
     chips = games.map { ChipUi(it.shortName, it.color) },
-    unplayable = unplayable != null,
+    unplayable = dimmed,
     playing = id == playingId,
     familyId = familyId,
     thumbnail = thumbnail,
