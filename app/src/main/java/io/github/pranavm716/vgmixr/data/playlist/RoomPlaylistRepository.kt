@@ -7,10 +7,9 @@ import io.github.pranavm716.vgmixr.data.db.UserDataDao
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
-import io.github.pranavm716.vgmixr.domain.sort.SortDirection
-import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import io.github.pranavm716.vgmixr.domain.sort.SortKeys
 import io.github.pranavm716.vgmixr.domain.sort.SortSetting
+import io.github.pranavm716.vgmixr.domain.sort.sortSettingOf
 import java.time.Clock
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,7 +41,12 @@ class RoomPlaylistRepository @Inject constructor(
                 isFavorites = it.id == FAVORITES_PLAYLIST_ID,
                 trackIds = entries.map { entry -> entry.trackId },
                 addedAt = entries.associate { entry -> entry.trackId to entry.addedAt },
-                sort = sortOf(it)
+                sort = sortSettingOf(
+                    it.sortKey,
+                    it.sortDirection,
+                    SortKeys.playlist,
+                    SortKeys.playlistDefault
+                )
             )
         }
     }
@@ -80,16 +84,5 @@ class RoomPlaylistRepository @Inject constructor(
         } else {
             dao.removeFromPlaylist(playlistId, trackId)
         }
-    }
-}
-
-/** [playlist]'s saved sort; unset, or one this app no longer offers, is the default. */
-private fun sortOf(playlist: PlaylistEntity): SortSetting {
-    val key = SortKey.entries.firstOrNull { it.name == playlist.sortKey }
-    val direction = SortDirection.entries.firstOrNull { it.name == playlist.sortDirection }
-    return if (key in SortKeys.playlist && direction != null) {
-        SortSetting(requireNotNull(key), direction)
-    } else {
-        SortKeys.playlistDefault
     }
 }

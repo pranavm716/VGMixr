@@ -109,3 +109,22 @@ fun Catalog.sortRow(track: CatalogTrack, addedAt: Instant?): SortRow {
         addedAt = addedAt
     )
 }
+
+/**
+ * A sort stored by its [key] and [direction] names; unset, or a key [keys] doesn't offer, is
+ * [default].
+ */
+fun sortSettingOf(
+    key: String?,
+    direction: String?,
+    keys: List<SortKey>,
+    default: SortSetting
+): SortSetting {
+    val sortKey = keys.firstOrNull { it.name == key }
+    val sortDirection = SortDirection.entries.firstOrNull { it.name == direction }
+    return if (sortKey != null && sortDirection != null) {
+        SortSetting(sortKey, sortDirection)
+    } else {
+        default
+    }
+}
