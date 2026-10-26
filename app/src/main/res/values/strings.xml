@@ -113,4 +113,11 @@
         <item quantity="other">%d tracks</item>
     </plurals>
     <string name="downloads_channel">Downloads</string>
+    <string name="download_progress">%1$d of %2$d</string>
+    <string name="downloading">Downloading, %1$d of %2$d</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="storage">Storage</string>
+    <string name="storage_downloaded">Downloaded: %s</string>
+    <string name="storage_cached">Recent plays: %s</string>
+    <string name="clear_recent">Clear recent</string>
 </resources>

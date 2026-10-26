@@ -2,6 +2,7 @@ package io.github.pranavm716.vgmixr.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -32,9 +35,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.pranavm716.vgmixr.R
+import io.github.pranavm716.vgmixr.domain.offline.OfflineProgress
 import io.github.pranavm716.vgmixr.domain.sort.SortDirection
 import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import io.github.pranavm716.vgmixr.domain.sort.SortKeys
@@ -56,7 +62,8 @@ fun SortRow(
     sort: SortUi,
     onKey: (SortKey) -> Unit,
     onReverse: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    download: OfflineProgress? = null
 ) {
     val muted = MaterialTheme.colorScheme.onSurfaceVariant
     Row(
@@ -116,6 +123,55 @@ fun SortRow(
                 ),
                 tint = muted,
                 modifier = Modifier.size(20.dp).rotate(turn)
+            )
+        }
+        if (download != null && download.total > 0) {
+            Spacer(Modifier.weight(1f))
+            DownloadStatus(download, Modifier.padding(end = 16.dp))
+        }
+    }
+}
+
+/**
+ * At the sort row's right margin: "3 of 81 · " and a ring while a collection downloads, then a
+ * filled download icon once all of it is on the phone.
+ */
+@Composable
+private fun DownloadStatus(progress: OfflineProgress, modifier: Modifier = Modifier) {
+    val muted = MaterialTheme.colorScheme.onSurfaceVariant
+    val description = if (progress.complete) {
+        stringResource(R.string.downloaded)
+    } else {
+        stringResource(R.string.downloading, progress.done, progress.total)
+    }
+    Row(
+        modifier.semantics(mergeDescendants = true) { contentDescription = description },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (progress.complete) {
+            Box(
+                Modifier.size(20.dp).clip(CircleShape).background(muted),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painterResource(R.drawable.ic_download),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.background,
+                    modifier = Modifier.size(14.dp)
+                )
+            }
+        } else {
+            Text(
+                stringResource(R.string.download_progress, progress.done, progress.total) + " · ",
+                style = MaterialTheme.typography.bodyMedium,
+                color = muted
+            )
+            CircularProgressIndicator(
+                progress = { progress.done.toFloat() / progress.total },
+                modifier = Modifier.size(18.dp),
+                color = muted,
+                strokeWidth = 2.dp,
+                trackColor = muted.copy(alpha = 0.25f)
             )
         }
     }

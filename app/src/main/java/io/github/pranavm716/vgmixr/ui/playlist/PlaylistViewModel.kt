@@ -8,6 +8,9 @@ import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.dimmed
+import io.github.pranavm716.vgmixr.domain.offline.OfflineProgress
+import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
+import io.github.pranavm716.vgmixr.domain.offline.offlineProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
@@ -82,7 +85,8 @@ class PlaylistViewModel @Inject constructor(
     private val playlists: PlaylistRepository,
     private val playback: PlaybackController,
     private val messages: UserMessages,
-    @DefaultDispatcher dispatcher: CoroutineDispatcher
+    @DefaultDispatcher dispatcher: CoroutineDispatcher,
+    offline: OfflineStore = OfflineStore.NONE
 ) : ViewModel() {
     // The PlaylistRoute's argument, stored by type-safe navigation under its property name.
     private val playlistId: Long = checkNotNull(savedStateHandle["playlistId"])
@@ -95,6 +99,18 @@ class PlaylistViewModel @Inject constructor(
         ) { catalog, playlist, playingId -> catalog.playlistState(playlist, playingId) }
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), PlaylistUiState.Loading)
+
+    /** How much of the playlist is downloaded, for the sort row's icon; null while loading. */
+    val download: StateFlow<OfflineProgress?> =
+        combine(catalog.catalog, playlists.playlist(playlistId), offline.playableOffline) {
+                catalog,
+                playlist,
+                onPhone
+            ->
+            playlist?.let { offlineProgress(catalog.playlistTracks(it), onPhone) }
+        }
+            .flowOn(dispatcher)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     /**
      * Plays the playlist from the tapped track, in its sort, leaving out tracks that can't play. A

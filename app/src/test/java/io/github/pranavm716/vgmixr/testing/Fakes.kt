@@ -6,6 +6,11 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogSync
 import io.github.pranavm716.vgmixr.domain.history.Play
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
+import io.github.pranavm716.vgmixr.domain.offline.OfflineEntry
+import io.github.pranavm716.vgmixr.domain.offline.OfflinePlan
+import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
+import io.github.pranavm716.vgmixr.domain.offline.OfflineUsage
+import io.github.pranavm716.vgmixr.domain.offline.RecentCutoff
 import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
@@ -315,5 +320,41 @@ class FakeThumbnailStore(private val failing: Boolean = false) : ThumbnailStore 
 
     override suspend fun delete(videoId: String) {
         downloaded -= videoId
+    }
+}
+
+/** An offline store holding [state]; finished entries play offline. */
+class FakeOfflineStore(
+    entries: Map<String, OfflineEntry> = emptyMap(),
+    usage: OfflineUsage =
+        OfflineUsage(0, 0)
+) : OfflineStore {
+    val state = MutableStateFlow(entries)
+    val usageState = MutableStateFlow(usage)
+    override val entries = state
+    override val playableOffline = state.map { m ->
+        m.values.filter { it.complete }.flatMap { it.trackIds }.toSet()
+    }
+    override val usage = usageState
+    override val onPhone = state.map { m ->
+        m.values.filter { it.complete }.map { it.videoId }.toSet()
+    }
+
+    override suspend fun apply(plan: io.github.pranavm716.vgmixr.domain.offline.OfflinePlan) = Unit
+
+    override suspend fun setComplete(videoId: String, bytes: Long) = Unit
+
+    override suspend fun setIncomplete(videoId: String) = Unit
+}
+
+/** A recent-plays cutoff that starts at [since] and moves to [now] on a clear. */
+class FakeRecentCutoff(
+    since: Instant = Instant.EPOCH,
+    private val now: Instant = Instant.parse("2026-10-26T12:00:00Z")
+) : RecentCutoff {
+    override val since = MutableStateFlow(since)
+
+    override fun clearNow() {
+        since.value = now
     }
 }

@@ -3,6 +3,9 @@ package io.github.pranavm716.vgmixr.ui.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
+import io.github.pranavm716.vgmixr.domain.offline.OfflineUsage
+import io.github.pranavm716.vgmixr.domain.offline.RecentCutoff
 import io.github.pranavm716.vgmixr.domain.settings.Accent
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
 import javax.inject.Inject
@@ -18,8 +21,11 @@ data class SettingsUiState(
 )
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(private val accentSetting: AccentSetting) :
-    ViewModel() {
+class SettingsViewModel @Inject constructor(
+    private val accentSetting: AccentSetting,
+    offline: OfflineStore = OfflineStore.NONE,
+    private val recentCutoff: RecentCutoff = RecentCutoff.NONE
+) : ViewModel() {
     val uiState: StateFlow<SettingsUiState> = accentSetting.accent
         .map { SettingsUiState(accent = it) }
         .stateIn(
@@ -29,4 +35,11 @@ class SettingsViewModel @Inject constructor(private val accentSetting: AccentSet
         )
 
     fun onAccentClick(accent: Accent) = accentSetting.set(accent)
+
+    /** Space taken by downloaded and cached tracks; null until read. */
+    val storage: StateFlow<OfflineUsage?> =
+        offline.usage.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    /** Deletes the cached recent plays; plays from now on count again. */
+    fun onClearRecent() = recentCutoff.clearNow()
 }

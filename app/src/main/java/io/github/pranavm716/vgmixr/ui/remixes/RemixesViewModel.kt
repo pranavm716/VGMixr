@@ -7,6 +7,9 @@ import io.github.pranavm716.vgmixr.di.DefaultDispatcher
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.dimmed
+import io.github.pranavm716.vgmixr.domain.offline.OfflineProgress
+import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
+import io.github.pranavm716.vgmixr.domain.offline.offlineProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.settings.SortSettings
@@ -77,7 +80,8 @@ class RemixesViewModel @Inject constructor(
     private val messages: UserMessages,
     private val userTracks: UserTrackRepository,
     private val sortSettings: SortSettings,
-    @DefaultDispatcher dispatcher: CoroutineDispatcher
+    @DefaultDispatcher dispatcher: CoroutineDispatcher,
+    offline: OfflineStore = OfflineStore.NONE
 ) : ViewModel() {
     private val mode = MutableStateFlow(RemixesMode.NORMAL)
 
@@ -96,6 +100,14 @@ class RemixesViewModel @Inject constructor(
         }
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), RemixesUiState.Loading)
+
+    /** How much of Remixes is downloaded, for the sort row's icon. */
+    val download: StateFlow<OfflineProgress?> =
+        combine(catalog.catalog, offline.playableOffline) { catalog, onPhone ->
+            offlineProgress(catalog.userTracks, onPhone)
+        }
+            .flowOn(dispatcher)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     /**
      * Plays Remixes from the tapped track, in their sort, leaving out tracks that can't play. A track

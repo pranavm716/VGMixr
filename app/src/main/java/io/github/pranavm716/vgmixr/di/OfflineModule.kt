@@ -16,6 +16,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.pranavm716.vgmixr.data.offline.AndroidConnectivity
 import io.github.pranavm716.vgmixr.data.offline.RoomOfflineStore
+import io.github.pranavm716.vgmixr.data.settings.PrefsRecentCutoff
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
@@ -26,6 +27,8 @@ import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
 import io.github.pranavm716.vgmixr.domain.offline.OfflineSync
 import io.github.pranavm716.vgmixr.domain.offline.PacedStreamResolver
 import io.github.pranavm716.vgmixr.domain.offline.RECENT_LIMIT
+import io.github.pranavm716.vgmixr.domain.offline.RecentCutoff
+import io.github.pranavm716.vgmixr.domain.offline.recentTrackIds
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
@@ -51,6 +54,9 @@ import kotlinx.coroutines.flow.onEach
 object OfflineModule {
     @Provides
     fun provideOfflineStore(store: RoomOfflineStore): OfflineStore = store
+
+    @Provides
+    fun provideRecentCutoff(cutoff: PrefsRecentCutoff): RecentCutoff = cutoff
 
     @Provides
     fun provideConnectivity(connectivity: AndroidConnectivity): Connectivity = connectivity
@@ -102,7 +108,8 @@ object OfflineModule {
         downloader: OfflineDownloader,
         history: PlayHistory,
         playback: PlaybackController,
-        diagnostics: PlaybackDiagnostics
+        diagnostics: PlaybackDiagnostics,
+        cutoff: RecentCutoff
     ) = OfflineSync(
         catalog = catalog.catalog,
         // Every playlist in full, in the Playlists tab's order.
@@ -117,9 +124,9 @@ object OfflineModule {
         brokenVideos = brokenSources.marks.map { it.keys },
         store = store,
         downloader = downloader,
-        recentlyPlayed = history.plays
-            .map { plays -> plays.asReversed().map { it.trackId }.distinct().take(RECENT_LIMIT) }
-            .distinctUntilChanged(),
+        recentlyPlayed = combine(history.plays, cutoff.since) { plays, since ->
+            recentTrackIds(plays, since).take(RECENT_LIMIT)
+        }.distinctUntilChanged(),
         next = playback.state
             .map { it.queue.entries.getOrNull(it.queue.current + 1)?.trackId }
             .distinctUntilChanged()

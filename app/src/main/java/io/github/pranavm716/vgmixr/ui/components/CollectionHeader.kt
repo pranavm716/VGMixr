@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
+import io.github.pranavm716.vgmixr.domain.offline.OfflineProgress
 import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -81,6 +82,7 @@ fun CollectionPage(
     sort: SortUi? = null,
     onSortKey: (SortKey) -> Unit = {},
     onReverseSort: () -> Unit = {},
+    download: OfflineProgress? = null,
     content: LazyListScope.() -> Unit
 ) {
     BoxWithConstraints(modifier.fillMaxSize()) {
@@ -99,7 +101,9 @@ fun CollectionPage(
         LazyColumn(Modifier.fillMaxSize(), state = listState) {
             item(key = HEADER_SPACER_KEY) { Spacer(Modifier.height(expanded)) }
             if (sort != null) {
-                item(key = SORT_ROW_KEY) { SortRow(sort, onSortKey, onReverseSort) }
+                item(key = SORT_ROW_KEY) {
+                    SortRow(sort, onSortKey, onReverseSort, download = download)
+                }
             }
             content()
         }

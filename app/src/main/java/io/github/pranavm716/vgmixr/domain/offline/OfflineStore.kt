@@ -1,6 +1,7 @@
 package io.github.pranavm716.vgmixr.domain.offline
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 /** Space taken by finished videos, per [OfflineKind]. */
 data class OfflineUsage(val downloadedBytes: Long, val cachedBytes: Long)
@@ -26,4 +27,20 @@ interface OfflineStore {
 
     /** Records that [videoId]'s audio is missing after all, so it is downloaded again. */
     suspend fun setIncomplete(videoId: String)
+
+    companion object {
+        /** Nothing on the phone: for screens and tests that don't care. */
+        val NONE: OfflineStore = object : OfflineStore {
+            override val entries: Flow<Map<String, OfflineEntry>> = flowOf(emptyMap())
+            override val playableOffline: Flow<Set<String>> = flowOf(emptySet())
+            override val usage: Flow<OfflineUsage> = flowOf(OfflineUsage(0, 0))
+            override val onPhone: Flow<Set<String>> = flowOf(emptySet())
+
+            override suspend fun apply(plan: OfflinePlan) = Unit
+
+            override suspend fun setComplete(videoId: String, bytes: Long) = Unit
+
+            override suspend fun setIncomplete(videoId: String) = Unit
+        }
+    }
 }

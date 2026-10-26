@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
+import io.github.pranavm716.vgmixr.domain.offline.OfflineProgress
 import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import io.github.pranavm716.vgmixr.ui.components.Art
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
@@ -59,6 +60,7 @@ fun PlaylistTab(
     viewModel: PlaylistViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val download by viewModel.download.collectAsStateWithLifecycle()
     // A deleted playlist's page closes, back to the playlist list.
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->
@@ -75,7 +77,8 @@ fun PlaylistTab(
         onRename = viewModel::onRename,
         onDelete = viewModel::onDelete,
         onSortKey = viewModel::onSortKey,
-        onReverseSort = viewModel::onReverseSort
+        onReverseSort = viewModel::onReverseSort,
+        download = download
     )
 }
 
@@ -95,7 +98,8 @@ fun PlaylistScreen(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
     onSortKey: (SortKey) -> Unit = {},
-    onReverseSort: () -> Unit = {}
+    onReverseSort: () -> Unit = {},
+    download: OfflineProgress? = null
 ) {
     when (state) {
         PlaylistUiState.Loading -> Unit
@@ -143,6 +147,7 @@ fun PlaylistScreen(
                 },
                 sort = state.sort.takeIf { state.rows.isNotEmpty() },
                 onSortKey = onSortKey,
+                download = download,
                 onReverseSort = onReverseSort
             ) {
                 items(state.rows, key = { it.id }) { row ->

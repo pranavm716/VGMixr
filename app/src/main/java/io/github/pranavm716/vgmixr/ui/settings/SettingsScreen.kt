@@ -1,5 +1,6 @@
 package io.github.pranavm716.vgmixr.ui.settings
 
+import android.text.format.Formatter
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -23,11 +24,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.pranavm716.vgmixr.R
+import io.github.pranavm716.vgmixr.domain.offline.OfflineUsage
 import io.github.pranavm716.vgmixr.domain.settings.Accent
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import io.github.pranavm716.vgmixr.ui.theme.color
@@ -55,7 +59,14 @@ private val RowPadding = 18.dp
 @Composable
 fun SettingsTab(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    SettingsScreen(state, onAccentClick = viewModel::onAccentClick, onBack = onBack)
+    val storage by viewModel.storage.collectAsStateWithLifecycle()
+    SettingsScreen(
+        state,
+        onAccentClick = viewModel::onAccentClick,
+        onBack = onBack,
+        storage = storage,
+        onClearRecent = viewModel::onClearRecent
+    )
 }
 
 /**
@@ -64,7 +75,13 @@ fun SettingsTab(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel
  * a tap applies it at once.
  */
 @Composable
-fun SettingsScreen(state: SettingsUiState, onAccentClick: (Accent) -> Unit, onBack: () -> Unit) {
+fun SettingsScreen(
+    state: SettingsUiState,
+    onAccentClick: (Accent) -> Unit,
+    onBack: () -> Unit,
+    storage: OfflineUsage? = null,
+    onClearRecent: () -> Unit = {}
+) {
     Column(Modifier.fillMaxSize().statusBarsPadding()) {
         Row(
             Modifier.fillMaxWidth().height(66.dp).padding(horizontal = 4.dp),
@@ -87,7 +104,38 @@ fun SettingsScreen(state: SettingsUiState, onAccentClick: (Accent) -> Unit, onBa
                     AccentCircle(accent, accent == state.accent) { onAccentClick(accent) }
                 }
             }
+            if (storage != null) Storage(storage, onClearRecent)
         }
+    }
+}
+
+/**
+ * Space taken on the phone: downloaded tracks (playlists and Remixes, kept) and recent plays
+ * (cached), with a button that deletes the recent ones.
+ */
+@Composable
+private fun Storage(usage: OfflineUsage, onClearRecent: () -> Unit) {
+    val context = LocalContext.current
+    SectionTitle(stringResource(R.string.storage))
+    Column(Modifier.padding(horizontal = 24.dp, vertical = 4.dp)) {
+        Text(
+            stringResource(
+                R.string.storage_downloaded,
+                Formatter.formatShortFileSize(context, usage.downloadedBytes)
+            ),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            stringResource(
+                R.string.storage_cached,
+                Formatter.formatShortFileSize(context, usage.cachedBytes)
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+    TextButton(onClick = onClearRecent, modifier = Modifier.padding(horizontal = 12.dp)) {
+        Text(stringResource(R.string.clear_recent))
     }
 }
 
