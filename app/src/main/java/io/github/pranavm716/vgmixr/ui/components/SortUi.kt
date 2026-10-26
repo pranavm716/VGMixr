@@ -66,10 +66,13 @@ fun SortRow(
         var expanded by remember { mutableStateOf(false) }
         Box {
             Row(
+                // One UI's measurements: a 36 dp pill (its ripple) with the icon's glyph 9.75 dp in,
+                // 8.6 dp to the text and 14.4 dp after it; the paddings allow for the icon's margin.
                 Modifier
+                    .height(36.dp)
                     .clip(RoundedCornerShape(50))
                     .clickable { expanded = true }
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                    .padding(start = 8.dp, end = 13.5.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -78,7 +81,7 @@ fun SortRow(
                     tint = muted,
                     modifier = Modifier.size(20.dp)
                 )
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(5.5.dp))
                 Text(
                     stringResource(sort.selected.key.label),
                     style = MaterialTheme.typography.bodyMedium,
@@ -95,8 +98,8 @@ fun SortRow(
                 onDismiss = { expanded = false }
             )
         }
-        // The arrow's 36 dp button pads its glyph by 8 dp and the key's text has 8 dp after it, so
-        // the divider sits as far from the arrow as from the text (measured on the phone).
+        // 4 dp after the pill; the arrow's 38 dp button puts its glyph 14 dp past the divider
+        // (One UI: 3.9 dp and 13.7 dp).
         VerticalDivider(Modifier.height(16.dp).padding(start = 4.dp), color = muted)
         val ascending = sort.selected.direction == SortDirection.Ascending
         // One up arrow that turns over, so reversing the direction animates.
@@ -105,7 +108,7 @@ fun SortRow(
             tween(ARROW_TURN_MS),
             label = "sort arrow"
         )
-        IconButton(onClick = onReverse, modifier = Modifier.size(36.dp)) {
+        IconButton(onClick = onReverse, modifier = Modifier.size(38.dp)) {
             Icon(
                 painterResource(R.drawable.ic_sort_up),
                 contentDescription = stringResource(
