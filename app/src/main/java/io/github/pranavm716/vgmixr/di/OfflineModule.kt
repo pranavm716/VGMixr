@@ -26,6 +26,7 @@ import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.settings.SortSettings
+import io.github.pranavm716.vgmixr.playback.ChunkedDataSource
 import io.github.pranavm716.vgmixr.playback.MediaDownloader
 import io.github.pranavm716.vgmixr.playback.StreamUriResolver
 import java.time.Clock
@@ -65,7 +66,10 @@ object OfflineModule {
     ): DownloadManager {
         val paced = PacedStreamResolver(resolver, LookupPacer()) { clock.instant() }
         val streams = ResolvingDataSource.Factory(
-            DefaultHttpDataSource.Factory().setAllowCrossProtocolRedirects(true),
+            // In byte ranges: YouTube slows open-ended requests to playback speed.
+            ChunkedDataSource.Factory(
+                DefaultHttpDataSource.Factory().setAllowCrossProtocolRedirects(true)
+            ),
             StreamUriResolver(paced, diagnostics)
         )
         return DownloadManager(
