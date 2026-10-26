@@ -50,6 +50,8 @@ class FakePlaybackController : PlaybackController {
 
     data class AddToQueue(val trackIds: List<String>)
 
+    data class Resort(val trackIds: List<String>, val context: QueueContext)
+
     data object TogglePlayPause
 
     data class SetShuffle(val on: Boolean)
@@ -74,6 +76,10 @@ class FakePlaybackController : PlaybackController {
     override val progress = MutableStateFlow(PlaybackProgress(positionMs = 0, durationMs = null))
     override val events = MutableSharedFlow<PlaybackEvent>(extraBufferCapacity = 16)
     val calls = mutableListOf<Any>()
+
+    override fun resort(trackIds: List<String>, context: QueueContext) {
+        calls += Resort(trackIds, context)
+    }
 
     override fun togglePlayPause() {
         calls += TogglePlayPause

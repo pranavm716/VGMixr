@@ -206,6 +206,7 @@ class PlaybackService : MediaSessionService() {
                     MediaSession.ConnectionResult.DEFAULT_SESSION_COMMANDS.buildUpon()
                         .add(toggleShuffle)
                         .add(toggleFavorite)
+                        .add(resortCommand)
                         .build()
                 )
                 .build()
@@ -219,6 +220,12 @@ class PlaybackService : MediaSessionService() {
             val player = session.player
             when (customCommand.customAction) {
                 TOGGLE_SHUFFLE -> player.shuffleModeEnabled = !player.shuffleModeEnabled
+
+                RESORT -> resortOf(args)?.let { (trackIds, context) ->
+                    player.apply(
+                        player.queue().resort(context, trackIds, player.shuffleModeEnabled)
+                    )
+                }
 
                 TOGGLE_FAVORITE -> player.currentMediaItem?.mediaId?.let { trackId ->
                     val favorite = trackId in favorites.value

@@ -215,6 +215,27 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
         }
     }
 
+    /**
+     * The collection tapped in [context] was sorted anew into [trackIds]. If it is the one playing
+     * (the context of the last list track played), its entries take their new list positions, so
+     * turning shuffle off later follows the new order. With [shuffle] off, "Next from" becomes
+     * the tracks after the current one in the new order, as [unshuffle] builds it; with it on, the
+     * shuffled order stays. Queued tracks are untouched.
+     */
+    fun resort(context: QueueContext, trackIds: List<String>, shuffle: Boolean): List<QueueEdit> {
+        val playing = entries.take(current + 1).lastOrNull { it.listIndex != null }?.context
+        if (playing != context) return emptyList()
+        val position = trackIds.withIndex().associate { (i, id) -> id to i }
+        val listIndices = entries.map { if (it.context == context) position[it.trackId] else null }
+        val relist = if (listIndices == entries.map { it.listIndex }) {
+            emptyList()
+        } else {
+            listOf(QueueEdit.Relist(listIndices))
+        }
+        if (shuffle) return relist
+        return relist + applying(relist).unshuffle()
+    }
+
     /** The queue after [edits], applied in order as the player applies them. */
     fun applying(edits: List<QueueEdit>): PlayQueue = edits.fold(this) { queue, edit ->
         queue.applying(edit)
@@ -227,6 +248,12 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
             is QueueEdit.Replace -> return PlayQueue(edit.entries, edit.startIndex)
 
             is QueueEdit.Seek -> return copy(current = edit.index)
+
+            is QueueEdit.Relist -> return copy(
+                entries = entries.zip(edit.listIndices) { entry, index ->
+                    entry.copy(listIndex = index)
+                }
+            )
 
             is QueueEdit.Insert ->
                 marked.take(edit.index) + edit.entries.map { it to false } + marked.drop(edit.index)
@@ -270,6 +297,12 @@ sealed interface QueueEdit {
      * ones elsewhere in the queue. The player reuses its own items for them.
      */
     data class Rearrange(val from: Int, val to: Int, val sourceIndices: List<Int>) : QueueEdit
+
+    /**
+     * Give each entry its new place in its list, one [listIndices] item per entry (null for a
+     * queued one), without moving or interrupting any.
+     */
+    data class Relist(val listIndices: List<Int?>) : QueueEdit
 
     /** Play entry [index] from its start. */
     data class Seek(val index: Int) : QueueEdit

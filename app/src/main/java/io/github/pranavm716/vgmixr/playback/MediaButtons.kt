@@ -7,12 +7,31 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.CommandButton
 import androidx.media3.session.SessionCommand
 import io.github.pranavm716.vgmixr.R
+import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 
 const val TOGGLE_SHUFFLE = "io.github.pranavm716.vgmixr.TOGGLE_SHUFFLE"
 const val TOGGLE_FAVORITE = "io.github.pranavm716.vgmixr.TOGGLE_FAVORITE"
 
 val toggleShuffle = SessionCommand(TOGGLE_SHUFFLE, Bundle.EMPTY)
 val toggleFavorite = SessionCommand(TOGGLE_FAVORITE, Bundle.EMPTY)
+
+/** Not a button: the app tells the service a collection was sorted anew. */
+const val RESORT = "io.github.pranavm716.vgmixr.RESORT"
+val resortCommand = SessionCommand(RESORT, Bundle.EMPTY)
+private const val RESORT_TRACK_IDS = "trackIds"
+private const val RESORT_CONTEXT = "context"
+
+fun resortArgs(trackIds: List<String>, context: QueueContext) = Bundle().apply {
+    putStringArrayList(RESORT_TRACK_IDS, ArrayList(trackIds))
+    putString(RESORT_CONTEXT, context.key)
+}
+
+/** The track ids and context [resortArgs] packed, or null if they are missing. */
+fun resortOf(args: Bundle): Pair<List<String>, QueueContext>? {
+    val trackIds = args.getStringArrayList(RESORT_TRACK_IDS) ?: return null
+    val context = args.getString(RESORT_CONTEXT)?.let(QueueContext::fromKey) ?: return null
+    return trackIds to context
+}
 
 /**
  * The media notification's extra buttons, each showing its state: shuffle at the far left and

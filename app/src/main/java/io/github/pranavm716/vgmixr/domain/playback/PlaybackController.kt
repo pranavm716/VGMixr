@@ -19,6 +19,12 @@ interface PlaybackController {
      */
     fun playAll(trackIds: List<String>, context: QueueContext)
 
+    /**
+     * The collection tapped in [context] is now sorted as [trackIds]. If it is the one playing,
+     * the queue follows the new order (see [PlayQueue.resort]); otherwise nothing changes.
+     */
+    fun resort(trackIds: List<String>, context: QueueContext)
+
     /** Adds [trackIds] to the end of the user's queue ("Next in queue"). */
     fun addToQueue(trackIds: List<String>)
 
