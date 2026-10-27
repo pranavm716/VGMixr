@@ -10,4 +10,7 @@ object UserTrackId {
     fun of(videoId: String): String = PREFIX + videoId
 
     fun isUserTrack(trackId: String): Boolean = trackId.startsWith(PREFIX)
+
+    /** The video id of user track [trackId], or null for a catalog track. */
+    fun videoId(trackId: String): String? = trackId.takeIf(::isUserTrack)?.removePrefix(PREFIX)
 }

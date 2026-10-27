@@ -171,4 +171,24 @@ class MiniPlayerViewModelTest {
             assertEquals("GlitchxCity", track.subtitle)
         }
     }
+
+    @Test
+    fun `a playing track that left the catalog stays shown`() = runTest {
+        val retired =
+            CatalogTrack("rse-old", "rse", listOf(ruby), "Old", 2, emptyList(), retired = true)
+        playback.state.value = PlaybackState(
+            queue = queue("rse-old", "rse-a", current = 0),
+            trackId = "rse-old",
+            isPlaying = true
+        )
+
+        MiniPlayerViewModel(
+            FakeCatalogRepository(catalog.copy(retiredTracks = listOf(retired))),
+            playback
+        )
+            .uiState.test {
+                val state = awaitItem() as MiniPlayerUiState.Visible
+                assertEquals(MiniTrackUi("rse-old", "rse", "Old", listOf(chip("R"))), state.track)
+            }
+    }
 }

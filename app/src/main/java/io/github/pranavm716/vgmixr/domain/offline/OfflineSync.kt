@@ -34,7 +34,7 @@ fun downloadOrder(
         favorites.flatMap { catalog.playlistTracks(it) } +
             catalog.sortedUserTracks(remixSort) +
             others.flatMap { catalog.playlistTracks(it) }
-        ).map { it.id }
+        ).filterNot { it.retired }.map { it.id }
 }
 
 /**

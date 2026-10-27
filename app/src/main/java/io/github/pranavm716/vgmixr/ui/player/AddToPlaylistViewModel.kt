@@ -57,7 +57,7 @@ class AddToPlaylistViewModel @Inject constructor(
                     playlists.playlistsContaining(id)
                 ) { catalog, summaries, containing ->
                     AddToPlaylistUiState(
-                        trackTitle = catalog.track(id)?.title.orEmpty(),
+                        trackTitle = catalog.trackOrRetired(id)?.title.orEmpty(),
                         rows = summaries.map {
                             AddToPlaylistRowUi(
                                 it.id,

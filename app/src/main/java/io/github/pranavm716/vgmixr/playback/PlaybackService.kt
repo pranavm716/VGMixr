@@ -50,6 +50,7 @@ import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
 import io.github.pranavm716.vgmixr.domain.playback.ShuffleSetting
 import io.github.pranavm716.vgmixr.domain.playback.SourceFailure
+import io.github.pranavm716.vgmixr.domain.playback.leftCatalog
 import io.github.pranavm716.vgmixr.domain.playback.nextSource
 import io.github.pranavm716.vgmixr.domain.playback.onSourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
@@ -160,7 +161,11 @@ class PlaybackService : MediaSessionService() {
                                 CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
                         )
                 )
-                    .setLoadErrorHandlingPolicy(FailFastLoadErrorPolicy())
+                    .setLoadErrorHandlingPolicy(
+                        FailFastLoadErrorPolicy {
+                            connectivity.online.value
+                        }
+                    )
             )
             .setAudioAttributes(
                 AudioAttributes.Builder()
@@ -199,6 +204,26 @@ class PlaybackService : MediaSessionService() {
             )
             .build()
         player.addListener(Failover(player, session))
+        // Queued tracks that leave the catalog (a new manifest, a deleted remix) become items
+        // with no source, so the player skips them; the playing one plays to its end.
+        scope.launch {
+            catalog.filterNotNull().collect { catalog ->
+                for (index in catalog.leftCatalog(player.queue())) {
+                    val item = player.getMediaItemAt(index)
+                    if (item.localConfiguration?.uri?.toString() == NO_SOURCE_URI) continue
+                    player.replaceMediaItem(
+                        index,
+                        catalog.startItem(
+                            item.mediaId,
+                            item.context,
+                            item.listIndex,
+                            marks.value,
+                            artwork
+                        )
+                    )
+                }
+            }
+        }
         player.addListener(PlayRecording(player))
         player.addListener(Shuffling(player, shuffleSetting, recentPlays))
         player.addListener(
@@ -354,7 +379,8 @@ class PlaybackService : MediaSessionService() {
             val failure = error.sourceFailure()
             // A failed or refused URL is never reused: the next try looks the video up again.
             if (failure !is SourceFailure.Everything) item.videoId?.let(resolver::forget)
-            val track = catalog.track(item.mediaId)
+            // A retired track still playing keeps its sources for retries and other uploads.
+            val track = catalog.trackOrRetired(item.mediaId)
             val streams = track?.let { playableStreams(it.sources) }.orEmpty()
             val failed = FailedSource(
                 trackId = item.mediaId,
@@ -527,7 +553,8 @@ private fun Catalog.startItem(
     marks: Map<String, BrokenMark>,
     artwork: NotificationArtwork
 ): MediaItem {
-    val track = track(trackId)
+    // A retired track is dimmed, so it gets no source either.
+    val track = trackOrRetired(trackId)
     val streams = track?.let { playableStreams(it.sources) }.orEmpty()
     // A dimmed track (broken, or offline and not on the phone) gets no source, so it is skipped.
     val sourceIndex = if (track?.dimmed == true) {
@@ -540,7 +567,7 @@ private fun Catalog.startItem(
 
 /**
  * The item for [trackId] playing source [sourceIndex] (none past the last one, so it is
- * skipped); a track gone from the catalog gets an item that is skipped.
+ * skipped); a deleted remix gets an item that is skipped.
  */
 private fun Catalog.itemFor(
     trackId: String,
@@ -550,7 +577,7 @@ private fun Catalog.itemFor(
     artwork: NotificationArtwork,
     retried: Boolean = false
 ): MediaItem {
-    val track = track(trackId)
+    val track = trackOrRetired(trackId)
         ?: return queueRequest(
             QueueEntry(trackId, context, listIndex)
         ).buildUpon().setUri(NO_SOURCE_URI).build()

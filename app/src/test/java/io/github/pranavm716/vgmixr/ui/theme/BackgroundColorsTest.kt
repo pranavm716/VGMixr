@@ -43,6 +43,17 @@ class BackgroundColorsTest {
         }
     }
 
+    // The search pill: a step up from the background, its text and placeholder readable.
+    @Test
+    fun `the search field stands a step above every background and keeps its text readable`() {
+        BackgroundChoice.entries.forEach {
+            val field = Surfaces.on(it.color).field
+            assertTrue("$it", field.luminance() > it.color.luminance())
+            assertTrue("$it text", contrast(TextPrimary, field) >= 7f)
+            assertTrue("$it placeholder", contrast(FieldHint, field) >= 4.5f)
+        }
+    }
+
     private fun contrast(a: Color, b: Color): Float {
         val (light, dark) = listOf(a.luminance(), b.luminance()).sortedDescending()
         return (light + 0.05f) / (dark + 0.05f)

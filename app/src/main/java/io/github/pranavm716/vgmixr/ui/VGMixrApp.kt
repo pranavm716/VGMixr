@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -47,8 +49,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -209,6 +213,9 @@ fun VGMixrApp(
     val selected = backStackEntry?.destination?.let { current ->
         TopLevelDestination.entries.firstOrNull { current.isIn(it) }
     }
+    // The keyboard covers the bottom bar, and messages sit on top of it.
+    var bottomBarHeight by remember { mutableIntStateOf(0) }
+    val imeBottom = WindowInsets.ime.getBottom(LocalDensity.current)
     Box(Modifier.fillMaxSize()) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
@@ -219,12 +226,15 @@ fun VGMixrApp(
             ),
             // The action (Try again) in the app's accent rather than Material's inverse primary.
             snackbarHost = {
-                SnackbarHost(snackbars) {
+                SnackbarHost(
+                    snackbars,
+                    Modifier.offset { IntOffset(0, -snackbarLift(imeBottom, bottomBarHeight)) }
+                ) {
                     Snackbar(it, actionColor = MaterialTheme.colorScheme.primary)
                 }
             },
             bottomBar = {
-                Column {
+                Column(Modifier.onSizeChanged { bottomBarHeight = it.height }) {
                     miniPlayer(sheet, openNowPlaying)
                     VGMixrNavBar(
                         // Slides down out of view as now playing opens.
@@ -554,3 +564,7 @@ private fun NavHostController.rootOf(destination: TopLevelDestination): NavDesti
     val tab = graph.findNode(destination.route)
     return if (tab is NavGraph) tab.findStartDestination() else tab
 }
+
+/** How far to lift messages so an open keyboard ([imeBottom] px) doesn't hide them. */
+fun snackbarLift(imeBottom: Int, bottomBarHeight: Int): Int =
+    (imeBottom - bottomBarHeight).coerceAtLeast(0)

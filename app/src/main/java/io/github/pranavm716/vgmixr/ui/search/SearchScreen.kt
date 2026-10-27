@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -105,7 +104,6 @@ fun SearchScreen(
             },
             onSearch = { hideKeyboard() }
         )
-        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         if (state.noResults) {
             NoSearchResults(query.trim())
         } else {

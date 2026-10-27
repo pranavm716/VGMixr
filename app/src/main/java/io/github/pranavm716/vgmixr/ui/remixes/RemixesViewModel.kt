@@ -18,6 +18,7 @@ import io.github.pranavm716.vgmixr.domain.sort.SortKeys
 import io.github.pranavm716.vgmixr.domain.sort.SortSetting
 import io.github.pranavm716.vgmixr.domain.sort.playableUserTrackIds
 import io.github.pranavm716.vgmixr.domain.sort.sortedUserTracks
+import io.github.pranavm716.vgmixr.domain.usertrack.RestoreThumbnails
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackRepository
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.SortUi
@@ -81,9 +82,15 @@ class RemixesViewModel @Inject constructor(
     private val userTracks: UserTrackRepository,
     private val sortSettings: SortSettings,
     @DefaultDispatcher dispatcher: CoroutineDispatcher,
-    offline: OfflineStore = OfflineStore.NONE
+    offline: OfflineStore = OfflineStore.NONE,
+    restoreThumbnails: RestoreThumbnails? = null
 ) : ViewModel() {
     private val mode = MutableStateFlow(RemixesMode.NORMAL)
+
+    init {
+        // While Remixes is open: missing thumbnails come back whenever the phone is online.
+        restoreThumbnails?.let { viewModelScope.launch { it() } }
+    }
 
     val uiState: StateFlow<RemixesUiState> =
         combine(
@@ -197,6 +204,7 @@ class RemixesViewModel @Inject constructor(
             // The title as the row showed it: the original's, while linked.
             val shown = catalog.catalog.first().track(trackId)?.title ?: track.title
             userTracks.delete(trackId)
+            playback.removeTrack(trackId)
             messages.post(UserMessage.RemixDeleted(track, shown))
         }
     }

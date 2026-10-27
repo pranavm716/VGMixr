@@ -77,6 +77,8 @@ class FakePlaybackController : PlaybackController {
 
     data class RemoveFromQueue(val index: Int)
 
+    data class RemoveTrack(val trackId: String)
+
     data object ClearQueue
 
     data class TryAgain(val trackId: String)
@@ -118,6 +120,10 @@ class FakePlaybackController : PlaybackController {
 
     override fun jumpTo(index: Int) {
         calls += JumpTo(index)
+    }
+
+    override fun removeTrack(trackId: String) {
+        calls += RemoveTrack(trackId)
     }
 
     override fun removeFromQueue(index: Int) {
@@ -319,12 +325,14 @@ class FakeVideoLookup(private val results: Map<String, VideoLookupResult> = empt
 class FakeThumbnailStore(private val failing: Boolean = false) : ThumbnailStore {
     val downloaded = mutableSetOf<String>()
 
+    override val version = MutableStateFlow(0)
+
     override fun file(videoId: String): File? =
         if (videoId in downloaded) File("thumbnails/$videoId.jpg") else null
 
     override suspend fun download(videoId: String): Boolean {
         if (failing) return false
-        downloaded += videoId
+        if (downloaded.add(videoId)) version.value++
         return true
     }
 

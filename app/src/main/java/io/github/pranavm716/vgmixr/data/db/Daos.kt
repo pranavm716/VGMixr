@@ -65,6 +65,9 @@ interface CatalogDao {
     @Query("SELECT * FROM tracks WHERE retired = 0 ORDER BY id")
     suspend fun activeTracks(): List<TrackEntity>
 
+    @Query("SELECT * FROM tracks WHERE retired = 1 ORDER BY id")
+    suspend fun retiredTracks(): List<TrackEntity>
+
     @Query("SELECT * FROM track_games")
     suspend fun allTrackGames(): List<TrackGameEntity>
 
@@ -90,10 +93,15 @@ interface UserDataDao {
     @Insert
     suspend fun insertPlaylist(playlist: PlaylistEntity): Long
 
-    /** Every playlist with its entry count: Favorites first, then by creation. */
+    /**
+     * Every playlist with how many tracks its page lists: Favorites first, then by creation. A
+     * deleted remix's entry (kept for Undo) isn't counted; a retired track's is, since it shows.
+     */
     @Query(
         "SELECT p.id, p.name, COUNT(e.trackId) AS trackCount FROM playlists p " +
-            "LEFT JOIN playlist_entries e ON e.playlistId = p.id GROUP BY p.id " +
+            "LEFT JOIN playlist_entries e ON e.playlistId = p.id " +
+            "AND (e.trackId NOT LIKE 'yt:%' OR e.trackId IN (SELECT id FROM user_tracks)) " +
+            "GROUP BY p.id " +
             "ORDER BY p.id = $FAVORITES_PLAYLIST_ID DESC, p.createdAt, p.id"
     )
     fun observePlaylists(): Flow<List<PlaylistCountRow>>

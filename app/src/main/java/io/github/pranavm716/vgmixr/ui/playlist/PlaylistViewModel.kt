@@ -119,7 +119,11 @@ class PlaylistViewModel @Inject constructor(
     fun onTrackClick(trackId: String) {
         viewModelScope.launch {
             val catalog = catalog.catalog.first()
-            val track = catalog.track(trackId) ?: return@launch
+            val track = catalog.trackOrRetired(trackId) ?: return@launch
+            if (track.retired) {
+                messages.post(UserMessage.TrackRetired(track.title))
+                return@launch
+            }
             if (track.offline == true) {
                 messages.post(UserMessage.TrackOffline(track.title))
                 return@launch
@@ -174,7 +178,7 @@ class PlaylistViewModel @Inject constructor(
     /** Adds one track to "Next in queue"; a greyed track can't be queued. */
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
-            val track = catalog.catalog.first().track(trackId)
+            val track = catalog.catalog.first().trackOrRetired(trackId)
             if (track == null || track.dimmed) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))
@@ -182,7 +186,7 @@ class PlaylistViewModel @Inject constructor(
     }
 }
 
-// Entries whose track left the catalog (retired) aren't listed until step 14 shows them.
+// Retired tracks are listed greyed; deleted remixes aren't listed.
 private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): PlaylistUiState {
     if (playlist == null) return PlaylistUiState.NotFound
     val rows = playlistTracks(playlist).map { track ->
@@ -190,7 +194,8 @@ private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): Play
             id = track.id,
             title = track.title,
             chips = track.games.map { ChipUi(it.shortName, it.color) },
-            unplayable = track.dimmed,
+            // A retired track that is playing plays to its end, as in the queue.
+            unplayable = track.dimmed && !(track.retired && track.id == playingId),
             playing = track.id == playingId,
             thumbnail = track.thumbnail,
             subtitle = track.channel,

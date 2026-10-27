@@ -158,11 +158,12 @@ private fun DownloadStatus(progress: OfflineProgress, modifier: Modifier = Modif
                 Modifier.size(DownloadIconSize).clip(CircleShape).background(accent),
                 contentAlignment = Alignment.Center
             ) {
+                // Drawn on the whole circle, as Spotify's is measured.
                 Icon(
-                    painterResource(R.drawable.ic_arrow_downward),
+                    painterResource(R.drawable.ic_download_arrow),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.background,
-                    modifier = Modifier.size(14.dp)
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         } else {

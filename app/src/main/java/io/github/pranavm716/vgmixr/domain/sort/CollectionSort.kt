@@ -20,11 +20,13 @@ fun Catalog.sortedUserTracks(sort: SortSetting): List<CatalogTrack> =
     sorted(userTracks, sort) { it.addedAt }
 
 /**
- * [playlist]'s tracks found in the catalog, in its own sort, by when each went into it. Tracks no
- * longer in the catalog are left out.
+ * [playlist]'s tracks found in the catalog, retired ones included, in its own sort, by when each
+ * went into it. Deleted remixes are left out.
  */
 fun Catalog.playlistTracks(playlist: Playlist): List<CatalogTrack> =
-    sorted(playlist.trackIds.mapNotNull(::track), playlist.sort) { playlist.addedAt[it.id] }
+    sorted(playlist.trackIds.mapNotNull(::trackOrRetired), playlist.sort) {
+        playlist.addedAt[it.id]
+    }
 
 /** What a tap in family [familyId] plays: its list in [sort], without greyed tracks. */
 fun Catalog.playableFamilyTrackIds(familyId: String, sort: SortSetting): List<String> =

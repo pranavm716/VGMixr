@@ -6,13 +6,16 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.model.Source
+import io.github.pranavm716.vgmixr.domain.offline.Connectivity
 import io.github.pranavm716.vgmixr.domain.playback.BrokenReason
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
+import io.github.pranavm716.vgmixr.domain.usertrack.RestoreThumbnails
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrack
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.FakeSortSettings
+import io.github.pranavm716.vgmixr.testing.FakeThumbnailStore
 import io.github.pranavm716.vgmixr.testing.FakeUserTrackRepository
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
@@ -20,7 +23,9 @@ import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
 import java.io.File
 import java.time.Instant
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -219,6 +224,16 @@ class RemixesViewModelTest {
     }
 
     @Test
+    fun `deleting a remix takes it out of the queue`() = runTest {
+        viewModel().onDelete("yt:CCCCCCCCCCC")
+
+        assertEquals(
+            listOf(FakePlaybackController.RemoveTrack("yt:CCCCCCCCCCC")),
+            playback.calls
+        )
+    }
+
+    @Test
     fun `the menu's Link turns link mode on, and Done turns it off`() = runTest {
         val viewModel = viewModel()
         viewModel.uiState.test {
@@ -252,5 +267,26 @@ class RemixesViewModelTest {
         viewModel(catalog.copy(userTracks = emptyList())).onPlayAll()
 
         assertEquals(emptyList<Any>(), playback.calls)
+    }
+
+    @Test
+    fun `opening Remixes online fetches the thumbnails it lacks`() = runTest {
+        val thumbnails = FakeThumbnailStore()
+        val connectivity = object : Connectivity {
+            override val online = MutableStateFlow(true)
+        }
+        val repository = FakeCatalogRepository(catalog)
+        RemixesViewModel(
+            repository,
+            playback,
+            messages,
+            userTracks,
+            sortSettings,
+            main.dispatcher,
+            restoreThumbnails = RestoreThumbnails(repository, thumbnails, connectivity)
+        )
+        advanceUntilIdle()
+
+        assertEquals(setOf("BBBBBBBBBBB", "CCCCCCCCCCC"), thumbnails.downloaded)
     }
 }

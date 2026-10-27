@@ -97,4 +97,22 @@ class UserTracksInCatalogTest {
             catalog.userTracks.map { it.thumbnail }
         )
     }
+
+    @Test
+    fun `a thumbnail downloaded later shows without a database change`() = runTest(dispatcher) {
+        import()
+        val thumbnails = FakeThumbnailStore()
+        userTracks.add(userTrack("AAAAAAAAAAA", addedAt = 2_000))
+
+        RoomCatalogRepository(db, db.catalogDao(), thumbnails).catalog.test {
+            assertEquals(null, awaitItem().userTracks.single().thumbnail)
+
+            thumbnails.download("AAAAAAAAAAA")
+
+            assertEquals(
+                File("thumbnails/AAAAAAAAAAA.jpg").path,
+                awaitItem().userTracks.single().thumbnail
+            )
+        }
+    }
 }

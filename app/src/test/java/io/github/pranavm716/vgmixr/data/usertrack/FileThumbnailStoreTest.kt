@@ -121,4 +121,29 @@ class FileThumbnailStoreTest {
 
         assertNull(store.file("AAAAAAAAAAA"))
     }
+
+    @Test
+    fun `the version goes up when a new thumbnail lands, and only then`() = runTest(dispatcher) {
+        images["/vi/AAAAAAAAAAA/maxresdefault.jpg"] = byteArrayOf(1)
+
+        assertEquals(0, store.version.value)
+        store.download("BBBBBBBBBBB")
+        assertEquals(0, store.version.value)
+        store.download("AAAAAAAAAAA")
+        assertEquals(1, store.version.value)
+        store.download("AAAAAAAAAAA")
+        assertEquals(1, store.version.value)
+    }
+
+    @Test
+    fun `a thumbnail that can't be written is a failed download, not a crash`() =
+        runTest(dispatcher) {
+            images["/vi/AAAAAAAAAAA/maxresdefault.jpg"] = byteArrayOf(1)
+            // A file where the folder should be, so nothing can be written in it.
+            dir.deleteRecursively()
+            dir.writeText("not a folder")
+
+            assertFalse(store.download("AAAAAAAAAAA"))
+            assertEquals(0, store.version.value)
+        }
 }

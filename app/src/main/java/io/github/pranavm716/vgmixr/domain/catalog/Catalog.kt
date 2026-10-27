@@ -8,13 +8,16 @@ import java.time.Instant
 /**
  * The browsable catalog: non-retired games and tracks only. [games] are in manifest order, and
  * [families] in the order of each family's first game. [userTracks] are the tracks added from
- * YouTube: [track] finds them, but family browsing reads only [tracks].
+ * YouTube: [track] finds them, but family browsing reads only [tracks]. [retiredTracks] left the
+ * manifest; playlists list them greyed, and the player shows one still playing or queued, through
+ * [trackOrRetired].
  */
 data class Catalog(
     val games: List<Game>,
     val families: List<Family>,
     val tracks: List<CatalogTrack>,
-    val userTracks: List<CatalogTrack> = emptyList()
+    val userTracks: List<CatalogTrack> = emptyList(),
+    val retiredTracks: List<CatalogTrack> = emptyList()
 ) {
     private val byId: Map<String, CatalogTrack> by lazy {
         (tracks + userTracks).associateBy { it.id }
@@ -22,6 +25,13 @@ data class Catalog(
 
     /** The catalog or user track with [id], or null if there is none. */
     fun track(id: String): CatalogTrack? = byId[id]
+
+    private val retiredById: Map<String, CatalogTrack> by lazy {
+        retiredTracks.associateBy { it.id }
+    }
+
+    /** [track], or the retired track with [id]: for playlists and the queue. */
+    fun trackOrRetired(id: String): CatalogTrack? = byId[id] ?: retiredById[id]
 }
 
 /** A derived family. [name] and [label] come from its non-retired games, in manifest order. */
@@ -50,8 +60,10 @@ data class CatalogTrack(
     val videoTitle: String? = null,
     val addedAt: Instant? = null,
     /** No connection, and the track isn't on the phone (roadmap step 13). */
-    val offline: Boolean = false
+    val offline: Boolean = false,
+    /** Left the manifest; shown greyed in playlists only. */
+    val retired: Boolean = false
 )
 
-/** Whether the track is greyed and skipped: broken, or offline and not on the phone. */
-val CatalogTrack.dimmed: Boolean get() = unplayable != null || offline
+/** Whether the track is greyed and skipped: broken, retired, or offline and not on the phone. */
+val CatalogTrack.dimmed: Boolean get() = unplayable != null || offline || retired

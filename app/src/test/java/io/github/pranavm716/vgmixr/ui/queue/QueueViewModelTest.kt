@@ -220,4 +220,51 @@ class QueueViewModelTest {
             assertEquals("rse", awaitItem().nowPlaying?.familyId)
         }
     }
+
+    @Test
+    fun `a retired track still shows, normal while it plays and greyed while queued`() = runTest {
+        val retired = listOf("old", "old2").map { track(it).copy(retired = true) }
+        playback.state.value = state(
+            listOf(QueueEntry("old", rse), QueueEntry("old2", rse), QueueEntry("x", rse)),
+            current = 0
+        )
+        val viewModel = QueueViewModel(
+            FakeCatalogRepository(catalog.copy(retiredTracks = retired)),
+            playback,
+            messages,
+            playlists
+        )
+
+        viewModel.uiState.test {
+            val state = awaitItem()
+            assertEquals(row(0, "old"), state.nowPlaying)
+            assertEquals(
+                listOf(row(1, "old2").copy(unplayable = true), row(2, "x")),
+                state.nextFrom
+            )
+        }
+    }
+
+    @Test
+    fun `a tap on a queued retired track says it left the catalog, and jumps nowhere`() = runTest {
+        playback.state.value = state(
+            listOf(QueueEntry("x", rse), QueueEntry("old", rse)),
+            current = 0
+        )
+        val viewModel = QueueViewModel(
+            FakeCatalogRepository(
+                catalog.copy(retiredTracks = listOf(track("old").copy(retired = true)))
+            ),
+            playback,
+            messages,
+            playlists
+        )
+
+        messages.messages.test {
+            viewModel.onJump(1)
+
+            assertEquals(UserMessage.TrackRetired("Title old"), awaitItem())
+            assertEquals(emptyList<Any>(), playback.calls)
+        }
+    }
 }

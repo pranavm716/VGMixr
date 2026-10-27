@@ -50,6 +50,9 @@ sealed interface UserMessage {
     /** A tap on [title] with no connection, which isn't on the phone. */
     data class TrackOffline(val title: String) : UserMessage
 
+    /** A tap on a playlist's track that left the catalog. */
+    data class TrackRetired(val title: String) : UserMessage
+
     /** A tap on [title], whose sources are all broken (the first for [reason]); offers Try again. */
     data class TrackUnplayable(val trackId: String, val title: String, val reason: BrokenReason) :
         UserMessage
@@ -183,6 +186,8 @@ private fun UserMessage.text(resources: Resources): String = when (this) {
     is UserMessage.RemixDeleted -> resources.getString(R.string.remix_deleted, title)
 
     is UserMessage.TrackOffline -> resources.getString(R.string.track_unplayable_offline, title)
+
+    is UserMessage.TrackRetired -> resources.getString(R.string.track_unplayable_retired, title)
 
     is UserMessage.TrackUnplayable -> resources.getString(
         when (reason) {

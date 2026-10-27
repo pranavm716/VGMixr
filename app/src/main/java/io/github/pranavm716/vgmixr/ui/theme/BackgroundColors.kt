@@ -40,12 +40,18 @@ val BackgroundChoice.label: Int
  * background mixed a little toward white (on black, the #1E1E1E, #202020 and #2A2A2A the app had).
  */
 @Immutable
-data class Surfaces(val dialog: Color, val artPlaceholder: Color, val divider: Color) {
+data class Surfaces(
+    val dialog: Color,
+    val artPlaceholder: Color,
+    val divider: Color,
+    val field: Color
+) {
     companion object {
         fun on(background: Color) = Surfaces(
             dialog = lerp(background, Color.White, 0.055f),
             artPlaceholder = lerp(background, Color.White, 0.065f),
-            divider = lerp(background, Color.White, 0.1f)
+            divider = lerp(background, Color.White, 0.1f),
+            field = lerp(background, Color.White, 0.08f)
         )
     }
 }
@@ -61,4 +67,9 @@ object VGMixrColors {
     val artPlaceholder: Color
         @Composable @ReadOnlyComposable
         get() = LocalSurfaces.current.artPlaceholder
+
+    /** The search pill's fill. */
+    val field: Color
+        @Composable @ReadOnlyComposable
+        get() = LocalSurfaces.current.field
 }
