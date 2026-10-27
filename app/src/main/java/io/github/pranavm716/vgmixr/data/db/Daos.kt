@@ -221,6 +221,9 @@ interface UserTrackDao {
     @Query("UPDATE user_tracks SET remixOf = :remixOf WHERE id = :id")
     suspend fun setRemixOf(id: String, remixOf: String?)
 
+    @Query("UPDATE user_tracks SET credit = :credit WHERE id = :id")
+    suspend fun setCredit(id: String, credit: String?)
+
     @Query("DELETE FROM user_tracks WHERE id = :id")
     suspend fun delete(id: String)
 

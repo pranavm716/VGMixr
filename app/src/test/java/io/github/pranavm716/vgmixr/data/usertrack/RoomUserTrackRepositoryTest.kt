@@ -75,6 +75,25 @@ class RoomUserTrackRepositoryTest {
     }
 
     @Test
+    fun `sets and clears a track's credit`() = runTest(dispatcher) {
+        repository.add(track("AAAAAAAAAAA"))
+
+        repository.setCredit("yt:AAAAAAAAAAA", "Super Smash Bros. Brawl")
+        assertEquals("Super Smash Bros. Brawl", repository.userTracks.first().single().credit)
+
+        repository.setCredit("yt:AAAAAAAAAAA", null)
+        assertEquals(null, repository.userTracks.first().single().credit)
+    }
+
+    @Test
+    fun `adding a track back keeps its credit`() = runTest(dispatcher) {
+        val credited = track("AAAAAAAAAAA").copy(credit = "Super Smash Bros. Brawl")
+        repository.add(credited)
+
+        assertEquals(credited, repository.userTracks.first().single())
+    }
+
+    @Test
     fun `deleting a track keeps its playlist entries and history`() = runTest(dispatcher) {
         val userData = db.userDataDao()
         repository.add(track("AAAAAAAAAAA"))

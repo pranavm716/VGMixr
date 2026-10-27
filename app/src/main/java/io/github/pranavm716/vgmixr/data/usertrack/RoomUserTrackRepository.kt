@@ -19,6 +19,8 @@ class RoomUserTrackRepository @Inject constructor(private val dao: UserTrackDao)
 
     override suspend fun setRemixOf(id: String, remixOf: String?) = dao.setRemixOf(id, remixOf)
 
+    override suspend fun setCredit(id: String, credit: String?) = dao.setCredit(id, credit)
+
     override suspend fun delete(id: String) = dao.delete(id)
 }
 
@@ -30,7 +32,8 @@ internal fun UserTrackEntity.toDomain() = UserTrack(
     channel = channel,
     durationMs = durationMs,
     addedAt = addedAt,
-    remixOf = remixOf
+    remixOf = remixOf,
+    credit = credit
 )
 
 private fun UserTrack.toEntity() = UserTrackEntity(
@@ -42,5 +45,6 @@ private fun UserTrack.toEntity() = UserTrackEntity(
     channel = channel,
     durationMs = durationMs,
     addedAt = addedAt,
-    remixOf = remixOf
+    remixOf = remixOf,
+    credit = credit
 )

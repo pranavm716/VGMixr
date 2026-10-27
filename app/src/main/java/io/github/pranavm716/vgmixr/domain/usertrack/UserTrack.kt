@@ -10,7 +10,8 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A track added from YouTube, mainly a fan remix: one video, or the part of it from [startMs] to
  * [endMs] (null: to its end). [title] and [channel] are the video's when it was added, and
- * [remixOf] the catalog track it remixes, if any.
+ * [remixOf] the catalog track it remixes, if any. [credit], when set, shows instead of [channel]
+ * (a rip's game, say).
  */
 data class UserTrack(
     val videoId: String,
@@ -20,7 +21,8 @@ data class UserTrack(
     val channel: String,
     val durationMs: Long?,
     val addedAt: Instant,
-    val remixOf: String? = null
+    val remixOf: String? = null,
+    val credit: String? = null
 ) {
     val id: String get() = UserTrackId.of(videoId)
 }
@@ -37,6 +39,9 @@ interface UserTrackRepository {
 
     /** Sets the catalog track that user track [id] remixes, or clears it with null. */
     suspend fun setRemixOf(id: String, remixOf: String?)
+
+    /** Sets what user track [id] shows instead of its channel, or clears it with null. */
+    suspend fun setCredit(id: String, credit: String?)
 
     /** Deletes user track [id]. Its playlist entries and history stay, for if it's added again. */
     suspend fun delete(id: String)

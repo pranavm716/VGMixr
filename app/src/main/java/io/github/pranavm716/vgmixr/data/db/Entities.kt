@@ -136,7 +136,9 @@ data class UserTrackEntity(
     val channel: String,
     val durationMs: Long?,
     val addedAt: Instant,
-    val remixOf: String?
+    val remixOf: String?,
+    /** Shown instead of [channel] when set (a rip's game, say). */
+    val credit: String? = null
 )
 
 @Entity(tableName = "play_history", indices = [Index("trackId")])

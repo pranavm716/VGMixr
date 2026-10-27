@@ -265,6 +265,25 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `7 to 8 adds an empty credit and keeps user tracks`() {
+        helper.createDatabase(7).use { db ->
+            db.execSQL(
+                "INSERT INTO user_tracks " +
+                    "(id, videoId, startMs, endMs, title, channel, durationMs, addedAt, remixOf) " +
+                    "VALUES ('yt:AAAAAAAAAAA', 'AAAAAAAAAAA', 0, NULL, 'Galactic', 'pkmnrips', " +
+                    "1000, 111, 'dppt-battle-galactic')"
+            )
+        }
+
+        helper.runMigrationsAndValidate(8).use { db ->
+            assertEquals(
+                listOf(listOf("yt:AAAAAAAAAAA", "pkmnrips", "dppt-battle-galactic", null)),
+                db.rows("SELECT id, channel, remixOf, credit FROM user_tracks")
+            )
+        }
+    }
+
     private fun SQLiteConnection.rows(sql: String): List<List<String?>> = prepare(sql).use { row ->
         buildList {
             while (row.step()) {

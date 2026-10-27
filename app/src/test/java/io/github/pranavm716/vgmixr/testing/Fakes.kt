@@ -305,6 +305,10 @@ class FakeUserTrackRepository(initial: List<UserTrack> = emptyList()) : UserTrac
         tracks.value = tracks.value.map { if (it.id == id) it.copy(remixOf = remixOf) else it }
     }
 
+    override suspend fun setCredit(id: String, credit: String?) {
+        tracks.value = tracks.value.map { if (it.id == id) it.copy(credit = credit) else it }
+    }
+
     override suspend fun delete(id: String) {
         tracks.value = tracks.value.filterNot { it.id == id }
     }
