@@ -63,4 +63,20 @@ class FailFastLoadErrorPolicyTest {
         assertTrue(retryDelay(IOException("connection reset")) > 0)
         assertTrue(retryDelay(ResolveFailedException(ResolveFailure.NETWORK)) > 0)
     }
+
+    @Test
+    fun `offline, network trouble is not retried, so a track not on the phone moves on`() {
+        val offline = FailFastLoadErrorPolicy(online = { false })
+        fun delay(e: IOException) = offline.getRetryDelayMsFor(
+            LoadErrorHandlingPolicy.LoadErrorInfo(
+                LoadEventInfo(LoadEventInfo.getNewId(), spec, 0),
+                MediaLoadData(C.DATA_TYPE_MEDIA),
+                e,
+                1
+            )
+        )
+
+        assertEquals(C.TIME_UNSET, delay(ResolveFailedException(ResolveFailure.NETWORK)))
+        assertEquals(C.TIME_UNSET, delay(IOException("connection reset")))
+    }
 }

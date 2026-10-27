@@ -161,7 +161,11 @@ class PlaybackService : MediaSessionService() {
                                 CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
                         )
                 )
-                    .setLoadErrorHandlingPolicy(FailFastLoadErrorPolicy())
+                    .setLoadErrorHandlingPolicy(
+                        FailFastLoadErrorPolicy {
+                            connectivity.online.value
+                        }
+                    )
             )
             .setAudioAttributes(
                 AudioAttributes.Builder()
