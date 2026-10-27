@@ -39,7 +39,8 @@
     { "id": "pla", "name": "Legends: Arceus", "shortName": "PLA", "color": "#36597B", "generation": 8, "platform": "Switch" },
     { "id": "scarlet", "name": "Scarlet", "shortName": "S", "color": "#F34134", "generation": 9, "platform": "Switch", "family": "sv" },
     { "id": "violet", "name": "Violet", "shortName": "V", "color": "#8334B7", "generation": 9, "platform": "Switch", "family": "sv" },
-    { "id": "plza", "name": "Legends: Z-A", "shortName": "Z-A", "color": "#31CA56", "generation": 9, "platform": "Switch" }
+    { "id": "plza", "name": "Legends: Z-A", "shortName": "Z-A", "color": "#31CA56", "generation": 9, "platform": "Switch" },
+    { "id": "botw", "name": "Breath of the Wild", "shortName": "BotW", "color": "#b99f65", "platform": "Switch" }
   ],
   "tracklists": [
     { "family": "rby", "games": ["red", "blue"], "page": "Game Boy: Entire Pokémon Sounds Collection CD", "disc": "Disc 1", "last": 45 },
@@ -118,7 +119,13 @@
     { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 1" },
     { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 2" },
     { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 3" },
-    { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 4" }
+    { "family": "plza", "page": "Pokémon Legends: Z-A + Mega Dimension Super Music Collection", "disc": "Disc 4" },
+
+    { "family": "botw", "file": "tracklists/botw.tsv", "disc": "Disc 1" },
+    { "family": "botw", "file": "tracklists/botw.tsv", "disc": "Disc 2" },
+    { "family": "botw", "file": "tracklists/botw.tsv", "disc": "Disc 3" },
+    { "family": "botw", "file": "tracklists/botw.tsv", "disc": "Disc 4" },
+    { "family": "botw", "file": "tracklists/botw.tsv", "disc": "Disc 5" }
   ],
   "youtube": {
     "playlists": [
@@ -147,8 +154,11 @@
       { "games": ["scarlet", "violet"], "playlist": "PLgyn_xiMXpwzKc-_Y6b4WEWsCgcBarJ6O", "note": "The Indigo Disk" },
       { "games": ["plza"], "playlist": "PL90nj2rNFfbcE2HR8S2TNT_h2DjM1nDGb" }
     ],
-    "albums": [],
+    "albums": [
+      { "games": ["botw"], "video": "JYaid9Uc56Y", "note": "Full OST, 220 chapters; Great Fairy Fountain's chapter starts 11 s early" }
+    ],
     "aliases": {
+      "botw": ["BotW", "Zelda Breath of the Wild"],
       "bw": ["BW", "B2W2", "BW2"],
       "pmd-brt": ["Mystery Dungeon", "PMD", "Blue Rescue Team", "Red Rescue Team", "Rescue Team", "Mystery Dungeon Rescue Team"],
       "pmd-eos": ["Pokemon Mystery Dungeon", "Mystery Dungeon", "PMD", "Explorers of Sky", "Explorers", "Mystery Dungeon Explorers"]
