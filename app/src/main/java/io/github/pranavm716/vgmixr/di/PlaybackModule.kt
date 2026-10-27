@@ -16,6 +16,8 @@ import io.github.pranavm716.vgmixr.data.settings.PrefsShuffleSetting
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.NewPipeStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.RoomBrokenSources
+import io.github.pranavm716.vgmixr.domain.history.PlayHistory
+import io.github.pranavm716.vgmixr.domain.history.RecentPlays
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
@@ -69,6 +71,14 @@ object PlaybackModule {
 
     @Provides
     fun provideBrokenSources(sources: RoomBrokenSources): BrokenSources = sources
+
+    @Provides
+    @Singleton
+    fun provideRecentPlays(
+        history: PlayHistory,
+        clock: Clock,
+        @ApplicationScope scope: CoroutineScope
+    ) = RecentPlays(history, clock, scope)
 
     @Provides
     fun provideShuffleSetting(setting: PrefsShuffleSetting): ShuffleSetting = setting

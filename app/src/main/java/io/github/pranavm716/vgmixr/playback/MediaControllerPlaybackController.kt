@@ -13,6 +13,7 @@ import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
+import io.github.pranavm716.vgmixr.domain.history.RecentPlays
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSourceCheck
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackEvent
@@ -44,7 +45,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 @Singleton
 class MediaControllerPlaybackController @Inject constructor(
     @ApplicationContext context: Context,
-    private val brokenSourceCheck: BrokenSourceCheck
+    private val brokenSourceCheck: BrokenSourceCheck,
+    private val recentPlays: RecentPlays
 ) : PlaybackController {
     private val main = ContextCompat.getMainExecutor(context)
     private val _state = MutableStateFlow(PlaybackState())
@@ -82,11 +84,26 @@ class MediaControllerPlaybackController @Inject constructor(
 
     override fun playFrom(trackIds: List<String>, index: Int, context: QueueContext) =
         withController {
-            it.apply(it.queue().playFrom(trackIds, context, index, it.shuffleModeEnabled))
+            it.apply(
+                it.queue().playFrom(
+                    trackIds,
+                    context,
+                    index,
+                    it.shuffleModeEnabled,
+                    recent = recentPlays.trackIds()
+                )
+            )
         }
 
     override fun playAll(trackIds: List<String>, context: QueueContext) = withController {
-        it.apply(it.queue().playAll(trackIds, context, it.shuffleModeEnabled))
+        it.apply(
+            it.queue().playAll(
+                trackIds,
+                context,
+                it.shuffleModeEnabled,
+                recent = recentPlays.trackIds()
+            )
+        )
     }
 
     // In the service, which updates its items in place, so the playing track isn't rebuilt.

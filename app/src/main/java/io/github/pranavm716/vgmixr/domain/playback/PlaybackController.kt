@@ -15,7 +15,8 @@ interface PlaybackController {
 
     /**
      * Plays all of [trackIds], a list long-pressed in [context]: in order from its first track, or
-     * with shuffle on in a shuffled order, from a random one (see [PlayQueue.playAll]).
+     * with shuffle on in a shuffled order, from a random one, keeping tracks heard in the last hour
+     * out of the start (see [PlayQueue.playAll]).
      */
     fun playAll(trackIds: List<String>, context: QueueContext)
 
