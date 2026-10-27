@@ -28,11 +28,17 @@ class FileThumbnailStore(
         if (fileFor(videoId).isFile) return@withContext true
         val image = SIZES.firstNotNullOfOrNull { fetch("$baseUrl$videoId/$it.jpg") }
             ?: return@withContext false
-        dir.mkdirs()
-        // Written whole, then renamed, so a half-written file is never shown.
-        val part = File(dir, "$videoId.part")
-        part.writeBytes(image)
-        part.renameTo(fileFor(videoId)).also { if (it) version.update { v -> v + 1 } }
+        // Written whole, then renamed, so a half-written file is never shown. A full disk or an
+        // unwritable folder is a failed download, tried again later.
+        val saved = try {
+            dir.mkdirs()
+            val part = File(dir, "$videoId.part")
+            part.writeBytes(image)
+            part.renameTo(fileFor(videoId))
+        } catch (e: IOException) {
+            false
+        }
+        saved.also { if (it) version.update { v -> v + 1 } }
     }
 
     override suspend fun delete(videoId: String) {

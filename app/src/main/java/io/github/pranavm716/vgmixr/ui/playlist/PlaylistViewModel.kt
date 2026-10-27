@@ -194,7 +194,8 @@ private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): Play
             id = track.id,
             title = track.title,
             chips = track.games.map { ChipUi(it.shortName, it.color) },
-            unplayable = track.dimmed,
+            // A retired track that is playing plays to its end, as in the queue.
+            unplayable = track.dimmed && !(track.retired && track.id == playingId),
             playing = track.id == playingId,
             thumbnail = track.thumbnail,
             subtitle = track.channel,

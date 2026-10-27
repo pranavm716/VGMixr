@@ -72,11 +72,13 @@ class FailFastLoadErrorPolicyTest {
                 LoadEventInfo(LoadEventInfo.getNewId(), spec, 0),
                 MediaLoadData(C.DATA_TYPE_MEDIA),
                 e,
-                1
+                2
             )
         )
 
         assertEquals(C.TIME_UNSET, delay(ResolveFailedException(ResolveFailure.NETWORK)))
-        assertEquals(C.TIME_UNSET, delay(IOException("connection reset")))
+        // A stream already playing keeps its retries: a Wi-Fi to mobile handover looks offline
+        // for a moment.
+        assertTrue(delay(IOException("connection reset")) > 0)
     }
 }

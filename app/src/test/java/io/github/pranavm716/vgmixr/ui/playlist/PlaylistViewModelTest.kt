@@ -310,4 +310,19 @@ class PlaylistViewModelTest {
 
         assertEquals(emptyList<Any>(), playback.calls)
     }
+
+    @Test
+    fun `a retired track that is playing shows normally until it ends`() = runTest {
+        playback.state.value = PlaybackState(
+            queue = PlayQueue(listOf(QueueEntry("rse-old", QueueContext.Playlist(1))), 0),
+            trackId = "rse-old",
+            isPlaying = true
+        )
+
+        retiredViewModel().uiState.test {
+            val row = (awaitItem() as PlaylistUiState.Loaded).rows.first { it.id == "rse-old" }
+            assertEquals(false, row.unplayable)
+            assertEquals(true, row.playing)
+        }
+    }
 }

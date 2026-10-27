@@ -144,4 +144,21 @@ class AddToPlaylistViewModelTest {
             assertEquals(AddToPlaylistUiState(), expectMostRecentItem())
         }
     }
+
+    @Test
+    fun `a playing retired track keeps its title`() = runTest {
+        val retired = CatalogTrack("rse-old", "rse", listOf(ruby), "Old", 9, emptyList())
+            .copy(retired = true)
+        play("rse-old")
+        val viewModel = AddToPlaylistViewModel(
+            FakeCatalogRepository(catalog.copy(retiredTracks = listOf(retired))),
+            playlists,
+            playback
+        )
+        viewModel.onOpen()
+
+        viewModel.uiState.test {
+            assertEquals("Old", expectMostRecentItem().trackTitle)
+        }
+    }
 }
