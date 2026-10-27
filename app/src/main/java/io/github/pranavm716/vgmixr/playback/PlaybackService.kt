@@ -35,6 +35,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.dimmed
 import io.github.pranavm716.vgmixr.domain.history.PlayCounter
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
+import io.github.pranavm716.vgmixr.domain.history.RecentPlays
 import io.github.pranavm716.vgmixr.domain.offline.Connectivity
 import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
 import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
@@ -102,6 +103,9 @@ class PlaybackService : MediaSessionService() {
 
     @Inject
     lateinit var shuffleSetting: ShuffleSetting
+
+    @Inject
+    lateinit var recentPlays: RecentPlays
 
     @Inject
     lateinit var playlists: PlaylistRepository
@@ -196,7 +200,7 @@ class PlaybackService : MediaSessionService() {
             .build()
         player.addListener(Failover(player, session))
         player.addListener(PlayRecording(player))
-        player.addListener(Shuffling(player, shuffleSetting))
+        player.addListener(Shuffling(player, shuffleSetting, recentPlays))
         player.addListener(
             object : Player.Listener {
                 override fun onEvents(player: Player, events: Player.Events) {
@@ -476,14 +480,26 @@ class PlaybackService : MediaSessionService() {
 /**
  * Turning shuffle on shuffles "Next from"; turning it off puts it back in list order. Here, so a
  * flip from the app, the notification or the lock screen all rearrange the same way. The setting
- * is saved for the next launch.
+ * is saved for the next launch. Tracks heard in the last hour stay out of the first 10.
  */
-private class Shuffling(private val player: Player, private val setting: ShuffleSetting) :
-    Player.Listener {
+private class Shuffling(
+    private val player: Player,
+    private val setting: ShuffleSetting,
+    private val recentPlays: RecentPlays
+) : Player.Listener {
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         setting.set(shuffleModeEnabled)
         val queue = player.queue()
-        player.apply(if (shuffleModeEnabled) queue.shuffle(Random.Default) else queue.unshuffle())
+        player.apply(
+            if (shuffleModeEnabled) {
+                queue.shuffle(
+                    Random.Default,
+                    recentPlays.trackIds()
+                )
+            } else {
+                queue.unshuffle()
+            }
+        )
     }
 }
 
