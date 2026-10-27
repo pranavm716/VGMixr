@@ -34,6 +34,8 @@ class SearchIndex(catalog: Catalog) {
                 // Linked, it shows its original's title; its own still finds it, for less.
                 if (original != null) addAll(searchWords(track.videoTitle.orEmpty()))
                 addAll(channelWords(track.channel.orEmpty()))
+                // A credit counts like the channel it replaces, which still finds the track.
+                track.credit?.let { addAll(channelWords(it)) }
                 addAll(REMIX_WORDS)
             }
             IndexedTrack(
@@ -52,7 +54,7 @@ class SearchIndex(catalog: Catalog) {
 
 /**
  * [title] holds the title's words in order; [meta] its family, games, generations and region, and
- * for a user track its video's title, its channel and "remix", which match for less. [order] places
+ * for a user track its video's title, its channel, its credit and "remix", which match for less. [order] places
  * it in its family: a remix takes its original's, and [isUserTrack] puts it right after it.
  */
 internal class IndexedTrack(

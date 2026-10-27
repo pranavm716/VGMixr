@@ -49,6 +49,12 @@ class SortRowTest {
     }
 
     @Test
+    fun `a credited remix sorts by its credit`() {
+        val credited = linked.copy(credit = "Super Smash Bros. Brawl")
+        assertEquals("Super Smash Bros. Brawl", catalog.sortRow(credited, added).channel)
+    }
+
+    @Test
     fun `an unlinked remix has no family`() {
         assertEquals(null, catalog.sortRow(unlinked, null).familyPosition)
     }

@@ -36,14 +36,21 @@ class SearchUserTracksTest {
         tracks = catalogTracks
     )
 
-    private fun remix(videoId: String, title: String, channel: String, remixOf: String?) =
+    private fun remix(
+        videoId: String,
+        title: String,
+        channel: String,
+        remixOf: String?,
+        credit: String? = null
+    ) =
         UserTrack(
             videoId = videoId,
             title = title,
             channel = channel,
             durationMs = null,
             addedAt = Instant.EPOCH,
-            remixOf = remixOf
+            remixOf = remixOf,
+            credit = credit
         ).toCatalogTrack(catalogOnly, unplayable = null)
 
     // Newest first, as the catalog lists them.
@@ -61,7 +68,14 @@ class SearchUserTracksTest {
                 "GlitchxCity",
                 remixOf = null
             ),
-            remix("CCCCCCCCCCC", "Route 29 Orchestrated", "SquashiOrchestral", "gsc-route-29")
+            remix("CCCCCCCCCCC", "Route 29 Orchestrated", "SquashiOrchestral", "gsc-route-29"),
+            remix(
+                "DDDDDDDDDDD",
+                "Lighthouse rip",
+                "pkmnrips4u",
+                remixOf = null,
+                credit = "Super Smash Bros. Brawl"
+            )
         )
     )
     private val index = SearchIndex(catalog)
@@ -83,6 +97,12 @@ class SearchUserTracksTest {
         assertEquals(listOf("yt:AAAAAAAAAAA", "yt:BBBBBBBBBBB"), ids("glitchxcity"))
         assertEquals(listOf("yt:AAAAAAAAAAA", "yt:BBBBBBBBBBB"), ids("glitch city"))
         assertEquals(listOf("yt:CCCCCCCCCCC"), ids("squashi"))
+    }
+
+    @Test
+    fun `a credit finds its track, and so does its channel`() {
+        assertEquals(listOf("yt:DDDDDDDDDDD"), ids("smash brawl"))
+        assertEquals(listOf("yt:DDDDDDDDDDD"), ids("pkmnrips4u"))
     }
 
     @Test

@@ -25,6 +25,9 @@ data class UserTrack(
     val credit: String? = null
 ) {
     val id: String get() = UserTrackId.of(videoId)
+
+    /** The name its row shows: its credit, or its channel. */
+    val artist: String get() = credit ?: channel
 }
 
 interface UserTrackRepository {
@@ -68,6 +71,7 @@ fun UserTrack.toCatalogTrack(
         sources = listOf(Source.Stream(videoId, startMs, endMs)),
         unplayable = unplayable,
         channel = channel,
+        credit = credit,
         remixOf = remixOf,
         thumbnail = thumbnail,
         videoTitle = title,

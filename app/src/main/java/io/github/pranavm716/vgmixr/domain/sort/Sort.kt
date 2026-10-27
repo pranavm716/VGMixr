@@ -105,7 +105,8 @@ fun Catalog.sortRow(track: CatalogTrack, addedAt: Instant?): SortRow {
         familyPosition = families.indexOfFirst { it.id == placed.familyId }.takeIf { it >= 0 },
         order = placed.order,
         isUserTrack = UserTrackId.isUserTrack(track.id),
-        channel = track.channel,
+        // What its row shows: a credit sorts in its channel's place.
+        channel = track.artist,
         addedAt = addedAt
     )
 }
