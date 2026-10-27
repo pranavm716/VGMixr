@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -208,8 +209,13 @@ fun ThumbnailTile(path: String, height: Dp, modifier: Modifier = Modifier) {
 @Composable
 fun ThumbnailArt(path: String, modifier: Modifier, width: Dp = 360.dp) {
     val widthPx = with(LocalDensity.current) { width.roundToPx() }
-    val image by produceState<ImageBitmap?>(null, path, widthPx) {
-        value = withContext(Dispatchers.IO) { decodeThumbnail(path, widthPx) }
+    // Starts from the cache, so art moving to another spot (a swiped-in track becoming the
+    // current one) shows at once instead of blanking while it decodes again.
+    val image by produceState(thumbnails[path to widthPx], path, widthPx) {
+        if (value == null) {
+            value = withContext(Dispatchers.IO) { decodeThumbnail(path, widthPx) }
+                ?.also { thumbnails.put(path to widthPx, it) }
+        }
     }
     val decoded = image
     if (decoded == null) {
@@ -218,6 +224,11 @@ fun ThumbnailArt(path: String, modifier: Modifier, width: Dp = 360.dp) {
         Image(decoded, null, modifier.clip(ArtShape), contentScale = ContentScale.Crop)
     }
 }
+
+// Decoded thumbnails by path and width, up to an eighth of the app's memory.
+private val thumbnails = SizedLruCache<Pair<String, Int>, ImageBitmap>(
+    Runtime.getRuntime().maxMemory() / 8
+) { it.asAndroidBitmap().allocationByteCount }
 
 /** The image at [path], scaled down by halves while it stays at least [widthPx] wide. */
 private fun decodeThumbnail(path: String, widthPx: Int): ImageBitmap? {
