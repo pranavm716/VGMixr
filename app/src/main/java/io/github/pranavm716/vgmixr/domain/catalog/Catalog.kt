@@ -44,7 +44,8 @@ data class Family(val id: String, val name: String, val label: String)
  * first source was marked. Only user tracks have a [channel] (the video's), a [remixOf] (the
  * catalog track they remix), a [thumbnail] (its file's path, once downloaded) and a [videoTitle]
  * (the video's own title, which [title] replaces with the original's while linked) and an [addedAt]
- * (when its link was pasted).
+ * (when its link was pasted). A user track's [credit], when set, shows instead of its channel:
+ * [artist] is what shows.
  */
 data class CatalogTrack(
     val id: String,
@@ -55,6 +56,7 @@ data class CatalogTrack(
     val sources: List<Source>,
     val unplayable: BrokenReason? = null,
     val channel: String? = null,
+    val credit: String? = null,
     val remixOf: String? = null,
     val thumbnail: String? = null,
     val videoTitle: String? = null,
@@ -63,7 +65,10 @@ data class CatalogTrack(
     val offline: Boolean = false,
     /** Left the manifest; shown greyed in playlists only. */
     val retired: Boolean = false
-)
+) {
+    /** The name under a user track's title: its credit, or its channel. */
+    val artist: String? get() = credit ?: channel
+}
 
 /** Whether the track is greyed and skipped: broken, retired, or offline and not on the phone. */
 val CatalogTrack.dimmed: Boolean get() = unplayable != null || offline || retired

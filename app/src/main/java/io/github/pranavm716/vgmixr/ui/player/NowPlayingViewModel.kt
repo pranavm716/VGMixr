@@ -158,7 +158,7 @@ private fun Catalog.nowPlaying(
         chips = track.games.map { ChipUi(it.shortName, it.color) },
         familyId = track.familyId,
         thumbnail = track.thumbnail,
-        subtitle = track.channel,
+        subtitle = track.artist,
         opensRemixes = UserTrackId.isUserTrack(track.id),
         playingFrom = playingFrom,
         isPlaying = state.isPlaying,

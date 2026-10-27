@@ -133,6 +133,6 @@ private fun CatalogTrack.toRow(added: Boolean) = EditPlaylistRowUi(
     unplayable = dimmed,
     added = added,
     thumbnail = thumbnail,
-    subtitle = channel,
+    subtitle = artist,
     familyId = familyId
 )

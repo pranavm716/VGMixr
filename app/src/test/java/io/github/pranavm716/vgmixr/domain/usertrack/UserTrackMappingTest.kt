@@ -102,4 +102,18 @@ class UserTrackMappingTest {
             userTrack(remixOf = "rse-retired").toCatalogTrack(catalog, null).title
         )
     }
+
+    @Test
+    fun `a credit carries over and shows instead of the channel`() {
+        val track = userTrack().copy(credit = "Super Smash Bros. Brawl")
+            .toCatalogTrack(catalog, unplayable = null)
+        assertEquals("Super Smash Bros. Brawl", track.credit)
+        assertEquals("GlitchxCity", track.channel)
+        assertEquals("Super Smash Bros. Brawl", track.artist)
+    }
+
+    @Test
+    fun `without a credit the channel shows`() {
+        assertEquals("GlitchxCity", userTrack().toCatalogTrack(catalog, unplayable = null).artist)
+    }
 }

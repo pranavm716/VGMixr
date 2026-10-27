@@ -119,7 +119,7 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
             // A retired track that is playing plays to its end; queued, it is skipped.
             unplayable = track.dimmed && !(track.retired && index == queue.current),
             thumbnail = track.thumbnail,
-            subtitle = track.channel,
+            subtitle = track.artist,
             familyId = track.familyId
         )
     }

@@ -26,7 +26,7 @@ import java.time.Instant
         OfflineVideoEntity::class,
         OfflineVideoTrackEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2, spec = DropTrackCategory::class),
@@ -38,7 +38,9 @@ import java.time.Instant
         // 5 to 6: each playlist's sort (roadmap step 15b), two nullable columns.
         AutoMigration(from = 5, to = 6),
         // 6 to 7: downloaded and cached videos (roadmap step 13), two new tables.
-        AutoMigration(from = 6, to = 7)
+        AutoMigration(from = 6, to = 7),
+        // 7 to 8: a user track's credit, one nullable column.
+        AutoMigration(from = 7, to = 8)
     ]
 )
 @TypeConverters(Converters::class)

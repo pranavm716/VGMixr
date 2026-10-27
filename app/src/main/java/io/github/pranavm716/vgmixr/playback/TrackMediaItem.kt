@@ -51,7 +51,7 @@ fun trackMediaItem(
         .setMediaMetadata(
             MediaMetadata.Builder()
                 .setTitle(track.title)
-                .setArtist(track.channel ?: familyName)
+                .setArtist(track.artist ?: familyName)
                 .setArtworkUri(artworkUri)
                 .setExtras(
                     Bundle().apply {

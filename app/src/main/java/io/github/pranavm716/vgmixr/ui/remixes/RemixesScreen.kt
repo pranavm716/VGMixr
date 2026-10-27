@@ -84,6 +84,7 @@ fun RemixesTab(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val download by viewModel.download.collectAsStateWithLifecycle()
+    val creditDialog by viewModel.creditDialog.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
     ScrollToTopOnReselect(reselects, listState)
     var handledScrolls by rememberSaveable { mutableIntStateOf(0) }
@@ -107,6 +108,8 @@ fun RemixesTab(
         onTrackLongClick = onAddToPlaylist,
         onStartLinking = viewModel::onStartLinking,
         onStartDeleting = viewModel::onStartDeleting,
+        onStartCrediting = viewModel::onStartCrediting,
+        onCredit = viewModel::onOpenCredit,
         onDone = viewModel::onDone,
         onLink = onOpenLink,
         onDelete = viewModel::onDelete,
@@ -115,15 +118,23 @@ fun RemixesTab(
         onReverseSort = viewModel::onReverseSort,
         download = download
     )
+    creditDialog?.let {
+        CreditDialog(
+            it,
+            onPick = viewModel::onPickCredit,
+            onAdd = viewModel::onAddCredit,
+            onDismiss = viewModel::onDismissCredit
+        )
+    }
 }
 
 /**
  * The Remixes tab: the tracks added from YouTube, newest first, each with its video's thumbnail,
  * its original's game chips and its channel. A tap plays Remixes from that track, a swipe right
  * queues it and a long press opens Add to playlist for it. The menu by the title holds Link, which
- * gives every row a chevron and opens its Link page on a tap, and Delete, which gives every row a
- * trash can that deletes it; either lasts until Done (or back). The buttons slide in from the
- * right edge.
+ * gives every row a chevron and opens its Link page on a tap, Credit, which gives every row a
+ * pencil and opens its credit dialog on a tap, and Delete, which gives every row a trash can that
+ * deletes it; each lasts until Done (or back). The buttons slide in from the right edge.
  */
 @Composable
 fun RemixesScreen(
@@ -137,6 +148,8 @@ fun RemixesScreen(
     onLink: (String) -> Unit,
     onDelete: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onStartCrediting: () -> Unit = {},
+    onCredit: (String) -> Unit = {},
     listState: LazyListState = rememberLazyListState(),
     onSortKey: (SortKey) -> Unit = {},
     onReverseSort: () -> Unit = {},
@@ -164,7 +177,12 @@ fun RemixesScreen(
                     modifier = Modifier.padding(end = 8.dp)
                 ) { Text(stringResource(R.string.done)) }
 
-                else -> RemixesMenu(onStartLinking, onStartDeleting, Modifier.padding(end = 4.dp))
+                else -> RemixesMenu(
+                    onStartLinking,
+                    onStartCrediting,
+                    onStartDeleting,
+                    Modifier.padding(end = 4.dp)
+                )
             }
         }
         if (state !is RemixesUiState.Loaded) return@Column
@@ -202,6 +220,7 @@ fun RemixesScreen(
                         onClick = when (mode) {
                             RemixesMode.NORMAL -> ({ onTrackClick(row.id) })
                             RemixesMode.LINK -> ({ onLink(row.id) })
+                            RemixesMode.CREDIT -> ({ onCredit(row.id) })
                             RemixesMode.DELETE -> null
                         },
                         onLongClick = if (mode == RemixesMode.NORMAL) {
@@ -219,10 +238,11 @@ fun RemixesScreen(
     }
 }
 
-/** The header's menu: Link and Delete. */
+/** The header's menu: Link, Credit and Delete. */
 @Composable
 private fun RemixesMenu(
     onStartLinking: () -> Unit,
+    onStartCrediting: () -> Unit,
     onStartDeleting: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -247,6 +267,13 @@ private fun RemixesMenu(
                 }
             )
             DropdownMenuItem(
+                text = { Text(stringResource(R.string.credit)) },
+                onClick = {
+                    expanded = false
+                    onStartCrediting()
+                }
+            )
+            DropdownMenuItem(
                 text = { Text(stringResource(R.string.delete)) },
                 onClick = {
                     expanded = false
@@ -259,7 +286,7 @@ private fun RemixesMenu(
 
 /**
  * A row's end in [mode]: nothing normally; in link mode a chevron (the row's tap opens the Link
- * page); in delete mode a trash can, the only thing that deletes. It slides in from the right edge,
+ * page); in credit mode a pencil (the row's tap opens its credit dialog); in delete mode a trash can, the only thing that deletes. It slides in from the right edge,
  * and the room it takes grows with it, so the title gives way smoothly.
  */
 @Composable
@@ -298,6 +325,14 @@ private fun ModeButton(mode: RemixesMode, title: String, onDelete: () -> Unit) {
                         painterResource(R.drawable.ic_delete),
                         contentDescription = stringResource(R.string.delete_named, title)
                     )
+                }
+
+                // The row's tap opens the dialog; the pencil only shows what it does.
+                RemixesMode.CREDIT -> Box(
+                    Modifier.size(48.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(painterResource(R.drawable.ic_edit), contentDescription = null)
                 }
 
                 // The row's tap does the linking; the chevron only shows where it leads.

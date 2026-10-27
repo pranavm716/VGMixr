@@ -92,6 +92,6 @@ private fun Catalog.miniTrack(trackId: String?): MiniTrackUi? {
         title = track.title,
         chips = track.games.map { ChipUi(it.shortName, it.color) },
         thumbnail = track.thumbnail,
-        subtitle = track.channel
+        subtitle = track.artist
     )
 }
