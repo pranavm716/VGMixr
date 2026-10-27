@@ -1,7 +1,6 @@
 package io.github.pranavm716.vgmixr.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Box
@@ -19,6 +18,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,8 +42,8 @@ import io.github.pranavm716.vgmixr.ui.theme.VGMixrColors
 
 /**
  * A search field as a pill: the search icon, the query, a clear button once there is one. Its
- * edges line up with the rows' thumbnails below, and it takes an accent outline while focused.
- * The Search tab, "Add tracks" and "Link to original" use it.
+ * edges line up with the rows' thumbnails below. The Search tab, "Add tracks" and "Link to
+ * original" use it.
  */
 @Composable
 fun SearchField(
@@ -75,11 +75,6 @@ fun SearchField(
                     .height(48.dp)
                     .clip(CircleShape)
                     .background(VGMixrColors.field)
-                    .border(
-                        1.5.dp,
-                        if (focused) MaterialTheme.colorScheme.primary else Color.Transparent,
-                        CircleShape
-                    )
                     .padding(start = 14.dp, end = 6.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
