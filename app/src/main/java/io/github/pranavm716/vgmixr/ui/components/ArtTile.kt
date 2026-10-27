@@ -17,8 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -210,11 +210,14 @@ fun ThumbnailTile(path: String, height: Dp, modifier: Modifier = Modifier) {
 fun ThumbnailArt(path: String, modifier: Modifier, width: Dp = 360.dp) {
     val widthPx = with(LocalDensity.current) { width.roundToPx() }
     // Starts from the cache, so art moving to another spot (a swiped-in track becoming the
-    // current one) shows at once instead of blanking while it decodes again.
-    val image by produceState(thumbnails[path to widthPx], path, widthPx) {
-        if (value == null) {
-            value = withContext(Dispatchers.IO) { decodeThumbnail(path, widthPx) }
-                ?.also { thumbnails.put(path to widthPx, it) }
+    // current one) shows at once instead of blanking while it decodes again. Keyed by the path,
+    // so a new path never shows the old image.
+    val key = path to widthPx
+    var image by remember(key) { mutableStateOf(thumbnails[key]) }
+    LaunchedEffect(key) {
+        if (image == null) {
+            image = withContext(Dispatchers.IO) { decodeThumbnail(path, widthPx) }
+                ?.also { thumbnails.put(key, it) }
         }
     }
     val decoded = image
