@@ -117,9 +117,9 @@ _TRACK_NUMBER = re.compile(
     re.IGNORECASE,
 )
 _NOISE = {
-    "pokemon", "ost", "soundtrack", "music", "bgm", "hq", "hd", "gba", "nds", "ds", "3ds", "gb",
-    "gbc", "switch", "official", "audio", "game", "theme", "version", "versions", "ver", "vs",
-    "and", "the", "of", "a", "1080p", "720p", "4k", "rip",
+    "pokemon", "zelda", "legend", "ost", "soundtrack", "music", "bgm", "hq", "hd", "gba", "nds",
+    "ds", "3ds", "gb", "gbc", "switch", "official", "audio", "game", "theme", "version", "versions",
+    "ver", "vs", "and", "the", "of", "a", "1080p", "720p", "4k", "rip",
 }  # fmt: skip
 # Single words that change what a video is. Matched as whole words.
 _FLAGS = {

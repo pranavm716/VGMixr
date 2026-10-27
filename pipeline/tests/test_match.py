@@ -193,6 +193,24 @@ def test_album_chapters_come_last_with_their_slice() -> None:
     assert videos.calls.count(f"video {vid(50)}") == 1
 
 
+def test_a_track_an_album_covers_is_never_searched() -> None:
+    album = Video(vid(50), "Ruby OST", 120_000, [Chapter("01. Somewhere Else", 0, None)])
+    youtube = config(playlists=[{"games": ["emerald"], "playlist": E_LIST}],
+                     albums=[{"games": ["ruby", "sapphire"], "video": vid(50)}])  # fmt: skip
+    videos = FakeVideos({E_LIST: []}, videos={vid(50): album})
+    run(draft(track("Route 101", games=["ruby"])), videos, youtube)
+    assert not [c for c in videos.calls if c.startswith("search")]
+
+
+def test_a_track_no_album_covers_is_still_searched() -> None:
+    album = Video(vid(50), "Emerald OST", 120_000, [Chapter("01. Somewhere Else", 0, None)])
+    youtube = config(playlists=[{"games": ["ruby"], "playlist": RS_LIST}],
+                     albums=[{"games": ["emerald"], "video": vid(50)}])  # fmt: skip
+    videos = FakeVideos({RS_LIST: []}, videos={vid(50): album})
+    run(draft(track("Route 101", games=["ruby"])), videos, youtube)
+    assert [c for c in videos.calls if c.startswith("search")]
+
+
 def test_at_most_three_accepted_sources_best_first() -> None:
     youtube = config(playlists=[
         {"games": ["ruby"], "playlist": RS_LIST},

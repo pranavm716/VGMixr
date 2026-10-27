@@ -212,6 +212,20 @@ class SearchTest {
     }
 
     @Test
+    fun `zelda finds Breath of the Wild's tracks`() {
+        val botw = listOf(game("botw", "botw", "Breath of the Wild", "BotW", null))
+        val catalog = Catalog(
+            games = botw,
+            families = listOf(Family("botw", "Breath of the Wild", "BotW")),
+            tracks = listOf(track("botw-hateno-village-day", botw, "Hateno Village (Day)", 1))
+        )
+        assertEquals(
+            listOf("botw-hateno-village-day"),
+            search("zelda", SearchIndex(catalog)).map { it.id }
+        )
+    }
+
+    @Test
     fun `a region combines with title words`() {
         assertEquals(listOf("hgss-route-29", "hgss-pokegear-radio-route-101"), ids("johto route"))
     }
