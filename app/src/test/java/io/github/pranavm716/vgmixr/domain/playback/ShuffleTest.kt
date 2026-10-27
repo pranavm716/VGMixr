@@ -3,6 +3,7 @@ package io.github.pranavm716.vgmixr.domain.playback
 import kotlin.random.Random
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 private const val SEED = 1
@@ -151,6 +152,49 @@ class ShuffleTest {
     @Test
     fun `a list already in order is left alone`() {
         assertEquals(emptyList<QueueEdit>(), inOrder.unshuffle())
+    }
+
+    private val many = (0 until 20).map { "t$it" }
+    private val recent = (0 until 8).map { "t$it" }.toSet()
+
+    @Test
+    fun `tapping with shuffle on plays the tapped track first even if recent, then 10 fresh`() {
+        val queue = PlayQueue(listOf(at("x", 0)) + queued("q1"), current = 0)
+        repeat(30) { seed ->
+            val edit = queue.playFrom(many, rse, 3, shuffle = true, Random(seed), recent)
+
+            assertEquals("t3", edit.entries[0].trackId)
+            assertEquals(queued("q1"), edit.entries.subList(1, 2))
+            val rest = edit.entries.drop(2).map { it.trackId }
+            assertEquals((many - "t3").sorted(), rest.sorted())
+            assertTrue(rest.take(10).none { it in recent })
+        }
+    }
+
+    @Test
+    fun `playing all with shuffle on opens with a fresh track and keeps recent ones back`() {
+        repeat(30) { seed ->
+            val ids = PlayQueue.EMPTY.playAll(many, rse, shuffle = true, Random(seed), recent)
+                .entries.map { it.trackId }
+
+            assertTrue(ids.take(11).none { it in recent })
+        }
+    }
+
+    @Test
+    fun `turning shuffle on keeps recent tracks out of the first 10 of next from`() {
+        val queue = PlayQueue(
+            many.mapIndexed { i, id -> at(id, i) } + listOf(at("z", 20)),
+            current = 20
+        ).let { PlayQueue(listOf(at("z", 20)) + queued("q1") + it.entries.dropLast(1), 0) }
+        repeat(30) { seed ->
+            val after = queue.applying(queue.shuffle(Random(seed), recent))
+
+            assertEquals(listOf("z", "q1"), after.ids().take(2))
+            val next = after.nextFromContext.map { it.trackId }
+            assertEquals(many.sorted(), next.sorted())
+            assertTrue(next.take(10).none { it in recent })
+        }
     }
 
     @Test
