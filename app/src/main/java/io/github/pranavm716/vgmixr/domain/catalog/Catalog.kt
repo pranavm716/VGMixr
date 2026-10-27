@@ -70,6 +70,5 @@ data class CatalogTrack(
     val artist: String? get() = credit ?: channel
 }
 
-
 /** Whether the track is greyed and skipped: broken, retired, or offline and not on the phone. */
 val CatalogTrack.dimmed: Boolean get() = unplayable != null || offline || retired

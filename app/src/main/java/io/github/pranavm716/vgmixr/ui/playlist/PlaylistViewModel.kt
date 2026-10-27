@@ -198,7 +198,7 @@ private fun Catalog.playlistState(playlist: Playlist?, playingId: String?): Play
             unplayable = track.dimmed && !(track.retired && track.id == playingId),
             playing = track.id == playingId,
             thumbnail = track.thumbnail,
-            subtitle = track.channel,
+            subtitle = track.artist,
             familyId = track.familyId
         )
     }

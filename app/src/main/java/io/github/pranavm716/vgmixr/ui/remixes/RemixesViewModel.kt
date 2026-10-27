@@ -20,6 +20,8 @@ import io.github.pranavm716.vgmixr.domain.sort.playableUserTrackIds
 import io.github.pranavm716.vgmixr.domain.sort.sortedUserTracks
 import io.github.pranavm716.vgmixr.domain.usertrack.RestoreThumbnails
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackRepository
+import io.github.pranavm716.vgmixr.domain.usertrack.creditChoices
+import io.github.pranavm716.vgmixr.domain.usertrack.creditFor
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.SortUi
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
@@ -37,15 +39,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/** What a tap on a Remixes row does: play it, open its Link page, or (its trash can) delete it. */
-enum class RemixesMode { NORMAL, LINK, DELETE }
+/**
+ * What a tap on a Remixes row does: play it, open its Link page, open its credit dialog, or (its
+ * trash can) delete it.
+ */
+enum class RemixesMode { NORMAL, LINK, CREDIT, DELETE }
 
 sealed interface RemixesUiState {
     data object Loading : RemixesUiState
 
     /**
      * The user tracks in [sort]; none shows the empty state. In a [mode] other than normal, each
-     * row ends in that mode's button: a chevron to link it, a trash can to delete it.
+     * row ends in that mode's button: a chevron to link it, a pencil to credit it, a trash can to
+     * delete it.
      */
     data class Loaded(
         val rows: List<RemixRowUi>,
@@ -62,7 +68,7 @@ sealed interface RemixesUiState {
 
 /**
  * A user track's row: its title over its original's game chips (none if it remixes nothing) and
- * its [channel]. [thumbnail] is its thumbnail file's path, null until it is downloaded.
+ * its [channel] (its credit, when it has one). [thumbnail] is its thumbnail file's path, null until it is downloaded.
  */
 data class RemixRowUi(
     val id: String,
@@ -72,6 +78,19 @@ data class RemixRowUi(
     val thumbnail: String?,
     val unplayable: Boolean = false,
     val playing: Boolean = false
+)
+
+/**
+ * The credit dialog for user track [trackId], shown under its row's [title]: its own [channel]
+ * first, then the other names Remixes shows ([choices]). [selected] is its credit, null while its
+ * channel shows.
+ */
+data class CreditDialogUi(
+    val trackId: String,
+    val title: String,
+    val channel: String,
+    val choices: List<String>,
+    val selected: String?
 )
 
 @HiltViewModel
@@ -86,6 +105,7 @@ class RemixesViewModel @Inject constructor(
     restoreThumbnails: RestoreThumbnails? = null
 ) : ViewModel() {
     private val mode = MutableStateFlow(RemixesMode.NORMAL)
+    private val creditTrackId = MutableStateFlow<String?>(null)
 
     init {
         // While Remixes is open: missing thumbnails come back whenever the phone is online.
@@ -107,6 +127,22 @@ class RemixesViewModel @Inject constructor(
         }
             .flowOn(dispatcher)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), RemixesUiState.Loading)
+
+    /** The open credit dialog, if any (credit mode's row tap opens it). */
+    val creditDialog: StateFlow<CreditDialogUi?> =
+        combine(creditTrackId, userTracks.userTracks, catalog.catalog) { id, tracks, catalog ->
+            val track = tracks.firstOrNull { it.id == id } ?: return@combine null
+            CreditDialogUi(
+                trackId = track.id,
+                // The title as its row shows it: the original's, while linked.
+                title = catalog.track(track.id)?.title ?: track.title,
+                channel = track.channel,
+                choices = creditChoices(tracks, track),
+                selected = track.credit
+            )
+        }
+            .flowOn(dispatcher)
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     /** How much of Remixes is downloaded, for the sort row's icon. */
     val download: StateFlow<OfflineProgress?> =
@@ -188,6 +224,39 @@ class RemixesViewModel @Inject constructor(
         mode.value = RemixesMode.LINK
     }
 
+    /** The menu's Credit: every row gets a pencil, and a tap opens its credit dialog. */
+    fun onStartCrediting() {
+        mode.value = RemixesMode.CREDIT
+    }
+
+    /** Opens user track [trackId]'s credit dialog. */
+    fun onOpenCredit(trackId: String) {
+        creditTrackId.value = trackId
+    }
+
+    /** A choice in the dialog: a name, or null for the track's own channel. */
+    fun onPickCredit(name: String?) = saveCredit(name.orEmpty())
+
+    /** The dialog's New name: a blank one saves nothing. */
+    fun onAddCredit(typed: String) {
+        if (typed.isNotBlank()) saveCredit(typed)
+    }
+
+    fun onDismissCredit() {
+        creditTrackId.value = null
+    }
+
+    // Closes the dialog and stays in credit mode, so the next row can be credited.
+    private fun saveCredit(name: String) {
+        val dialog = creditDialog.value ?: return
+        creditTrackId.value = null
+        viewModelScope.launch {
+            val own = userTracks.userTracks.first().firstOrNull { it.id == dialog.trackId }
+                ?: return@launch
+            userTracks.setCredit(own.id, creditFor(name, own, dialog.choices))
+        }
+    }
+
     /** Done, or back: the rows go back to normal. */
     fun onDone() {
         mode.value = RemixesMode.NORMAL
@@ -213,7 +282,7 @@ class RemixesViewModel @Inject constructor(
         id = id,
         title = title,
         chips = games.map { ChipUi(it.shortName, it.color) },
-        channel = channel,
+        channel = artist,
         thumbnail = thumbnail,
         unplayable = dimmed,
         playing = id == playingId

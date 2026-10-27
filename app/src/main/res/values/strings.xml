@@ -83,6 +83,11 @@
     <string name="playing_from_queue">Queue</string>
     <string name="playing_from_remixes">Remixes</string>
     <string name="link">Link</string>
+    <string name="credit">Credit</string>
+    <string name="credit_channel">Channel</string>
+    <string name="credit_new_name">New name</string>
+    <string name="credit_name_hint">Artist or game</string>
+    <string name="credit_add">Add</string>
     <string name="link_to_original">Link to original</string>
     <string name="linked_to">Linked to</string>
     <string name="clear_link">Clear link</string>

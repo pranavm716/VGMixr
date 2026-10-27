@@ -42,16 +42,15 @@ class SearchUserTracksTest {
         channel: String,
         remixOf: String?,
         credit: String? = null
-    ) =
-        UserTrack(
-            videoId = videoId,
-            title = title,
-            channel = channel,
-            durationMs = null,
-            addedAt = Instant.EPOCH,
-            remixOf = remixOf,
-            credit = credit
-        ).toCatalogTrack(catalogOnly, unplayable = null)
+    ) = UserTrack(
+        videoId = videoId,
+        title = title,
+        channel = channel,
+        durationMs = null,
+        addedAt = Instant.EPOCH,
+        remixOf = remixOf,
+        credit = credit
+    ).toCatalogTrack(catalogOnly, unplayable = null)
 
     // Newest first, as the catalog lists them.
     private val catalog = catalogOnly.copy(

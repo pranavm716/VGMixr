@@ -168,5 +168,5 @@ private fun CatalogTrack.toRow(playingId: String?) = SearchRowUi(
     playing = id == playingId,
     familyId = familyId,
     thumbnail = thumbnail,
-    subtitle = channel
+    subtitle = artist
 )
