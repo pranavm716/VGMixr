@@ -5,6 +5,7 @@ import app.cash.turbine.test
 import io.github.pranavm716.vgmixr.data.db.FAVORITES_PLAYLIST_ID
 import io.github.pranavm716.vgmixr.data.db.PlaylistEntity
 import io.github.pranavm716.vgmixr.data.db.PlaylistEntryEntity
+import io.github.pranavm716.vgmixr.data.db.UserTrackEntity
 import io.github.pranavm716.vgmixr.data.db.inMemoryDatabase
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
@@ -52,6 +53,7 @@ class RoomPlaylistRepositoryTest {
             PlaylistEntity(name = "Later", createdAt = Instant.ofEpochMilli(1_000))
         )
         entry(FAVORITES_PLAYLIST_ID, "rse-route-101")
+        db.userTrackDao().insert(remix("abc"))
         entry(FAVORITES_PLAYLIST_ID, "yt:abc")
         entry(mix, "rse-route-101")
 
@@ -331,6 +333,35 @@ class RoomPlaylistRepositoryTest {
         )
 
         assertEquals(SortKeys.playlistDefault, repository.playlist(9).first()?.sort)
+    }
+
+    private fun remix(videoId: String) = UserTrackEntity(
+        id = "yt:$videoId",
+        videoId = videoId,
+        startMs = 0,
+        endMs = null,
+        title = "Remix",
+        channel = "Channel",
+        durationMs = null,
+        addedAt = Instant.EPOCH,
+        remixOf = null
+    )
+
+    @Test
+    fun `counts leave out deleted remixes, and keep the rest`() = runTest(dispatcher) {
+        db.userTrackDao().insert(remix("kept"))
+        entry(FAVORITES_PLAYLIST_ID, "yt:kept")
+        // A deleted remix's entry stays, so Undo or a re-share brings it back.
+        entry(FAVORITES_PLAYLIST_ID, "yt:deleted")
+        // Catalog ids never leave the tracks table; a retired track is still listed.
+        entry(FAVORITES_PLAYLIST_ID, "rse-route-101")
+
+        repository.playlists.test {
+            assertEquals(2, awaitItem().single().trackCount)
+
+            db.userTrackDao().delete("yt:kept")
+            assertEquals(1, awaitItem().single().trackCount)
+        }
     }
 
     private class MutableClock(var instant: Instant) : Clock() {
