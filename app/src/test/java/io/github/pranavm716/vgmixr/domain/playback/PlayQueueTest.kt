@@ -160,4 +160,35 @@ class PlayQueueTest {
         assertEquals(QueueContext.Playlist(7), QueueContext.fromKey(QueueContext.Playlist(7).key))
         assertEquals(null, QueueContext.fromKey("playlist:abc"))
     }
+
+    @Test
+    fun `removing a track takes out each of its entries, keeping the current one`() {
+        val queue = PlayQueue(context("x", "a") + queued("x") + context("b", "x"), current = 1)
+
+        val edits = queue.removeTrack("x")
+
+        assertEquals(PlayQueue(context("a", "b"), current = 0), queue.applying(edits))
+    }
+
+    @Test
+    fun `removing the playing track moves on to the entry after it, as the player does`() {
+        val queue = PlayQueue(context("a", "x", "b", "x", "c"), current = 1)
+
+        assertEquals(
+            PlayQueue(context("a", "b", "c"), current = 1),
+            queue.applying(queue.removeTrack("x"))
+        )
+    }
+
+    @Test
+    fun `removing the playing last track leaves the one before it current`() {
+        val queue = PlayQueue(context("a", "x"), current = 1)
+
+        assertEquals(PlayQueue(context("a"), current = 0), queue.applying(queue.removeTrack("x")))
+    }
+
+    @Test
+    fun `removing a track the queue doesn't have changes nothing`() {
+        assertEquals(emptyList<QueueEdit>(), PlayQueue(context("a"), current = 0).removeTrack("x"))
+    }
 }

@@ -197,6 +197,7 @@ class RemixesViewModel @Inject constructor(
             // The title as the row showed it: the original's, while linked.
             val shown = catalog.catalog.first().track(trackId)?.title ?: track.title
             userTracks.delete(trackId)
+            playback.removeTrack(trackId)
             messages.post(UserMessage.RemixDeleted(track, shown))
         }
     }

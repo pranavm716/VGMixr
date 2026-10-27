@@ -24,7 +24,9 @@ fun Catalog.sortedUserTracks(sort: SortSetting): List<CatalogTrack> =
  * went into it. Deleted remixes are left out.
  */
 fun Catalog.playlistTracks(playlist: Playlist): List<CatalogTrack> =
-    sorted(playlist.trackIds.mapNotNull(::playlistTrack), playlist.sort) { playlist.addedAt[it.id] }
+    sorted(playlist.trackIds.mapNotNull(::trackOrRetired), playlist.sort) {
+        playlist.addedAt[it.id]
+    }
 
 /** What a tap in family [familyId] plays: its list in [sort], without greyed tracks. */
 fun Catalog.playableFamilyTrackIds(familyId: String, sort: SortSetting): List<String> =

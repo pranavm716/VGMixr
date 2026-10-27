@@ -149,6 +149,9 @@ class MediaControllerPlaybackController @Inject constructor(
 
     override fun removeFromQueue(index: Int) = withController { it.apply(it.queue().remove(index)) }
 
+    override fun removeTrack(trackId: String) =
+        withController { it.apply(it.queue().removeTrack(trackId)) }
+
     override fun clearQueue() = withController { it.apply(it.queue().clearQueue()) }
 
     override suspend fun tryAgain(trackId: String): TryAgainResult =

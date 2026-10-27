@@ -85,7 +85,7 @@ private fun Catalog.miniPlayer(state: PlaybackState): MiniPlayerUiState {
 }
 
 private fun Catalog.miniTrack(trackId: String?): MiniTrackUi? {
-    val track = trackId?.let { track(it) } ?: return null
+    val track = trackId?.let { trackOrRetired(it) } ?: return null
     return MiniTrackUi(
         trackId = track.id,
         familyId = track.familyId,

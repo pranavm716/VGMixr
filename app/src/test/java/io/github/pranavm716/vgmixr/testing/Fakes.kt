@@ -77,6 +77,8 @@ class FakePlaybackController : PlaybackController {
 
     data class RemoveFromQueue(val index: Int)
 
+    data class RemoveTrack(val trackId: String)
+
     data object ClearQueue
 
     data class TryAgain(val trackId: String)
@@ -118,6 +120,10 @@ class FakePlaybackController : PlaybackController {
 
     override fun jumpTo(index: Int) {
         calls += JumpTo(index)
+    }
+
+    override fun removeTrack(trackId: String) {
+        calls += RemoveTrack(trackId)
     }
 
     override fun removeFromQueue(index: Int) {

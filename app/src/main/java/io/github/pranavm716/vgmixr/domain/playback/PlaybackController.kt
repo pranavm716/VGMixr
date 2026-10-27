@@ -58,6 +58,9 @@ interface PlaybackController {
     /** Removes upcoming queue entry [index], from "Next in queue" or "Next from". */
     fun removeFromQueue(index: Int)
 
+    /** Takes every entry of [trackId] out of the queue, the playing one too. */
+    fun removeTrack(trackId: String)
+
     /** Empties "Next in queue". */
     fun clearQueue()
 

@@ -50,6 +50,7 @@ import io.github.pranavm716.vgmixr.domain.playback.QueueEntry
 import io.github.pranavm716.vgmixr.domain.playback.ResolveFailure
 import io.github.pranavm716.vgmixr.domain.playback.ShuffleSetting
 import io.github.pranavm716.vgmixr.domain.playback.SourceFailure
+import io.github.pranavm716.vgmixr.domain.playback.leftCatalog
 import io.github.pranavm716.vgmixr.domain.playback.nextSource
 import io.github.pranavm716.vgmixr.domain.playback.onSourceFailure
 import io.github.pranavm716.vgmixr.domain.playback.playableStreams
@@ -199,6 +200,26 @@ class PlaybackService : MediaSessionService() {
             )
             .build()
         player.addListener(Failover(player, session))
+        // Queued tracks that leave the catalog (a new manifest, a deleted remix) become items
+        // with no source, so the player skips them; the playing one plays to its end.
+        scope.launch {
+            catalog.filterNotNull().collect { catalog ->
+                for (index in catalog.leftCatalog(player.queue())) {
+                    val item = player.getMediaItemAt(index)
+                    if (item.localConfiguration?.uri?.toString() == NO_SOURCE_URI) continue
+                    player.replaceMediaItem(
+                        index,
+                        catalog.itemFor(
+                            item.mediaId,
+                            item.context,
+                            item.listIndex,
+                            item.sourceIndex,
+                            artwork
+                        )
+                    )
+                }
+            }
+        }
         player.addListener(PlayRecording(player))
         player.addListener(Shuffling(player, shuffleSetting, recentPlays))
         player.addListener(

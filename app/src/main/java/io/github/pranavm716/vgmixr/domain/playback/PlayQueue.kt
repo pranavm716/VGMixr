@@ -184,6 +184,15 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
         emptyList()
     }
 
+    /**
+     * Takes every entry of [trackId] out, the playing one too (a deleted remix): the player then
+     * plays the entry after it, keeping play or pause. Last first, so earlier indices hold.
+     */
+    fun removeTrack(trackId: String): List<QueueEdit> = entries.indices
+        .filter { entries[it].trackId == trackId }
+        .sortedDescending()
+        .map { QueueEdit.Remove(it, it + 1) }
+
     /** Empties "Next in queue"; the current track keeps playing. */
     fun clearQueue(): List<QueueEdit> = if (upNext.isEmpty()) {
         emptyList()
@@ -305,7 +314,15 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
                 rest.take(edit.newIndex) + moving + rest.drop(edit.newIndex)
             }
         }
-        return PlayQueue(result.map { it.first }, result.indexOfFirst { it.second })
+        val kept = result.indexOfFirst { it.second }
+        // A removed current entry hands over to the one after it, or the last, as the player does.
+        val removedAt = (edit as? QueueEdit.Remove)?.takeIf { current in it.from until it.to }?.from
+        val newCurrent = if (kept < 0 && removedAt != null) {
+            removedAt.coerceAtMost(result.size - 1)
+        } else {
+            kept
+        }
+        return PlayQueue(result.map { it.first }, newCurrent)
     }
 
     companion object {

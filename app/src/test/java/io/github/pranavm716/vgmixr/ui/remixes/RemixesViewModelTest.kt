@@ -219,6 +219,16 @@ class RemixesViewModelTest {
     }
 
     @Test
+    fun `deleting a remix takes it out of the queue`() = runTest {
+        viewModel().onDelete("yt:CCCCCCCCCCC")
+
+        assertEquals(
+            listOf(FakePlaybackController.RemoveTrack("yt:CCCCCCCCCCC")),
+            playback.calls
+        )
+    }
+
+    @Test
     fun `the menu's Link turns link mode on, and Done turns it off`() = runTest {
         val viewModel = viewModel()
         viewModel.uiState.test {

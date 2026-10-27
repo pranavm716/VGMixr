@@ -119,7 +119,7 @@ class PlaylistViewModel @Inject constructor(
     fun onTrackClick(trackId: String) {
         viewModelScope.launch {
             val catalog = catalog.catalog.first()
-            val track = catalog.playlistTrack(trackId) ?: return@launch
+            val track = catalog.trackOrRetired(trackId) ?: return@launch
             if (track.retired) {
                 messages.post(UserMessage.TrackRetired(track.title))
                 return@launch
@@ -178,7 +178,7 @@ class PlaylistViewModel @Inject constructor(
     /** Adds one track to "Next in queue"; a greyed track can't be queued. */
     fun onQueueTrack(trackId: String) {
         viewModelScope.launch {
-            val track = catalog.catalog.first().playlistTrack(trackId)
+            val track = catalog.catalog.first().trackOrRetired(trackId)
             if (track == null || track.dimmed) return@launch
             playback.addToQueue(listOf(trackId))
             messages.post(UserMessage.AddedToQueue(1))

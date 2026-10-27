@@ -9,7 +9,8 @@ import java.time.Instant
  * The browsable catalog: non-retired games and tracks only. [games] are in manifest order, and
  * [families] in the order of each family's first game. [userTracks] are the tracks added from
  * YouTube: [track] finds them, but family browsing reads only [tracks]. [retiredTracks] left the
- * manifest; only playlists list them (greyed), through [playlistTrack].
+ * manifest; playlists list them greyed, and the player shows one still playing or queued, through
+ * [trackOrRetired].
  */
 data class Catalog(
     val games: List<Game>,
@@ -29,8 +30,8 @@ data class Catalog(
         retiredTracks.associateBy { it.id }
     }
 
-    /** What a playlist entry shows: [track], or the retired track with [id]. */
-    fun playlistTrack(id: String): CatalogTrack? = byId[id] ?: retiredById[id]
+    /** [track], or the retired track with [id]: for playlists and the queue. */
+    fun trackOrRetired(id: String): CatalogTrack? = byId[id] ?: retiredById[id]
 }
 
 /** A derived family. [name] and [label] come from its non-retired games, in manifest order. */

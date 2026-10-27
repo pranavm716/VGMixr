@@ -71,7 +71,11 @@ class QueueViewModel @Inject constructor(
     fun onJump(index: Int) {
         viewModelScope.launch {
             val trackId = playback.state.value.queue.entries.getOrNull(index)?.trackId
-            val track = trackId?.let { repository.catalog.first().track(it) }
+            val track = trackId?.let { repository.catalog.first().trackOrRetired(it) }
+            if (track?.retired == true && index != playback.state.value.queue.current) {
+                messages.post(UserMessage.TrackRetired(track.title))
+                return@launch
+            }
             if (track?.offline == true) {
                 messages.post(UserMessage.TrackOffline(track.title))
                 return@launch
@@ -106,13 +110,14 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
     val queue = state.queue
     if (queue.current !in queue.entries.indices) return QueueUiState.EMPTY
     fun row(index: Int): QueueRowUi? {
-        val track = track(queue.entries[index].trackId) ?: return null
+        val track = trackOrRetired(queue.entries[index].trackId) ?: return null
         return QueueRowUi(
             index = index,
             trackId = track.id,
             title = track.title,
             chips = track.games.map { ChipUi(it.shortName, it.color) },
-            unplayable = track.dimmed,
+            // A retired track that is playing plays to its end; queued, it is skipped.
+            unplayable = track.dimmed && !(track.retired && index == queue.current),
             thumbnail = track.thumbnail,
             subtitle = track.channel,
             familyId = track.familyId

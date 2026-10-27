@@ -393,4 +393,19 @@ class NowPlayingViewModelTest {
             assertEquals(false, (awaitItem() as NowPlayingUiState.Visible).opensRemixes)
         }
     }
+
+    @Test
+    fun `a playing track that left the catalog stays shown`() = runTest {
+        val retired =
+            CatalogTrack("rse-old", "rse", listOf(ruby), "Old", 2, emptyList(), retired = true)
+        playback.state.value = playing(QueueContext.Family("rse"), trackId = "rse-old")
+
+        NowPlayingViewModel(
+            FakeCatalogRepository(catalog.copy(retiredTracks = listOf(retired))),
+            playback,
+            playlists
+        ).uiState.test {
+            assertEquals("Old", (awaitItem() as NowPlayingUiState.Visible).title)
+        }
+    }
 }
