@@ -34,6 +34,7 @@ sealed interface NowPlayingUiState {
      * which slides in while the art is swiped; null at the queue's ends.
      */
     data class Visible(
+        val trackId: String,
         val title: String,
         val chips: List<ChipUi>,
         val familyId: String?,
@@ -154,6 +155,7 @@ private fun Catalog.nowPlaying(
         QueueContext.Remixes -> PlayingFromUi.Remixes
     }
     return NowPlayingUiState.Visible(
+        trackId = track.id,
         title = track.title,
         chips = track.games.map { ChipUi(it.shortName, it.color) },
         familyId = track.familyId,

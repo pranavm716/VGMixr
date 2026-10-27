@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.DraggableState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -39,6 +40,17 @@ class TrackSwipeState {
 
     var hasPrevious = false
     var hasNext = false
+
+    // The track a skip left, while settle waits for the player to switch.
+    private var skippedFrom by mutableStateOf<String?>(null)
+
+    /**
+     * Where to draw the content while [currentId] is the current track: [offset], except once a
+     * skip's track has changed, when the new current track belongs in place. Drawing with [offset]
+     * there would center its neighbour for a frame, until [settle] resets it.
+     */
+    fun offsetFor(currentId: String?): Float =
+        if (skippedFrom != null && currentId != skippedFrom) 0f else offset
 
     // How far the finger has moved: the offset toward a neighbour, else what the stretch follows.
     private var raw = 0f
@@ -79,9 +91,14 @@ class TrackSwipeState {
             if (offset != 0f) animate(offset, 0f) { value, _ -> offset = value }
         } else {
             animate(offset, skip.first) { value, _ -> offset = value }
-            skip.second()
-            withTimeoutOrNull(1_000) { snapshotFlow { trackId() }.first { it != before } }
-            offset = 0f
+            skippedFrom = before
+            try {
+                skip.second()
+                withTimeoutOrNull(1_000) { snapshotFlow { trackId() }.first { it != before } }
+            } finally {
+                offset = 0f
+                skippedFrom = null
+            }
         }
         raw = 0f
     }

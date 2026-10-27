@@ -74,6 +74,7 @@ class NowPlayingViewModelTest {
         viewModel.uiState.test {
             assertEquals(
                 NowPlayingUiState.Visible(
+                    trackId = "rse-a",
                     title = "Route 101",
                     chips = listOf(ChipUi("R", "#336699"), ChipUi("S", "#336699")),
                     familyId = "rse",

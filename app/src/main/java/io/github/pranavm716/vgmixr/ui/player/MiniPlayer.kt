@@ -194,8 +194,10 @@ fun MiniPlayer(
                     state.track to 0,
                     state.next?.let { it to 1 }
                 )
-                fun slot(side: Int) =
-                    IntOffset((swipe.offset + side * swipe.widthPx).roundToInt(), 0)
+                fun slot(side: Int) = IntOffset(
+                    (swipe.offsetFor(state.track.trackId) + side * swipe.widthPx).roundToInt(),
+                    0
+                )
                 // The tints slide whole, under everything.
                 tracks.forEach { (track, side) -> TrackTint(track) { slot(side) } }
                 // The tiles and text slide too, but fade out just before the button, which stays

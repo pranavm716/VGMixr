@@ -1,5 +1,11 @@
 package io.github.pranavm716.vgmixr.ui.player
 
+import androidx.compose.runtime.MonotonicFrameClock
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -69,5 +75,30 @@ class TrackSwipeStateTest {
         assertTrue(resisted(20f, limit) > resisted(10f, limit))
         assertTrue(resisted(1_000_000f, limit) < limit)
         assertEquals(-resisted(50f, limit), resisted(-50f, limit))
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `once the track has changed the new current track is drawn in place, not its neighbour`() =
+        runTest {
+            val swipe = swipe(hasPrevious = true, hasNext = true)
+            swipe.draggable.dispatchRawDelta(-500f)
+            val settling = launch {
+                withContext(FrameClock) { swipe.settle(0f, {}, {}) { "a" } }
+            }
+            runCurrent()
+            // Slid fully toward the next track, waiting for the player to switch.
+            assertEquals(-width, swipe.offsetFor("a"))
+            // The frame that brings the new track (and its new neighbours) draws it centered.
+            assertEquals(0f, swipe.offsetFor("b"))
+            settling.cancel()
+        }
+
+    private object FrameClock : MonotonicFrameClock {
+        private var nanos = 0L
+        override suspend fun <R> withFrameNanos(onFrame: (Long) -> R): R {
+            nanos += 16_000_000L
+            return onFrame(nanos)
+        }
     }
 }
