@@ -4,6 +4,7 @@ import androidx.room.withTransaction
 import io.github.pranavm716.vgmixr.data.db.CatalogDao
 import io.github.pranavm716.vgmixr.data.db.GameEntity
 import io.github.pranavm716.vgmixr.data.db.SourceEntity
+import io.github.pranavm716.vgmixr.data.db.TrackEntity
 import io.github.pranavm716.vgmixr.data.db.VGMixrDatabase
 import io.github.pranavm716.vgmixr.data.usertrack.toDomain
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
@@ -67,11 +68,11 @@ class RoomCatalogRepository @Inject constructor(
         val marks = db.brokenStreamDao().all()
             .filter { it.videoId !in onPhone }
             .associateBy { it.videoId }
-        val tracks = dao.activeTracks().map { track ->
+        fun build(track: TrackEntity): CatalogTrack {
             val subset = subsets[track.id]
             val streams = sources[track.id].orEmpty().filter { it.type == SourceEntity.TYPE_STREAM }
             val streamMarks = streams.map { marks[it.videoId] }
-            CatalogTrack(
+            return CatalogTrack(
                 id = track.id,
                 familyId = track.familyId,
                 games = games.filter { game ->
@@ -82,10 +83,18 @@ class RoomCatalogRepository @Inject constructor(
                 sources = sources[track.id].orEmpty().map { it.toDomain() },
                 unplayable = streamMarks.takeIf { it.isNotEmpty() && null !in it }
                     ?.firstOrNull()
-                    ?.let { BrokenReason.fromKey(it.reason) }
+                    ?.let { BrokenReason.fromKey(it.reason) },
+                retired = track.retired
             )
         }
-        val catalog = Catalog(games, families, tracks)
+        // All retired tracks, not only those in a playlist: playlist writes don't re-read the
+        // catalog, so an undone removal must find its track already here.
+        val catalog = Catalog(
+            games,
+            families,
+            dao.activeTracks().map(::build),
+            retiredTracks = dao.retiredTracks().map(::build)
+        )
         val userTracks = db.userTrackDao().allNewestFirst().map { entity ->
             entity.toDomain().toCatalogTrack(
                 catalog,

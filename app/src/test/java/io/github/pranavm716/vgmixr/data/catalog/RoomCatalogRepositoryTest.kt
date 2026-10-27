@@ -172,4 +172,26 @@ class RoomCatalogRepositoryTest {
             expectNoEvents()
         }
     }
+
+    @Test
+    fun `retired tracks are kept apart, marked retired, for playlists to show`() =
+        runTest(dispatcher) {
+            importer.import(manifest(games = rse, tracks = listOf(track("rse-a"), track("rse-b"))))
+            importer.import(
+                manifest(
+                    generatedAt = "2026-10-14T08:00:00Z",
+                    games = rse,
+                    tracks = listOf(track("rse-a"))
+                )
+            )
+
+            val catalog = repository.catalog.first()
+
+            assertEquals(listOf("rse-a"), catalog.tracks.map { it.id })
+            val retired = catalog.retiredTracks.single()
+            assertEquals("rse-b", retired.id)
+            assertEquals(true, retired.retired)
+            assertEquals(rse, retired.games)
+            assertEquals(false, catalog.tracks.single().retired)
+        }
 }

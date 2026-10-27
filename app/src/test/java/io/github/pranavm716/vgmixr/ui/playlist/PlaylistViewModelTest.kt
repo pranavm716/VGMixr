@@ -270,4 +270,44 @@ class PlaylistViewModelTest {
             assertEquals(OfflineProgress(1, 2), awaitItem())
         }
     }
+
+    private val retired =
+        CatalogTrack("rse-old", "rse", listOf(ruby), "Old Theme", 9, emptyList(), retired = true)
+
+    private fun retiredViewModel() = PlaylistViewModel(
+        SavedStateHandle(mapOf("playlistId" to 1L)),
+        FakeCatalogRepository(catalog.copy(retiredTracks = listOf(retired))),
+        playlists.apply {
+            contents.value = mapOf(1L to Playlist(1, "Favorites", true, listOf("rse-old", "rse-a")))
+        },
+        playback,
+        messages,
+        main.dispatcher
+    )
+
+    @Test
+    fun `a retired track is listed greyed`() = runTest {
+        retiredViewModel().uiState.test {
+            val rows = (awaitItem() as PlaylistUiState.Loaded).rows
+            assertEquals(listOf("rse-old", "rse-a"), rows.map { it.id })
+            assertEquals(listOf(true, false), rows.map { it.unplayable })
+        }
+    }
+
+    @Test
+    fun `a tap on a retired track says it left the catalog, and plays nothing`() = runTest {
+        messages.messages.test {
+            retiredViewModel().onTrackClick("rse-old")
+
+            assertEquals(UserMessage.TrackRetired("Old Theme"), awaitItem())
+            assertEquals(emptyList<Any>(), playback.calls)
+        }
+    }
+
+    @Test
+    fun `a retired track can't be queued`() = runTest {
+        retiredViewModel().onQueueTrack("rse-old")
+
+        assertEquals(emptyList<Any>(), playback.calls)
+    }
 }

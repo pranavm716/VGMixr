@@ -57,6 +57,19 @@ class OfflineSyncTest {
         assertEquals(listOf("b", "a", "yt:old", "yt:new", "c", "d"), order)
     }
 
+    @Test
+    fun `retired tracks in a playlist aren't downloaded`() {
+        val withRetired = catalog.copy(retiredTracks = listOf(track("old").copy(retired = true)))
+
+        val order = downloadOrder(
+            withRetired,
+            playlists = listOf(playlist(1, true, "old", "a")),
+            remixSort = byTitle
+        )
+
+        assertEquals(listOf("a", "yt:new", "yt:old"), order)
+    }
+
     private class FakeStore : OfflineStore {
         val state = MutableStateFlow<Map<String, OfflineEntry>>(emptyMap())
         override val entries: Flow<Map<String, OfflineEntry>> = state

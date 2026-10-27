@@ -65,6 +65,9 @@ interface CatalogDao {
     @Query("SELECT * FROM tracks WHERE retired = 0 ORDER BY id")
     suspend fun activeTracks(): List<TrackEntity>
 
+    @Query("SELECT * FROM tracks WHERE retired = 1 ORDER BY id")
+    suspend fun retiredTracks(): List<TrackEntity>
+
     @Query("SELECT * FROM track_games")
     suspend fun allTrackGames(): List<TrackGameEntity>
 
