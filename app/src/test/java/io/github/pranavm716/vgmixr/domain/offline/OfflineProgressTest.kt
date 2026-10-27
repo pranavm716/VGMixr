@@ -32,4 +32,12 @@ class OfflineProgressTest {
         assertEquals(listOf("b", "c", "a"), recentTrackIds(plays, since = Instant.EPOCH))
         assertEquals(listOf("b", "c"), recentTrackIds(plays, since = at(2)))
     }
+
+    @Test
+    fun `progress leaves out retired tracks, which are never downloaded`() {
+        val tracks = listOf(track("a"), track("old").copy(retired = true))
+
+        assertEquals(OfflineProgress(1, 1), offlineProgress(tracks, setOf("a")))
+        assertEquals(OfflineProgress(1, 1), offlineProgress(tracks, setOf("a", "old")))
+    }
 }

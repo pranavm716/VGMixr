@@ -17,7 +17,8 @@ data class OfflineProgress(val done: Int, val total: Int) {
  * if it is on the phone, since it would never download otherwise.
  */
 fun offlineProgress(tracks: List<CatalogTrack>, onPhone: Set<String>): OfflineProgress {
-    val counted = tracks.filter { it.id in onPhone || it.unplayable == null }
+    // Retired tracks are never downloaded; broken ones count only if downloaded before they broke.
+    val counted = tracks.filter { !it.retired && (it.id in onPhone || it.unplayable == null) }
     return OfflineProgress(counted.count { it.id in onPhone }, counted.size)
 }
 
