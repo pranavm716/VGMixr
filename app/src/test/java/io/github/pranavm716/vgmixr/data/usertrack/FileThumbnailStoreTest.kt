@@ -121,4 +121,17 @@ class FileThumbnailStoreTest {
 
         assertNull(store.file("AAAAAAAAAAA"))
     }
+
+    @Test
+    fun `the version goes up when a new thumbnail lands, and only then`() = runTest(dispatcher) {
+        images["/vi/AAAAAAAAAAA/maxresdefault.jpg"] = byteArrayOf(1)
+
+        assertEquals(0, store.version.value)
+        store.download("BBBBBBBBBBB")
+        assertEquals(0, store.version.value)
+        store.download("AAAAAAAAAAA")
+        assertEquals(1, store.version.value)
+        store.download("AAAAAAAAAAA")
+        assertEquals(1, store.version.value)
+    }
 }

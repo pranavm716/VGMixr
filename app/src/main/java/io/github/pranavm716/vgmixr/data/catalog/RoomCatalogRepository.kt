@@ -19,6 +19,7 @@ import io.github.pranavm716.vgmixr.domain.usertrack.ThumbnailStore
 import io.github.pranavm716.vgmixr.domain.usertrack.toCatalogTrack
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
@@ -47,6 +48,8 @@ class RoomCatalogRepository @Inject constructor(
                 "user_tracks",
                 "offline_videos"
             )
+            // A thumbnail downloaded later changes no table, so its store says when to re-read.
+            .combine(thumbnails.version) { _, _ -> }
             .map { db.withTransaction { load() } }
             // A download's progress touches offline_videos without changing the catalog.
             .distinctUntilChanged()

@@ -4,6 +4,8 @@ import io.github.pranavm716.vgmixr.domain.usertrack.ThumbnailStore
 import java.io.File
 import java.io.IOException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -18,6 +20,8 @@ class FileThumbnailStore(
     private val io: CoroutineDispatcher,
     private val baseUrl: String = "https://i.ytimg.com/vi/"
 ) : ThumbnailStore {
+    override val version = MutableStateFlow(0)
+
     override fun file(videoId: String): File? = fileFor(videoId).takeIf { it.isFile }
 
     override suspend fun download(videoId: String): Boolean = withContext(io) {
@@ -28,7 +32,7 @@ class FileThumbnailStore(
         // Written whole, then renamed, so a half-written file is never shown.
         val part = File(dir, "$videoId.part")
         part.writeBytes(image)
-        part.renameTo(fileFor(videoId))
+        part.renameTo(fileFor(videoId)).also { if (it) version.update { v -> v + 1 } }
     }
 
     override suspend fun delete(videoId: String) {
