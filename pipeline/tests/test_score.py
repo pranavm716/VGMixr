@@ -96,6 +96,18 @@ def test_noise_is_stripped_before_comparing(video: str) -> None:
     assert title_similarity(facts("Route 101"), video, NAMES) == 1.0
 
 
+@pytest.mark.parametrize(
+    "video", ["The Legend of Zelda OST - Hateno Village", "Hateno Village | Zelda Music"]
+)
+def test_zelda_franchise_words_are_noise(video: str) -> None:
+    assert title_similarity(facts("Hateno Village"), video, NAMES) == 1.0
+
+
+def test_zeldas_in_a_track_title_is_still_compared() -> None:
+    assert title_similarity(facts("Zelda's Wish"), "Zelda's Wish", NAMES) == 1.0
+    assert title_similarity(facts("Zelda's Wish"), "Wish", NAMES) < 1.0
+
+
 def test_accents_ampersands_and_apostrophes_compare_equal() -> None:
     track = facts("Battle! (Wild Pokémon)")
     assert title_similarity(track, "Battle Wild Pokemon", NAMES) == 1.0
