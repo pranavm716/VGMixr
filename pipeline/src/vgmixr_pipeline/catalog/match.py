@@ -211,7 +211,8 @@ class _Matcher:
         return self._playlist_noise[playlist_id]
 
     def _search_candidates(self, track: DraftTrack, facts: TrackFacts) -> Iterable[Candidate]:
-        if not self._search:
+        # An album's chapters already lay out its tracks; searching would only add noise.
+        if not self._search or any(facts.games & set(a.games) for a in self._youtube.albums):
             return
         query = search_query(facts, [self._games[g] for g in self._family_games[track.family]])
         for entry in self._videos.search(query, SEARCH_RESULTS):

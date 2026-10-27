@@ -155,7 +155,7 @@
       { "games": ["plza"], "playlist": "PL90nj2rNFfbcE2HR8S2TNT_h2DjM1nDGb" }
     ],
     "albums": [
-      { "games": ["botw"], "video": "JYaid9Uc56Y", "note": "Full OST, 220 chapters; Great Fairy Fountain's chapter starts 11 s early" }
+      { "games": ["botw"], "video": "JYaid9Uc56Y", "note": "Full OST. YouTube made no chapters from its timestamps (sub-10 s tracks), so the slices are accept overrides from tracklists/botw.tsv; the entry keeps BotW from being searched" }
     ],
     "aliases": {
       "botw": ["BotW", "Zelda Breath of the Wild"],
