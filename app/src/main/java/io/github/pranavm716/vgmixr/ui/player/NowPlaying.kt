@@ -188,8 +188,8 @@ fun NowPlayingScreen(
     ) {
         // Everything between the header and the title swipes: left for the next track, right for
         // the previous one. One drag state over the three pieces makes them one touch area.
-        val trackId by viewModel.trackId.collectAsStateWithLifecycle()
-        val currentTrackId by rememberUpdatedState(trackId)
+        // The id comes with the art it names, so a swipe settles in the frame the art changes.
+        val currentTrackId by rememberUpdatedState(visible.trackId)
         val swipe = rememberTrackSwipeState(visible.previous != null, visible.next != null)
         val swipeArea = Modifier
             .fillMaxWidth()
@@ -205,7 +205,8 @@ fun NowPlayingScreen(
         Spacer(Modifier.weight(ABOVE_ART).then(swipeArea))
         // Only the art slides; the title and tint switch once the player has.
         Box(swipeArea.clipToBounds().onSizeChanged { swipe.widthPx = it.width.toFloat() }) {
-            fun slot(side: Int) = IntOffset((swipe.offset + side * swipe.widthPx).roundToInt(), 0)
+            fun slot(side: Int) =
+                IntOffset((swipe.offsetFor(visible.trackId) + side * swipe.widthPx).roundToInt(), 0)
             visible.previous?.let { TrackArt(it) { slot(-1) } }
             TrackArt(
                 NowPlayingArt(visible.familyId, visible.thumbnail),
