@@ -229,9 +229,12 @@ fun ThumbnailArt(path: String, modifier: Modifier, width: Dp = 360.dp) {
 }
 
 // Decoded thumbnails by path and width, up to an eighth of the app's memory.
-private val thumbnails = SizedLruCache<Pair<String, Int>, ImageBitmap>(
-    Runtime.getRuntime().maxMemory() / 8
-) { it.asAndroidBitmap().allocationByteCount }
+private val thumbnails = object : LruCache<Pair<String, Int>, ImageBitmap>(
+    (Runtime.getRuntime().maxMemory() / 8).toInt()
+) {
+    override fun sizeOf(key: Pair<String, Int>, value: ImageBitmap) =
+        value.asAndroidBitmap().allocationByteCount
+}
 
 /** The image at [path], scaled down by halves while it stays at least [widthPx] wide. */
 private fun decodeThumbnail(path: String, widthPx: Int): ImageBitmap? {
