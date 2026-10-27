@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-27T21:23:06Z",
+  "generatedAt": "2026-10-27T21:40:40Z",
   "games": [
     {
       "id": "red",
@@ -37862,30 +37862,15 @@
       ]
     },
     {
-      "id": "botw-kakariko-village-day",
+      "id": "botw-kakariko-village",
       "family": "botw",
-      "title": "Kakariko Village (Day)",
+      "title": "Kakariko Village",
       "order": 19,
       "sources": [
         {
           "type": "stream",
           "videoId": "JYaid9Uc56Y",
           "startMs": 2028000,
-          "endMs": 2253000,
-          "confidence": 1.0
-        }
-      ]
-    },
-    {
-      "id": "botw-kakariko-village-night",
-      "family": "botw",
-      "title": "Kakariko Village (Night)",
-      "order": 20,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "JYaid9Uc56Y",
-          "startMs": 2253000,
           "endMs": 2425000,
           "confidence": 1.0
         }
@@ -37895,7 +37880,7 @@
       "id": "botw-impas-story",
       "family": "botw",
       "title": "Impa's Story",
-      "order": 21,
+      "order": 20,
       "sources": [
         {
           "type": "stream",
@@ -37910,7 +37895,7 @@
       "id": "botw-ancient-folklore",
       "family": "botw",
       "title": "Ancient Folklore",
-      "order": 22,
+      "order": 21,
       "sources": [
         {
           "type": "stream",
@@ -37922,30 +37907,15 @@
       ]
     },
     {
-      "id": "botw-hateno-village-day",
+      "id": "botw-hateno-village",
       "family": "botw",
-      "title": "Hateno Village (Day)",
-      "order": 23,
+      "title": "Hateno Village",
+      "order": 22,
       "sources": [
         {
           "type": "stream",
           "videoId": "JYaid9Uc56Y",
           "startMs": 2728000,
-          "endMs": 2863000,
-          "confidence": 1.0
-        }
-      ]
-    },
-    {
-      "id": "botw-hateno-village-night",
-      "family": "botw",
-      "title": "Hateno Village (Night)",
-      "order": 24,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "JYaid9Uc56Y",
-          "startMs": 2863000,
           "endMs": 3077000,
           "confidence": 1.0
         }
@@ -37955,7 +37925,7 @@
       "id": "botw-hateno-ancient-tech-lab",
       "family": "botw",
       "title": "Hateno Ancient Tech Lab",
-      "order": 25,
+      "order": 23,
       "sources": [
         {
           "type": "stream",
@@ -37970,7 +37940,7 @@
       "id": "botw-great-fairy-revival",
       "family": "botw",
       "title": "Great Fairy Revival",
-      "order": 26,
+      "order": 24,
       "sources": [
         {
           "type": "stream",
@@ -37985,7 +37955,7 @@
       "id": "botw-great-fairy-fountain",
       "family": "botw",
       "title": "Great Fairy Fountain",
-      "order": 27,
+      "order": 25,
       "sources": [
         {
           "type": "stream",
@@ -38000,7 +37970,7 @@
       "id": "botw-field-night",
       "family": "botw",
       "title": "Field (Night)",
-      "order": 28,
+      "order": 26,
       "sources": [
         {
           "type": "stream",
@@ -38015,7 +37985,7 @@
       "id": "botw-kasss-theme",
       "family": "botw",
       "title": "Kass's Theme",
-      "order": 29,
+      "order": 27,
       "sources": [
         {
           "type": "stream",
@@ -38030,7 +38000,7 @@
       "id": "botw-kass-ancient-song",
       "family": "botw",
       "title": "Kass \"Ancient Song\"",
-      "order": 30,
+      "order": 28,
       "sources": [
         {
           "type": "stream",
@@ -38045,7 +38015,7 @@
       "id": "botw-stables",
       "family": "botw",
       "title": "Stables",
-      "order": 31,
+      "order": 29,
       "sources": [
         {
           "type": "stream",
@@ -38060,7 +38030,7 @@
       "id": "botw-kass-song-of-tradition",
       "family": "botw",
       "title": "Kass \"Song of Tradition\"",
-      "order": 32,
+      "order": 30,
       "sources": [
         {
           "type": "stream",
@@ -38075,7 +38045,7 @@
       "id": "botw-riding-night",
       "family": "botw",
       "title": "Riding (Night)",
-      "order": 33,
+      "order": 31,
       "sources": [
         {
           "type": "stream",
@@ -38090,7 +38060,7 @@
       "id": "botw-blessing-shrine",
       "family": "botw",
       "title": "Blessing Shrine",
-      "order": 34,
+      "order": 32,
       "sources": [
         {
           "type": "stream",
@@ -38105,7 +38075,7 @@
       "id": "botw-hinox-battle",
       "family": "botw",
       "title": "Hinox Battle",
-      "order": 35,
+      "order": 33,
       "sources": [
         {
           "type": "stream",
@@ -38120,7 +38090,7 @@
       "id": "botw-waterfront",
       "family": "botw",
       "title": "Waterfront",
-      "order": 36,
+      "order": 34,
       "sources": [
         {
           "type": "stream",
@@ -38135,7 +38105,7 @@
       "id": "botw-watch-out-for-the-flowers",
       "family": "botw",
       "title": "Watch Out for the Flowers!",
-      "order": 37,
+      "order": 35,
       "sources": [
         {
           "type": "stream",
@@ -38150,7 +38120,7 @@
       "id": "botw-encounter-with-sidon",
       "family": "botw",
       "title": "Encounter with Sidon",
-      "order": 38,
+      "order": 36,
       "sources": [
         {
           "type": "stream",
@@ -38165,7 +38135,7 @@
       "id": "botw-sidons-theme",
       "family": "botw",
       "title": "Sidon's Theme",
-      "order": 39,
+      "order": 37,
       "sources": [
         {
           "type": "stream",
@@ -38177,30 +38147,15 @@
       ]
     },
     {
-      "id": "botw-zoras-domain-day",
+      "id": "botw-zoras-domain",
       "family": "botw",
-      "title": "Zora's Domain (Day)",
-      "order": 40,
+      "title": "Zora's Domain",
+      "order": 38,
       "sources": [
         {
           "type": "stream",
           "videoId": "JYaid9Uc56Y",
           "startMs": 4888000,
-          "endMs": 5032000,
-          "confidence": 1.0
-        }
-      ]
-    },
-    {
-      "id": "botw-zoras-domain-night",
-      "family": "botw",
-      "title": "Zora's Domain (Night)",
-      "order": 41,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "JYaid9Uc56Y",
-          "startMs": 5032000,
           "endMs": 5236000,
           "confidence": 1.0
         }
@@ -38210,7 +38165,7 @@
       "id": "botw-divine-beast-vah-ruta",
       "family": "botw",
       "title": "Divine Beast Vah Ruta",
-      "order": 42,
+      "order": 39,
       "sources": [
         {
           "type": "stream",
@@ -38225,7 +38180,7 @@
       "id": "botw-links-memories-miphas-touch",
       "family": "botw",
       "title": "Link's Memories \"Mipha's Touch\"",
-      "order": 43,
+      "order": 40,
       "sources": [
         {
           "type": "stream",
@@ -38240,7 +38195,7 @@
       "id": "botw-attack-on-vah-ruta",
       "family": "botw",
       "title": "Attack on Vah Ruta",
-      "order": 44,
+      "order": 41,
       "sources": [
         {
           "type": "stream",
@@ -38255,7 +38210,7 @@
       "id": "botw-a-promise-with-sidon",
       "family": "botw",
       "title": "A Promise with Sidon",
-      "order": 45,
+      "order": 42,
       "sources": [
         {
           "type": "stream",
@@ -38270,7 +38225,7 @@
       "id": "botw-divine-beast-vah-ruta-dungeon",
       "family": "botw",
       "title": "Divine Beast Vah Ruta (Dungeon)",
-      "order": 46,
+      "order": 43,
       "sources": [
         {
           "type": "stream",
@@ -38285,7 +38240,7 @@
       "id": "botw-battle-divine-beast",
       "family": "botw",
       "title": "Battle (Divine Beast)",
-      "order": 47,
+      "order": 44,
       "sources": [
         {
           "type": "stream",
@@ -38300,7 +38255,7 @@
       "id": "botw-blight-ganon-appears",
       "family": "botw",
       "title": "Blight Ganon Appears",
-      "order": 48,
+      "order": 45,
       "sources": [
         {
           "type": "stream",
@@ -38315,7 +38270,7 @@
       "id": "botw-waterblight-ganon-battle",
       "family": "botw",
       "title": "Waterblight Ganon Battle",
-      "order": 49,
+      "order": 46,
       "sources": [
         {
           "type": "stream",
@@ -38330,7 +38285,7 @@
       "id": "botw-a-heart-container-appears",
       "family": "botw",
       "title": "A Heart Container Appears",
-      "order": 50,
+      "order": 47,
       "sources": [
         {
           "type": "stream",
@@ -38345,7 +38300,7 @@
       "id": "botw-reunion-mipha-miphas-theme",
       "family": "botw",
       "title": "Reunion: Mipha (Mipha's Theme)",
-      "order": 51,
+      "order": 48,
       "sources": [
         {
           "type": "stream",
@@ -38360,7 +38315,7 @@
       "id": "botw-the-champions-divine-gift",
       "family": "botw",
       "title": "The Champion's Divine Gift",
-      "order": 52,
+      "order": 49,
       "sources": [
         {
           "type": "stream",
@@ -38375,7 +38330,7 @@
       "id": "botw-the-grand-divine-beast",
       "family": "botw",
       "title": "The Grand Divine Beast",
-      "order": 53,
+      "order": 50,
       "sources": [
         {
           "type": "stream",
@@ -38390,7 +38345,7 @@
       "id": "botw-mipha-and-the-divine-beast",
       "family": "botw",
       "title": "Mipha and the Divine Beast",
-      "order": 54,
+      "order": 51,
       "sources": [
         {
           "type": "stream",
@@ -38405,7 +38360,7 @@
       "id": "botw-field-freezing-cold",
       "family": "botw",
       "title": "Field (Freezing Cold)",
-      "order": 55,
+      "order": 52,
       "sources": [
         {
           "type": "stream",
@@ -38420,7 +38375,7 @@
       "id": "botw-cave",
       "family": "botw",
       "title": "Cave",
-      "order": 56,
+      "order": 53,
       "sources": [
         {
           "type": "stream",
@@ -38435,7 +38390,7 @@
       "id": "botw-divine-beast-vah-medoh",
       "family": "botw",
       "title": "Divine Beast Vah Medoh",
-      "order": 57,
+      "order": 54,
       "sources": [
         {
           "type": "stream",
@@ -38447,30 +38402,15 @@
       ]
     },
     {
-      "id": "botw-rito-village-day",
+      "id": "botw-rito-village",
       "family": "botw",
-      "title": "Rito Village (Day)",
-      "order": 58,
+      "title": "Rito Village",
+      "order": 55,
       "sources": [
         {
           "type": "stream",
           "videoId": "JYaid9Uc56Y",
           "startMs": 6847000,
-          "endMs": 6979000,
-          "confidence": 1.0
-        }
-      ]
-    },
-    {
-      "id": "botw-rito-village-night",
-      "family": "botw",
-      "title": "Rito Village (Night)",
-      "order": 59,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "JYaid9Uc56Y",
-          "startMs": 6979000,
           "endMs": 7191000,
           "confidence": 1.0
         }
@@ -38480,7 +38420,7 @@
       "id": "botw-links-memories-revalis-flap",
       "family": "botw",
       "title": "Link's Memories \"Revali's Flap\"",
-      "order": 60,
+      "order": 56,
       "sources": [
         {
           "type": "stream",
@@ -38495,7 +38435,7 @@
       "id": "botw-flight-range",
       "family": "botw",
       "title": "Flight Range",
-      "order": 61,
+      "order": 57,
       "sources": [
         {
           "type": "stream",
@@ -38510,7 +38450,7 @@
       "id": "botw-encounter-with-teba",
       "family": "botw",
       "title": "Encounter with Teba",
-      "order": 62,
+      "order": 58,
       "sources": [
         {
           "type": "stream",
@@ -38525,7 +38465,7 @@
       "id": "botw-flight-range-minigame",
       "family": "botw",
       "title": "Flight Range Minigame",
-      "order": 63,
+      "order": 59,
       "sources": [
         {
           "type": "stream",
@@ -38540,7 +38480,7 @@
       "id": "botw-attack-on-vah-medoh",
       "family": "botw",
       "title": "Attack on Vah Medoh",
-      "order": 64,
+      "order": 60,
       "sources": [
         {
           "type": "stream",
@@ -38555,7 +38495,7 @@
       "id": "botw-tebas-encouragement",
       "family": "botw",
       "title": "Teba's Encouragement",
-      "order": 65,
+      "order": 61,
       "sources": [
         {
           "type": "stream",
@@ -38570,7 +38510,7 @@
       "id": "botw-divine-beast-vah-medoh-dungeon",
       "family": "botw",
       "title": "Divine Beast Vah Medoh (Dungeon)",
-      "order": 66,
+      "order": 62,
       "sources": [
         {
           "type": "stream",
@@ -38585,7 +38525,7 @@
       "id": "botw-windblight-ganon-battle",
       "family": "botw",
       "title": "Windblight Ganon Battle",
-      "order": 67,
+      "order": 63,
       "sources": [
         {
           "type": "stream",
@@ -38600,7 +38540,7 @@
       "id": "botw-reunion-revali-revalis-theme",
       "family": "botw",
       "title": "Reunion: Revali (Revali's Theme)",
-      "order": 68,
+      "order": 64,
       "sources": [
         {
           "type": "stream",
@@ -38615,7 +38555,7 @@
       "id": "botw-revali-and-the-divine-beast",
       "family": "botw",
       "title": "Revali and the Divine Beast",
-      "order": 69,
+      "order": 65,
       "sources": [
         {
           "type": "stream",
@@ -38630,7 +38570,7 @@
       "id": "botw-house",
       "family": "botw",
       "title": "House",
-      "order": 70,
+      "order": 66,
       "sources": [
         {
           "type": "stream",
@@ -38645,7 +38585,7 @@
       "id": "botw-snowball-bowling-minigame",
       "family": "botw",
       "title": "Snowball Bowling Minigame",
-      "order": 71,
+      "order": 67,
       "sources": [
         {
           "type": "stream",
@@ -38660,7 +38600,7 @@
       "id": "botw-recital-at-warblers-nest",
       "family": "botw",
       "title": "Recital at Warbler's Nest",
-      "order": 72,
+      "order": 68,
       "sources": [
         {
           "type": "stream",
@@ -38675,7 +38615,7 @@
       "id": "botw-kass-complete-theme",
       "family": "botw",
       "title": "Kass' Complete Theme",
-      "order": 73,
+      "order": 69,
       "sources": [
         {
           "type": "stream",
@@ -38690,7 +38630,7 @@
       "id": "botw-rito-village-kass-and-the-five-sisters-version",
       "family": "botw",
       "title": "Rito Village (Kass and the Five Sisters Version)",
-      "order": 74,
+      "order": 70,
       "sources": [
         {
           "type": "stream",
@@ -38705,7 +38645,7 @@
       "id": "botw-field-scorching-heat",
       "family": "botw",
       "title": "Field (Scorching Heat)",
-      "order": 75,
+      "order": 71,
       "sources": [
         {
           "type": "stream",
@@ -38720,7 +38660,7 @@
       "id": "botw-lava-area",
       "family": "botw",
       "title": "Lava Area",
-      "order": 76,
+      "order": 72,
       "sources": [
         {
           "type": "stream",
@@ -38735,7 +38675,7 @@
       "id": "botw-goron-humming-at-the-mine",
       "family": "botw",
       "title": "Goron Humming at the Mine",
-      "order": 77,
+      "order": 73,
       "sources": [
         {
           "type": "stream",
@@ -38750,7 +38690,7 @@
       "id": "botw-divine-beast-vah-rudania",
       "family": "botw",
       "title": "Divine Beast Vah Rudania",
-      "order": 78,
+      "order": 74,
       "sources": [
         {
           "type": "stream",
@@ -38762,30 +38702,15 @@
       ]
     },
     {
-      "id": "botw-goron-city-day",
+      "id": "botw-goron-city",
       "family": "botw",
-      "title": "Goron City (Day)",
-      "order": 79,
+      "title": "Goron City",
+      "order": 75,
       "sources": [
         {
           "type": "stream",
           "videoId": "JYaid9Uc56Y",
           "startMs": 9490000,
-          "endMs": 9629000,
-          "confidence": 1.0
-        }
-      ]
-    },
-    {
-      "id": "botw-goron-city-night",
-      "family": "botw",
-      "title": "Goron City (Night)",
-      "order": 80,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "JYaid9Uc56Y",
-          "startMs": 9629000,
           "endMs": 9749000,
           "confidence": 1.0
         }
@@ -38795,7 +38720,7 @@
       "id": "botw-abandoned-north-mine",
       "family": "botw",
       "title": "Abandoned North Mine",
-      "order": 81,
+      "order": 76,
       "sources": [
         {
           "type": "stream",
@@ -38810,7 +38735,7 @@
       "id": "botw-encounter-with-yunobo",
       "family": "botw",
       "title": "Encounter with Yunobo",
-      "order": 82,
+      "order": 77,
       "sources": [
         {
           "type": "stream",
@@ -38825,7 +38750,7 @@
       "id": "botw-links-memories-daruks-mettle",
       "family": "botw",
       "title": "Link's Memories \"Daruk's Mettle\"",
-      "order": 83,
+      "order": 78,
       "sources": [
         {
           "type": "stream",
@@ -38840,7 +38765,7 @@
       "id": "botw-attack-on-vah-rudania",
       "family": "botw",
       "title": "Attack on Vah Rudania",
-      "order": 84,
+      "order": 79,
       "sources": [
         {
           "type": "stream",
@@ -38855,7 +38780,7 @@
       "id": "botw-yunobos-big-chance",
       "family": "botw",
       "title": "Yunobo's Big Chance",
-      "order": 85,
+      "order": 80,
       "sources": [
         {
           "type": "stream",
@@ -38870,7 +38795,7 @@
       "id": "botw-divine-beast-vah-rudania-dungeon",
       "family": "botw",
       "title": "Divine Beast Vah Rudania (Dungeon)",
-      "order": 86,
+      "order": 81,
       "sources": [
         {
           "type": "stream",
@@ -38885,7 +38810,7 @@
       "id": "botw-fireblight-ganon-battle",
       "family": "botw",
       "title": "Fireblight Ganon Battle",
-      "order": 87,
+      "order": 82,
       "sources": [
         {
           "type": "stream",
@@ -38900,7 +38825,7 @@
       "id": "botw-reunion-daruk-daruks-theme",
       "family": "botw",
       "title": "Reunion: Daruk (Daruk's Theme)",
-      "order": 88,
+      "order": 83,
       "sources": [
         {
           "type": "stream",
@@ -38915,7 +38840,7 @@
       "id": "botw-daruk-and-the-divine-beast",
       "family": "botw",
       "title": "Daruk and the Divine Beast",
-      "order": 89,
+      "order": 84,
       "sources": [
         {
           "type": "stream",
@@ -38930,7 +38855,7 @@
       "id": "botw-field-intense-heat",
       "family": "botw",
       "title": "Field (Intense Heat)",
-      "order": 90,
+      "order": 85,
       "sources": [
         {
           "type": "stream",
@@ -38945,7 +38870,7 @@
       "id": "botw-divine-beast-vah-naboris",
       "family": "botw",
       "title": "Divine Beast Vah Naboris",
-      "order": 91,
+      "order": 86,
       "sources": [
         {
           "type": "stream",
@@ -38960,7 +38885,7 @@
       "id": "botw-kara-kara-bazaar",
       "family": "botw",
       "title": "Kara Kara Bazaar",
-      "order": 92,
+      "order": 87,
       "sources": [
         {
           "type": "stream",
@@ -38975,7 +38900,7 @@
       "id": "botw-cross-dressing",
       "family": "botw",
       "title": "Cross-dressing",
-      "order": 93,
+      "order": 88,
       "sources": [
         {
           "type": "stream",
@@ -38987,30 +38912,15 @@
       ]
     },
     {
-      "id": "botw-gerudo-town-day",
+      "id": "botw-gerudo-town",
       "family": "botw",
-      "title": "Gerudo Town (Day)",
-      "order": 94,
+      "title": "Gerudo Town",
+      "order": 89,
       "sources": [
         {
           "type": "stream",
           "videoId": "JYaid9Uc56Y",
           "startMs": 11236000,
-          "endMs": 11395000,
-          "confidence": 1.0
-        }
-      ]
-    },
-    {
-      "id": "botw-gerudo-town-night",
-      "family": "botw",
-      "title": "Gerudo Town (Night)",
-      "order": 95,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "JYaid9Uc56Y",
-          "startMs": 11395000,
           "endMs": 11668000,
           "confidence": 1.0
         }
@@ -39020,7 +38930,7 @@
       "id": "botw-encounter-with-riju",
       "family": "botw",
       "title": "Encounter with Riju",
-      "order": 96,
+      "order": 90,
       "sources": [
         {
           "type": "stream",
@@ -39035,7 +38945,7 @@
       "id": "botw-yiga-clan-hideout",
       "family": "botw",
       "title": "Yiga Clan Hideout",
-      "order": 97,
+      "order": 91,
       "sources": [
         {
           "type": "stream",
@@ -39050,7 +38960,7 @@
       "id": "botw-the-arrogant-master-kohga",
       "family": "botw",
       "title": "The Arrogant Master Kohga",
-      "order": 98,
+      "order": 92,
       "sources": [
         {
           "type": "stream",
@@ -39065,7 +38975,7 @@
       "id": "botw-master-kohga-battle",
       "family": "botw",
       "title": "Master Kohga Battle",
-      "order": 99,
+      "order": 93,
       "sources": [
         {
           "type": "stream",
@@ -39080,7 +38990,7 @@
       "id": "botw-links-memories-urbosas-hand",
       "family": "botw",
       "title": "Link's Memories \"Urbosa's Hand\"",
-      "order": 100,
+      "order": 94,
       "sources": [
         {
           "type": "stream",
@@ -39095,7 +39005,7 @@
       "id": "botw-divine-beast-lookout-post",
       "family": "botw",
       "title": "Divine Beast Lookout Post",
-      "order": 101,
+      "order": 95,
       "sources": [
         {
           "type": "stream",
@@ -39110,7 +39020,7 @@
       "id": "botw-attack-on-vah-naboris",
       "family": "botw",
       "title": "Attack on Vah Naboris",
-      "order": 102,
+      "order": 96,
       "sources": [
         {
           "type": "stream",
@@ -39125,7 +39035,7 @@
       "id": "botw-entrusted-by-riju",
       "family": "botw",
       "title": "Entrusted by Riju",
-      "order": 103,
+      "order": 97,
       "sources": [
         {
           "type": "stream",
@@ -39140,7 +39050,7 @@
       "id": "botw-divine-beast-vah-naboris-dungeon",
       "family": "botw",
       "title": "Divine Beast Vah Naboris (Dungeon)",
-      "order": 104,
+      "order": 98,
       "sources": [
         {
           "type": "stream",
@@ -39155,7 +39065,7 @@
       "id": "botw-thunderblight-ganon-battle",
       "family": "botw",
       "title": "Thunderblight Ganon Battle",
-      "order": 105,
+      "order": 99,
       "sources": [
         {
           "type": "stream",
@@ -39170,7 +39080,7 @@
       "id": "botw-reunion-urbosa-urbosas-theme",
       "family": "botw",
       "title": "Reunion: Urbosa (Urbosa's Theme)",
-      "order": 106,
+      "order": 100,
       "sources": [
         {
           "type": "stream",
@@ -39185,7 +39095,7 @@
       "id": "botw-urbosa-and-the-divine-beast",
       "family": "botw",
       "title": "Urbosa and the Divine Beast",
-      "order": 107,
+      "order": 101,
       "sources": [
         {
           "type": "stream",
@@ -39200,7 +39110,7 @@
       "id": "botw-race-start",
       "family": "botw",
       "title": "Race Start",
-      "order": 108,
+      "order": 102,
       "sources": [
         {
           "type": "stream",
@@ -39215,7 +39125,7 @@
       "id": "botw-sand-seal-rally-minigame",
       "family": "botw",
       "title": "Sand-Seal Rally Minigame",
-      "order": 109,
+      "order": 103,
       "sources": [
         {
           "type": "stream",
@@ -39230,7 +39140,7 @@
       "id": "botw-sand-seal-rally-award-ceremony",
       "family": "botw",
       "title": "Sand-Seal Rally Award Ceremony",
-      "order": 110,
+      "order": 104,
       "sources": [
         {
           "type": "stream",
@@ -39245,7 +39155,7 @@
       "id": "botw-test-of-will-minigame",
       "family": "botw",
       "title": "Test of Will Minigame",
-      "order": 111,
+      "order": 105,
       "sources": [
         {
           "type": "stream",
@@ -39260,7 +39170,7 @@
       "id": "botw-molduga-battle",
       "family": "botw",
       "title": "Molduga Battle",
-      "order": 112,
+      "order": 106,
       "sources": [
         {
           "type": "stream",
@@ -39275,7 +39185,7 @@
       "id": "botw-ruins",
       "family": "botw",
       "title": "Ruins",
-      "order": 113,
+      "order": 107,
       "sources": [
         {
           "type": "stream",
@@ -39290,7 +39200,7 @@
       "id": "botw-lost-woods",
       "family": "botw",
       "title": "Lost Woods",
-      "order": 114,
+      "order": 108,
       "sources": [
         {
           "type": "stream",
@@ -39302,30 +39212,15 @@
       ]
     },
     {
-      "id": "botw-korok-forest-day",
+      "id": "botw-korok-forest",
       "family": "botw",
-      "title": "Korok Forest (Day)",
-      "order": 115,
+      "title": "Korok Forest",
+      "order": 109,
       "sources": [
         {
           "type": "stream",
           "videoId": "JYaid9Uc56Y",
           "startMs": 14030000,
-          "endMs": 14125000,
-          "confidence": 1.0
-        }
-      ]
-    },
-    {
-      "id": "botw-korok-forest-night",
-      "family": "botw",
-      "title": "Korok Forest (Night)",
-      "order": 116,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "JYaid9Uc56Y",
-          "startMs": 14125000,
           "endMs": 14304000,
           "confidence": 1.0
         }
@@ -39335,7 +39230,7 @@
       "id": "botw-encounter-with-deku-tree",
       "family": "botw",
       "title": "Encounter with Deku Tree",
-      "order": 117,
+      "order": 110,
       "sources": [
         {
           "type": "stream",
@@ -39350,7 +39245,7 @@
       "id": "botw-master-sword-in-hand",
       "family": "botw",
       "title": "Master Sword in Hand",
-      "order": 118,
+      "order": 111,
       "sources": [
         {
           "type": "stream",
@@ -39365,7 +39260,7 @@
       "id": "botw-memories-of-a-sacred-sword",
       "family": "botw",
       "title": "Memories of a Sacred Sword",
-      "order": 119,
+      "order": 112,
       "sources": [
         {
           "type": "stream",
@@ -39380,7 +39275,7 @@
       "id": "botw-master-sword-the-deku-trees-words",
       "family": "botw",
       "title": "Master Sword ~The Deku Tree's Words~",
-      "order": 120,
+      "order": 113,
       "sources": [
         {
           "type": "stream",
@@ -39395,7 +39290,7 @@
       "id": "botw-akkala-ancient-tech-lab",
       "family": "botw",
       "title": "Akkala Ancient Tech Lab",
-      "order": 121,
+      "order": 114,
       "sources": [
         {
           "type": "stream",
@@ -39410,7 +39305,7 @@
       "id": "botw-possessed-naydra",
       "family": "botw",
       "title": "Possessed Naydra",
-      "order": 122,
+      "order": 115,
       "sources": [
         {
           "type": "stream",
@@ -39425,7 +39320,7 @@
       "id": "botw-dragon-servant-of-the-sacred-spring",
       "family": "botw",
       "title": "Dragon ~Servant of the Sacred Spring~",
-      "order": 123,
+      "order": 116,
       "sources": [
         {
           "type": "stream",
@@ -39440,7 +39335,7 @@
       "id": "botw-omen-of-the-bloody-moon",
       "family": "botw",
       "title": "Omen of the Bloody Moon",
-      "order": 124,
+      "order": 117,
       "sources": [
         {
           "type": "stream",
@@ -39455,7 +39350,7 @@
       "id": "botw-the-blood-moon",
       "family": "botw",
       "title": "The Blood Moon",
-      "order": 125,
+      "order": 118,
       "sources": [
         {
           "type": "stream",
@@ -39470,7 +39365,7 @@
       "id": "botw-recovered-memory",
       "family": "botw",
       "title": "Recovered Memory",
-      "order": 126,
+      "order": 119,
       "sources": [
         {
           "type": "stream",
@@ -39485,7 +39380,7 @@
       "id": "botw-links-memories-subdued-ceremony",
       "family": "botw",
       "title": "Link's Memories \"Subdued Ceremony\"",
-      "order": 127,
+      "order": 120,
       "sources": [
         {
           "type": "stream",
@@ -39500,7 +39395,7 @@
       "id": "botw-links-memories-resolve-and-grief",
       "family": "botw",
       "title": "Link's Memories \"Resolve and Grief\"",
-      "order": 128,
+      "order": 121,
       "sources": [
         {
           "type": "stream",
@@ -39515,7 +39410,7 @@
       "id": "botw-links-memories-blades-of-the-yiga",
       "family": "botw",
       "title": "Link's Memories \"Blades of the Yiga\"",
-      "order": 129,
+      "order": 122,
       "sources": [
         {
           "type": "stream",
@@ -39530,7 +39425,7 @@
       "id": "botw-links-memories-a-premonition",
       "family": "botw",
       "title": "Link's Memories \"A Premonition\"",
-      "order": 130,
+      "order": 123,
       "sources": [
         {
           "type": "stream",
@@ -39545,7 +39440,7 @@
       "id": "botw-links-memories-silent-princess",
       "family": "botw",
       "title": "Link's Memories \"Silent Princess\"",
-      "order": 131,
+      "order": 124,
       "sources": [
         {
           "type": "stream",
@@ -39560,7 +39455,7 @@
       "id": "botw-links-memories-father-and-daughter",
       "family": "botw",
       "title": "Link's Memories \"Father and Daughter\"",
-      "order": 132,
+      "order": 125,
       "sources": [
         {
           "type": "stream",
@@ -39575,7 +39470,7 @@
       "id": "botw-links-memories-slumbering-power",
       "family": "botw",
       "title": "Link's Memories \"Slumbering Power\"",
-      "order": 133,
+      "order": 126,
       "sources": [
         {
           "type": "stream",
@@ -39590,7 +39485,7 @@
       "id": "botw-links-memories-to-mount-lanayru",
       "family": "botw",
       "title": "Link's Memories \"To Mount Lanayru\"",
-      "order": 134,
+      "order": 127,
       "sources": [
         {
           "type": "stream",
@@ -39605,7 +39500,7 @@
       "id": "botw-links-memories-return-of-calamity-ganon",
       "family": "botw",
       "title": "Link's Memories \"Return of Calamity Ganon\"",
-      "order": 135,
+      "order": 128,
       "sources": [
         {
           "type": "stream",
@@ -39620,7 +39515,7 @@
       "id": "botw-links-memories-despair",
       "family": "botw",
       "title": "Link's Memories \"Despair\"",
-      "order": 136,
+      "order": 129,
       "sources": [
         {
           "type": "stream",
@@ -39635,7 +39530,7 @@
       "id": "botw-links-memories-zeldas-awakening",
       "family": "botw",
       "title": "Link's Memories \"Zelda's Awakening\"",
-      "order": 137,
+      "order": 130,
       "sources": [
         {
           "type": "stream",
@@ -39650,7 +39545,7 @@
       "id": "botw-zeldas-wish",
       "family": "botw",
       "title": "Zelda's Wish",
-      "order": 138,
+      "order": 131,
       "sources": [
         {
           "type": "stream",
@@ -39665,7 +39560,7 @@
       "id": "botw-hyrule-castle-town-ruins",
       "family": "botw",
       "title": "Hyrule Castle Town Ruins",
-      "order": 139,
+      "order": 132,
       "sources": [
         {
           "type": "stream",
@@ -39680,7 +39575,7 @@
       "id": "botw-guardian-battle",
       "family": "botw",
       "title": "Guardian Battle",
-      "order": 140,
+      "order": 133,
       "sources": [
         {
           "type": "stream",
@@ -39695,7 +39590,7 @@
       "id": "botw-hyrule-castle-ganons-roar",
       "family": "botw",
       "title": "Hyrule Castle: Ganon's Roar",
-      "order": 141,
+      "order": 134,
       "sources": [
         {
           "type": "stream",
@@ -39707,30 +39602,15 @@
       ]
     },
     {
-      "id": "botw-hyrule-castle-exterior",
+      "id": "botw-hyrule-castle",
       "family": "botw",
-      "title": "Hyrule Castle (Exterior)",
-      "order": 142,
+      "title": "Hyrule Castle",
+      "order": 135,
       "sources": [
         {
           "type": "stream",
           "videoId": "JYaid9Uc56Y",
           "startMs": 16443000,
-          "endMs": 16587000,
-          "confidence": 1.0
-        }
-      ]
-    },
-    {
-      "id": "botw-hyrule-castle-interior",
-      "family": "botw",
-      "title": "Hyrule Castle (Interior)",
-      "order": 143,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "JYaid9Uc56Y",
-          "startMs": 16587000,
           "endMs": 16729000,
           "confidence": 1.0
         }
@@ -39740,7 +39620,7 @@
       "id": "botw-calamity-ganon-appears",
       "family": "botw",
       "title": "Calamity Ganon Appears",
-      "order": 144,
+      "order": 136,
       "sources": [
         {
           "type": "stream",
@@ -39755,7 +39635,7 @@
       "id": "botw-activate-the-power-of-the-champions",
       "family": "botw",
       "title": "Activate! The Power of the Champions",
-      "order": 145,
+      "order": 137,
       "sources": [
         {
           "type": "stream",
@@ -39770,7 +39650,7 @@
       "id": "botw-calamity-ganon-battle-first-form",
       "family": "botw",
       "title": "Calamity Ganon Battle: First Form",
-      "order": 146,
+      "order": 138,
       "sources": [
         {
           "type": "stream",
@@ -39785,7 +39665,7 @@
       "id": "botw-calamity-ganon-battle-second-form",
       "family": "botw",
       "title": "Calamity Ganon Battle: Second Form",
-      "order": 147,
+      "order": 139,
       "sources": [
         {
           "type": "stream",
@@ -39800,7 +39680,7 @@
       "id": "botw-dark-beast-ganon-appears",
       "family": "botw",
       "title": "Dark Beast Ganon Appears",
-      "order": 148,
+      "order": 140,
       "sources": [
         {
           "type": "stream",
@@ -39815,7 +39695,7 @@
       "id": "botw-dark-beast-ganon-battle",
       "family": "botw",
       "title": "Dark Beast Ganon Battle",
-      "order": 149,
+      "order": 141,
       "sources": [
         {
           "type": "stream",
@@ -39830,7 +39710,7 @@
       "id": "botw-do-you-remember",
       "family": "botw",
       "title": "Do You Remember?",
-      "order": 150,
+      "order": 142,
       "sources": [
         {
           "type": "stream",
@@ -39845,7 +39725,7 @@
       "id": "botw-staff-credits",
       "family": "botw",
       "title": "Staff Credits",
-      "order": 151,
+      "order": 143,
       "sources": [
         {
           "type": "stream",
@@ -39860,7 +39740,7 @@
       "id": "botw-epilogue",
       "family": "botw",
       "title": "Epilogue",
-      "order": 152,
+      "order": 144,
       "sources": [
         {
           "type": "stream",
@@ -39872,30 +39752,15 @@
       ]
     },
     {
-      "id": "botw-lurelin-village-day",
+      "id": "botw-lurelin-village",
       "family": "botw",
-      "title": "Lurelin Village (Day)",
-      "order": 153,
+      "title": "Lurelin Village",
+      "order": 145,
       "sources": [
         {
           "type": "stream",
           "videoId": "JYaid9Uc56Y",
           "startMs": 18371000,
-          "endMs": 18497000,
-          "confidence": 1.0
-        }
-      ]
-    },
-    {
-      "id": "botw-lurelin-village-night",
-      "family": "botw",
-      "title": "Lurelin Village (Night)",
-      "order": 154,
-      "sources": [
-        {
-          "type": "stream",
-          "videoId": "JYaid9Uc56Y",
-          "startMs": 18497000,
           "endMs": 18708000,
           "confidence": 1.0
         }
@@ -39905,7 +39770,7 @@
       "id": "botw-kilton",
       "family": "botw",
       "title": "Kilton",
-      "order": 155,
+      "order": 146,
       "sources": [
         {
           "type": "stream",
@@ -39920,7 +39785,7 @@
       "id": "botw-to-tarrey-town",
       "family": "botw",
       "title": "To Tarrey Town",
-      "order": 156,
+      "order": 147,
       "sources": [
         {
           "type": "stream",
@@ -39935,7 +39800,7 @@
       "id": "botw-tarrey-town",
       "family": "botw",
       "title": "Tarrey Town",
-      "order": 157,
+      "order": 148,
       "sources": [
         {
           "type": "stream",
@@ -39950,7 +39815,7 @@
       "id": "botw-tarrey-town-wedding",
       "family": "botw",
       "title": "Tarrey Town Wedding",
-      "order": 158,
+      "order": 149,
       "sources": [
         {
           "type": "stream",
@@ -39965,7 +39830,7 @@
       "id": "botw-wasteland",
       "family": "botw",
       "title": "Wasteland",
-      "order": 159,
+      "order": 150,
       "sources": [
         {
           "type": "stream",
@@ -39980,7 +39845,7 @@
       "id": "botw-horseback-archery-minigame",
       "family": "botw",
       "title": "Horseback Archery Minigame",
-      "order": 160,
+      "order": 151,
       "sources": [
         {
           "type": "stream",
@@ -39995,7 +39860,7 @@
       "id": "botw-malanya-revival",
       "family": "botw",
       "title": "Malanya Revival",
-      "order": 161,
+      "order": 152,
       "sources": [
         {
           "type": "stream",
@@ -40010,7 +39875,7 @@
       "id": "botw-malanya-spring",
       "family": "botw",
       "title": "Malanya Spring",
-      "order": 162,
+      "order": 153,
       "sources": [
         {
           "type": "stream",
@@ -40025,7 +39890,7 @@
       "id": "botw-lord-of-satori-mountain",
       "family": "botw",
       "title": "Lord of Satori Mountain",
-      "order": 163,
+      "order": 154,
       "sources": [
         {
           "type": "stream",
@@ -40040,7 +39905,7 @@
       "id": "botw-bird-man-research-study-minigame",
       "family": "botw",
       "title": "Bird-Man Research Study Minigame",
-      "order": 164,
+      "order": 155,
       "sources": [
         {
           "type": "stream",
@@ -40055,7 +39920,7 @@
       "id": "botw-trial-of-the-sword-clear-the-master-trials",
       "family": "botw",
       "title": "Trial of the Sword Clear (The Master Trials)",
-      "order": 165,
+      "order": 156,
       "sources": [
         {
           "type": "stream",
@@ -40070,7 +39935,7 @@
       "id": "botw-deku-trees-congratulations",
       "family": "botw",
       "title": "Deku Tree's Congratulations",
-      "order": 166,
+      "order": 157,
       "sources": [
         {
           "type": "stream",
@@ -40085,7 +39950,7 @@
       "id": "botw-kass-unfinished-song-the-champions-ballad",
       "family": "botw",
       "title": "Kass \"Unfinished Song\" (The Champions' Ballad)",
-      "order": 167,
+      "order": 158,
       "sources": [
         {
           "type": "stream",
@@ -40100,7 +39965,7 @@
       "id": "botw-monuments-appear-the-champions-ballad",
       "family": "botw",
       "title": "Monuments Appear (The Champions' Ballad)",
-      "order": 168,
+      "order": 159,
       "sources": [
         {
           "type": "stream",
@@ -40115,7 +39980,7 @@
       "id": "botw-kass-the-champions-ballad-first-verse",
       "family": "botw",
       "title": "Kass \"The Champions' Ballad\" (First Verse)",
-      "order": 169,
+      "order": 160,
       "sources": [
         {
           "type": "stream",
@@ -40130,7 +39995,7 @@
       "id": "botw-champion-shrine-the-champions-ballad",
       "family": "botw",
       "title": "Champion Shrine (The Champions' Ballad)",
-      "order": 170,
+      "order": 161,
       "sources": [
         {
           "type": "stream",
@@ -40145,7 +40010,7 @@
       "id": "botw-mipha-and-sidon-the-champions-ballad",
       "family": "botw",
       "title": "Mipha and Sidon (The Champions' Ballad)",
-      "order": 171,
+      "order": 162,
       "sources": [
         {
           "type": "stream",
@@ -40160,7 +40025,7 @@
       "id": "botw-kass-miphas-song-the-champions-ballad",
       "family": "botw",
       "title": "Kass \"Mipha's Song\" (The Champions' Ballad)",
-      "order": 172,
+      "order": 163,
       "sources": [
         {
           "type": "stream",
@@ -40175,7 +40040,7 @@
       "id": "botw-kass-the-champions-ballad-second-verse",
       "family": "botw",
       "title": "Kass \"The Champions' Ballad\" (Second Verse)",
-      "order": 173,
+      "order": 164,
       "sources": [
         {
           "type": "stream",
@@ -40190,7 +40055,7 @@
       "id": "botw-solidary-warrior-revali-the-champions-ballad",
       "family": "botw",
       "title": "Solidary Warrior Revali (The Champions' Ballad)",
-      "order": 174,
+      "order": 165,
       "sources": [
         {
           "type": "stream",
@@ -40205,7 +40070,7 @@
       "id": "botw-kass-revalis-song-the-champions-ballad",
       "family": "botw",
       "title": "Kass \"Revali's Song\" (The Champions' Ballad)",
-      "order": 175,
+      "order": 166,
       "sources": [
         {
           "type": "stream",
@@ -40220,7 +40085,7 @@
       "id": "botw-kass-the-champions-ballad-third-verse",
       "family": "botw",
       "title": "Kass \"The Champions' Ballad\" (Third Verse)",
-      "order": 176,
+      "order": 167,
       "sources": [
         {
           "type": "stream",
@@ -40235,7 +40100,7 @@
       "id": "botw-larger-than-life-daruk-the-champions-ballad",
       "family": "botw",
       "title": "Larger Than Life: Daruk (The Champions' Ballad)",
-      "order": 177,
+      "order": 168,
       "sources": [
         {
           "type": "stream",
@@ -40250,7 +40115,7 @@
       "id": "botw-kass-daruks-song-the-champions-ballad",
       "family": "botw",
       "title": "Kass \"Daruk's Song\" (The Champions' Ballad)",
-      "order": 178,
+      "order": 169,
       "sources": [
         {
           "type": "stream",
@@ -40265,7 +40130,7 @@
       "id": "botw-kass-the-champions-ballad-fourth-verse",
       "family": "botw",
       "title": "Kass \"The Champions' Ballad\" (Fourth Verse)",
-      "order": 179,
+      "order": 170,
       "sources": [
         {
           "type": "stream",
@@ -40280,7 +40145,7 @@
       "id": "botw-the-great-urbosa-the-champions-ballad",
       "family": "botw",
       "title": "The Great Urbosa (The Champions' Ballad)",
-      "order": 180,
+      "order": 171,
       "sources": [
         {
           "type": "stream",
@@ -40295,7 +40160,7 @@
       "id": "botw-kass-urbosas-song-the-champions-ballad",
       "family": "botw",
       "title": "Kass \"Urbosa's Song\" (The Champions' Ballad)",
-      "order": 181,
+      "order": 172,
       "sources": [
         {
           "type": "stream",
@@ -40310,7 +40175,7 @@
       "id": "botw-the-final-trial-the-champions-ballad",
       "family": "botw",
       "title": "The Final Trial (The Champions' Ballad)",
-      "order": 182,
+      "order": 173,
       "sources": [
         {
           "type": "stream",
@@ -40325,7 +40190,7 @@
       "id": "botw-monk-maz-koshia-the-champions-ballad",
       "family": "botw",
       "title": "Monk Maz Koshia (The Champions' Ballad)",
-      "order": 183,
+      "order": 174,
       "sources": [
         {
           "type": "stream",
@@ -40340,7 +40205,7 @@
       "id": "botw-recovered-memory-the-champions-ballad",
       "family": "botw",
       "title": "Recovered Memory (The Champions' Ballad)",
-      "order": 184,
+      "order": 175,
       "sources": [
         {
           "type": "stream",
@@ -40355,7 +40220,7 @@
       "id": "botw-the-divine-princess-and-the-five-champions",
       "family": "botw",
       "title": "The Divine Princess and the Five Champions",
-      "order": 185,
+      "order": 176,
       "sources": [
         {
           "type": "stream",
@@ -40370,7 +40235,7 @@
       "id": "botw-the-champions-ballad-ending",
       "family": "botw",
       "title": "The Champions' Ballad Ending",
-      "order": 186,
+      "order": 177,
       "sources": [
         {
           "type": "stream",
@@ -40385,7 +40250,7 @@
       "id": "botw-displaying-the-picture-the-champions-ballad",
       "family": "botw",
       "title": "Displaying the Picture (The Champions' Ballad)",
-      "order": 187,
+      "order": 178,
       "sources": [
         {
           "type": "stream",
@@ -40400,7 +40265,7 @@
       "id": "botw-the-champions-ballad-short-version",
       "family": "botw",
       "title": "The Champions' Ballad (Short Version)",
-      "order": 188,
+      "order": 179,
       "sources": [
         {
           "type": "stream",
@@ -40415,7 +40280,7 @@
       "id": "botw-2014-e3-trailer-bgm",
       "family": "botw",
       "title": "2014 E3 Trailer BGM",
-      "order": 189,
+      "order": 180,
       "sources": [
         {
           "type": "stream",
@@ -40430,7 +40295,7 @@
       "id": "botw-nintendo-switch-presentation-2017-trailer-bgm",
       "family": "botw",
       "title": "Nintendo Switch Presentation 2017 Trailer BGM",
-      "order": 190,
+      "order": 181,
       "sources": [
         {
           "type": "stream",
