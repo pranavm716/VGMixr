@@ -42,5 +42,7 @@ val FAMILY_REGIONS: Map<String, List<String>> = mapOf(
     "plza" to listOf("kalos"),
     "sm" to listOf("alola"),
     "swsh" to listOf("galar"),
-    "sv" to listOf("paldea")
+    "sv" to listOf("paldea"),
+    // Not a region: the franchise, until games get a franchise field (docs/manifest.md).
+    "botw" to listOf("zelda")
 )
