@@ -52,7 +52,7 @@ class OfflineSync(
     private val downloader: OfflineDownloader,
     /** Play history, newest first, repeats allowed. */
     private val recentlyPlayed: Flow<List<String>> = flowOf(emptyList()),
-    /** The track after the playing one in the queue, prefetched whole. */
+    /** The track to prefetch whole ([prefetchTarget]): the next one, once the playing one counts. */
     private val next: Flow<String?> = flowOf(null)
 ) {
     suspend fun run() {

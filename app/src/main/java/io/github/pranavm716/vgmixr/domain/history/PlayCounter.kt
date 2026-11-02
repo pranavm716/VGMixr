@@ -24,7 +24,10 @@ class PlayCounter(private val thresholdMs: Long = PLAY_THRESHOLD_MS) {
 
     private var trackId: String? = null
     private var started = false
-    private var counted = false
+    private var hasCounted = false
+
+    /** The current track once its visit has counted, else null. */
+    val counted: String? get() = trackId.takeIf { hasCounted }
 
     /** The player moved to [trackId]'s item (null: nothing). */
     fun onTransition(trackId: String?, reason: Transition) {
@@ -32,7 +35,7 @@ class PlayCounter(private val thresholdMs: Long = PLAY_THRESHOLD_MS) {
         if (reason == Transition.QUEUE_CHANGED && trackId != null && trackId == this.trackId) return
         this.trackId = trackId
         started = false
-        counted = false
+        hasCounted = false
     }
 
     /** The current item plays, at [positionMs]. Returns the track to record, once per visit. */
@@ -46,8 +49,8 @@ class PlayCounter(private val thresholdMs: Long = PLAY_THRESHOLD_MS) {
     fun onEnded(): String? = if (started) count() else null
 
     private fun count(): String? {
-        if (counted) return null
-        counted = true
+        if (hasCounted) return null
+        hasCounted = true
         return trackId
     }
 }

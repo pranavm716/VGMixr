@@ -106,4 +106,34 @@ class PlayCounterTest {
         assertNull(counter.onPlaying(10_000))
         assertNull(counter.onEnded())
     }
+
+    @Test
+    fun `the counted track is the current one once its visit counts`() {
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+        counter.onPlaying(9_999)
+        assertNull(counter.counted)
+
+        counter.onPlaying(10_000)
+        assertEquals("a", counter.counted)
+    }
+
+    @Test
+    fun `moving to another track clears the counted track`() {
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+        counter.onPlaying(10_000)
+
+        counter.onTransition("b", Transition.SKIP)
+
+        assertNull(counter.counted)
+    }
+
+    @Test
+    fun `failover keeps the counted track`() {
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+        counter.onPlaying(10_000)
+
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+
+        assertEquals("a", counter.counted)
+    }
 }

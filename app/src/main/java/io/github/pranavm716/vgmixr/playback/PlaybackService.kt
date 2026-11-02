@@ -33,6 +33,7 @@ import io.github.pranavm716.vgmixr.data.stream.describe
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.dimmed
+import io.github.pranavm716.vgmixr.domain.history.CurrentPlay
 import io.github.pranavm716.vgmixr.domain.history.PlayCounter
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
 import io.github.pranavm716.vgmixr.domain.history.RecentPlays
@@ -107,6 +108,9 @@ class PlaybackService : MediaSessionService() {
 
     @Inject
     lateinit var recentPlays: RecentPlays
+
+    @Inject
+    lateinit var currentPlay: CurrentPlay
 
     @Inject
     lateinit var playlists: PlaylistRepository
@@ -474,6 +478,7 @@ class PlaybackService : MediaSessionService() {
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) counter.onEnded()?.let(::record)
             counter.onTransition(mediaItem?.mediaId, reason.toTransition())
+            currentPlay.set(counter.counted)
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
@@ -495,6 +500,7 @@ class PlaybackService : MediaSessionService() {
         }
 
         private fun record(trackId: String) {
+            currentPlay.set(counter.counted)
             scope.launch {
                 playHistory.record(trackId)
                 diagnostics.log("play $trackId")
