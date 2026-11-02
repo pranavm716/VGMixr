@@ -91,5 +91,7 @@ data class PlaybackState(
     val isPlaying: Boolean = false,
     val isLoading: Boolean = false,
     val stoppedBy: ResolveFailure? = null,
-    val shuffle: Boolean = false
+    val shuffle: Boolean = false,
+    /** Whether this came from the player; before it connects, nothing loaded means nothing yet. */
+    val connected: Boolean = false
 )

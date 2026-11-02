@@ -162,7 +162,8 @@ fun VGMixrApp(
         onClose: () -> Unit
     ) -> Unit = { _, _ -> PlaceholderScreen("Add to playlist") },
     queue: @Composable (onClose: () -> Unit) -> Unit = { PlaceholderScreen("Queue") },
-    nowPlayingOpen: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
+    nowPlayingOpen: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
+    nothingLoaded: Boolean = false
 ) {
     val openNowPlaying = { nowPlayingOpen.value = true }
     val scope = rememberCoroutineScope()
@@ -170,6 +171,8 @@ fun VGMixrApp(
     // change of the flag (a tap, a track, the notification, back) animates the sheet.
     val sheet = remember { NowPlayingSheetState(scope) { nowPlayingOpen.value = it } }
     LaunchedEffect(nowPlayingOpen.value) { sheet.animateTo(nowPlayingOpen.value) }
+    // Restored open after Android killed the app, with no track left to show: close it.
+    LaunchedEffect(nothingLoaded) { if (nothingLoaded) nowPlayingOpen.value = false }
     // A focused field (search) loses focus as soon as now playing starts to open, so the keyboard
     // and the cursor's handle, which draws above every window, don't stay over the sheet.
     val focusManager = LocalFocusManager.current

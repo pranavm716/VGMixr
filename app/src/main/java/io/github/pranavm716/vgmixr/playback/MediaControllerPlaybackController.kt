@@ -179,7 +179,8 @@ class MediaControllerPlaybackController @Inject constructor(
             stoppedBy = controller.sessionExtras.getString(
                 STOPPED_BY
             )?.let(ResolveFailure::valueOf),
-            shuffle = controller.shuffleModeEnabled
+            shuffle = controller.shuffleModeEnabled,
+            connected = true
         )
     }
 }

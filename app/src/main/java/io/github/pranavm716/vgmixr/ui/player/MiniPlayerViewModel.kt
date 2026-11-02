@@ -55,6 +55,17 @@ class MiniPlayerViewModel @Inject constructor(
                 MiniPlayerUiState.Hidden
             )
 
+    /**
+     * True once the player has connected with no track: after Android killed the app, which
+     * restores now playing open but not the queue. Now playing then closes, rather than show an
+     * empty page.
+     */
+    val nothingLoaded: StateFlow<Boolean> =
+        playback.state
+            .map { it.connected && it.trackId == null }
+            .distinctUntilChanged()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
     /** The share of the current track played, 0 to 1; kept apart so its ticks redraw only the bar. */
     val progress: StateFlow<Float> =
         playback.progress

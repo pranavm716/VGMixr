@@ -24,6 +24,7 @@ import io.github.pranavm716.vgmixr.ui.messages.MessagesEffect
 import io.github.pranavm716.vgmixr.ui.player.AddToPlaylist
 import io.github.pranavm716.vgmixr.ui.player.MiniPlayerBar
 import io.github.pranavm716.vgmixr.ui.player.MiniPlayerInSheet
+import io.github.pranavm716.vgmixr.ui.player.MiniPlayerViewModel
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingHeader
 import io.github.pranavm716.vgmixr.ui.player.NowPlayingScreen
 import io.github.pranavm716.vgmixr.ui.playlist.EditPlaylistTab
@@ -73,6 +74,8 @@ class MainActivity : ComponentActivity() {
                 MessagesEffect(snackbars)
                 // A long press on the Remixes tab plays them from any tab.
                 val remixes: RemixesViewModel = hiltViewModel()
+                val miniPlayer: MiniPlayerViewModel = hiltViewModel()
+                val nothingLoaded by miniPlayer.nothingLoaded.collectAsStateWithLifecycle()
                 VGMixrApp(
                     screen = { destination, nav, reselects, addToPlaylist ->
                         AppScreen(destination, nav, reselects, addToPlaylist)
@@ -99,7 +102,8 @@ class MainActivity : ComponentActivity() {
                     },
                     addToPlaylist = { trackId, close -> AddToPlaylist(trackId, onClose = close) },
                     queue = { close -> QueueScreen(onClose = close) },
-                    nowPlayingOpen = nowPlayingOpen
+                    nowPlayingOpen = nowPlayingOpen,
+                    nothingLoaded = nothingLoaded
                 )
             }
         }
