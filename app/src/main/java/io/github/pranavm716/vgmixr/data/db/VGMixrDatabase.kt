@@ -24,9 +24,10 @@ import java.time.Instant
         BrokenStreamEntity::class,
         UserTrackEntity::class,
         OfflineVideoEntity::class,
-        OfflineVideoTrackEntity::class
+        OfflineVideoTrackEntity::class,
+        SkipEntity::class
     ],
-    version = 8,
+    version = 9,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 1, to = 2, spec = DropTrackCategory::class),
@@ -40,7 +41,9 @@ import java.time.Instant
         // 6 to 7: downloaded and cached videos (roadmap step 13), two new tables.
         AutoMigration(from = 6, to = 7),
         // 7 to 8: a user track's credit, one nullable column.
-        AutoMigration(from = 7, to = 8)
+        AutoMigration(from = 7, to = 8),
+        // 8 to 9: skips, for discovery later (roadmap step 22), a new table.
+        AutoMigration(from = 8, to = 9)
     ]
 )
 @TypeConverters(Converters::class)

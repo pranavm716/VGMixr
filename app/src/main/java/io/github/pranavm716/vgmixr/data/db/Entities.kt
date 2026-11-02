@@ -148,6 +148,19 @@ data class PlayHistoryEntity(
     val playedAt: Instant
 )
 
+/**
+ * A track left forward before it counted as a play (see `PlayCounter`), [positionMs] in.
+ * [context] is the `QueueContext.key` it played from; null when unknown.
+ */
+@Entity(tableName = "skips", indices = [Index("trackId")])
+data class SkipEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val trackId: String,
+    val skippedAt: Instant,
+    val positionMs: Long,
+    val context: String? = null
+)
+
 /** Single row ([id] is always 0). [generatedAt] is `Instant.toString()`, which round-trips exactly. */
 @Entity(tableName = "import_state")
 data class ImportStateEntity(

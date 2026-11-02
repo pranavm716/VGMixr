@@ -10,6 +10,7 @@ import io.github.pranavm716.vgmixr.data.db.ImportStateEntity
 import io.github.pranavm716.vgmixr.data.db.PlayHistoryEntity
 import io.github.pranavm716.vgmixr.data.db.PlaylistEntity
 import io.github.pranavm716.vgmixr.data.db.PlaylistEntryEntity
+import io.github.pranavm716.vgmixr.data.db.SkipEntity
 import io.github.pranavm716.vgmixr.data.db.SourceEntity
 import io.github.pranavm716.vgmixr.data.db.TrackEntity
 import io.github.pranavm716.vgmixr.data.db.UserDataDao
@@ -325,6 +326,32 @@ class CatalogImporterTest {
             userDataDao.history().map { it.trackId to it.playedAt.toEpochMilli() }
         )
         assertEquals(true, catalogDao.track("rse-weather-lab")?.retired)
+    }
+
+    @Test
+    fun `replaces re-points skips to the new id`() = runTest(dispatcher) {
+        importer.import(manifest(tracks = listOf(track("rse-weather-lab"), track("rse-route-101"))))
+        userDataDao.insertSkip(
+            SkipEntity(trackId = "rse-weather-lab", skippedAt = Instant.EPOCH, positionMs = 3_000)
+        )
+        userDataDao.insertSkip(
+            SkipEntity(trackId = "rse-route-101", skippedAt = Instant.EPOCH, positionMs = 1_000)
+        )
+
+        importer.import(
+            manifest(
+                generatedAt = "2026-10-14T08:00:00Z",
+                tracks = listOf(
+                    track("rse-weather-institute", replaces = listOf("rse-weather-lab")),
+                    track("rse-route-101")
+                )
+            )
+        )
+
+        assertEquals(
+            listOf("rse-weather-institute", "rse-route-101"),
+            userDataDao.skips().map { it.trackId }
+        )
     }
 
     @Test

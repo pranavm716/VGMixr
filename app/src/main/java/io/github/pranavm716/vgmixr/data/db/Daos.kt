@@ -177,6 +177,15 @@ interface UserDataDao {
 
     @Query("UPDATE play_history SET trackId = :newId WHERE trackId = :oldId")
     suspend fun repointHistory(oldId: String, newId: String)
+
+    @Insert
+    suspend fun insertSkip(skip: SkipEntity)
+
+    @Query("SELECT * FROM skips ORDER BY id")
+    suspend fun skips(): List<SkipEntity>
+
+    @Query("UPDATE skips SET trackId = :newId WHERE trackId = :oldId")
+    suspend fun repointSkips(oldId: String, newId: String)
 }
 
 @Dao

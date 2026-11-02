@@ -136,4 +136,70 @@ class PlayCounterTest {
 
         assertEquals("a", counter.counted)
     }
+
+    @Test
+    fun `leaving a track forward before it counts reports a skip, with how far in`() {
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+        counter.onPlaying(0)
+        counter.onPlaying(4_000)
+
+        assertEquals(Skip("a", 4_000), counter.onTransition("b", Transition.SKIP))
+    }
+
+    @Test
+    fun `tapping another track or list counts as leaving forward`() {
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+        counter.onPlaying(2_000)
+
+        assertEquals(Skip("a", 2_000), counter.onTransition("x", Transition.QUEUE_CHANGED))
+    }
+
+    @Test
+    fun `leaving before the audio started is not a skip`() {
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+
+        assertNull(counter.onTransition("b", Transition.SKIP))
+    }
+
+    @Test
+    fun `leaving after the track counted is not a skip`() {
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+        counter.onPlaying(10_000)
+
+        assertNull(counter.onTransition("b", Transition.SKIP))
+    }
+
+    @Test
+    fun `going back to the previous track is not a skip`() {
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+        counter.onPlaying(3_000)
+
+        assertNull(counter.onTransition("z", Transition.SKIP, forward = false))
+    }
+
+    @Test
+    fun `failover to the same track's next source is not a skip`() {
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+        counter.onPlaying(3_000)
+
+        assertNull(counter.onTransition("a", Transition.QUEUE_CHANGED))
+    }
+
+    @Test
+    fun `a track that ends on its own or repeats is not a skip`() {
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+        counter.onPlaying(3_000)
+        assertNull(counter.onTransition("a", Transition.REPEAT))
+
+        counter.onPlaying(3_000)
+        assertNull(counter.onTransition("b", Transition.AUTO))
+    }
+
+    @Test
+    fun `playback stopping (nothing next) is not a skip`() {
+        counter.onTransition("a", Transition.QUEUE_CHANGED)
+        counter.onPlaying(3_000)
+
+        assertNull(counter.onTransition(null, Transition.QUEUE_CHANGED))
+    }
 }

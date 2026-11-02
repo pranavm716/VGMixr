@@ -31,7 +31,7 @@ Android music player for Pokémon (later other) game soundtracks. Kotlin, Jetpac
 - DI: Hilt, constructor injection.
 - Media3 is used only behind the `PlaybackController` interface in `domain/`. UI and ViewModels never touch Media3 types.
 - Stream resolution (NewPipe Extractor) is used only behind the `StreamResolver` interface in `domain/`. No extractor types leak past `data/`.
-- Room is the source of truth. Favorites is a built-in playlist (`Playlist`, `PlaylistEntry`); PlayHistory (trackId, playedAt) is its own table, written only by the playback service once a track has played 10 s (`PlayCounter`). Tracks the user adds from YouTube live in `UserTrack`, with `yt:<videoId>` ids that can't collide with catalog ids, and an optional `remixOf` catalog track id. All of this is user data in Room; the manifest stays pipeline-only.
+- Room is the source of truth. Favorites is a built-in playlist (`Playlist`, `PlaylistEntry`); PlayHistory (trackId, playedAt) is its own table, written only by the playback service once a track has played 10 s (`PlayCounter`); `skips` likewise records a track left forward (next, or a tap elsewhere) after its audio started and before 10 s, with how far in and the context it played from, for discovery later (roadmap step 22); nothing reads it yet. Tracks the user adds from YouTube live in `UserTrack`, with `yt:<videoId>` ids that can't collide with catalog ids, and an optional `remixOf` catalog track id. All of this is user data in Room; the manifest stays pipeline-only.
 
 ## Catalog and manifest
 - The UI renders only from the Room catalog, never from live network lookups. Browsing and filtering must work offline.

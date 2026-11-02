@@ -5,11 +5,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.pranavm716.vgmixr.data.history.RoomPlayHistory
+import io.github.pranavm716.vgmixr.data.history.RoomSkipHistory
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
+import io.github.pranavm716.vgmixr.domain.history.SkipHistory
 
 @Module
 @InstallIn(SingletonComponent::class)
 object HistoryModule {
     @Provides
     fun providePlayHistory(history: RoomPlayHistory): PlayHistory = history
+
+    @Provides
+    fun provideSkipHistory(skips: RoomSkipHistory): SkipHistory = skips
 }
