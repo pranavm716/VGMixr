@@ -38,11 +38,11 @@ class SwipeTrackerTest {
     }
 
     @Test
-    fun `finger travel past the limit is kept, so coming back starts from where the finger is`() {
-        queueOnly.dragAll(queueLimits, 500f, 200f, -90f)
+    fun `coming back moves the row at once, however far the finger went past the stop`() {
+        queueOnly.dragAll(queueLimits, 500f, 200f, -10f)
 
         assertTrue(queueOnly.armed)
-        assertEquals(100f, queueOnly.offset)
+        assertEquals(90f, queueOnly.offset)
     }
 
     @Test

@@ -18,14 +18,12 @@ enum class SwipeLimit {
 data class SwipeLimits(val start: SwipeLimit, val end: SwipeLimit)
 
 /**
- * Follows one swipe on a row. It keeps the finger's whole travel, apart from where the row is
- * drawn ([offset]), so a row stopped at the threshold doesn't lose what the finger did past it. It
- * arms at [threshold] and disarms only once the finger is [margin] back under it, so a finger
- * rolling back on lift, or wiggling at the threshold, neither drops the action nor ticks again.
+ * Follows one swipe on a row: where it is drawn ([offset]) and whether letting go acts. It arms at
+ * [threshold] and disarms only once the row is [margin] back under it, so a finger rolling back on
+ * lift, or wiggling at the threshold, neither drops the action nor ticks again. The row follows
+ * the finger back at once, even after the finger went past a row's stop.
  */
 class SwipeTracker(private val threshold: Float, private val margin: Float) {
-    private var travel = 0f
-
     /** Whether letting go now runs the action of the side [offset] points to. */
     var armed = false
         private set
@@ -37,30 +35,21 @@ class SwipeTracker(private val threshold: Float, private val margin: Float) {
     /** Moves the finger by [delta] px on a row [width] px wide. True when this arms (tick). */
     fun drag(delta: Float, limits: SwipeLimits, width: Float): Boolean {
         // 0f - x, not -x: a side with no action gives 0, not -0.
-        travel =
-            (travel + delta).coerceIn(0f - reach(limits.end, width), reach(limits.start, width))
-        offset = travel.coerceIn(0f - shown(limits.end, width), shown(limits.start, width))
-        val distance = abs(travel)
+        offset =
+            (offset + delta).coerceIn(0f - reach(limits.end, width), reach(limits.start, width))
+        val distance = abs(offset)
         val wasArmed = armed
         armed = if (armed) distance >= threshold - margin else distance >= threshold
         return armed && !wasArmed
     }
 
     fun reset() {
-        travel = 0f
         offset = 0f
         armed = false
     }
 
-    /** How far the finger's travel is kept toward a side. */
+    /** How far the row moves toward a side. */
     private fun reach(limit: SwipeLimit, width: Float) = when (limit) {
-        SwipeLimit.NONE -> 0f
-        SwipeLimit.STOPS -> Float.POSITIVE_INFINITY
-        SwipeLimit.EXITS -> width
-    }
-
-    /** How far the row is drawn toward a side. */
-    private fun shown(limit: SwipeLimit, width: Float) = when (limit) {
         SwipeLimit.NONE -> 0f
         SwipeLimit.STOPS -> threshold
         SwipeLimit.EXITS -> width
