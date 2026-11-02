@@ -20,10 +20,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
@@ -332,7 +334,19 @@ fun VGMixrApp(
         ) {
             Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                 BackHandler { queueOpen = false }
-                queue { queueOpen = false }
+                Box {
+                    queue { queueOpen = false }
+                    // The scaffold's messages sit under this screen, so the queue (where tracks
+                    // are swiped to the queue) shows the same ones over itself.
+                    SnackbarHost(
+                        snackbars,
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .windowInsetsPadding(WindowInsets.navigationBars)
+                    ) {
+                        Snackbar(it, actionColor = MaterialTheme.colorScheme.primary)
+                    }
+                }
             }
         }
         AnimatedVisibility(
