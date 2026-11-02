@@ -8,6 +8,7 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
+import io.github.pranavm716.vgmixr.domain.playlist.playPlaylist
 import io.github.pranavm716.vgmixr.domain.sort.playablePlaylistTrackIds
 import io.github.pranavm716.vgmixr.ui.messages.UserMessage
 import io.github.pranavm716.vgmixr.ui.messages.UserMessages
@@ -64,11 +65,7 @@ class PlaylistsViewModel @Inject constructor(
      * Plays the whole playlist (a long press) in its own sort, leaving out tracks that can't play.
      */
     fun onPlayPlaylist(playlistId: Long) {
-        viewModelScope.launch {
-            val playlist = repository.playlist(playlistId).first() ?: return@launch
-            val ids = catalog.catalog.first().playablePlaylistTrackIds(playlist)
-            if (ids.isNotEmpty()) playback.playAll(ids, QueueContext.Playlist(playlistId))
-        }
+        viewModelScope.launch { playPlaylist(playlistId, repository, catalog, playback) }
     }
 
     /**

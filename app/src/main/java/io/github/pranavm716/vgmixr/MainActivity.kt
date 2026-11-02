@@ -14,7 +14,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toArgb
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
+import io.github.pranavm716.vgmixr.domain.playlist.playPlaylist
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
 import io.github.pranavm716.vgmixr.domain.settings.BackgroundSetting
 import io.github.pranavm716.vgmixr.ui.AppScreen
@@ -37,6 +42,7 @@ import io.github.pranavm716.vgmixr.ui.theme.Background
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 import io.github.pranavm716.vgmixr.ui.theme.color
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -46,6 +52,15 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var backgroundSetting: BackgroundSetting
 
+    @Inject
+    lateinit var playlists: PlaylistRepository
+
+    @Inject
+    lateinit var catalog: CatalogRepository
+
+    @Inject
+    lateinit var playback: PlaybackController
+
     // Held here so the notification's intent (onNewIntent) can open it.
     private val nowPlayingOpen = mutableStateOf(false)
 
@@ -53,6 +68,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         nowPlayingOpen.value = savedInstanceState?.getBoolean(NOW_PLAYING_OPEN)
             ?: intent.opensNowPlaying()
+        // A restored activity already handled the intent it was started with.
+        if (savedInstanceState == null) playShortcutPlaylist(intent)
         // A transparent status bar, so now playing's game tint runs up behind it.
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
@@ -112,6 +129,14 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (intent.opensNowPlaying()) nowPlayingOpen.value = true
+        playShortcutPlaylist(intent)
+    }
+
+    /** A playlist's row on the app icon's menu plays it, as a long press in Playlists does. */
+    private fun playShortcutPlaylist(intent: Intent) {
+        if (intent.action != ACTION_PLAY_PLAYLIST) return
+        val playlistId = intent.getLongExtra(EXTRA_PLAYLIST_ID, -1L).takeIf { it >= 0 } ?: return
+        lifecycleScope.launch { playPlaylist(playlistId, playlists, catalog, playback) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -122,6 +147,10 @@ class MainActivity : ComponentActivity() {
     companion object {
         /** The action of the notification's intent: open the app on now playing. */
         const val ACTION_OPEN_NOW_PLAYING = "io.github.pranavm716.vgmixr.OPEN_NOW_PLAYING"
+
+        /** The action of a playlist's row on the app icon's menu: play [EXTRA_PLAYLIST_ID]. */
+        const val ACTION_PLAY_PLAYLIST = "io.github.pranavm716.vgmixr.PLAY_PLAYLIST"
+        const val EXTRA_PLAYLIST_ID = "playlistId"
 
         private const val NOW_PLAYING_OPEN = "nowPlayingOpen"
 

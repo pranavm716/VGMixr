@@ -7,6 +7,7 @@ import dagger.hilt.android.HiltAndroidApp
 import io.github.pranavm716.vgmixr.data.catalog.DefaultCatalogSync
 import io.github.pranavm716.vgmixr.data.diagnostics.BrokenMarksMirror
 import io.github.pranavm716.vgmixr.playback.OfflineStarter
+import io.github.pranavm716.vgmixr.ui.shortcuts.PlaylistShortcutPublisher
 import javax.inject.Inject
 
 @OptIn(UnstableApi::class)
@@ -21,10 +22,14 @@ class VGMixrApplication : Application() {
     @Inject
     lateinit var offlineStarter: OfflineStarter
 
+    @Inject
+    lateinit var playlistShortcuts: PlaylistShortcutPublisher
+
     override fun onCreate() {
         super.onCreate()
         catalogSync.start()
         brokenMarksMirror.start()
         offlineStarter.start()
+        playlistShortcuts.start()
     }
 }
