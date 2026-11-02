@@ -90,7 +90,7 @@ class MediaControllerPlaybackController @Inject constructor(
                     context,
                     index,
                     it.shuffleModeEnabled,
-                    recent = recentPlays.trackIds()
+                    lastPlayed = recentPlays.lastPlayed()
                 )
             )
         }
@@ -101,7 +101,7 @@ class MediaControllerPlaybackController @Inject constructor(
                 trackIds,
                 context,
                 it.shuffleModeEnabled,
-                recent = recentPlays.trackIds()
+                lastPlayed = recentPlays.lastPlayed()
             )
         )
     }

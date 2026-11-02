@@ -512,7 +512,7 @@ class PlaybackService : MediaSessionService() {
 /**
  * Turning shuffle on shuffles "Next from"; turning it off puts it back in list order. Here, so a
  * flip from the app, the notification or the lock screen all rearrange the same way. The setting
- * is saved for the next launch. Tracks heard in the last hour stay out of the first 10.
+ * is saved for the next launch. The tracks heard most recently go last (smart shuffle).
  */
 private class Shuffling(
     private val player: Player,
@@ -526,7 +526,7 @@ private class Shuffling(
             if (shuffleModeEnabled) {
                 queue.shuffle(
                     Random.Default,
-                    recentPlays.trackIds()
+                    recentPlays.lastPlayed()
                 )
             } else {
                 queue.unshuffle()

@@ -87,9 +87,8 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
      * Tapping track [index] of [trackIds], tapped in [context]: it plays now, the queue still waits
      * right after it, and the rest of [trackIds] follows. The tracks before it stay, so "previous"
      * walks back through them. With [shuffle] on, the rest of [trackIds] follows shuffled instead,
-     * all of it, so nothing waits behind for "previous". Tracks in [recent] (heard in the last
-     * hour) stay out of the first [FRESH_SLOTS] of it (see [smartShuffled]); the tapped one plays
-     * first anyway.
+     * all of it, so nothing waits behind for "previous". The tracks heard most recently
+     * ([lastPlayed]) come last in it (see [smartShuffled]); the tapped one plays first anyway.
      */
     fun playFrom(
         trackIds: List<String>,
@@ -97,13 +96,14 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
         index: Int,
         shuffle: Boolean = false,
         random: Random = Random.Default,
-        recent: Set<String> = emptySet()
+        lastPlayed: Map<String, Int> = emptyMap()
     ): QueueEdit.Replace {
         val tapped = trackIds.mapIndexed { i, id -> QueueEntry(id, context, listIndex = i) }
         if (shuffle) {
             val rest = smartShuffled(
                 tapped.take(index) + tapped.drop(index + 1),
-                { it.trackId in recent },
+                QueueEntry::trackId,
+                lastPlayed,
                 random
             )
             return QueueEdit.Replace(listOf(tapped[index]) + upNext + rest, startIndex = 0)
@@ -117,22 +117,22 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
     /**
      * Playing all of [trackIds] (a long-pressed family or playlist) as tapping its first track does,
      * or with [shuffle] on, a random one: the rest then follows shuffled, so the whole list plays in
-     * a shuffled order. That first one is fresh (not in [recent]) when any is.
+     * a shuffled order. That first one is the first of the smart shuffle, so not one heard lately
+     * when there is a choice.
      */
     fun playAll(
         trackIds: List<String>,
         context: QueueContext,
         shuffle: Boolean,
         random: Random = Random.Default,
-        recent: Set<String> = emptySet()
+        lastPlayed: Map<String, Int> = emptyMap()
     ): QueueEdit.Replace {
-        val fresh = trackIds.indices.filter { trackIds[it] !in recent }
-        val first = when {
-            !shuffle -> 0
-            fresh.isEmpty() || fresh.size == trackIds.size -> random.nextInt(trackIds.size)
-            else -> fresh.random(random)
+        val first = if (shuffle) {
+            smartShuffled(trackIds.indices.toList(), { trackIds[it] }, lastPlayed, random).first()
+        } else {
+            0
         }
-        return playFrom(trackIds, context, first, shuffle, random, recent)
+        return playFrom(trackIds, context, first, shuffle, random, lastPlayed)
     }
 
     /**
@@ -205,13 +205,14 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
 
     /**
      * Turning shuffle on shuffles "Next from" only; "Next in queue" and the tracks played stay as
-     * they are. Tracks in [recent] stay out of its first [FRESH_SLOTS] (see [smartShuffled]).
+     * they are. The tracks heard most recently ([lastPlayed]) come last (see [smartShuffled]).
      */
-    fun shuffle(random: Random, recent: Set<String> = emptySet()): List<QueueEdit> {
+    fun shuffle(random: Random, lastPlayed: Map<String, Int> = emptyMap()): List<QueueEdit> {
         if (nextFromContext.size < 2) return emptyList()
         val order = smartShuffled(
             (nextFromStart until entries.size).toList(),
-            { entries[it].trackId in recent },
+            { entries[it].trackId },
+            lastPlayed,
             random
         )
         return listOf(QueueEdit.Rearrange(nextFromStart, entries.size, order))
