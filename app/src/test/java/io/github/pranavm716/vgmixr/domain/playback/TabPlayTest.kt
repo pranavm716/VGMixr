@@ -4,6 +4,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogTrack
 import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.domain.sort.SortDirection
 import io.github.pranavm716.vgmixr.domain.sort.SortKey
 import io.github.pranavm716.vgmixr.domain.sort.SortSetting
@@ -85,5 +86,28 @@ class TabPlayTest {
     fun `mix contexts survive the round trip through their key`() {
         assertEquals(QueueContext.Games, QueueContext.fromKey(QueueContext.Games.key))
         assertEquals(QueueContext.Playlists, QueueContext.fromKey(QueueContext.Playlists.key))
+    }
+
+    private val summaries = listOf(
+        PlaylistSummary(1, "Favorites", 2, isFavorites = true),
+        PlaylistSummary(2, "Hype", 2, isFavorites = false),
+        PlaylistSummary(3, "Chill", 2, isFavorites = false)
+    )
+
+    @Test
+    fun `a mix track opens the first chosen playlist holding it, in tab order`() {
+        assertEquals(3L, mixPlaylistOf(containing = setOf(1, 3), selected = setOf(3, 2), summaries))
+        assertEquals(2L, mixPlaylistOf(containing = setOf(2, 3), selected = setOf(3, 2), summaries))
+    }
+
+    @Test
+    fun `with no chosen playlist holding it, any playlist holding it, else none`() {
+        assertEquals(2L, mixPlaylistOf(containing = setOf(2), selected = setOf(3), summaries))
+        assertNull(mixPlaylistOf(containing = emptySet(), selected = setOf(3), summaries))
+    }
+
+    @Test
+    fun `no choice means favorites`() {
+        assertEquals(1L, mixPlaylistOf(containing = setOf(2, 1), selected = emptySet(), summaries))
     }
 }

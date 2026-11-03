@@ -111,18 +111,32 @@ class NowPlayingViewModelTest {
     }
 
     @Test
-    fun `a track from a tab's long press plays from Games or Playlists`() = runTest {
+    fun `a games mix track opens its own family`() = runTest {
         playback.state.value = playing(QueueContext.Games)
+
         viewModel.uiState.test {
             assertEquals(
-                PlayingFromUi.Games,
+                PlayingFromUi.Games(familyId = "rse"),
                 (awaitItem() as NowPlayingUiState.Visible).playingFrom
             )
-            playback.state.value = playing(QueueContext.Playlists)
+        }
+    }
+
+    @Test
+    fun `a playlists mix track opens the playlist it came from, else its family`() = runTest {
+        playback.state.value = playing(QueueContext.Playlists)
+
+        viewModel.uiState.test {
             assertEquals(
-                PlayingFromUi.Playlists,
+                PlayingFromUi.Playlists(playlistId = null, familyId = "rse"),
                 (awaitItem() as NowPlayingUiState.Visible).playingFrom
             )
+            playlists.favorites.value = setOf("rse-a")
+            assertEquals(
+                PlayingFromUi.Playlists(playlistId = 1, familyId = "rse"),
+                (expectMostRecentItem() as NowPlayingUiState.Visible).playingFrom
+            )
+            cancelAndIgnoreRemainingEvents()
         }
     }
 

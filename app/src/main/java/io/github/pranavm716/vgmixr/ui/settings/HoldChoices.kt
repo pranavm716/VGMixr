@@ -1,6 +1,7 @@
 package io.github.pranavm716.vgmixr.ui.settings
 
 import io.github.pranavm716.vgmixr.domain.catalog.Family
+import io.github.pranavm716.vgmixr.domain.playback.effectivePlaylists
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 
 /** One row in a "Hold to play" picker; [id] is a family id or a playlist id as text. */
@@ -26,14 +27,6 @@ fun gameChoices(families: List<Family>, excluded: Set<String>): HoldChoices {
     }
     return HoldChoices(choices, summary)
 }
-
-/**
- * The playlists the Playlists tab's long press plays out of [selected]: those that still exist, or
- * Favorites when none do.
- */
-fun effectivePlaylists(playlists: List<PlaylistSummary>, selected: Set<Long>): Set<Long> =
-    playlists.map { it.id }.filter { it in selected }.toSet()
-        .ifEmpty { playlists.filter { it.isFavorites }.map { it.id }.toSet() }
 
 /** Every playlist, checked as [effectivePlaylists]; summary "All", up to two names, or "n of m". */
 fun playlistChoices(playlists: List<PlaylistSummary>, selected: Set<Long>): HoldChoices {

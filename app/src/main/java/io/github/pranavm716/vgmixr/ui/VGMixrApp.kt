@@ -307,26 +307,34 @@ fun VGMixrApp(
                         // (Playlists tab) or the Remixes tab, replacing any one already open there; it scrolls to the
                         // playing track on opening.
                         nowPlayingOpen.value = false
+                        // Unlike the Games tab's list, the playlist list isn't under every
+                        // tab's screens: switch to its tab first, so the playlist opens over
+                        // it and back and the tab return to it.
+                        fun openPlaylist(playlistId: Long) {
+                            navController.navigateTo(TopLevelDestination.PLAYLISTS)
+                            navController.navigate(
+                                PlaylistRoute(playlistId, fromNowPlaying = true)
+                            ) { popUpTo<PlaylistsRoute>() }
+                        }
                         when (playingFrom) {
                             is PlayingFromUi.Family -> openFamily(playingFrom.familyId)
 
-                            // Unlike the Games tab's list, the playlist list isn't under every
-                            // tab's screens: switch to its tab first, so the playlist opens over
-                            // it and back and the tab return to it.
-                            is PlayingFromUi.Playlist -> {
-                                navController.navigateTo(TopLevelDestination.PLAYLISTS)
-                                navController.navigate(
-                                    PlaylistRoute(playingFrom.playlistId, fromNowPlaying = true)
-                                ) { popUpTo<PlaylistsRoute>() }
-                            }
+                            is PlayingFromUi.Playlist -> openPlaylist(playingFrom.playlistId)
 
                             PlayingFromUi.Remixes -> openRemixes()
 
-                            PlayingFromUi.Games ->
-                                navController.navigateTo(TopLevelDestination.GAMES)
+                            // A mix opens where the track would play from alone.
+                            is PlayingFromUi.Games ->
+                                playingFrom.familyId?.let(openFamily)
 
-                            PlayingFromUi.Playlists ->
-                                navController.navigateTo(TopLevelDestination.PLAYLISTS)
+                            is PlayingFromUi.Playlists -> {
+                                val playlistId = playingFrom.playlistId
+                                if (playlistId != null) {
+                                    openPlaylist(playlistId)
+                                } else {
+                                    playingFrom.familyId?.let(openFamily)
+                                }
+                            }
 
                             PlayingFromUi.Queue -> Unit
                         }

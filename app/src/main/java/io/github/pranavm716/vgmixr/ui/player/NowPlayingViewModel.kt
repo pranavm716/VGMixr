@@ -10,8 +10,10 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackProgress
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackState
 import io.github.pranavm716.vgmixr.domain.playback.QueueContext
 import io.github.pranavm716.vgmixr.domain.playback.homeContext
+import io.github.pranavm716.vgmixr.domain.playback.mixPlaylistOf
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
+import io.github.pranavm716.vgmixr.domain.settings.HoldSettings
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackId
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import javax.inject.Inject
@@ -19,6 +21,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -68,27 +72,46 @@ sealed interface PlayingFromUi {
     /** Tapped in the Remixes tab; the header opens it. */
     data object Remixes : PlayingFromUi
 
-    /** A long press on the Games tab with several families; the header opens the tab. */
-    data object Games : PlayingFromUi
+    /**
+     * A long press on the Games tab with several families; the header opens the track's family,
+     * as if it played from there.
+     */
+    data class Games(val familyId: String?) : PlayingFromUi
 
-    /** A long press on the Playlists tab with several playlists; the header opens the tab. */
-    data object Playlists : PlayingFromUi
+    /**
+     * A long press on the Playlists tab with several playlists; the header opens the playlist the
+     * track came from ([mixPlaylistOf]), else its family.
+     */
+    data class Playlists(val playlistId: Long?, val familyId: String?) : PlayingFromUi
 }
 
 @HiltViewModel
 class NowPlayingViewModel @Inject constructor(
     repository: CatalogRepository,
     private val playback: PlaybackController,
-    private val playlists: PlaylistRepository
+    private val playlists: PlaylistRepository,
+    private val hold: HoldSettings = HoldSettings.NONE
 ) : ViewModel() {
+    // The playing track's playlists, and the ones the Playlists tab's long press plays: where a
+    // track from a Playlists mix opens.
+    private val mixPlaylists = combine(
+        playback.state.map { it.trackId }.distinctUntilChanged().flatMapLatest { id ->
+            id?.let(playlists::playlistsContaining) ?: flowOf(emptySet())
+        },
+        hold.playlists
+    ) { containing, selected -> containing to selected }
+
     val uiState: StateFlow<NowPlayingUiState> =
         combine(
             repository.catalog,
             playback.state,
             playlists.favorites,
-            playlists.playlists
-        ) { catalog, state, favorites, playlists ->
-            catalog.nowPlaying(state, favorites, playlists)
+            playlists.playlists,
+            mixPlaylists
+        ) { catalog, state, favorites, playlists, (containing, selected) ->
+            catalog.nowPlaying(state, favorites, playlists) {
+                mixPlaylistOf(containing, selected, playlists)
+            }
         }
             .stateIn(
                 viewModelScope,
@@ -135,7 +158,8 @@ class NowPlayingViewModel @Inject constructor(
 private fun Catalog.nowPlaying(
     state: PlaybackState,
     favorites: Set<String>,
-    playlists: List<PlaylistSummary>
+    playlists: List<PlaylistSummary>,
+    mixPlaylist: () -> Long?
 ): NowPlayingUiState {
     val track = state.trackId?.let { trackOrRetired(it) } ?: return NowPlayingUiState.Hidden
     // No context, or a playlist deleted since: the track plays from its family, or from Remixes
@@ -160,9 +184,9 @@ private fun Catalog.nowPlaying(
 
         QueueContext.Remixes -> PlayingFromUi.Remixes
 
-        QueueContext.Games -> PlayingFromUi.Games
+        QueueContext.Games -> PlayingFromUi.Games(track.familyId)
 
-        QueueContext.Playlists -> PlayingFromUi.Playlists
+        QueueContext.Playlists -> PlayingFromUi.Playlists(mixPlaylist(), track.familyId)
     }
     return NowPlayingUiState.Visible(
         trackId = track.id,

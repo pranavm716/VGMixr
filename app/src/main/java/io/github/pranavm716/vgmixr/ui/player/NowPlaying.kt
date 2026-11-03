@@ -134,8 +134,8 @@ private fun PlayingFromText(playingFrom: PlayingFromUi?) {
             is PlayingFromUi.Playlist -> playingFrom.name
             PlayingFromUi.Queue -> stringResource(R.string.playing_from_queue)
             PlayingFromUi.Remixes -> stringResource(R.string.playing_from_remixes)
-            PlayingFromUi.Games -> stringResource(R.string.playing_from_games)
-            PlayingFromUi.Playlists -> stringResource(R.string.playing_from_playlists)
+            is PlayingFromUi.Games -> stringResource(R.string.playing_from_games)
+            is PlayingFromUi.Playlists -> stringResource(R.string.playing_from_playlists)
         },
         style = MaterialTheme.typography.titleSmall,
         fontWeight = FontWeight.Bold,

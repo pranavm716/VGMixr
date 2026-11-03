@@ -4,6 +4,7 @@ import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.domain.settings.HoldSettings
 import io.github.pranavm716.vgmixr.domain.settings.SortSettings
 import io.github.pranavm716.vgmixr.domain.sort.SortSetting
@@ -44,6 +45,29 @@ fun Catalog.playlistsMix(selected: Set<Long>, playlists: List<Playlist>): TabMix
     val context =
         chosen.singleOrNull()?.let { QueueContext.Playlist(it.id) } ?: QueueContext.Playlists
     return TabMix(ids, context)
+}
+
+/**
+ * The playlists the Playlists tab's long press plays out of [selected]: those that still exist, or
+ * Favorites when none do.
+ */
+fun effectivePlaylists(playlists: List<PlaylistSummary>, selected: Set<Long>): Set<Long> =
+    playlists.map { it.id }.filter { it in selected }.toSet()
+        .ifEmpty { playlists.filter { it.isFavorites }.map { it.id }.toSet() }
+
+/**
+ * Where a track playing from a Playlists mix opens: the first playlist holding it ([containing]),
+ * in tab order ([playlists]), among the chosen ones ([selected], as [effectivePlaylists]), else
+ * among all. Null when no playlist holds it.
+ */
+fun mixPlaylistOf(
+    containing: Set<Long>,
+    selected: Set<Long>,
+    playlists: List<PlaylistSummary>
+): Long? {
+    val chosen = effectivePlaylists(playlists, selected)
+    val holding = playlists.map { it.id }.filter { it in containing }
+    return holding.firstOrNull { it in chosen } ?: holding.firstOrNull()
 }
 
 /** The tabs whose long press plays. */
