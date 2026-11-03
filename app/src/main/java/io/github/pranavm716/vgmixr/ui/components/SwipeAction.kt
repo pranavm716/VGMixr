@@ -68,6 +68,25 @@ fun SwipeToQueue(
     content = content
 )
 
+/**
+ * Swipe right on [content] to add it to the queue, or left to play it now: both sides look and
+ * behave the same (the accent, a white icon, a stop at the threshold and a spring back).
+ */
+@Composable
+fun SwipeToQueueOrPlayNow(
+    onQueue: () -> Unit,
+    onPlayNow: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    content: @Composable () -> Unit
+) = SwipeAction(
+    start = Side(R.drawable.ic_queue_add, stringResource(R.string.add_to_queue), onQueue),
+    end = Side(R.drawable.ic_play_now, stringResource(R.string.play_now), onPlayNow),
+    modifier = modifier,
+    enabled = enabled,
+    content = content
+)
+
 /** Swipe left on [content] to remove it from the queue, behind a trash can like Spotify. */
 @Composable
 fun SwipeToRemove(

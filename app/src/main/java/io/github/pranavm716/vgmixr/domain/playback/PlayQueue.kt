@@ -164,6 +164,17 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
     }
 
     /**
+     * Playing [trackId] now (a left swipe on a track row): it plays at once, right after the
+     * current track, which stays behind it for "previous"; "Next in queue" and "Next from" carry on
+     * after it untouched. With nothing to play it just plays, as [add] does.
+     */
+    fun playNow(trackId: String, hasEnded: Boolean): List<QueueEdit> {
+        val entry = QueueEntry(trackId, QueueContext.Queue)
+        if (entries.isEmpty() || hasEnded) return listOf(QueueEdit.Replace(listOf(entry), 0))
+        return listOf(QueueEdit.Insert(current + 1, listOf(entry)), QueueEdit.Seek(current + 1))
+    }
+
+    /**
      * Jumping to entry [index] from the queue screen. Into "Next in queue": the queued tracks
      * before it are dropped. Into "Next from": the waiting queue moves right after it, as
      * Spotify's does, and the tracks skipped become history for "previous". Either way it plays.

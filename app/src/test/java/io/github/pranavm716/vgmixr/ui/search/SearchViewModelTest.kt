@@ -293,6 +293,23 @@ class SearchViewModelTest {
     }
 
     @Test
+    fun `swiping a track left plays it now and says so`() = runTest {
+        messages.messages.test {
+            viewModel.onPlayNow("rse-route-101")
+
+            assertEquals(listOf(FakePlaybackController.PlayNow("rse-route-101")), playback.calls)
+            assertEquals(UserMessage.PlayingNow, awaitItem())
+        }
+    }
+
+    @Test
+    fun `a greyed track can't be played now`() = runTest {
+        viewModel.onPlayNow("rse-dead")
+
+        assertEquals(emptyList<Any>(), playback.calls)
+    }
+
+    @Test
     fun `a swipe adds the track to the queue`() = runTest {
         messages.messages.test {
             viewModel.onQueueTrack("rse-route-101")

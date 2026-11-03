@@ -116,6 +116,8 @@
     <string name="clear_search">Clear search</string>
     <string name="search_no_results">No tracks match “%1$s”</string>
 
+    <string name="play_now">Play now</string>
+    <string name="playing_now">Playing now</string>
     <plurals name="added_to_queue">
         <item quantity="one">Added to queue</item>
         <item quantity="other">Added %d tracks to queue</item>

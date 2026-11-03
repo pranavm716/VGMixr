@@ -121,6 +121,27 @@ class PlayQueueTest {
     }
 
     @Test
+    fun `playing now plays it next to the current track, ahead of the queue and the family`() {
+        val queue = PlayQueue(context("a", "b") + queued("q1") + context("c"), current = 1)
+
+        assertEquals(
+            listOf(QueueEdit.Insert(index = 2, queued("x")), QueueEdit.Seek(2)),
+            queue.playNow("x", hasEnded = false)
+        )
+    }
+
+    @Test
+    fun `playing now with nothing to play, or after playback ended, just plays it`() {
+        val ended = PlayQueue(context("a", "b"), current = 1)
+
+        assertEquals(
+            listOf(QueueEdit.Replace(queued("x"), 0)),
+            PlayQueue.EMPTY.playNow("x", hasEnded = false)
+        )
+        assertEquals(listOf(QueueEdit.Replace(queued("x"), 0)), ended.playNow("x", hasEnded = true))
+    }
+
+    @Test
     fun `the queue tells what is next in queue and what is next from the family`() {
         val queue =
             PlayQueue(context("a", "b") + queued("q1", "q2") + context("c", "d"), current = 1)

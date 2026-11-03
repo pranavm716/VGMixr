@@ -35,7 +35,7 @@ import io.github.pranavm716.vgmixr.ui.components.CollectionPage
 import io.github.pranavm716.vgmixr.ui.components.FullWidth
 import io.github.pranavm716.vgmixr.ui.components.GameChips
 import io.github.pranavm716.vgmixr.ui.components.HeaderImage
-import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
+import io.github.pranavm716.vgmixr.ui.components.SwipeToQueueOrPlayNow
 import io.github.pranavm716.vgmixr.ui.components.UnplayableIcon
 import io.github.pranavm716.vgmixr.ui.components.coverAsset
 import io.github.pranavm716.vgmixr.ui.components.rememberArt
@@ -58,6 +58,7 @@ fun FamilyTab(onAddToPlaylist: (String) -> Unit, viewModel: FamilyViewModel = hi
         state,
         onTrackClick = viewModel::onTrackClick,
         onQueueTrack = viewModel::onQueueTrack,
+        onPlayNow = viewModel::onPlayNow,
         onTrackLongClick = onAddToPlaylist,
         onSortKey = viewModel::onSortKey,
         onReverseSort = viewModel::onReverseSort
@@ -70,6 +71,7 @@ fun FamilyScreen(
     state: FamilyUiState,
     onTrackClick: (String) -> Unit,
     onQueueTrack: (String) -> Unit,
+    onPlayNow: (String) -> Unit = {},
     onTrackLongClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     onSortKey: (SortKey) -> Unit = {},
@@ -111,7 +113,11 @@ fun FamilyScreen(
                     if (track.unplayable) {
                         row()
                     } else {
-                        SwipeToQueue(onQueue = { onQueueTrack(track.id) }, content = row)
+                        SwipeToQueueOrPlayNow(
+                            onQueue = { onQueueTrack(track.id) },
+                            onPlayNow = { onPlayNow(track.id) },
+                            content = row
+                        )
                     }
                 }
             }

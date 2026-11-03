@@ -37,6 +37,9 @@ sealed interface UserMessage {
 
     data class AddedToQueue(val count: Int) : UserMessage
 
+    /** A track swiped left plays now. */
+    data object PlayingNow : UserMessage
+
     /**
      * A source of [title] failed just now, broken for [reason] (null when not marked);
      * [trackSkipped] when no source was left, else another upload plays.
@@ -160,6 +163,8 @@ fun MessagesEffect(snackbars: SnackbarHostState, viewModel: MessagesViewModel = 
 private fun UserMessage.text(resources: Resources): String = when (this) {
     is UserMessage.AddedToQueue ->
         resources.getQuantityString(R.plurals.added_to_queue, count, count)
+
+    UserMessage.PlayingNow -> resources.getString(R.string.playing_now)
 
     is UserMessage.PlaybackStopped -> resources.getString(
         when (failure) {

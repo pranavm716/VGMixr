@@ -195,6 +195,23 @@ class RemixesViewModelTest {
     }
 
     @Test
+    fun `swiping a track left plays it now and says so`() = runTest {
+        messages.messages.test {
+            viewModel().onPlayNow("yt:CCCCCCCCCCC")
+
+            assertEquals(listOf(FakePlaybackController.PlayNow("yt:CCCCCCCCCCC")), playback.calls)
+            assertEquals(UserMessage.PlayingNow, awaitItem())
+        }
+    }
+
+    @Test
+    fun `a greyed track can't be played now`() = runTest {
+        viewModel().onPlayNow("yt:BBBBBBBBBBB")
+
+        assertEquals(emptyList<Any>(), playback.calls)
+    }
+
+    @Test
     fun `a greyed track can't be queued`() = runTest {
         viewModel().onQueueTrack("yt:BBBBBBBBBBB")
 

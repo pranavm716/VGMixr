@@ -152,6 +152,16 @@ class SearchViewModel @Inject constructor(
             messages.post(UserMessage.AddedToQueue(1))
         }
     }
+
+    /** Plays one track now, keeping the queue and what plays next (a left swipe). */
+    fun onPlayNow(trackId: String) {
+        viewModelScope.launch {
+            val track = repository.catalog.first().track(trackId)
+            if (track == null || track.dimmed) return@launch
+            playback.playNow(trackId)
+            messages.post(UserMessage.PlayingNow)
+        }
+    }
 }
 
 /** How long typing must pause before the field is searched. */

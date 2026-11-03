@@ -60,7 +60,7 @@ import io.github.pranavm716.vgmixr.ui.components.SORT_ROW_KEY
 import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnReselect
 import io.github.pranavm716.vgmixr.ui.components.ScrollToTopOnSortChange
 import io.github.pranavm716.vgmixr.ui.components.SortRow
-import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
+import io.github.pranavm716.vgmixr.ui.components.SwipeToQueueOrPlayNow
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
 import io.github.pranavm716.vgmixr.ui.components.centerOn
@@ -105,6 +105,7 @@ fun RemixesTab(
         state,
         onTrackClick = viewModel::onTrackClick,
         onQueueTrack = viewModel::onQueueTrack,
+        onPlayNow = viewModel::onPlayNow,
         onTrackLongClick = onAddToPlaylist,
         onStartLinking = viewModel::onStartLinking,
         onStartDeleting = viewModel::onStartDeleting,
@@ -141,6 +142,7 @@ fun RemixesScreen(
     state: RemixesUiState,
     onTrackClick: (String) -> Unit,
     onQueueTrack: (String) -> Unit,
+    onPlayNow: (String) -> Unit = {},
     onTrackLongClick: (String) -> Unit,
     onStartLinking: () -> Unit,
     onStartDeleting: () -> Unit,
@@ -207,9 +209,10 @@ fun RemixesScreen(
             items(state.rows, key = { it.id }) { row ->
                 val mode = state.mode
                 // One row in every mode, so its button can slide in. A greyed track can't be
-                // queued, and in a mode nothing swipes.
-                SwipeToQueue(
+                // queued or played now, and in a mode nothing swipes.
+                SwipeToQueueOrPlayNow(
                     onQueue = { onQueueTrack(row.id) },
+                    onPlayNow = { onPlayNow(row.id) },
                     enabled = mode == RemixesMode.NORMAL && !row.unplayable
                 ) {
                     TrackTileRow(

@@ -26,6 +26,9 @@ interface PlaybackController {
      */
     fun resort(trackIds: List<String>, context: QueueContext)
 
+    /** Plays [trackId] at once, keeping the queue and what plays next (see [PlayQueue.playNow]). */
+    fun playNow(trackId: String)
+
     /** Adds [trackIds] to the end of the user's queue ("Next in queue"). */
     fun addToQueue(trackIds: List<String>)
 

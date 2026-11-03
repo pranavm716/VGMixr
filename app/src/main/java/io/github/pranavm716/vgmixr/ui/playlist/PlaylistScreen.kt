@@ -42,7 +42,7 @@ import io.github.pranavm716.vgmixr.ui.components.FavoritesHeaderArt
 import io.github.pranavm716.vgmixr.ui.components.FullWidth
 import io.github.pranavm716.vgmixr.ui.components.HeaderImage
 import io.github.pranavm716.vgmixr.ui.components.PlainBarTint
-import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
+import io.github.pranavm716.vgmixr.ui.components.SwipeToQueueOrPlayNow
 import io.github.pranavm716.vgmixr.ui.components.TileRowHeight
 import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
 import io.github.pranavm716.vgmixr.ui.components.playlistArtAsset
@@ -72,6 +72,7 @@ fun PlaylistTab(
         state,
         onTrackClick = viewModel::onTrackClick,
         onQueueTrack = viewModel::onQueueTrack,
+        onPlayNow = viewModel::onPlayNow,
         onEditPlaylist = onEditPlaylist,
         onRename = viewModel::onRename,
         onDelete = viewModel::onDelete,
@@ -92,6 +93,7 @@ fun PlaylistScreen(
     state: PlaylistUiState,
     onTrackClick: (String) -> Unit,
     onQueueTrack: (String) -> Unit,
+    onPlayNow: (String) -> Unit = {},
     onEditPlaylist: (name: String) -> Unit,
     onRename: (String) -> Unit,
     onDelete: () -> Unit,
@@ -166,7 +168,11 @@ fun PlaylistScreen(
                     if (row.unplayable) {
                         content()
                     } else {
-                        SwipeToQueue(onQueue = { onQueueTrack(row.id) }, content = content)
+                        SwipeToQueueOrPlayNow(
+                            onQueue = { onQueueTrack(row.id) },
+                            onPlayNow = { onPlayNow(row.id) },
+                            content = content
+                        )
                     }
                 }
             }

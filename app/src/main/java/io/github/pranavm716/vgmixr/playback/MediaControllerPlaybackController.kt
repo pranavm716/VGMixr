@@ -111,6 +111,10 @@ class MediaControllerPlaybackController @Inject constructor(
         it.sendCustomCommand(resortCommand, resortArgs(trackIds, context))
     }
 
+    override fun playNow(trackId: String) = withController {
+        it.apply(it.queue().playNow(trackId, hasEnded = it.playbackState == Player.STATE_ENDED))
+    }
+
     override fun addToQueue(trackIds: List<String>) = withController {
         it.apply(it.queue().add(trackIds, hasEnded = it.playbackState == Player.STATE_ENDED))
     }

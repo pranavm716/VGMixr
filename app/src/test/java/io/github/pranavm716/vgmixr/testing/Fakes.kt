@@ -60,6 +60,8 @@ class FakePlaybackController : PlaybackController {
 
     data class AddToQueue(val trackIds: List<String>)
 
+    data class PlayNow(val trackId: String)
+
     data class Resort(val trackIds: List<String>, val context: QueueContext)
 
     data object TogglePlayPause
@@ -148,6 +150,10 @@ class FakePlaybackController : PlaybackController {
 
     override fun playAll(trackIds: List<String>, context: QueueContext) {
         calls += PlayAll(trackIds, context)
+    }
+
+    override fun playNow(trackId: String) {
+        calls += PlayNow(trackId)
     }
 
     override fun addToQueue(trackIds: List<String>) {

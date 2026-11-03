@@ -184,6 +184,16 @@ class PlaylistViewModel @Inject constructor(
             messages.post(UserMessage.AddedToQueue(1))
         }
     }
+
+    /** Plays one track now, keeping the queue and what plays next (a left swipe). */
+    fun onPlayNow(trackId: String) {
+        viewModelScope.launch {
+            val track = catalog.catalog.first().trackOrRetired(trackId)
+            if (track == null || track.dimmed) return@launch
+            playback.playNow(trackId)
+            messages.post(UserMessage.PlayingNow)
+        }
+    }
 }
 
 // Retired tracks are listed greyed; deleted remixes aren't listed.
