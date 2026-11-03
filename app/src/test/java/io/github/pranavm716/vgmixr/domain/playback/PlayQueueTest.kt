@@ -142,6 +142,27 @@ class PlayQueueTest {
     }
 
     @Test
+    fun `moving a queued track moves it within next in queue`() {
+        // a, [b], q1, q2, q3, c
+        val queue =
+            PlayQueue(context("a", "b") + queued("q1", "q2", "q3") + context("c"), current = 1)
+
+        assertEquals(listOf(QueueEdit.Move(2, 3, 4)), queue.move(from = 2, to = 4))
+        assertEquals(listOf(QueueEdit.Move(4, 5, 2)), queue.move(from = 4, to = 2))
+    }
+
+    @Test
+    fun `a move onto itself, or out of next in queue, does nothing`() {
+        val queue =
+            PlayQueue(context("a", "b") + queued("q1", "q2", "q3") + context("c"), current = 1)
+
+        assertEquals(emptyList<QueueEdit>(), queue.move(from = 3, to = 3))
+        assertEquals(emptyList<QueueEdit>(), queue.move(from = 2, to = 5))
+        assertEquals(emptyList<QueueEdit>(), queue.move(from = 2, to = 1))
+        assertEquals(emptyList<QueueEdit>(), queue.move(from = 5, to = 2))
+    }
+
+    @Test
     fun `the queue tells what is next in queue and what is next from the family`() {
         val queue =
             PlayQueue(context("a", "b") + queued("q1", "q2") + context("c", "d"), current = 1)

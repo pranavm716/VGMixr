@@ -117,6 +117,9 @@
     <string name="search_no_results">No tracks match “%1$s”</string>
 
     <string name="play_now">Play now</string>
+    <string name="drag_to_reorder">Drag to reorder</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
     <string name="playing_now">Playing now</string>
     <plurals name="added_to_queue">
         <item quantity="one">Added to queue</item>

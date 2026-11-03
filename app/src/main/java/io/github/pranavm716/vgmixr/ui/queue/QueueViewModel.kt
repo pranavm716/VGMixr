@@ -91,6 +91,9 @@ class QueueViewModel @Inject constructor(
 
     fun onRemove(index: Int) = playback.removeFromQueue(index)
 
+    /** Moves queued entry [from] to [to], dragged by its handle within "Next in queue". */
+    fun onMove(from: Int, to: Int) = playback.moveInQueue(from, to)
+
     /** Adds the track at [index] (from "Next from") to the end of "Next in queue". */
     fun onQueue(index: Int) {
         val trackId = playback.state.value.queue.entries.getOrNull(index)?.trackId ?: return

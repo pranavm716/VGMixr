@@ -151,6 +151,9 @@ class MediaControllerPlaybackController @Inject constructor(
 
     override fun jumpTo(index: Int) = withController { it.apply(it.queue().jumpTo(index)) }
 
+    override fun moveInQueue(from: Int, to: Int) =
+        withController { it.apply(it.queue().move(from, to)) }
+
     override fun removeFromQueue(index: Int) = withController { it.apply(it.queue().remove(index)) }
 
     override fun removeTrack(trackId: String) =

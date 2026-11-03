@@ -105,6 +105,13 @@ class QueueViewModelTest {
     }
 
     @Test
+    fun `a dragged queue row moves in the player`() {
+        viewModel.onMove(from = 2, to = 4)
+
+        assertEquals(listOf(FakePlaybackController.MoveInQueue(2, 4)), playback.calls)
+    }
+
+    @Test
     fun `taps, swipes and the clear button reach the player`() {
         viewModel.onJump(4)
         viewModel.onRemove(2)

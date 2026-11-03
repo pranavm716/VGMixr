@@ -210,6 +210,16 @@ data class PlayQueue(val entries: List<QueueEntry>, val current: Int) {
     }
 
     /**
+     * Moves queued entry [from] to [to] (a drag on the queue screen): both must be in "Next in
+     * queue", so a track never moves into the one playing or into "Next from".
+     */
+    fun move(from: Int, to: Int): List<QueueEdit> {
+        val queued = current + 1 until nextFromStart
+        if (from == to || from !in queued || to !in queued) return emptyList()
+        return listOf(QueueEdit.Move(from, from + 1, to))
+    }
+
+    /**
      * Takes every entry of [trackId] out, the playing one too (a deleted remix): the player then
      * plays the entry after it, keeping play or pause. Last first, so earlier indices hold.
      */
