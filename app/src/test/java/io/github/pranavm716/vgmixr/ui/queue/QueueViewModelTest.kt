@@ -173,6 +173,25 @@ class QueueViewModelTest {
     }
 
     @Test
+    fun `next from a tab's long press names Games or Playlists`() = runTest {
+        for ((context, name) in listOf(
+            QueueContext.Games to "Games",
+            QueueContext.Playlists to "Playlists"
+        )) {
+            playback.state.value = state(
+                listOf(
+                    QueueEntry("yt:AAAAAAAAAAA", context),
+                    QueueEntry("yt:BBBBBBBBBBB", context)
+                ),
+                current = 0
+            )
+            viewModel.uiState.test {
+                assertEquals(name, expectMostRecentItem().nextFromName)
+            }
+        }
+    }
+
+    @Test
     fun `user tracks from a deleted playlist come from Remixes`() = runTest {
         val gone = QueueContext.Playlist(9)
         playback.state.value = state(

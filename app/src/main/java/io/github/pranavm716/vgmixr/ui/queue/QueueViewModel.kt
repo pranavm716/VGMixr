@@ -134,6 +134,10 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
 
         QueueContext.Remixes -> REMIXES
 
+        QueueContext.Games -> "Games"
+
+        QueueContext.Playlists -> "Playlists"
+
         QueueContext.Queue, null -> null
     }
     return QueueUiState(

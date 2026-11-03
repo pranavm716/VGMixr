@@ -15,7 +15,9 @@ import kotlinx.serialization.Serializable
  */
 @Serializable data class FamilyRoute(val familyId: String, val fromNowPlaying: Boolean = false)
 
-/** The Search tab. */
+/** The Search tab: search, and Settings. */
+@Serializable data object SearchGraph
+
 @Serializable data object SearchRoute
 
 /** The Playlists tab: the playlist list, and a playlist's tracks opened from it. */
@@ -40,25 +42,32 @@ import kotlinx.serialization.Serializable
 /** Remix [trackId]'s Link page: sets, changes or clears the catalog track it remixes. */
 @Serializable data class LinkRoute(val trackId: String)
 
-/** Settings, opened by a long press on the Games tab. */
+/** Settings, opened by a long press on the Search tab. */
 @Serializable data object SettingsRoute
+
+/** What a long press on a navbar tab does. */
+sealed interface LongPress {
+    /** Opens [route] inside the tab, over whatever it shows. */
+    data class Open(val route: Any) : LongPress
+
+    /** Plays the tab's tracks, as a held family or playlist does (chosen in Settings). */
+    data object Play : LongPress
+}
 
 /**
  * The navbar's tabs, in bar order. The first entry is the start tab, so moving a tab is moving
- * its line. A long press on a tab with a [longPressRoute] opens that page inside the tab; on one
- * that [longPressPlays], it plays all of the tab's tracks, as a held family or playlist does.
+ * its line. Each has a [longPress].
  */
 enum class TopLevelDestination(
     val label: String,
     @param:DrawableRes val icon: Int,
     val route: Any,
-    val longPressRoute: Any? = null,
-    val longPressPlays: Boolean = false
+    val longPress: LongPress
 ) {
-    GAMES("Games", R.drawable.ic_games, GamesGraph, longPressRoute = SettingsRoute),
-    SEARCH("Search", R.drawable.ic_search, SearchRoute),
-    PLAYLISTS("Playlists", R.drawable.ic_library_music, PlaylistsGraph),
-    REMIXES("Remixes", R.drawable.ic_equalizer, RemixesGraph, longPressPlays = true);
+    GAMES("Games", R.drawable.ic_games, GamesGraph, LongPress.Play),
+    SEARCH("Search", R.drawable.ic_search, SearchGraph, LongPress.Open(SettingsRoute)),
+    PLAYLISTS("Playlists", R.drawable.ic_library_music, PlaylistsGraph, LongPress.Play),
+    REMIXES("Remixes", R.drawable.ic_equalizer, RemixesGraph, LongPress.Play);
 
     companion object {
         val start: TopLevelDestination get() = entries.first()

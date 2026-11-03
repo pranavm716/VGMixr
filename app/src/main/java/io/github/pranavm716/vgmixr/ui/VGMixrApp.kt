@@ -74,11 +74,13 @@ import io.github.pranavm716.vgmixr.ui.navigation.FamilyRoute
 import io.github.pranavm716.vgmixr.ui.navigation.GamesGraph
 import io.github.pranavm716.vgmixr.ui.navigation.GamesRoute
 import io.github.pranavm716.vgmixr.ui.navigation.LinkRoute
+import io.github.pranavm716.vgmixr.ui.navigation.LongPress
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistRoute
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistsGraph
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistsRoute
 import io.github.pranavm716.vgmixr.ui.navigation.RemixesGraph
 import io.github.pranavm716.vgmixr.ui.navigation.RemixesRoute
+import io.github.pranavm716.vgmixr.ui.navigation.SearchGraph
 import io.github.pranavm716.vgmixr.ui.navigation.SearchRoute
 import io.github.pranavm716.vgmixr.ui.navigation.SettingsRoute
 import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
@@ -120,7 +122,7 @@ const val SETTINGS_SCREEN_TAG = "screen-settings"
  * [familyScreen] a family's tracks, [playlistScreen] a playlist's (its plus opens
  * [editPlaylistScreen]); all default to placeholders
  * so the shell runs without Hilt (tests), and MainActivity passes the real screens.
- * [settingsScreen] is opened by a long press on the Remixes tab.
+ * [settingsScreen] is opened by a long press on the Search tab. [onPlayTab] plays a held tab.
  */
 @Composable
 fun VGMixrApp(
@@ -141,7 +143,7 @@ fun VGMixrApp(
         SettingsScreen(SettingsUiState(), onAccentClick = {}, onBack = it)
     },
     snackbars: SnackbarHostState = remember { SnackbarHostState() },
-    onPlayRemixes: () -> Unit = {},
+    onPlayTab: (TopLevelDestination) -> Unit = {},
     miniPlayer: @Composable (
         NowPlayingSheetState,
         onOpenNowPlaying: () -> Unit
@@ -262,16 +264,17 @@ fun VGMixrApp(
                                 navController.navigateTo(tab)
                             }
                         },
-                        // Plays the tab's tracks (Remixes), or opens the tab's page inside it,
-                        // over whatever the tab shows (Games: Settings).
+                        // Plays the tab's tracks, or opens the tab's page inside it, over
+                        // whatever the tab shows (Search: Settings).
                         onLongPress = { tab ->
-                            if (tab.longPressPlays) {
-                                onPlayRemixes()
-                                return@VGMixrNavBar
+                            when (val press = tab.longPress) {
+                                LongPress.Play -> onPlayTab(tab)
+
+                                is LongPress.Open -> {
+                                    if (tab != selected) navController.navigateTo(tab)
+                                    navController.navigate(press.route) { launchSingleTop = true }
+                                }
                             }
-                            val page = tab.longPressRoute ?: return@VGMixrNavBar
-                            if (tab != selected) navController.navigateTo(tab)
-                            navController.navigate(page) { launchSingleTop = true }
                         }
                     )
                 }
@@ -318,6 +321,12 @@ fun VGMixrApp(
                             }
 
                             PlayingFromUi.Remixes -> openRemixes()
+
+                            PlayingFromUi.Games ->
+                                navController.navigateTo(TopLevelDestination.GAMES)
+
+                            PlayingFromUi.Playlists ->
+                                navController.navigateTo(TopLevelDestination.PLAYLISTS)
 
                             PlayingFromUi.Queue -> Unit
                         }
@@ -423,15 +432,17 @@ private fun AppNavHost(
                     familyScreen(onAddToPlaylist)
                 }
             }
+        }
+        navigation<SearchGraph>(startDestination = SearchRoute) {
+            composable<SearchRoute> {
+                Tab(TopLevelDestination.SEARCH, navController, screen, reselects, onAddToPlaylist)
+            }
             // Pads below the status bar itself, as the family screen does.
             composable<SettingsRoute> {
                 Box(Modifier.screen().testTag(SETTINGS_SCREEN_TAG)) {
                     settingsScreen { navController.popBackStack() }
                 }
             }
-        }
-        composable<SearchRoute> {
-            Tab(TopLevelDestination.SEARCH, navController, screen, reselects, onAddToPlaylist)
         }
         navigation<PlaylistsGraph>(startDestination = PlaylistsRoute) {
             composable<PlaylistsRoute> {

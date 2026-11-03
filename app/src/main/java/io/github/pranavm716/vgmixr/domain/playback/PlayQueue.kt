@@ -27,6 +27,12 @@ sealed interface QueueContext {
     /** Tapped in the Remixes tab, or a user track tapped anywhere but a playlist. */
     data object Remixes : QueueContext
 
+    /** A long press on the Games tab, with more than one family chosen in Settings. */
+    data object Games : QueueContext
+
+    /** A long press on the Playlists tab, with more than one playlist chosen in Settings. */
+    data object Playlists : QueueContext
+
     /** The context as a short string, to carry it with a player item. */
     val key: String
         get() = when (this) {
@@ -34,6 +40,8 @@ sealed interface QueueContext {
             is Playlist -> "$PLAYLIST_PREFIX$playlistId"
             Queue -> QUEUE_KEY
             Remixes -> REMIXES_KEY
+            Games -> GAMES_KEY
+            Playlists -> PLAYLISTS_KEY
         }
 
     companion object {
@@ -41,11 +49,17 @@ sealed interface QueueContext {
         private const val PLAYLIST_PREFIX = "playlist:"
         private const val QUEUE_KEY = "queue"
         private const val REMIXES_KEY = "remixes"
+        private const val GAMES_KEY = "games"
+        private const val PLAYLISTS_KEY = "playlists"
 
         fun fromKey(key: String): QueueContext? = when {
             key == QUEUE_KEY -> Queue
 
             key == REMIXES_KEY -> Remixes
+
+            key == GAMES_KEY -> Games
+
+            key == PLAYLISTS_KEY -> Playlists
 
             key.startsWith(FAMILY_PREFIX) -> Family(key.removePrefix(FAMILY_PREFIX))
 

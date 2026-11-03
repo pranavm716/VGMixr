@@ -17,7 +17,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.playback.PlayableTab
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
+import io.github.pranavm716.vgmixr.domain.playback.TabPlayer
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.playPlaylist
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
@@ -26,6 +28,7 @@ import io.github.pranavm716.vgmixr.ui.AppScreen
 import io.github.pranavm716.vgmixr.ui.VGMixrApp
 import io.github.pranavm716.vgmixr.ui.family.FamilyTab
 import io.github.pranavm716.vgmixr.ui.messages.MessagesEffect
+import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
 import io.github.pranavm716.vgmixr.ui.player.AddToPlaylist
 import io.github.pranavm716.vgmixr.ui.player.MiniPlayerBar
 import io.github.pranavm716.vgmixr.ui.player.MiniPlayerInSheet
@@ -36,7 +39,6 @@ import io.github.pranavm716.vgmixr.ui.playlist.EditPlaylistTab
 import io.github.pranavm716.vgmixr.ui.playlist.PlaylistTab
 import io.github.pranavm716.vgmixr.ui.queue.QueueScreen
 import io.github.pranavm716.vgmixr.ui.remixes.LinkTab
-import io.github.pranavm716.vgmixr.ui.remixes.RemixesViewModel
 import io.github.pranavm716.vgmixr.ui.settings.SettingsTab
 import io.github.pranavm716.vgmixr.ui.theme.Background
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
@@ -60,6 +62,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var playback: PlaybackController
+
+    @Inject
+    lateinit var tabPlayer: TabPlayer
 
     // Held here so the notification's intent (onNewIntent) can open it.
     private val nowPlayingOpen = mutableStateOf(false)
@@ -89,8 +94,6 @@ class MainActivity : ComponentActivity() {
             VGMixrTheme(accent.color, background.color) {
                 val snackbars = remember { SnackbarHostState() }
                 MessagesEffect(snackbars)
-                // A long press on the Remixes tab plays them from any tab.
-                val remixes: RemixesViewModel = hiltViewModel()
                 val miniPlayer: MiniPlayerViewModel = hiltViewModel()
                 val nothingLoaded by miniPlayer.nothingLoaded.collectAsStateWithLifecycle()
                 VGMixrApp(
@@ -105,7 +108,7 @@ class MainActivity : ComponentActivity() {
                     linkScreen = { back -> LinkTab(onBack = back) },
                     settingsScreen = { back -> SettingsTab(onBack = back) },
                     snackbars = snackbars,
-                    onPlayRemixes = remixes::onPlayAll,
+                    onPlayTab = ::playTab,
                     miniPlayer = { sheet, open -> MiniPlayerBar(sheet, onOpenNowPlaying = open) },
                     miniPlayerInSheet = { MiniPlayerInSheet() },
                     nowPlayingHeader = { close, open -> NowPlayingHeader(close, open) },
@@ -142,6 +145,17 @@ class MainActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(NOW_PLAYING_OPEN, nowPlayingOpen.value)
+    }
+
+    /** A long press on a navbar tab that plays: Games, Playlists or Remixes. */
+    private fun playTab(tab: TopLevelDestination) {
+        val playable = when (tab) {
+            TopLevelDestination.GAMES -> PlayableTab.GAMES
+            TopLevelDestination.PLAYLISTS -> PlayableTab.PLAYLISTS
+            TopLevelDestination.REMIXES -> PlayableTab.REMIXES
+            TopLevelDestination.SEARCH -> return
+        }
+        lifecycleScope.launch { tabPlayer.play(playable) }
     }
 
     companion object {

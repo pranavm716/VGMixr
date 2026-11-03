@@ -27,6 +27,7 @@ import io.github.pranavm716.vgmixr.domain.settings.Accent
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
 import io.github.pranavm716.vgmixr.domain.settings.Background
 import io.github.pranavm716.vgmixr.domain.settings.BackgroundSetting
+import io.github.pranavm716.vgmixr.domain.settings.HoldSettings
 import io.github.pranavm716.vgmixr.domain.settings.SortSettings
 import io.github.pranavm716.vgmixr.domain.sort.SortKeys
 import io.github.pranavm716.vgmixr.domain.sort.SortSetting
@@ -275,6 +276,20 @@ class FakeAccentSetting(initial: Accent = Accent.DEFAULT) : AccentSetting {
 
     override fun set(accent: Accent) {
         this.accent.value = accent
+    }
+}
+
+class FakeHoldSettings(excluded: Set<String> = emptySet(), playlists: Set<Long> = emptySet()) :
+    HoldSettings {
+    override val excludedFamilies = MutableStateFlow(excluded)
+    override val playlists = MutableStateFlow(playlists)
+
+    override fun setExcludedFamilies(ids: Set<String>) {
+        excludedFamilies.value = ids
+    }
+
+    override fun setPlaylists(ids: Set<Long>) {
+        playlists.value = ids
     }
 }
 

@@ -6,9 +6,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.pranavm716.vgmixr.data.settings.PrefsAccentSetting
 import io.github.pranavm716.vgmixr.data.settings.PrefsBackgroundSetting
+import io.github.pranavm716.vgmixr.data.settings.PrefsHoldSettings
 import io.github.pranavm716.vgmixr.data.settings.PrefsSortSettings
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
 import io.github.pranavm716.vgmixr.domain.settings.BackgroundSetting
+import io.github.pranavm716.vgmixr.domain.settings.HoldSettings
 import io.github.pranavm716.vgmixr.domain.settings.SortSettings
 
 @Module
@@ -19,6 +21,9 @@ object SettingsModule {
 
     @Provides
     fun provideBackgroundSetting(setting: PrefsBackgroundSetting): BackgroundSetting = setting
+
+    @Provides
+    fun provideHoldSettings(settings: PrefsHoldSettings): HoldSettings = settings
 
     @Provides
     fun provideSortSettings(settings: PrefsSortSettings): SortSettings = settings

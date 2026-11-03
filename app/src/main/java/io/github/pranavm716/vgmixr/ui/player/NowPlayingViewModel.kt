@@ -67,6 +67,12 @@ sealed interface PlayingFromUi {
 
     /** Tapped in the Remixes tab; the header opens it. */
     data object Remixes : PlayingFromUi
+
+    /** A long press on the Games tab with several families; the header opens the tab. */
+    data object Games : PlayingFromUi
+
+    /** A long press on the Playlists tab with several playlists; the header opens the tab. */
+    data object Playlists : PlayingFromUi
 }
 
 @HiltViewModel
@@ -153,6 +159,10 @@ private fun Catalog.nowPlaying(
         QueueContext.Queue -> PlayingFromUi.Queue
 
         QueueContext.Remixes -> PlayingFromUi.Remixes
+
+        QueueContext.Games -> PlayingFromUi.Games
+
+        QueueContext.Playlists -> PlayingFromUi.Playlists
     }
     return NowPlayingUiState.Visible(
         trackId = track.id,

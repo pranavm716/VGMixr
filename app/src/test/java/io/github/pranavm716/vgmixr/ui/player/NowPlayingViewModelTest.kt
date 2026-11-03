@@ -111,6 +111,22 @@ class NowPlayingViewModelTest {
     }
 
     @Test
+    fun `a track from a tab's long press plays from Games or Playlists`() = runTest {
+        playback.state.value = playing(QueueContext.Games)
+        viewModel.uiState.test {
+            assertEquals(
+                PlayingFromUi.Games,
+                (awaitItem() as NowPlayingUiState.Visible).playingFrom
+            )
+            playback.state.value = playing(QueueContext.Playlists)
+            assertEquals(
+                PlayingFromUi.Playlists,
+                (awaitItem() as NowPlayingUiState.Visible).playingFrom
+            )
+        }
+    }
+
+    @Test
     fun `a track playing from a playlist still knows its own family`() = runTest {
         playback.state.value = playing(QueueContext.Playlist(1))
 
