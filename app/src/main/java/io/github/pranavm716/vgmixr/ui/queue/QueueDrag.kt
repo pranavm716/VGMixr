@@ -86,17 +86,48 @@ fun carryKeys(
     }
 }
 
-/** Keeps the queued rows' keys from one queue to the next (see [carryKeys]). */
+/**
+ * Keeps the queued rows' keys from one queue to the next. A removal or a move made on this screen
+ * is told first ([removed], [moved]): the keys then follow it exactly, which a comparison can't
+ * when the rows are copies of one track. Other changes (a queued track starting to play, tracks
+ * added) are matched by [carryKeys].
+ */
 class QueueKeys {
     private var last: List<Pair<String, String>> = emptyList()
+    private var lastEntries: List<Int> = emptyList()
     private var lastQueue: Any? = null
     private var count = 0
+    private var edit: ((List<Pair<String, String>>) -> List<Pair<String, String>>)? = null
+    private var editedSize = -1
+
+    /** Entry [index] is being removed from the queue. */
+    fun removed(index: Int) {
+        val at = lastEntries.indexOf(index).takeIf { it >= 0 } ?: return
+        edit = { rows -> rows.filterIndexed { i, _ -> i != at } }
+        editedSize = last.size - 1
+    }
+
+    /** Entry [from] is being moved to entry [to]. */
+    fun moved(from: Int, to: Int) {
+        val at = lastEntries.indexOf(from).takeIf { it >= 0 } ?: return
+        val target = lastEntries.indexOf(to).takeIf { it >= 0 } ?: return
+        edit = { rows -> rows.toMutableList().apply { add(target, removeAt(at)) } }
+        editedSize = last.size
+    }
 
     /** The key of each row of [queue] (entry index and track id), by entry index. */
     fun keysFor(queue: Any, rows: List<Pair<Int, String>>): Map<Int, String> {
         if (queue !== lastQueue) {
-            val keys = carryKeys(last, rows.map { it.second }) { "upnext-${count++}" }
-            last = rows.map { it.second }.zip(keys)
+            val tracks = rows.map { it.second }
+            // The told edit, if the new queue is what it makes; else a comparison.
+            val edited = edit?.takeIf { editedSize == rows.size }?.invoke(last)
+            last = if (edited != null && edited.map { it.first } == tracks) {
+                edited
+            } else {
+                tracks.zip(carryKeys(last, tracks) { "upnext-${count++}" })
+            }
+            edit = null
+            lastEntries = rows.map { it.first }
             lastQueue = queue
         }
         return rows.map { it.first }.zip(last.map { it.second }).toMap()

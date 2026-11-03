@@ -133,7 +133,12 @@ fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()
                             Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
                         }
                     ) {
-                        SwipeToRemove(onRemove = { viewModel.onRemove(row.index) }) {
+                        SwipeToRemove(
+                            onRemove = {
+                                queueKeys.removed(row.index)
+                                viewModel.onRemove(row.index)
+                            }
+                        ) {
                             QueueRow(row, current = false, onClick = { jump(row.index) }) {
                                 DragHandle(
                                     onStart = { touchY ->
@@ -150,13 +155,22 @@ fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()
                                     onDrag = drag::dragBy,
                                     onEnd = {
                                         haptics.performHapticFeedback(HapticFeedbackType.GestureEnd)
-                                        drag.end()?.let { (from, to) -> viewModel.onMove(from, to) }
+                                        drag.end()?.let { (from, to) ->
+                                            queueKeys.moved(from, to)
+                                            viewModel.onMove(from, to)
+                                        }
                                     },
                                     onMoveUp = above?.let {
-                                        { viewModel.onMove(row.index, it.index) }
+                                        {
+                                            queueKeys.moved(row.index, it.index)
+                                            viewModel.onMove(row.index, it.index)
+                                        }
                                     },
                                     onMoveDown = below?.let {
-                                        { viewModel.onMove(row.index, it.index) }
+                                        {
+                                            queueKeys.moved(row.index, it.index)
+                                            viewModel.onMove(row.index, it.index)
+                                        }
                                     }
                                 )
                             }

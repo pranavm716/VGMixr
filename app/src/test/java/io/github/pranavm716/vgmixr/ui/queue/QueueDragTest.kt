@@ -91,4 +91,32 @@ class QueueDragTest {
         assertEquals(-300f, drawn(-450f))
         assertEquals(600f, drawn(800f))
     }
+
+    // Queued rows as the screen gives them: entry index and track, the queue starting at entry 1.
+    private fun rows(vararg tracks: String) = tracks.mapIndexed { i, track -> i + 1 to track }
+
+    @Test
+    fun `removing one of five copies of a track drops that row's key, not another`() {
+        val keys = QueueKeys()
+        val before = keys.keysFor(Any(), rows("x", "x", "x", "x", "x"))
+
+        keys.removed(3)
+        val after = keys.keysFor(Any(), rows("x", "x", "x", "x"))
+
+        assertEquals(
+            listOf(before[1], before[2], before[4], before[5]),
+            listOf(after[1], after[2], after[3], after[4])
+        )
+    }
+
+    @Test
+    fun `moving one of several copies keeps its key with it`() {
+        val keys = QueueKeys()
+        val before = keys.keysFor(Any(), rows("x", "x", "x"))
+
+        keys.moved(from = 1, to = 3)
+        val after = keys.keysFor(Any(), rows("x", "x", "x"))
+
+        assertEquals(listOf(before[2], before[3], before[1]), listOf(after[1], after[2], after[3]))
+    }
 }
