@@ -160,7 +160,11 @@ fun SearchScreen(
                     } else {
                         SwipeToQueueOrPlayNow(
                             onQueue = { onQueueTrack(row.id) },
-                            onPlayNow = { onPlayNow(row.id) },
+                            // Playing now leaves the search, as a tap does.
+                            onPlayNow = {
+                                hideKeyboard()
+                                onPlayNow(row.id)
+                            },
                             content = content
                         )
                     }
