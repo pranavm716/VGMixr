@@ -152,7 +152,8 @@ private fun PlayingFromText(playingFrom: PlayingFromUi?) {
  * the header's text and the title's letters (layout E of roadmap 13b's mockups).
  * Tapping the title or chips opens the track's own family ([onOpenFamily]), also when it plays
  * from a playlist, to reach the tracks around it; a user track's opens the Remixes tab
- * ([onOpenRemixes]). Swiping anywhere from the header to the title goes to the next track (left)
+ * ([onOpenRemixes]). Swiping anywhere from the header to halfway between the chips and the seek
+ * bar goes to the next track (left)
  * or always back to the previous one (right), sliding only the art until the track changes.
  */
 @Composable
@@ -188,8 +189,9 @@ fun NowPlayingScreen(
             .padding(top = 66.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Everything between the header and the title swipes: left for the next track, right for
-        // the previous one. One drag state over the three pieces makes them one touch area.
+        // Everything from the header to halfway between the chips and the seek bar swipes: left
+        // for the next track, right for the previous one. One drag state over the pieces makes
+        // them one touch area.
         // The id comes with the art it names, so a swipe settles in the frame the art changes.
         val currentTrackId by rememberUpdatedState(visible.trackId)
         val swipe = rememberTrackSwipeState(visible.previous != null, visible.next != null)
@@ -217,31 +219,37 @@ fun NowPlayingScreen(
             visible.next?.let { TrackArt(it) { slot(1) } }
         }
         Spacer(Modifier.weight(BELOW_ART).then(swipeArea))
-        // A tap target without a ripple, as the header's "Playing from".
-        Column(
-            Modifier
-                .offset(y = INFO_NUDGE)
-                .clickable(interactionSource = null, indication = null) {
-                    if (visible.opensRemixes) {
-                        onOpenRemixes()
-                    } else {
-                        visible.familyId?.let(
-                            onOpenFamily
-                        )
-                    }
-                },
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // A title too wide scrolls, fading at both edges.
-            MarqueeText(
-                visible.title,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(horizontal = SIDE_MARGIN)
-            )
-            Spacer(Modifier.height(12.dp))
-            ChipsLine(visible.chips, visible.subtitle)
+        // The title and chips swipe too, down to halfway to the seek bar; a tap still opens.
+        Column(swipeArea, horizontalAlignment = Alignment.CenterHorizontally) {
+            // A tap target without a ripple, as the header's "Playing from".
+            Column(
+                Modifier
+                    .offset(y = INFO_NUDGE)
+                    .clickable(interactionSource = null, indication = null) {
+                        if (visible.opensRemixes) {
+                            onOpenRemixes()
+                        } else {
+                            visible.familyId?.let(
+                                onOpenFamily
+                            )
+                        }
+                    },
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // A title too wide scrolls, fading at both edges.
+                MarqueeText(
+                    visible.title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(horizontal = SIDE_MARGIN)
+                )
+                Spacer(Modifier.height(12.dp))
+                ChipsLine(visible.chips, visible.subtitle)
+            }
+            // The chips are drawn INFO_NUDGE low, so the swipe area ends halfway between them, as
+            // seen, and the seek row.
+            Spacer(Modifier.height((INFO_TO_SEEK + INFO_NUDGE) / 2))
         }
-        Spacer(Modifier.height(INFO_TO_SEEK))
+        Spacer(Modifier.height((INFO_TO_SEEK - INFO_NUDGE) / 2))
         Column(Modifier.padding(horizontal = SIDE_MARGIN)) {
             SeekRow(viewModel)
             Spacer(Modifier.height(16.dp))
