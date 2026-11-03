@@ -67,6 +67,7 @@ fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     val drag = rememberQueueDragState(listState)
+    val queueKeys = remember { QueueKeys() }
     val haptics = LocalHapticFeedback.current
     // Playing a track from the list brings the list back to the top, where it now plays.
     val jump: (Int) -> Unit = { index ->
@@ -107,9 +108,12 @@ fun QueueScreen(onClose: () -> Unit, viewModel: QueueViewModel = hiltViewModel()
                     ?.mapNotNull { index -> state.upNext.firstOrNull { it.index == index } }
                     ?.takeIf { it.size == state.upNext.size }
                     ?: state.upNext
-                val keys = state.upNext.map { it.index }
-                    .zip(queuedKeys(state.upNext.map { it.trackId }))
-                    .toMap()
+                val keys = queueKeys.keysFor(
+                    state.upNext,
+                    state.upNext.map {
+                        it.index to it.trackId
+                    }
+                )
                 items(shown, key = { keys.getValue(it.index) }) { row ->
                     val lifted = drag.liftedKey == keys.getValue(row.index)
                     // The rows around it, for the Move up and Move down accessibility actions.

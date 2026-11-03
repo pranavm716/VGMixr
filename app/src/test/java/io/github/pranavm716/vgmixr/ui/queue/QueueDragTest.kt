@@ -45,14 +45,33 @@ class QueueDragTest {
         assertEquals(true, canAutoScroll(speed = -5f, edgeRow = RowSpan(1, -40f, 60f), 0f, 1000f))
     }
 
+    private fun fresh(): () -> String {
+        var n = 0
+        return { "new${n++}" }
+    }
+
     @Test
-    fun `queued rows are keyed by track and copy, so a move doesn't re-key the rows it passes`() {
+    fun `removing a row keeps every other row's key, duplicates included`() {
+        // a is queued twice; the first a is removed.
+        val old = listOf("a" to "k1", "b" to "k2", "a" to "k3")
+
+        assertEquals(listOf("k2", "k3"), carryKeys(old, listOf("b", "a"), fresh()))
+    }
+
+    @Test
+    fun `a moved row keeps its key, and new rows get new ones`() {
+        val old = listOf("a" to "k1", "b" to "k2", "c" to "k3")
+
+        assertEquals(listOf("k2", "k3", "k1"), carryKeys(old, listOf("b", "c", "a"), fresh()))
         assertEquals(
-            listOf("upnext-a-0", "upnext-b-0", "upnext-a-1"),
-            queuedKeys(listOf("a", "b", "a"))
+            listOf("k1", "new0", "k2"),
+            carryKeys(old.take(2), listOf("a", "d", "b"), fresh())
         )
-        // After a moves from the front to the back, b keeps its key.
-        assertEquals("upnext-b-0", queuedKeys(listOf("b", "a", "a"))[0])
+    }
+
+    @Test
+    fun `a first queue gets new keys`() {
+        assertEquals(listOf("new0", "new1"), carryKeys(emptyList(), listOf("a", "a"), fresh()))
     }
 
     @Test

@@ -35,16 +35,71 @@ fun canAutoScroll(speed: Float, edgeRow: RowSpan?, top: Float, bottom: Float): B
 }
 
 /**
- * The list keys of the queued rows, playing [trackIds] in order: each by its track and which copy
- * of it it is, so moving one row doesn't re-key the rows it passes (keys by queue position would,
- * and the list would animate them all again).
+ * The list keys of the queued rows, playing [newTracks] in order, carried over from the rows
+ * before ([old], track to key) so a row that stays keeps its key: a removal or a move must not
+ * re-key the rows it passes, or the list animates them again (and a row slid aside to be removed
+ * would hand its state to another copy of its track). Rows kept in place are matched by a longest
+ * common run of tracks; a row that moved takes an unmatched key of its track; new rows get [fresh].
  */
-fun queuedKeys(trackIds: List<String>): List<String> {
-    val seen = mutableMapOf<String, Int>()
-    return trackIds.map { id ->
-        val copy = seen.getOrDefault(id, 0)
-        seen[id] = copy + 1
-        "upnext-$id-$copy"
+fun carryKeys(
+    old: List<Pair<String, String>>,
+    newTracks: List<String>,
+    fresh: () -> String
+): List<String> {
+    val oldTracks = old.map { it.first }
+    // lcs[i][j]: the longest common run of oldTracks from i and newTracks from j.
+    val lcs = Array(oldTracks.size + 1) { IntArray(newTracks.size + 1) }
+    for (i in oldTracks.indices.reversed()) {
+        for (j in newTracks.indices.reversed()) {
+            lcs[i][j] = if (oldTracks[i] == newTracks[j]) {
+                lcs[i + 1][j + 1] + 1
+            } else {
+                maxOf(lcs[i + 1][j], lcs[i][j + 1])
+            }
+        }
+    }
+    val keys = arrayOfNulls<String>(newTracks.size)
+    val used = BooleanArray(old.size)
+    var i = 0
+    var j = 0
+    while (i < oldTracks.size && j < newTracks.size) {
+        when {
+            oldTracks[i] == newTracks[j] -> {
+                keys[j] = old[i].second
+                used[i] = true
+                i++
+                j++
+            }
+
+            lcs[i + 1][j] >= lcs[i][j + 1] -> i++
+
+            else -> j++
+        }
+    }
+    return newTracks.mapIndexed { at, track ->
+        keys[at] ?: old.indices.firstOrNull { !used[it] && oldTracks[it] == track }
+            ?.let {
+                used[it] = true
+                old[it].second
+            }
+            ?: fresh()
+    }
+}
+
+/** Keeps the queued rows' keys from one queue to the next (see [carryKeys]). */
+class QueueKeys {
+    private var last: List<Pair<String, String>> = emptyList()
+    private var lastQueue: Any? = null
+    private var count = 0
+
+    /** The key of each row of [queue] (entry index and track id), by entry index. */
+    fun keysFor(queue: Any, rows: List<Pair<Int, String>>): Map<Int, String> {
+        if (queue !== lastQueue) {
+            val keys = carryKeys(last, rows.map { it.second }) { "upnext-${count++}" }
+            last = rows.map { it.second }.zip(keys)
+            lastQueue = queue
+        }
+        return rows.map { it.first }.zip(last.map { it.second }).toMap()
     }
 }
 
