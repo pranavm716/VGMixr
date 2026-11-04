@@ -166,6 +166,16 @@ class PlaylistViewModelTest {
     }
 
     @Test
+    fun `swiping a track left plays it now and says so`() = runTest {
+        messages.messages.test {
+            viewModel().onPlayNow("rse-b")
+
+            assertEquals(listOf(FakePlaybackController.PlayNow("rse-b")), playback.calls)
+            assertEquals(UserMessage.PlayingNow, awaitItem())
+        }
+    }
+
+    @Test
     fun `an empty playlist has no rows`() = runTest {
         playlists.contents.value = mapOf(2L to Playlist(2, "Mix", false, emptyList()))
 

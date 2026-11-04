@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,6 +42,9 @@ private val IconSize = 24.dp
 // The row acts once its edge is as far past the icon as the icon is from the screen edge.
 private val Threshold = IconInset + IconSize + IconInset
 
+// How far back under the threshold the finger must come to disarm (see [SwipeTracker]).
+private val DisarmMargin = 16.dp
+
 /** A swipe side: the icon the row uncovers, its accessibility label, and its action. */
 private class Side(
     @param:DrawableRes val icon: Int,
@@ -61,6 +63,25 @@ fun SwipeToQueue(
 ) = SwipeAction(
     start = Side(R.drawable.ic_queue_add, stringResource(R.string.add_to_queue), onQueue),
     end = null,
+    modifier = modifier,
+    enabled = enabled,
+    content = content
+)
+
+/**
+ * Swipe right on [content] to add it to the queue, or left to play it now: both sides look and
+ * behave the same (the accent, a white icon, a stop at the threshold and a spring back).
+ */
+@Composable
+fun SwipeToQueueOrPlayNow(
+    onQueue: () -> Unit,
+    onPlayNow: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    content: @Composable () -> Unit
+) = SwipeAction(
+    start = Side(R.drawable.ic_queue_add, stringResource(R.string.add_to_queue), onQueue),
+    end = Side(R.drawable.ic_play_now, stringResource(R.string.play_now), onPlayNow),
     modifier = modifier,
     enabled = enabled,
     content = content
@@ -106,7 +127,7 @@ fun SwipeToQueueOrRemove(
 /**
  * Swipe [content] right for [start] or left for [end] (either may be null). The row uncovers the
  * accent with that side's icon; past [Threshold] there is a haptic tick, and letting go runs the
- * action (short of it, or after dragging back, nothing happens). A row that exits (remove) follows
+ * action (short of it, or after dragging back past [DisarmMargin], nothing happens). A row that exits (remove) follows
  * the finger as far as it goes and slides off on release; others stop at the threshold and spring
  * back. Each action is also offered for accessibility.
  */
@@ -118,30 +139,19 @@ private fun SwipeAction(
     enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val thresholdPx = with(LocalDensity.current) { Threshold.toPx() }
+    val density = LocalDensity.current
+    val tracker = remember(density) {
+        with(density) { SwipeTracker(Threshold.toPx(), DisarmMargin.toPx()) }
+    }
+    val limits = SwipeLimits(start.limit(), end.limit())
     val haptics = LocalHapticFeedback.current
     var offset by remember { mutableFloatStateOf(0f) }
-    var armed by remember { mutableStateOf(false) }
     var width by remember { mutableIntStateOf(0) }
     val drag = rememberDraggableState { delta ->
-        // A side whose row exits (remove) follows the finger as far as it goes; others stop at
-        // the threshold.
-        val min = when {
-            end == null -> 0f
-            end.exits -> -width.toFloat()
-            else -> -thresholdPx
-        }
-        val max = when {
-            start == null -> 0f
-            start.exits -> width.toFloat()
-            else -> thresholdPx
-        }
-        offset = (offset + delta).coerceIn(min, max)
-        val reached = kotlin.math.abs(offset) >= thresholdPx
-        if (reached && !armed) {
+        if (tracker.drag(delta, limits, width.toFloat())) {
             haptics.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
         }
-        armed = reached
+        offset = tracker.offset
     }
     val sides = if (enabled) listOfNotNull(start, end) else emptyList()
     Box(
@@ -183,8 +193,8 @@ private fun SwipeAction(
                     orientation = Orientation.Horizontal,
                     enabled = enabled,
                     onDragStopped = {
-                        val side = if (armed) (if (offset > 0f) start else end) else null
-                        armed = false
+                        val side = if (tracker.armed) (if (offset > 0f) start else end) else null
+                        tracker.reset()
                         if (side?.exits == true) {
                             // A removal slides the row off its side before it goes, so it exits.
                             val target = if (offset < 0f) -width.toFloat() else width.toFloat()
@@ -205,3 +215,9 @@ private fun SwipeAction(
 }
 
 private const val EXIT_RESET_MS = 600L
+
+private fun Side?.limit() = when {
+    this == null -> SwipeLimit.NONE
+    exits -> SwipeLimit.EXITS
+    else -> SwipeLimit.STOPS
+}

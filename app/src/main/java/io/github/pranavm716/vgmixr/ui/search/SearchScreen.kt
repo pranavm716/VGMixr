@@ -34,7 +34,7 @@ import io.github.pranavm716.vgmixr.R
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import io.github.pranavm716.vgmixr.ui.components.NoSearchResults
 import io.github.pranavm716.vgmixr.ui.components.SearchField
-import io.github.pranavm716.vgmixr.ui.components.SwipeToQueue
+import io.github.pranavm716.vgmixr.ui.components.SwipeToQueueOrPlayNow
 import io.github.pranavm716.vgmixr.ui.components.TrackTileRow
 import io.github.pranavm716.vgmixr.ui.theme.VGMixrTheme
 
@@ -63,6 +63,7 @@ fun SearchTab(
         },
         onTrackClick = viewModel::onTrackClick,
         onQueueTrack = viewModel::onQueueTrack,
+        onPlayNow = viewModel::onPlayNow,
         onTrackLongClick = onAddToPlaylist
     )
 }
@@ -79,6 +80,7 @@ fun SearchScreen(
     onQueryChange: (String) -> Unit,
     onTrackClick: (String) -> Unit,
     onQueueTrack: (String) -> Unit,
+    onPlayNow: (String) -> Unit = {},
     onTrackLongClick: (String) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -156,7 +158,15 @@ fun SearchScreen(
                     if (row.unplayable) {
                         content()
                     } else {
-                        SwipeToQueue(onQueue = { onQueueTrack(row.id) }, content = content)
+                        SwipeToQueueOrPlayNow(
+                            onQueue = { onQueueTrack(row.id) },
+                            // Playing now leaves the search, as a tap does.
+                            onPlayNow = {
+                                hideKeyboard()
+                                onPlayNow(row.id)
+                            },
+                            content = content
+                        )
                     }
                 }
             }

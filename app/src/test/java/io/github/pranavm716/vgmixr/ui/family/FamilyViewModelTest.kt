@@ -227,4 +227,14 @@ class FamilyViewModelTest {
             assertEquals(UserMessage.AddedToQueue(1), awaitItem())
         }
     }
+
+    @Test
+    fun `swiping a track left plays it now and says so`() = runTest {
+        messages.messages.test {
+            viewModel("rse").onPlayNow("rse-c")
+
+            assertEquals(listOf(FakePlaybackController.PlayNow("rse-c")), playback.calls)
+            assertEquals(UserMessage.PlayingNow, awaitItem())
+        }
+    }
 }

@@ -33,9 +33,12 @@ import io.github.pranavm716.vgmixr.data.stream.describe
 import io.github.pranavm716.vgmixr.domain.catalog.Catalog
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
 import io.github.pranavm716.vgmixr.domain.catalog.dimmed
+import io.github.pranavm716.vgmixr.domain.history.CurrentPlay
 import io.github.pranavm716.vgmixr.domain.history.PlayCounter
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
 import io.github.pranavm716.vgmixr.domain.history.RecentPlays
+import io.github.pranavm716.vgmixr.domain.history.Skip
+import io.github.pranavm716.vgmixr.domain.history.SkipHistory
 import io.github.pranavm716.vgmixr.domain.offline.Connectivity
 import io.github.pranavm716.vgmixr.domain.offline.OfflineStore
 import io.github.pranavm716.vgmixr.domain.playback.BrokenMark
@@ -103,10 +106,16 @@ class PlaybackService : MediaSessionService() {
     lateinit var playHistory: PlayHistory
 
     @Inject
+    lateinit var skipHistory: SkipHistory
+
+    @Inject
     lateinit var shuffleSetting: ShuffleSetting
 
     @Inject
     lateinit var recentPlays: RecentPlays
+
+    @Inject
+    lateinit var currentPlay: CurrentPlay
 
     @Inject
     lateinit var playlists: PlaylistRepository
@@ -464,16 +473,27 @@ class PlaybackService : MediaSessionService() {
     }
 
     /**
-     * Writes a play to the history when [PlayCounter] says a visit counts: the position is checked
-     * once a second while the player plays.
+     * Writes a play to the history when [PlayCounter] says a visit counts (the position is checked
+     * once a second while the player plays), and a skip when it says one was left early.
      */
     private inner class PlayRecording(private val player: Player) : Player.Listener {
         private val counter = PlayCounter()
         private var ticker: Job? = null
+        private var lastItem: MediaItem? = null
+        private var lastIndex = C.INDEX_UNSET
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) counter.onEnded()?.let(::record)
-            counter.onTransition(mediaItem?.mediaId, reason.toTransition())
+            val index = player.currentMediaItemIndex
+            // A seek to an earlier item is previous; a replaced queue (a tap) moves on.
+            val forward = reason != Player.MEDIA_ITEM_TRANSITION_REASON_SEEK ||
+                lastIndex == C.INDEX_UNSET || index > lastIndex
+            val left = lastItem
+            counter.onTransition(mediaItem?.mediaId, reason.toTransition(), forward)
+                ?.let { recordSkip(it, left?.context) }
+            currentPlay.set(counter.counted)
+            lastItem = mediaItem
+            lastIndex = index
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
@@ -494,7 +514,16 @@ class PlaybackService : MediaSessionService() {
             }
         }
 
+        private fun recordSkip(skip: Skip, context: QueueContext?) {
+            scope.launch {
+                skipHistory.record(skip, context)
+                val seconds = skip.positionMs / 1000
+                diagnostics.log("skip ${skip.trackId} at ${seconds / 60}:%02d".format(seconds % 60))
+            }
+        }
+
         private fun record(trackId: String) {
+            currentPlay.set(counter.counted)
             scope.launch {
                 playHistory.record(trackId)
                 diagnostics.log("play $trackId")
@@ -506,7 +535,7 @@ class PlaybackService : MediaSessionService() {
 /**
  * Turning shuffle on shuffles "Next from"; turning it off puts it back in list order. Here, so a
  * flip from the app, the notification or the lock screen all rearrange the same way. The setting
- * is saved for the next launch. Tracks heard in the last hour stay out of the first 10.
+ * is saved for the next launch. The tracks heard most recently go last (smart shuffle).
  */
 private class Shuffling(
     private val player: Player,
@@ -520,7 +549,7 @@ private class Shuffling(
             if (shuffleModeEnabled) {
                 queue.shuffle(
                     Random.Default,
-                    recentPlays.trackIds()
+                    recentPlays.lastPlayed()
                 )
             } else {
                 queue.unshuffle()

@@ -16,12 +16,16 @@ class TopLevelDestinationTest {
     }
 
     @Test
-    fun `only a long press on Games opens a page, Settings`() {
-        val longPresses = TopLevelDestination.entries
-            .mapNotNull { tab -> tab.longPressRoute?.let { tab to it } }
-            .toMap()
-
-        assertEquals(mapOf(TopLevelDestination.GAMES to SettingsRoute), longPresses)
+    fun `a long press on Search opens Settings, and every other tab plays`() {
+        assertEquals(
+            mapOf(
+                TopLevelDestination.GAMES to LongPress.Play,
+                TopLevelDestination.SEARCH to LongPress.Open(SettingsRoute),
+                TopLevelDestination.PLAYLISTS to LongPress.Play,
+                TopLevelDestination.REMIXES to LongPress.Play
+            ),
+            TopLevelDestination.entries.associateWith { it.longPress }
+        )
     }
 
     @Test

@@ -90,7 +90,7 @@ class MediaControllerPlaybackController @Inject constructor(
                     context,
                     index,
                     it.shuffleModeEnabled,
-                    recent = recentPlays.trackIds()
+                    lastPlayed = recentPlays.lastPlayed()
                 )
             )
         }
@@ -101,7 +101,7 @@ class MediaControllerPlaybackController @Inject constructor(
                 trackIds,
                 context,
                 it.shuffleModeEnabled,
-                recent = recentPlays.trackIds()
+                lastPlayed = recentPlays.lastPlayed()
             )
         )
     }
@@ -109,6 +109,10 @@ class MediaControllerPlaybackController @Inject constructor(
     // In the service, which updates its items in place, so the playing track isn't rebuilt.
     override fun resort(trackIds: List<String>, context: QueueContext) = withController {
         it.sendCustomCommand(resortCommand, resortArgs(trackIds, context))
+    }
+
+    override fun playNow(trackId: String) = withController {
+        it.apply(it.queue().playNow(trackId, hasEnded = it.playbackState == Player.STATE_ENDED))
     }
 
     override fun addToQueue(trackIds: List<String>) = withController {
@@ -147,6 +151,9 @@ class MediaControllerPlaybackController @Inject constructor(
 
     override fun jumpTo(index: Int) = withController { it.apply(it.queue().jumpTo(index)) }
 
+    override fun moveInQueue(from: Int, to: Int) =
+        withController { it.apply(it.queue().move(from, to)) }
+
     override fun removeFromQueue(index: Int) = withController { it.apply(it.queue().remove(index)) }
 
     override fun removeTrack(trackId: String) =
@@ -179,7 +186,8 @@ class MediaControllerPlaybackController @Inject constructor(
             stoppedBy = controller.sessionExtras.getString(
                 STOPPED_BY
             )?.let(ResolveFailure::valueOf),
-            shuffle = controller.shuffleModeEnabled
+            shuffle = controller.shuffleModeEnabled,
+            connected = true
         )
     }
 }

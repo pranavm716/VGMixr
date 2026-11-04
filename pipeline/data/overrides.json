@@ -163,6 +163,7 @@
     "hgss-pokeathlon-event-time-gb-sounds": { "streams": { "accept": [ { "videoId": "JZr7c-Se42E" } ] } },
     "hgss-pokeathlon-medal-ceremony-gb-sounds": { "streams": { "accept": [ { "videoId": "aQQR67wlQRk" } ] } },
     "hgss-bell-tower": { "streams": { "accept": [ { "videoId": "rCfzcRSjyrY" } ], "reject": ["J-b3C45f0yw", "IZL8d8i36tY"] } },
+    "hgss-rock-tunnel": { "streams": { "reject": ["3UxM8idhP84"] } },
 
     "pmd-brt-insert-title": { "exclude": false, "note": "Short, but music, not a jingle" },
     "pmd-brt-versus-boss": { "streams": { "accept": [ { "videoId": "xfwcL8P10Sw" } ] } },

@@ -1,12 +1,18 @@
 package io.github.pranavm716.vgmixr.ui.settings
 
 import app.cash.turbine.test
+import io.github.pranavm716.vgmixr.domain.catalog.Catalog
+import io.github.pranavm716.vgmixr.domain.catalog.Family
 import io.github.pranavm716.vgmixr.domain.offline.OfflineUsage
+import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.domain.settings.Accent
 import io.github.pranavm716.vgmixr.domain.settings.Background
 import io.github.pranavm716.vgmixr.testing.FakeAccentSetting
 import io.github.pranavm716.vgmixr.testing.FakeBackgroundSetting
+import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
+import io.github.pranavm716.vgmixr.testing.FakeHoldSettings
 import io.github.pranavm716.vgmixr.testing.FakeOfflineStore
+import io.github.pranavm716.vgmixr.testing.FakePlaylistRepository
 import io.github.pranavm716.vgmixr.testing.FakeRecentCutoff
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import java.time.Instant
@@ -72,6 +78,66 @@ class SettingsViewModelTest {
 
             assertEquals(Background.NAVY, awaitItem().background)
             assertEquals(Background.NAVY, setting.background.value)
+        }
+    }
+
+    private val catalog = FakeCatalogRepository(
+        Catalog(
+            games = emptyList(),
+            families = listOf(Family("rse", "RSE", "RSE"), Family("dp", "DPPt", "DPPt")),
+            tracks = emptyList()
+        )
+    )
+    private val playlists = FakePlaylistRepository(
+        initialPlaylists = listOf(
+            PlaylistSummary(1, "Favorites", 9, isFavorites = true),
+            PlaylistSummary(2, "Hype", 9, isFavorites = false)
+        )
+    )
+
+    private fun holdViewModel(hold: FakeHoldSettings) = SettingsViewModel(
+        FakeAccentSetting(),
+        hold = hold,
+        catalog = catalog,
+        playlists = playlists
+    )
+
+    @Test
+    fun `unchecking a family excludes it, and none or all set every family at once`() = runTest {
+        val hold = FakeHoldSettings()
+        val viewModel = holdViewModel(hold)
+
+        viewModel.hold.test {
+            assertEquals("All", expectMostRecentItem().games.summary)
+
+            viewModel.onGameToggle("dp")
+            assertEquals(setOf("dp"), hold.excludedFamilies.value)
+            assertEquals("1 of 2", expectMostRecentItem().games.summary)
+
+            viewModel.onAllGames(false)
+            assertEquals(setOf("rse", "dp"), hold.excludedFamilies.value)
+
+            viewModel.onAllGames(true)
+            assertEquals(emptySet<String>(), hold.excludedFamilies.value)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `playlists toggle from favorites, the default`() = runTest {
+        val hold = FakeHoldSettings()
+        val viewModel = holdViewModel(hold)
+
+        viewModel.hold.test {
+            assertEquals("Favorites", expectMostRecentItem().playlists.summary)
+
+            viewModel.onPlaylistToggle("2")
+            assertEquals(setOf(1L, 2L), hold.playlists.value)
+
+            viewModel.onPlaylistToggle("1")
+            assertEquals(setOf(2L), hold.playlists.value)
+            assertEquals("Hype", expectMostRecentItem().playlists.summary)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 }

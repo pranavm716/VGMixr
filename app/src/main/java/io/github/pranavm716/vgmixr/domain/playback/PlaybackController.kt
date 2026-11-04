@@ -26,6 +26,12 @@ interface PlaybackController {
      */
     fun resort(trackIds: List<String>, context: QueueContext)
 
+    /** Moves queued entry [from] to [to] within "Next in queue" (see [PlayQueue.move]). */
+    fun moveInQueue(from: Int, to: Int)
+
+    /** Plays [trackId] at once, keeping the queue and what plays next (see [PlayQueue.playNow]). */
+    fun playNow(trackId: String)
+
     /** Adds [trackIds] to the end of the user's queue ("Next in queue"). */
     fun addToQueue(trackIds: List<String>)
 
@@ -91,5 +97,7 @@ data class PlaybackState(
     val isPlaying: Boolean = false,
     val isLoading: Boolean = false,
     val stoppedBy: ResolveFailure? = null,
-    val shuffle: Boolean = false
+    val shuffle: Boolean = false,
+    /** Whether this came from the player; before it connects, nothing loaded means nothing yet. */
+    val connected: Boolean = false
 )

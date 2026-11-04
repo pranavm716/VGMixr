@@ -155,45 +155,48 @@ class ShuffleTest {
     }
 
     private val many = (0 until 20).map { "t$it" }
-    private val recent = (0 until 8).map { "t$it" }.toSet()
+
+    // t0..t7 heard, t0 most recently.
+    private val lastPlayed = (0 until 8).associate { "t$it" to it }
+    private val heardOldestFirst = (7 downTo 0).map { "t$it" }
 
     @Test
-    fun `tapping with shuffle on plays the tapped track first even if recent, then 10 fresh`() {
+    fun `tapping with shuffle on plays the tapped track first even if heard, heard ones last`() {
         val queue = PlayQueue(listOf(at("x", 0)) + queued("q1"), current = 0)
         repeat(30) { seed ->
-            val edit = queue.playFrom(many, rse, 3, shuffle = true, Random(seed), recent)
+            val edit = queue.playFrom(many, rse, 3, shuffle = true, Random(seed), lastPlayed)
 
             assertEquals("t3", edit.entries[0].trackId)
             assertEquals(queued("q1"), edit.entries.subList(1, 2))
             val rest = edit.entries.drop(2).map { it.trackId }
             assertEquals((many - "t3").sorted(), rest.sorted())
-            assertTrue(rest.take(10).none { it in recent })
+            assertEquals(heardOldestFirst - "t3", rest.takeLast(7))
         }
     }
 
     @Test
-    fun `playing all with shuffle on opens with a fresh track and keeps recent ones back`() {
+    fun `playing all with shuffle on opens with an unheard track and plays heard ones last`() {
         repeat(30) { seed ->
-            val ids = PlayQueue.EMPTY.playAll(many, rse, shuffle = true, Random(seed), recent)
+            val ids = PlayQueue.EMPTY.playAll(many, rse, shuffle = true, Random(seed), lastPlayed)
                 .entries.map { it.trackId }
 
-            assertTrue(ids.take(11).none { it in recent })
+            assertEquals(heardOldestFirst, ids.takeLast(8))
         }
     }
 
     @Test
-    fun `turning shuffle on keeps recent tracks out of the first 10 of next from`() {
+    fun `turning shuffle on puts heard tracks at the end of next from, the latest last`() {
         val queue = PlayQueue(
             many.mapIndexed { i, id -> at(id, i) } + listOf(at("z", 20)),
             current = 20
         ).let { PlayQueue(listOf(at("z", 20)) + queued("q1") + it.entries.dropLast(1), 0) }
         repeat(30) { seed ->
-            val after = queue.applying(queue.shuffle(Random(seed), recent))
+            val after = queue.applying(queue.shuffle(Random(seed), lastPlayed))
 
             assertEquals(listOf("z", "q1"), after.ids().take(2))
             val next = after.nextFromContext.map { it.trackId }
             assertEquals(many.sorted(), next.sorted())
-            assertTrue(next.take(10).none { it in recent })
+            assertEquals(heardOldestFirst, next.takeLast(8))
         }
     }
 

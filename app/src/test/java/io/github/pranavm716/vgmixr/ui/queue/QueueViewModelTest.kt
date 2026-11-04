@@ -105,6 +105,13 @@ class QueueViewModelTest {
     }
 
     @Test
+    fun `a dragged queue row moves in the player`() {
+        viewModel.onMove(from = 2, to = 4)
+
+        assertEquals(listOf(FakePlaybackController.MoveInQueue(2, 4)), playback.calls)
+    }
+
+    @Test
     fun `taps, swipes and the clear button reach the player`() {
         viewModel.onJump(4)
         viewModel.onRemove(2)
@@ -169,6 +176,25 @@ class QueueViewModelTest {
 
         viewModel.uiState.test {
             assertEquals("Remixes", awaitItem().nextFromName)
+        }
+    }
+
+    @Test
+    fun `next from a tab's long press names Games or Playlists`() = runTest {
+        for ((context, name) in listOf(
+            QueueContext.Games to "Games",
+            QueueContext.Playlists to "Playlists"
+        )) {
+            playback.state.value = state(
+                listOf(
+                    QueueEntry("yt:AAAAAAAAAAA", context),
+                    QueueEntry("yt:BBBBBBBBBBB", context)
+                ),
+                current = 0
+            )
+            viewModel.uiState.test {
+                assertEquals(name, expectMostRecentItem().nextFromName)
+            }
         }
     }
 

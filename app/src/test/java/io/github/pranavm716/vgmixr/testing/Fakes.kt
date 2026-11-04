@@ -27,6 +27,7 @@ import io.github.pranavm716.vgmixr.domain.settings.Accent
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
 import io.github.pranavm716.vgmixr.domain.settings.Background
 import io.github.pranavm716.vgmixr.domain.settings.BackgroundSetting
+import io.github.pranavm716.vgmixr.domain.settings.HoldSettings
 import io.github.pranavm716.vgmixr.domain.settings.SortSettings
 import io.github.pranavm716.vgmixr.domain.sort.SortKeys
 import io.github.pranavm716.vgmixr.domain.sort.SortSetting
@@ -58,6 +59,10 @@ class FakePlaybackController : PlaybackController {
     data class PlayAll(val trackIds: List<String>, val context: QueueContext)
 
     data class AddToQueue(val trackIds: List<String>)
+
+    data class PlayNow(val trackId: String)
+
+    data class MoveInQueue(val from: Int, val to: Int)
 
     data class Resort(val trackIds: List<String>, val context: QueueContext)
 
@@ -147,6 +152,14 @@ class FakePlaybackController : PlaybackController {
 
     override fun playAll(trackIds: List<String>, context: QueueContext) {
         calls += PlayAll(trackIds, context)
+    }
+
+    override fun moveInQueue(from: Int, to: Int) {
+        calls += MoveInQueue(from, to)
+    }
+
+    override fun playNow(trackId: String) {
+        calls += PlayNow(trackId)
     }
 
     override fun addToQueue(trackIds: List<String>) {
@@ -275,6 +288,20 @@ class FakeAccentSetting(initial: Accent = Accent.DEFAULT) : AccentSetting {
 
     override fun set(accent: Accent) {
         this.accent.value = accent
+    }
+}
+
+class FakeHoldSettings(excluded: Set<String> = emptySet(), playlists: Set<Long> = emptySet()) :
+    HoldSettings {
+    override val excludedFamilies = MutableStateFlow(excluded)
+    override val playlists = MutableStateFlow(playlists)
+
+    override fun setExcludedFamilies(ids: Set<String>) {
+        excludedFamilies.value = ids
+    }
+
+    override fun setPlaylists(ids: Set<Long>) {
+        playlists.value = ids
     }
 }
 

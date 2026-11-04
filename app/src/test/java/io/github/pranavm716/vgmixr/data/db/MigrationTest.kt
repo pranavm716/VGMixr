@@ -284,6 +284,21 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun `8 to 9 adds an empty skips table and keeps history`() {
+        helper.createDatabase(8).use { db ->
+            db.execSQL("INSERT INTO play_history (trackId, playedAt) VALUES ('rse-route-101', 111)")
+        }
+
+        helper.runMigrationsAndValidate(9).use { db ->
+            assertEquals(emptyList<List<String?>>(), db.rows("SELECT * FROM skips"))
+            assertEquals(
+                listOf(listOf("rse-route-101")),
+                db.rows("SELECT trackId FROM play_history")
+            )
+        }
+    }
+
     private fun SQLiteConnection.rows(sql: String): List<List<String?>> = prepare(sql).use { row ->
         buildList {
             while (row.step()) {

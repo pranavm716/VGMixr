@@ -74,11 +74,8 @@ object PlaybackModule {
 
     @Provides
     @Singleton
-    fun provideRecentPlays(
-        history: PlayHistory,
-        clock: Clock,
-        @ApplicationScope scope: CoroutineScope
-    ) = RecentPlays(history, clock, scope)
+    fun provideRecentPlays(history: PlayHistory, @ApplicationScope scope: CoroutineScope) =
+        RecentPlays(history, scope)
 
     @Provides
     fun provideShuffleSetting(setting: PrefsShuffleSetting): ShuffleSetting = setting

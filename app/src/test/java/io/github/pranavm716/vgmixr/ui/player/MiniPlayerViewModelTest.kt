@@ -191,4 +191,24 @@ class MiniPlayerViewModelTest {
                 assertEquals(MiniTrackUi("rse-old", "rse", "Old", listOf(chip("R"))), state.track)
             }
     }
+
+    @Test
+    fun `nothing loaded is unknown until the player connects`() = runTest {
+        viewModel.nothingLoaded.test {
+            assertEquals(false, awaitItem())
+
+            playback.state.value = PlaybackState(connected = true)
+            assertEquals(true, awaitItem())
+        }
+    }
+
+    @Test
+    fun `a loaded track is not nothing loaded`() = runTest {
+        playback.state.value =
+            PlaybackState(queue = queue("rse-a", current = 0), trackId = "rse-a", connected = true)
+
+        viewModel.nothingLoaded.test {
+            assertEquals(false, awaitItem())
+        }
+    }
 }

@@ -82,6 +82,8 @@
     <string name="playing_from">Playing from</string>
     <string name="playing_from_queue">Queue</string>
     <string name="playing_from_remixes">Remixes</string>
+    <string name="playing_from_games">Games</string>
+    <string name="playing_from_playlists">Playlists</string>
     <string name="link">Link</string>
     <string name="credit">Credit</string>
     <string name="credit_channel">Channel</string>
@@ -92,6 +94,11 @@
     <string name="linked_to">Linked to</string>
     <string name="clear_link">Clear link</string>
     <string name="done">Done</string>
+    <string name="hold_to_play">Hold to play</string>
+    <string name="games">Games</string>
+    <string name="playlists">Playlists</string>
+    <string name="all">All</string>
+    <string name="none">None</string>
     <string name="undo">Undo</string>
     <string name="remix_deleted">Deleted %1$s</string>
     <string name="delete_named">Delete %1$s</string>
@@ -109,6 +116,11 @@
     <string name="clear_search">Clear search</string>
     <string name="search_no_results">No tracks match “%1$s”</string>
 
+    <string name="play_now">Play now</string>
+    <string name="drag_to_reorder">Drag to reorder</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+    <string name="playing_now">Playing now</string>
     <plurals name="added_to_queue">
         <item quantity="one">Added to queue</item>
         <item quantity="other">Added %d tracks to queue</item>

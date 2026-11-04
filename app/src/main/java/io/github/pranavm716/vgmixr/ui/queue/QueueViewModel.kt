@@ -91,6 +91,9 @@ class QueueViewModel @Inject constructor(
 
     fun onRemove(index: Int) = playback.removeFromQueue(index)
 
+    /** Moves queued entry [from] to [to], dragged by its handle within "Next in queue". */
+    fun onMove(from: Int, to: Int) = playback.moveInQueue(from, to)
+
     /** Adds the track at [index] (from "Next from") to the end of "Next in queue". */
     fun onQueue(index: Int) {
         val trackId = playback.state.value.queue.entries.getOrNull(index)?.trackId ?: return
@@ -133,6 +136,10 @@ private fun Catalog.queue(state: PlaybackState, playlists: List<PlaylistSummary>
             ?: track(queue.nextFromContext.first().trackId)?.let { homeName(it) }
 
         QueueContext.Remixes -> REMIXES
+
+        QueueContext.Games -> "Games"
+
+        QueueContext.Playlists -> "Playlists"
 
         QueueContext.Queue, null -> null
     }

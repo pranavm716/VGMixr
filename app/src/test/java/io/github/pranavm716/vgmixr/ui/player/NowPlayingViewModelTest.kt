@@ -111,6 +111,36 @@ class NowPlayingViewModelTest {
     }
 
     @Test
+    fun `a games mix track opens its own family`() = runTest {
+        playback.state.value = playing(QueueContext.Games)
+
+        viewModel.uiState.test {
+            assertEquals(
+                PlayingFromUi.Games(familyId = "rse"),
+                (awaitItem() as NowPlayingUiState.Visible).playingFrom
+            )
+        }
+    }
+
+    @Test
+    fun `a playlists mix track opens the playlist it came from, else its family`() = runTest {
+        playback.state.value = playing(QueueContext.Playlists)
+
+        viewModel.uiState.test {
+            assertEquals(
+                PlayingFromUi.Playlists(playlistId = null, familyId = "rse"),
+                (awaitItem() as NowPlayingUiState.Visible).playingFrom
+            )
+            playlists.favorites.value = setOf("rse-a")
+            assertEquals(
+                PlayingFromUi.Playlists(playlistId = 1, familyId = "rse"),
+                (expectMostRecentItem() as NowPlayingUiState.Visible).playingFrom
+            )
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun `a track playing from a playlist still knows its own family`() = runTest {
         playback.state.value = playing(QueueContext.Playlist(1))
 

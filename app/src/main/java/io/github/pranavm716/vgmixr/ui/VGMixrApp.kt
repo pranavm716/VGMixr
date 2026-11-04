@@ -20,10 +20,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
@@ -72,11 +74,13 @@ import io.github.pranavm716.vgmixr.ui.navigation.FamilyRoute
 import io.github.pranavm716.vgmixr.ui.navigation.GamesGraph
 import io.github.pranavm716.vgmixr.ui.navigation.GamesRoute
 import io.github.pranavm716.vgmixr.ui.navigation.LinkRoute
+import io.github.pranavm716.vgmixr.ui.navigation.LongPress
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistRoute
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistsGraph
 import io.github.pranavm716.vgmixr.ui.navigation.PlaylistsRoute
 import io.github.pranavm716.vgmixr.ui.navigation.RemixesGraph
 import io.github.pranavm716.vgmixr.ui.navigation.RemixesRoute
+import io.github.pranavm716.vgmixr.ui.navigation.SearchGraph
 import io.github.pranavm716.vgmixr.ui.navigation.SearchRoute
 import io.github.pranavm716.vgmixr.ui.navigation.SettingsRoute
 import io.github.pranavm716.vgmixr.ui.navigation.TopLevelDestination
@@ -118,7 +122,7 @@ const val SETTINGS_SCREEN_TAG = "screen-settings"
  * [familyScreen] a family's tracks, [playlistScreen] a playlist's (its plus opens
  * [editPlaylistScreen]); all default to placeholders
  * so the shell runs without Hilt (tests), and MainActivity passes the real screens.
- * [settingsScreen] is opened by a long press on the Remixes tab.
+ * [settingsScreen] is opened by a long press on the Search tab. [onPlayTab] plays a held tab.
  */
 @Composable
 fun VGMixrApp(
@@ -139,7 +143,7 @@ fun VGMixrApp(
         SettingsScreen(SettingsUiState(), onAccentClick = {}, onBack = it)
     },
     snackbars: SnackbarHostState = remember { SnackbarHostState() },
-    onPlayRemixes: () -> Unit = {},
+    onPlayTab: (TopLevelDestination) -> Unit = {},
     miniPlayer: @Composable (
         NowPlayingSheetState,
         onOpenNowPlaying: () -> Unit
@@ -160,7 +164,8 @@ fun VGMixrApp(
         onClose: () -> Unit
     ) -> Unit = { _, _ -> PlaceholderScreen("Add to playlist") },
     queue: @Composable (onClose: () -> Unit) -> Unit = { PlaceholderScreen("Queue") },
-    nowPlayingOpen: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) }
+    nowPlayingOpen: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
+    nothingLoaded: Boolean = false
 ) {
     val openNowPlaying = { nowPlayingOpen.value = true }
     val scope = rememberCoroutineScope()
@@ -168,6 +173,8 @@ fun VGMixrApp(
     // change of the flag (a tap, a track, the notification, back) animates the sheet.
     val sheet = remember { NowPlayingSheetState(scope) { nowPlayingOpen.value = it } }
     LaunchedEffect(nowPlayingOpen.value) { sheet.animateTo(nowPlayingOpen.value) }
+    // Restored open after Android killed the app, with no track left to show: close it.
+    LaunchedEffect(nothingLoaded) { if (nothingLoaded) nowPlayingOpen.value = false }
     // A focused field (search) loses focus as soon as now playing starts to open, so the keyboard
     // and the cursor's handle, which draws above every window, don't stay over the sheet.
     val focusManager = LocalFocusManager.current
@@ -257,16 +264,17 @@ fun VGMixrApp(
                                 navController.navigateTo(tab)
                             }
                         },
-                        // Plays the tab's tracks (Remixes), or opens the tab's page inside it,
-                        // over whatever the tab shows (Games: Settings).
+                        // Plays the tab's tracks, or opens the tab's page inside it, over
+                        // whatever the tab shows (Search: Settings).
                         onLongPress = { tab ->
-                            if (tab.longPressPlays) {
-                                onPlayRemixes()
-                                return@VGMixrNavBar
+                            when (val press = tab.longPress) {
+                                LongPress.Play -> onPlayTab(tab)
+
+                                is LongPress.Open -> {
+                                    if (tab != selected) navController.navigateTo(tab)
+                                    navController.navigate(press.route) { launchSingleTop = true }
+                                }
                             }
-                            val page = tab.longPressRoute ?: return@VGMixrNavBar
-                            if (tab != selected) navController.navigateTo(tab)
-                            navController.navigate(page) { launchSingleTop = true }
                         }
                     )
                 }
@@ -299,20 +307,34 @@ fun VGMixrApp(
                         // (Playlists tab) or the Remixes tab, replacing any one already open there; it scrolls to the
                         // playing track on opening.
                         nowPlayingOpen.value = false
+                        // Unlike the Games tab's list, the playlist list isn't under every
+                        // tab's screens: switch to its tab first, so the playlist opens over
+                        // it and back and the tab return to it.
+                        fun openPlaylist(playlistId: Long) {
+                            navController.navigateTo(TopLevelDestination.PLAYLISTS)
+                            navController.navigate(
+                                PlaylistRoute(playlistId, fromNowPlaying = true)
+                            ) { popUpTo<PlaylistsRoute>() }
+                        }
                         when (playingFrom) {
                             is PlayingFromUi.Family -> openFamily(playingFrom.familyId)
 
-                            // Unlike the Games tab's list, the playlist list isn't under every
-                            // tab's screens: switch to its tab first, so the playlist opens over
-                            // it and back and the tab return to it.
-                            is PlayingFromUi.Playlist -> {
-                                navController.navigateTo(TopLevelDestination.PLAYLISTS)
-                                navController.navigate(
-                                    PlaylistRoute(playingFrom.playlistId, fromNowPlaying = true)
-                                ) { popUpTo<PlaylistsRoute>() }
-                            }
+                            is PlayingFromUi.Playlist -> openPlaylist(playingFrom.playlistId)
 
                             PlayingFromUi.Remixes -> openRemixes()
+
+                            // A mix opens where the track would play from alone.
+                            is PlayingFromUi.Games ->
+                                playingFrom.familyId?.let(openFamily)
+
+                            is PlayingFromUi.Playlists -> {
+                                val playlistId = playingFrom.playlistId
+                                if (playlistId != null) {
+                                    openPlaylist(playlistId)
+                                } else {
+                                    playingFrom.familyId?.let(openFamily)
+                                }
+                            }
 
                             PlayingFromUi.Queue -> Unit
                         }
@@ -332,7 +354,19 @@ fun VGMixrApp(
         ) {
             Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                 BackHandler { queueOpen = false }
-                queue { queueOpen = false }
+                Box {
+                    queue { queueOpen = false }
+                    // The scaffold's messages sit under this screen, so the queue (where tracks
+                    // are swiped to the queue) shows the same ones over itself.
+                    SnackbarHost(
+                        snackbars,
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .windowInsetsPadding(WindowInsets.navigationBars)
+                    ) {
+                        Snackbar(it, actionColor = MaterialTheme.colorScheme.primary)
+                    }
+                }
             }
         }
         AnimatedVisibility(
@@ -406,15 +440,17 @@ private fun AppNavHost(
                     familyScreen(onAddToPlaylist)
                 }
             }
+        }
+        navigation<SearchGraph>(startDestination = SearchRoute) {
+            composable<SearchRoute> {
+                Tab(TopLevelDestination.SEARCH, navController, screen, reselects, onAddToPlaylist)
+            }
             // Pads below the status bar itself, as the family screen does.
             composable<SettingsRoute> {
                 Box(Modifier.screen().testTag(SETTINGS_SCREEN_TAG)) {
                     settingsScreen { navController.popBackStack() }
                 }
             }
-        }
-        composable<SearchRoute> {
-            Tab(TopLevelDestination.SEARCH, navController, screen, reselects, onAddToPlaylist)
         }
         navigation<PlaylistsGraph>(startDestination = PlaylistsRoute) {
             composable<PlaylistsRoute> {

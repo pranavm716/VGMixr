@@ -4,7 +4,8 @@ package io.github.pranavm716.vgmixr.domain.history
  * Decides when a visit to a track counts as a play: once it has played [thresholdMs], or when it
  * ends sooner after its audio started (a short jingle). A visit counts at most once, so a restart
  * or seek within it doesn't count again; a track skipped before its audio started never counts.
- * The playback service feeds it and records what it returns.
+ * Leaving a visit forward before it counts is a skip. The playback service feeds it and records
+ * what it returns.
  */
 class PlayCounter(private val thresholdMs: Long = PLAY_THRESHOLD_MS) {
     /** Why the player moved to an item, as Media3 reports it. */
@@ -24,21 +25,43 @@ class PlayCounter(private val thresholdMs: Long = PLAY_THRESHOLD_MS) {
 
     private var trackId: String? = null
     private var started = false
-    private var counted = false
+    private var hasCounted = false
+    private var positionMs = 0L
 
-    /** The player moved to [trackId]'s item (null: nothing). */
-    fun onTransition(trackId: String?, reason: Transition) {
+    /** The current track once its visit has counted, else null. */
+    val counted: String? get() = trackId.takeIf { hasCounted }
+
+    /**
+     * The player moved to [trackId]'s item (null: nothing); [forward] is false when it went back
+     * (previous). Returns the track left, as a [Skip], if it was left forward after its audio
+     * started and before it counted: next, or tapping another track or list. Going back, a track
+     * ending or repeating, and playback stopping are not skips.
+     */
+    fun onTransition(trackId: String?, reason: Transition, forward: Boolean = true): Skip? {
         // Failover replaces the current item with the same track's next source: the same visit.
-        if (reason == Transition.QUEUE_CHANGED && trackId != null && trackId == this.trackId) return
+        if (reason == Transition.QUEUE_CHANGED && trackId != null && trackId == this.trackId) {
+            return null
+        }
+        val left = this.trackId
+        val leftForward = forward && trackId != null &&
+            (reason == Transition.SKIP || reason == Transition.QUEUE_CHANGED)
+        val skip = if (left != null && started && !hasCounted && leftForward) {
+            Skip(left, positionMs)
+        } else {
+            null
+        }
         this.trackId = trackId
         started = false
-        counted = false
+        hasCounted = false
+        positionMs = 0L
+        return skip
     }
 
     /** The current item plays, at [positionMs]. Returns the track to record, once per visit. */
     fun onPlaying(positionMs: Long): String? {
         if (trackId == null) return null
         started = true
+        this.positionMs = positionMs
         return if (positionMs >= thresholdMs) count() else null
     }
 
@@ -46,11 +69,14 @@ class PlayCounter(private val thresholdMs: Long = PLAY_THRESHOLD_MS) {
     fun onEnded(): String? = if (started) count() else null
 
     private fun count(): String? {
-        if (counted) return null
-        counted = true
+        if (hasCounted) return null
+        hasCounted = true
         return trackId
     }
 }
+
+/** A track left [positionMs] in, before it counted as a play (see [PlayCounter.onTransition]). */
+data class Skip(val trackId: String, val positionMs: Long)
 
 /** How long a track must play to count as a play (see docs/roadmap.md, step 11). */
 const val PLAY_THRESHOLD_MS = 10_000L

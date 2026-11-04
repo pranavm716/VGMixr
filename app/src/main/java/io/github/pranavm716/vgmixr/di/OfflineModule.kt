@@ -19,6 +19,7 @@ import io.github.pranavm716.vgmixr.data.offline.RoomOfflineStore
 import io.github.pranavm716.vgmixr.data.settings.PrefsRecentCutoff
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.history.CurrentPlay
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
 import io.github.pranavm716.vgmixr.domain.offline.Connectivity
 import io.github.pranavm716.vgmixr.domain.offline.LookupPacer
@@ -28,6 +29,7 @@ import io.github.pranavm716.vgmixr.domain.offline.OfflineSync
 import io.github.pranavm716.vgmixr.domain.offline.PacedStreamResolver
 import io.github.pranavm716.vgmixr.domain.offline.RECENT_LIMIT
 import io.github.pranavm716.vgmixr.domain.offline.RecentCutoff
+import io.github.pranavm716.vgmixr.domain.offline.prefetchTarget
 import io.github.pranavm716.vgmixr.domain.offline.recentTrackIds
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
@@ -109,7 +111,8 @@ object OfflineModule {
         history: PlayHistory,
         playback: PlaybackController,
         diagnostics: PlaybackDiagnostics,
-        cutoff: RecentCutoff
+        cutoff: RecentCutoff,
+        currentPlay: CurrentPlay
     ) = OfflineSync(
         catalog = catalog.catalog,
         // Every playlist in full, in the Playlists tab's order.
@@ -127,9 +130,9 @@ object OfflineModule {
         recentlyPlayed = combine(history.plays, cutoff.since) { plays, since ->
             recentTrackIds(plays, since).take(RECENT_LIMIT)
         }.distinctUntilChanged(),
-        next = playback.state
-            .map { it.queue.entries.getOrNull(it.queue.current + 1)?.trackId }
-            .distinctUntilChanged()
+        next = combine(playback.state, currentPlay.counted) { state, played ->
+            prefetchTarget(state.queue, played)
+        }.distinctUntilChanged()
             .onEach { diagnostics.log("offline: next $it") }
     )
 }

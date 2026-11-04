@@ -86,13 +86,14 @@ class CatalogImporter @Inject constructor(
     }
 
     /**
-     * Re-points history, playlist entries (favorites included) and the user tracks remixing it from
+     * Re-points history, skips, playlist entries (favorites included) and the user tracks remixing it from
      * [oldId] to [newId]. If a playlist holds both, they merge into one entry with the earlier
      * addedAt. Done in Kotlin
      * rather than SQL because SQLite on API 26 (3.18) has no `ON CONFLICT DO UPDATE`.
      */
     private suspend fun migrateUserData(oldId: String, newId: String) {
         userDataDao.repointHistory(oldId, newId)
+        userDataDao.repointSkips(oldId, newId)
         userTrackDao.repointRemixOf(oldId, newId)
         for (old in userDataDao.playlistEntriesOf(oldId)) {
             val new = userDataDao.playlistEntry(old.playlistId, newId)

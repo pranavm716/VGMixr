@@ -214,6 +214,16 @@ class RemixesViewModel @Inject constructor(
         }
     }
 
+    /** Plays one track now, keeping the queue and what plays next (a left swipe). */
+    fun onPlayNow(trackId: String) {
+        viewModelScope.launch {
+            val track = catalog.catalog.first().track(trackId)
+            if (track == null || track.dimmed) return@launch
+            playback.playNow(trackId)
+            messages.post(UserMessage.PlayingNow)
+        }
+    }
+
     /** The menu's Delete: every row gets a delete button. */
     fun onStartDeleting() {
         mode.value = RemixesMode.DELETE

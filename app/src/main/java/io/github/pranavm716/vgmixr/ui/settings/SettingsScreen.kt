@@ -3,6 +3,7 @@ package io.github.pranavm716.vgmixr.ui.settings
 import android.text.format.Formatter
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,11 +16,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +34,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,20 +70,26 @@ private val RowPadding = 18.dp
 fun SettingsTab(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val storage by viewModel.storage.collectAsStateWithLifecycle()
+    val hold by viewModel.hold.collectAsStateWithLifecycle()
     SettingsScreen(
         state,
         onAccentClick = viewModel::onAccentClick,
         onBack = onBack,
         onBackgroundClick = viewModel::onBackgroundClick,
         storage = storage,
-        onClearRecent = viewModel::onClearRecent
+        onClearRecent = viewModel::onClearRecent,
+        hold = hold,
+        onGameToggle = viewModel::onGameToggle,
+        onAllGames = viewModel::onAllGames,
+        onPlaylistToggle = viewModel::onPlaylistToggle
     )
 }
 
 /**
  * Settings under a back arrow, as Edit playlist's header. Laid out as Shuttle's Appearance page:
  * a section title, then its options. Accent and Background are a solid circle per color, the
- * current one with a white check; a tap applies either at once.
+ * current one with a white check; a tap applies either at once. "Hold to play" picks what a long
+ * press on the Games and Playlists tabs plays, each in a checklist dialog.
  */
 @Composable
 fun SettingsScreen(
@@ -83,8 +98,13 @@ fun SettingsScreen(
     onBack: () -> Unit,
     onBackgroundClick: (Background) -> Unit = {},
     storage: OfflineUsage? = null,
-    onClearRecent: () -> Unit = {}
+    onClearRecent: () -> Unit = {},
+    hold: HoldUiState = HoldUiState(),
+    onGameToggle: (String) -> Unit = {},
+    onAllGames: (Boolean) -> Unit = {},
+    onPlaylistToggle: (String) -> Unit = {}
 ) {
+    var picker by remember { mutableStateOf<HoldPicker?>(null) }
     Column(Modifier.fillMaxSize().statusBarsPadding()) {
         Row(
             Modifier.fillMaxWidth().height(66.dp).padding(horizontal = 4.dp),
@@ -128,9 +148,105 @@ fun SettingsScreen(
                     Spacer(Modifier.weight(1f))
                 }
             }
+            SectionTitle(stringResource(R.string.hold_to_play))
+            HoldRow(stringResource(R.string.games), hold.games.summary) {
+                picker = HoldPicker.GAMES
+            }
+            HoldRow(stringResource(R.string.playlists), hold.playlists.summary) {
+                picker = HoldPicker.PLAYLISTS
+            }
             if (storage != null) Storage(storage, onClearRecent)
         }
     }
+    when (picker) {
+        HoldPicker.GAMES -> HoldDialog(
+            stringResource(R.string.games),
+            hold.games,
+            onToggle = onGameToggle,
+            onAll = onAllGames,
+            onDismiss = { picker = null }
+        )
+
+        HoldPicker.PLAYLISTS -> HoldDialog(
+            stringResource(R.string.playlists),
+            hold.playlists,
+            onToggle = onPlaylistToggle,
+            onAll = null,
+            onDismiss = { picker = null }
+        )
+
+        null -> Unit
+    }
+}
+
+private enum class HoldPicker { GAMES, PLAYLISTS }
+
+/** A tab whose long press plays, with what it plays; a tap opens its checklist. */
+@Composable
+private fun HoldRow(title: String, summary: String, onClick: () -> Unit) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 24.dp, vertical = 10.dp)
+    ) {
+        Text(title, style = MaterialTheme.typography.bodyLarge)
+        Text(
+            summary,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+/**
+ * What a held tab plays: a checklist that applies each tap at once. [onAll], when set, adds All and
+ * None buttons (Games only: unchecking every playlist falls back to Favorites).
+ */
+@Composable
+private fun HoldDialog(
+    title: String,
+    choices: HoldChoices,
+    onToggle: (String) -> Unit,
+    onAll: ((Boolean) -> Unit)?,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = {
+            LazyColumn {
+                items(choices.choices, key = { it.id }) { choice ->
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .toggleable(
+                                value = choice.checked,
+                                role = Role.Checkbox,
+                                onValueChange = { onToggle(choice.id) }
+                            )
+                            .padding(vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(checked = choice.checked, onCheckedChange = null)
+                        Spacer(Modifier.width(12.dp))
+                        Text(choice.name, style = MaterialTheme.typography.bodyLarge)
+                    }
+                }
+            }
+        },
+        dismissButton = onAll?.let { all ->
+            {
+                Row {
+                    TextButton(onClick = { all(false) }) { Text(stringResource(R.string.none)) }
+                    TextButton(onClick = { all(true) }) { Text(stringResource(R.string.all)) }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.done)) }
+        }
+    )
 }
 
 /**
