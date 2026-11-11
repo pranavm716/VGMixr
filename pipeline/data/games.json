@@ -22,7 +22,7 @@
     { "id": "white", "name": "White", "shortName": "W", "color": "#E1E1E1", "generation": 5, "platform": "DS", "family": "bw" },
     { "id": "black-2", "name": "Black 2", "shortName": "B2", "color": "#303E51", "generation": 5, "platform": "DS", "family": "bw" },
     { "id": "white-2", "name": "White 2", "shortName": "W2", "color": "#EBC5C3", "generation": 5, "platform": "DS", "family": "bw" },
-    { "id": "mk7", "name": "Mario Kart 7", "shortName": "MK7", "color": "#ED1D24", "platform": "3DS" },
+    { "id": "mk7", "name": "Mario Kart 7", "shortName": "MK7", "color": "#E5141C", "platform": "3DS" },
     { "id": "x", "name": "X", "shortName": "X", "color": "#025DA6", "generation": 6, "platform": "3DS", "family": "xy" },
     { "id": "y", "name": "Y", "shortName": "Y", "color": "#EA1A3E", "generation": 6, "platform": "3DS", "family": "xy" },
     { "id": "omega-ruby", "name": "Omega Ruby", "shortName": "OR", "color": "#AB2813", "generation": 6, "platform": "3DS", "family": "oras" },

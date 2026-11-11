@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-11T09:45:54Z",
+  "generatedAt": "2026-11-11T09:52:58Z",
   "games": [
     {
       "id": "red",
@@ -202,7 +202,7 @@
       "id": "mk7",
       "name": "Mario Kart 7",
       "shortName": "MK7",
-      "color": "#ED1D24",
+      "color": "#E5141C",
       "platform": "3DS"
     },
     {
