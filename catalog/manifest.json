@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-03T06:30:34Z",
+  "generatedAt": "2026-11-11T09:45:54Z",
   "games": [
     {
       "id": "red",
@@ -197,6 +197,13 @@
       "generation": 5,
       "platform": "DS",
       "family": "bw"
+    },
+    {
+      "id": "mk7",
+      "name": "Mario Kart 7",
+      "shortName": "MK7",
+      "color": "#ED1D24",
+      "platform": "3DS"
     },
     {
       "id": "x",
@@ -18412,6 +18419,1034 @@
         {
           "type": "stream",
           "videoId": "R8tqY0uk-O4",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-home-menu-banner",
+      "family": "mk7",
+      "title": "Home Menu Banner",
+      "order": 0,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "gpbH6wlw4Dg",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-title-screen",
+      "family": "mk7",
+      "title": "Title Screen",
+      "order": 1,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "G153OhPHlKY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-main-menu",
+      "family": "mk7",
+      "title": "Main Menu",
+      "order": 2,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "NgO9RS4RB5c",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-course-intro-fanfare",
+      "family": "mk7",
+      "title": "Course Intro Fanfare",
+      "order": 3,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "K0WUt_ThFno",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "mk7-race-start-fanfare-grand-prix-and-vs",
+      "family": "mk7",
+      "title": "Race Start Fanfare (Grand Prix & VS)",
+      "order": 4,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "FM8n3jJ8mis",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "mk7-toad-circuit-and-mario-circuit",
+      "family": "mk7",
+      "title": "Toad Circuit & Mario Circuit",
+      "order": 5,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "F4lD-VqAOzE",
+          "startMs": 0,
+          "confidence": 0.87
+        }
+      ]
+    },
+    {
+      "id": "mk7-daisy-hills",
+      "family": "mk7",
+      "title": "Daisy Hills",
+      "order": 6,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VIalTqj8ZD8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-cheep-cheep-lagoon",
+      "family": "mk7",
+      "title": "Cheep Cheep Lagoon",
+      "order": 7,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "d4s029X0Ts0",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-shy-guy-bazaar",
+      "family": "mk7",
+      "title": "Shy Guy Bazaar",
+      "order": 8,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "_BckDIeU254",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "0m5ooNFEIXQ",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "mk7-wuhu-loop-and-maka-wuhu",
+      "family": "mk7",
+      "title": "Wuhu Loop & Maka Wuhu",
+      "order": 9,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TGMHZO0Uqu4",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "CYMynFUEgQQ",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "mk7-music-park",
+      "family": "mk7",
+      "title": "Music Park",
+      "order": 10,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fyqGDWb-MNY",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "mk7-rock-rock-mountain",
+      "family": "mk7",
+      "title": "Rock Rock Mountain",
+      "order": 11,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "BqhJTntwi1A",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "mk7-piranha-plant-slide",
+      "family": "mk7",
+      "title": "Piranha Plant Slide",
+      "order": 12,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "HxcQvN7MuTw",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "MjyTN8fIKSM",
+          "startMs": 0,
+          "confidence": 0.82
+        },
+        {
+          "type": "stream",
+          "videoId": "SUlDas9gjcE",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "mk7-piranha-plant-slide-underwater",
+      "family": "mk7",
+      "title": "Piranha Plant Slide (Underwater)",
+      "order": 13,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "MjyTN8fIKSM",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "HxcQvN7MuTw",
+          "startMs": 0,
+          "confidence": 0.86
+        },
+        {
+          "type": "stream",
+          "videoId": "Ow_X4ZUxSKY",
+          "startMs": 0,
+          "confidence": 0.84
+        }
+      ]
+    },
+    {
+      "id": "mk7-wario-shipyard",
+      "family": "mk7",
+      "title": "Wario Shipyard",
+      "order": 14,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iMei3VwhrhI",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "j-FV6bqQXLs",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-wario-shipyard-underwater",
+      "family": "mk7",
+      "title": "Wario Shipyard (Underwater)",
+      "order": 15,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "j-FV6bqQXLs",
+          "startMs": 0,
+          "confidence": 1.0
+        },
+        {
+          "type": "stream",
+          "videoId": "iMei3VwhrhI",
+          "startMs": 0,
+          "confidence": 0.86
+        },
+        {
+          "type": "stream",
+          "videoId": "xBXJe_-d5Yo",
+          "startMs": 0,
+          "confidence": 0.82
+        }
+      ]
+    },
+    {
+      "id": "mk7-neo-bowser-city",
+      "family": "mk7",
+      "title": "Neo Bowser City",
+      "order": 16,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "oFMRCSZbuug",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "InO8iXMs4C8",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-dk-jungle",
+      "family": "mk7",
+      "title": "DK Jungle",
+      "order": 17,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "LFmorGxCi18",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "mk7-rosalinas-ice-world",
+      "family": "mk7",
+      "title": "Rosalina's Ice World",
+      "order": 18,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3rHbBXZ_Pdo",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "pNaxmK5Moyw",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-bowsers-castle",
+      "family": "mk7",
+      "title": "Bowser's Castle",
+      "order": 19,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "tLxTNGSKo6s",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "mk7-rainbow-road",
+      "family": "mk7",
+      "title": "Rainbow Road",
+      "order": 20,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "h1JNbbKwM7c",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "SgRrYzQt0co",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-rainbow-road-moon",
+      "family": "mk7",
+      "title": "Rainbow Road (Moon)",
+      "order": 21,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "SgRrYzQt0co",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "h1JNbbKwM7c",
+          "startMs": 0,
+          "confidence": 0.87
+        },
+        {
+          "type": "stream",
+          "videoId": "EfZQ715IvbA",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "mk7-n64-luigi-raceway",
+      "family": "mk7",
+      "title": "N64 Luigi Raceway",
+      "order": 22,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jEbYgGnmE8c",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "5Nj-asPLjw0",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-gba-bowser-castle-1",
+      "family": "mk7",
+      "title": "GBA Bowser Castle 1",
+      "order": 23,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "Bh2YZbGtk-c",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "VgdiZYQCIVY",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-wii-mushroom-gorge",
+      "family": "mk7",
+      "title": "Wii Mushroom Gorge",
+      "order": 24,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "OaZWLmgXmU0",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "4zaHaPgb1oo",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-ds-luigis-mansion",
+      "family": "mk7",
+      "title": "DS Luigi's Mansion",
+      "order": 25,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "PlCU8WIu0_Q",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "mk7-n64-koopa-beach",
+      "family": "mk7",
+      "title": "N64 Koopa Beach",
+      "order": 26,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WrnIqQzUMJU",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "idL0zb9wXIo",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-snes-mario-circuit-2",
+      "family": "mk7",
+      "title": "SNES Mario Circuit 2",
+      "order": 27,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TnkpAgWTHyw",
+          "startMs": 0,
+          "confidence": 0.86
+        }
+      ]
+    },
+    {
+      "id": "mk7-wii-coconut-mall",
+      "family": "mk7",
+      "title": "Wii Coconut Mall",
+      "order": 28,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "bA0kNDSCieU",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "L-i-9JWYMng",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-ds-waluigi-pinball",
+      "family": "mk7",
+      "title": "DS Waluigi Pinball",
+      "order": 29,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "A3Kjo_mT0pk",
+          "startMs": 0,
+          "confidence": 0.84
+        },
+        {
+          "type": "stream",
+          "videoId": "I3dP-Bbtx6A",
+          "startMs": 0,
+          "confidence": 0.8
+        }
+      ]
+    },
+    {
+      "id": "mk7-n64-kalimari-desert",
+      "family": "mk7",
+      "title": "N64 Kalimari Desert",
+      "order": 30,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "j6eth2qTXYE",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "AzaJEzSDtQo",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-ds-dk-pass",
+      "family": "mk7",
+      "title": "DS DK Pass",
+      "order": 31,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iyq16sAdqXE",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "mk7-gcn-daisy-cruiser",
+      "family": "mk7",
+      "title": "GCN Daisy Cruiser",
+      "order": 32,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "56HhXXIQoZE",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "YoqAFVJ16GE",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-wii-maple-treeway",
+      "family": "mk7",
+      "title": "Wii Maple Treeway",
+      "order": 33,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "4ifE_4Q8Oqk",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "kmh-CWbtdsY",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-wii-koopa-cape",
+      "family": "mk7",
+      "title": "Wii Koopa Cape",
+      "order": 34,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "M6tFNPUl3XE",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "4akd8_1cULs",
+          "startMs": 0,
+          "confidence": 0.81
+        },
+        {
+          "type": "stream",
+          "videoId": "2_khaRlHi1M",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-wii-koopa-cape-underwater",
+      "family": "mk7",
+      "title": "Wii Koopa Cape (Underwater)",
+      "order": 35,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "2_khaRlHi1M",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "M6tFNPUl3XE",
+          "startMs": 0,
+          "confidence": 0.87
+        },
+        {
+          "type": "stream",
+          "videoId": "sQJ4wgFPK6E",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-gcn-dino-dino-jungle",
+      "family": "mk7",
+      "title": "GCN Dino Dino Jungle",
+      "order": 36,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "cR0oJfthsEs",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "C1GXssMnnu0",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-ds-airship-fortress",
+      "family": "mk7",
+      "title": "DS Airship Fortress",
+      "order": 37,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "us7D9tbAJVc",
+          "startMs": 0,
+          "confidence": 0.99
+        }
+      ]
+    },
+    {
+      "id": "mk7-snes-rainbow-road",
+      "family": "mk7",
+      "title": "SNES Rainbow Road",
+      "order": 38,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "VqfzK77fViE",
+          "startMs": 0,
+          "confidence": 0.99
+        },
+        {
+          "type": "stream",
+          "videoId": "HWS4rLE-3Qc",
+          "startMs": 0,
+          "confidence": 0.81
+        }
+      ]
+    },
+    {
+      "id": "mk7-award-ceremony",
+      "family": "mk7",
+      "title": "Award Ceremony",
+      "order": 39,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "JhJubcGB9CI",
+          "startMs": 0,
+          "confidence": 0.97
+        }
+      ]
+    },
+    {
+      "id": "mk7-mario-kart-channel",
+      "family": "mk7",
+      "title": "Mario Kart Channel",
+      "order": 40,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "fdWOldaSjOw",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-wi-fi-menu",
+      "family": "mk7",
+      "title": "Wi-Fi Menu",
+      "order": 41,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "287CyLAGAR4",
+          "startMs": 0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "id": "mk7-race-start-fanfare-battle",
+      "family": "mk7",
+      "title": "Race Start Fanfare (Battle)",
+      "order": 42,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "0_8tv2Pt1XY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-honeybee-hive",
+      "family": "mk7",
+      "title": "Honeybee Hive",
+      "order": 43,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "aPjDB3-9SX0",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "mk7-sherbet-rink",
+      "family": "mk7",
+      "title": "Sherbet Rink",
+      "order": 44,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "O8pw9bzfq3k",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "mk7-wuhu-town",
+      "family": "mk7",
+      "title": "Wuhu Town",
+      "order": 45,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "iMVl-hpXh_4",
+          "startMs": 0,
+          "confidence": 0.98
+        }
+      ]
+    },
+    {
+      "id": "mk7-gba-battle-course-1",
+      "family": "mk7",
+      "title": "GBA Battle Course 1",
+      "order": 46,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "UUgiPB0y7LM",
+          "startMs": 0,
+          "confidence": 0.95
+        }
+      ]
+    },
+    {
+      "id": "mk7-n64-big-donut",
+      "family": "mk7",
+      "title": "N64 Big Donut",
+      "order": 47,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "TAtgzK-Sfuc",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "mk7-ds-palm-shore",
+      "family": "mk7",
+      "title": "DS Palm Shore",
+      "order": 48,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "D2ofxyi1MtE",
+          "startMs": 0,
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "id": "mk7-final-lap-fanfare",
+      "family": "mk7",
+      "title": "Final Lap Fanfare",
+      "order": 49,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "acgTbvJqQbQ",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-race-start-fanfare-time-trial",
+      "family": "mk7",
+      "title": "Race Start Fanfare (Time Trial)",
+      "order": 50,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "sO5JflUFKv8",
+          "startMs": 0,
+          "confidence": 0.85
+        }
+      ]
+    },
+    {
+      "id": "mk7-staff-roll",
+      "family": "mk7",
+      "title": "Staff Roll",
+      "order": 51,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "x34xDeQlJJY",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-spectator-race",
+      "family": "mk7",
+      "title": "Spectator Race",
+      "order": 52,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "3imEGdWaYd8",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-1st-place-fanfare",
+      "family": "mk7",
+      "title": "1st Place Fanfare",
+      "order": 53,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "jDulctRCqok",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "mk7-2nd-4th-place-fanfare",
+      "family": "mk7",
+      "title": "2nd-4th Place Fanfare",
+      "order": 54,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "N6fgXBEPVdU",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "mk7-5th-8th-place-fanfare",
+      "family": "mk7",
+      "title": "5th-8th Place Fanfare",
+      "order": 55,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-W1pcxuAzuM",
+          "startMs": 0,
+          "confidence": 0.92
+        }
+      ]
+    },
+    {
+      "id": "mk7-1st-4th-place-results",
+      "family": "mk7",
+      "title": "1st-4th Place Results",
+      "order": 56,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "WB4SYll8P8I",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-5th-8th-place-results",
+      "family": "mk7",
+      "title": "5th-8th Place Results",
+      "order": 57,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "QEpnHgVNCek",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-congrats",
+      "family": "mk7",
+      "title": "Congrats!",
+      "order": 58,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "ESxSG8ukh34",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-draw",
+      "family": "mk7",
+      "title": "Draw!",
+      "order": 59,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "-e_Avupe_ro",
+          "startMs": 0,
+          "confidence": 1.0
+        }
+      ]
+    },
+    {
+      "id": "mk7-good-try",
+      "family": "mk7",
+      "title": "Good Try!",
+      "order": 60,
+      "sources": [
+        {
+          "type": "stream",
+          "videoId": "K2A8NexBjww",
           "startMs": 0,
           "confidence": 1.0
         }

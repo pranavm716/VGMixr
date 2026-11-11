@@ -22,6 +22,7 @@
     { "id": "white", "name": "White", "shortName": "W", "color": "#E1E1E1", "generation": 5, "platform": "DS", "family": "bw" },
     { "id": "black-2", "name": "Black 2", "shortName": "B2", "color": "#303E51", "generation": 5, "platform": "DS", "family": "bw" },
     { "id": "white-2", "name": "White 2", "shortName": "W2", "color": "#EBC5C3", "generation": 5, "platform": "DS", "family": "bw" },
+    { "id": "mk7", "name": "Mario Kart 7", "shortName": "MK7", "color": "#ED1D24", "platform": "3DS" },
     { "id": "x", "name": "X", "shortName": "X", "color": "#025DA6", "generation": 6, "platform": "3DS", "family": "xy" },
     { "id": "y", "name": "Y", "shortName": "Y", "color": "#EA1A3E", "generation": 6, "platform": "3DS", "family": "xy" },
     { "id": "omega-ruby", "name": "Omega Ruby", "shortName": "OR", "color": "#AB2813", "generation": 6, "platform": "3DS", "family": "oras" },
@@ -78,6 +79,8 @@
     { "family": "bw", "games": ["black-2", "white-2"], "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 1" },
     { "family": "bw", "games": ["black-2", "white-2"], "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 2" },
     { "family": "bw", "games": ["black-2", "white-2"], "page": "Pokémon Black 2 & Pokémon White 2: Super Music Collection", "disc": "Disc 3" },
+
+    { "family": "mk7", "file": "tracklists/mk7.tsv", "disc": "Disc 1" },
 
     { "family": "xy", "page": "Pokémon X & Pokémon Y: Super Music Collection", "disc": "Disc 1" },
     { "family": "xy", "page": "Pokémon X & Pokémon Y: Super Music Collection", "disc": "Disc 2" },
@@ -152,13 +155,15 @@
       { "games": ["scarlet", "violet"], "playlist": "PLzXrrIvqJ7v7CMnaH0hNFQQRFK_wZgIAu", "note": "Base game" },
       { "games": ["scarlet", "violet"], "playlist": "PLP8odx5YHM7ZkxehseQjzdWy5-rgbvJwG", "note": "The Teal Mask" },
       { "games": ["scarlet", "violet"], "playlist": "PLgyn_xiMXpwzKc-_Y6b4WEWsCgcBarJ6O", "note": "The Indigo Disk" },
-      { "games": ["plza"], "playlist": "PL90nj2rNFfbcE2HR8S2TNT_h2DjM1nDGb" }
+      { "games": ["plza"], "playlist": "PL90nj2rNFfbcE2HR8S2TNT_h2DjM1nDGb" },
+      { "games": ["mk7"], "playlist": "PLKms27UOSS5z3EIMKksJ-aj7x5GEPqf87" }
     ],
     "albums": [
       { "games": ["botw"], "video": "JYaid9Uc56Y", "note": "Full OST. YouTube made no chapters from its timestamps (sub-10 s tracks), so the slices are accept overrides from tracklists/botw.tsv; the entry keeps BotW from being searched" }
     ],
     "aliases": {
       "botw": ["BotW", "Zelda Breath of the Wild"],
+      "mk7": ["MK7", "Mario Kart 7"],
       "bw": ["BW", "B2W2", "BW2"],
       "pmd-brt": ["Mystery Dungeon", "PMD", "Blue Rescue Team", "Red Rescue Team", "Rescue Team", "Mystery Dungeon Rescue Team"],
       "pmd-eos": ["Pokemon Mystery Dungeon", "Mystery Dungeon", "PMD", "Explorers of Sky", "Explorers", "Mystery Dungeon Explorers"]
