@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-11T09:52:58Z",
+  "generatedAt": "2026-11-14T09:56:22Z",
   "games": [
     {
       "id": "red",
@@ -10506,15 +10506,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "0dPH7A0c7bI",
-          "startMs": 0,
-          "confidence": 0.93
-        },
-        {
-          "type": "stream",
           "videoId": "4pKSok1IH88",
           "startMs": 0,
-          "confidence": 0.93
+          "confidence": 1.0
         },
         {
           "type": "stream",
@@ -21850,9 +21844,9 @@
       "sources": [
         {
           "type": "stream",
-          "videoId": "Oc44myRhNRM",
+          "videoId": "mJf4WpuWGVY",
           "startMs": 0,
-          "confidence": 0.86
+          "confidence": 1.0
         }
       ]
     },

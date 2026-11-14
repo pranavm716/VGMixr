@@ -164,6 +164,7 @@
     "hgss-pokeathlon-medal-ceremony-gb-sounds": { "streams": { "accept": [ { "videoId": "aQQR67wlQRk" } ] } },
     "hgss-bell-tower": { "streams": { "accept": [ { "videoId": "rCfzcRSjyrY" } ], "reject": ["J-b3C45f0yw", "IZL8d8i36tY"] } },
     "hgss-rock-tunnel": { "streams": { "reject": ["3UxM8idhP84"] } },
+    "hgss-ending-theme": { "streams": { "accept": [ { "videoId": "4pKSok1IH88" } ], "reject": ["0dPH7A0c7bI"] } },
 
     "pmd-brt-insert-title": { "exclude": false, "note": "Short, but music, not a jingle" },
     "pmd-brt-versus-boss": { "streams": { "accept": [ { "videoId": "xfwcL8P10Sw" } ] } },
@@ -511,6 +512,7 @@
     "oras-route-110": { "streams": { "accept": [ { "videoId": "BM1xY0MYS4o" } ], "reject": ["tBksVgsh9UU"] } },
     "oras-route-111": { "streams": { "accept": [ { "videoId": "cVgZqeQKpPo" } ], "reject": ["vh6wfJyUN_k"] } },
     "oras-sea-mauville": { "streams": { "accept": [ { "videoId": "azgwTS1ToBk" } ], "reject": ["2aDffpuLE3w"] } },
+    "oras-battle-team-aqua-team-magma": { "streams": { "accept": [ { "videoId": "mJf4WpuWGVY" } ], "reject": ["Oc44myRhNRM"] } },
 
     "sm-alola-region-theme": { "games": ["sun", "moon"], "streams": { "accept": [ { "videoId": "TO6iwQsLj4k", "startMs": 145000, "endMs": 309000 } ] }, "title": "Alola Region Theme (Sun & Moon)",
                                "note": "USUM has its own version, sm-alola-region-theme-usum" },
