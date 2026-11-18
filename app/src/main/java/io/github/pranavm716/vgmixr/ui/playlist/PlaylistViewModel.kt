@@ -1,4 +1,4 @@
-package io.github.pranavm716.vgmixr.ui.playlist
+﻿package io.github.pranavm716.vgmixr.ui.playlist
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -140,7 +140,7 @@ class PlaylistViewModel @Inject constructor(
         }
     }
 
-    /** The sort menu: picking another key sorts by it, ascending. */
+    /** The sort menu: picking another key sorts by it in the same direction. */
     fun onSortKey(key: SortKey) = changeSort { if (key == it.key) it else it.withKey(key) }
 
     /** The sort arrow: the same key the other way. */

@@ -13,8 +13,8 @@ enum class SortDirection { Ascending, Descending }
 
 /** A collection's sort: [key] in [direction]. Descending only reverses the key, never ties. */
 data class SortSetting(val key: SortKey, val direction: SortDirection) {
-    /** Picking a key selects it, ascending. */
-    fun withKey(key: SortKey) = SortSetting(key, SortDirection.Ascending)
+    /** Picking a key selects it, keeping the direction. */
+    fun withKey(key: SortKey) = copy(key = key)
 
     /** The arrow: the same key the other way. */
     fun reversed() = copy(

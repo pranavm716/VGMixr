@@ -87,8 +87,16 @@ class PlaylistSortTest {
         assertEquals(SortUi(SortKeys.playlistDefault, SortKeys.playlist), state.sort)
     }
 
+    // Picking a key keeps the direction, so tests that expect ascending results start ascending.
+    private fun startAscending() = playlists.contents.value.getValue(7L).let {
+        playlists.contents.value += 7L to it.copy(
+            sort = SortSetting(SortKey.RecentlyAdded, SortDirection.Ascending)
+        )
+    }
+
     @Test
     fun `picking a key saves it on this playlist only and sorts the page`() = runTest {
+        startAscending()
         val viewModel = viewModel()
 
         viewModel.onSortKey(SortKey.Game)
@@ -106,7 +114,15 @@ class PlaylistSortTest {
     }
 
     @Test
+    fun `picking a key keeps the direction`() = runTest {
+        viewModel().onSortKey(SortKey.Game)
+
+        assertEquals(SortSetting(SortKey.Game, SortDirection.Descending), sortOf(7))
+    }
+
+    @Test
     fun `a sort change tells the player the playlist's new order`() = runTest {
+        startAscending()
         viewModel().onSortKey(SortKey.Title)
 
         assertEquals(

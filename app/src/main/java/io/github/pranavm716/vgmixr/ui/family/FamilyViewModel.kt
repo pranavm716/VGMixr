@@ -1,4 +1,4 @@
-package io.github.pranavm716.vgmixr.ui.family
+﻿package io.github.pranavm716.vgmixr.ui.family
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -120,7 +120,7 @@ class FamilyViewModel @Inject constructor(
         }
     }
 
-    /** The sort menu: picking another key sorts by it, ascending. */
+    /** The sort menu: picking another key sorts by it in the same direction. */
     fun onSortKey(key: SortKey) {
         val sort = sortSettings.games.value
         if (key != sort.key) changeSort(sort.withKey(key))

@@ -134,9 +134,13 @@ class SortTest {
     }
 
     @Test
-    fun `picking a key selects it ascending and the arrow reverses`() {
+    fun `picking a key keeps the direction and the arrow reverses`() {
         val setting = SortSetting(SortKey.RecentlyAdded, Descending)
-        assertEquals(SortSetting(SortKey.Title, Ascending), setting.withKey(SortKey.Title))
+        assertEquals(SortSetting(SortKey.Title, Descending), setting.withKey(SortKey.Title))
+        assertEquals(
+            SortSetting(SortKey.Game, Ascending),
+            SortSetting(SortKey.Title, Ascending).withKey(SortKey.Game)
+        )
         assertEquals(SortSetting(SortKey.RecentlyAdded, Ascending), setting.reversed())
     }
 }

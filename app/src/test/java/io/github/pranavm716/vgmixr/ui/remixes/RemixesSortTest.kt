@@ -84,6 +84,8 @@ class RemixesSortTest {
 
     @Test
     fun `picking channel saves it, sorts the list and tells the player`() = runTest {
+        // Picking a key keeps the direction, so start ascending for an ascending result.
+        sortSettings.remixes.value = SortSetting(SortKey.RecentlyAdded, SortDirection.Ascending)
         val viewModel = viewModel()
 
         viewModel.onSortKey(SortKey.Channel)

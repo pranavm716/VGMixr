@@ -80,6 +80,7 @@
     "frlg-opening-movie": { "title": "Opening Movie", "duration": "2:03", "streams": { "accept": [ { "videoId": "CZjL1VwPVqU", "startMs": 2000 } ] },
                             "note": "The Game Freak logo, the opening and the title screen, played back to back (0:11 + 0:16 + 1:36)" },
     "frlg-title-screen": { "mergeInto": "frlg-opening-movie" },
+    "frlg-final-battle-rival": { "streams": { "accept": [ { "videoId": "-4vpdkEkup8" } ], "reject": ["PF1dv8mJEFc"] } },
 
     "dppt-special-report-search-for-the-red-gyarados": { "streams": { "accept": [ { "videoId": "SuJnLCsXvYU" } ] } },
     "dppt-rival": { "streams": { "accept": [ { "videoId": "wuTvW88w5DY" } ] } },
