@@ -125,3 +125,7 @@ One file per condition, named `<field>-<variant>.json`, where `<field>` is the p
 ## `broken.json`
 
 Not a manifest: an example of the broken-marks file the app writes and `python -m vgmixr_pipeline.broken` pulls (format in [`../broken.md`](../broken.md)). The app's writer must produce exactly this file from its two marks, and the pipeline's parser must read it, so the two sides agree on the format. It covers both reasons, `detail`, and a mark without `catalogGeneratedAt` (marked before the first import).
+
+## `reports.json`
+
+Not a manifest: an example of the wrong-source reports file the app writes and `python -m vgmixr_pipeline.broken` pulls (format in [`../broken.md`](../broken.md#reportsjson)). The app's writer must produce exactly this file from its two reports, and the pipeline's parser must read it. It covers a whole-video source, an album slice with `endMs`, and a report without `catalogGeneratedAt` (made before the first import).
