@@ -156,7 +156,7 @@ One step per Claude Code session. Run `/clear` between steps. Phase 0 commits go
     - Cover: a 16:9 image in `pipeline/covers-in/botw.*`.
     - Deferred: the `franchise` field and grouping by franchise on the Games tab. With one Zelda game, BotW sits in the flat family list; the field comes with a second franchise game (`docs/manifest.md`).
     - Done when: the rebuilt manifest has BotW's tracks, all sliced from the album; `family-report.md` and `match-report.md` are checked; a new APK on the phone browses, searches ("hyrule", "zelda") and plays a few BotW tracks, the Fairy Fountain among them.
-15e. [ ] Report wrong source: a one-tap button at the far right of now playing's controls (replacing the placeholder repeat icon) marks the playing track's video as wrong, mirrored to `reports.json` on the phone; the review tool's Broken tab lists the reports and swaps in a candidate with one click. Replaces the "In-app flags" candidate, without notes. Plan: docs/features/report-wrong-source.md
+15e. [x] Report wrong source: a one-tap button at the far right of now playing's controls (replacing the placeholder repeat icon) marks the playing track's video as wrong, mirrored to `reports.json` on the phone; the review tool's Broken tab lists the reports and swaps in a candidate with one click. Replaces the "In-app flags" candidate, without notes. Plan: docs/features/report-wrong-source.md
 
 ## Phase 3: real catalog (independent of the app; can run in a separate worktree alongside Phase 2)
 16. [x] Catalog builder, part A: Bulbapedia track lists into a draft manifest. Decisions:

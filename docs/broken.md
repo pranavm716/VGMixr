@@ -86,3 +86,40 @@ The bot check and network trouble are no verdict: nothing is cached, and a bot c
 A report made on a catalog other than today's manifest is tagged "older catalog". Its mark still matters: the phone keeps it until a catalog drops the video.
 
 **Fixing.** Open track shows the track with the report above its sources, the reported video marked, and the check on every source and candidate. Fix it with the usual tools (reject, accept another candidate, search, paste a replacement, add a playlist), checking a replacement first so one refused upload isn't swapped for another (uploads from one channel are often refused alike), then Rebuild.
+
+## `reports.json`
+
+Wrong-source reports (roadmap step 15e): the flag at the far right of now playing's controls reports that the playing track's stream is the wrong audio (another track, a remix, the wrong version, a bad cut). A second tap on the same track takes the report back; the flag shows in the accent color while the track is reported. Unlike a broken mark, a report never changes playback: the video keeps playing until a rebuild replaces it.
+
+A report names the video playback would pick: the track's first `stream` source whose video isn't marked broken. One per track. The file is the only copy (dev diagnostics, not user data: not in Room, not in backups), next to `broken.json`: `/sdcard/Android/data/io.github.pranavm716.vgmixr/files/reports.json`, rewritten whole on every change. After each catalog import, a report whose track no longer picks the reported video (the fix shipped, or the track left the catalog) is dropped.
+
+Example (also the shared fixture [`fixtures/reports.json`](fixtures/reports.json)):
+
+```json
+{
+  "version": 1,
+  "reports": [
+    {
+      "trackId": "sm-battle-wild-pokemon",
+      "videoId": "Q3d1kTZmUQo",
+      "startMs": 754000,
+      "endMs": 871500,
+      "positionMs": 12000,
+      "reportedAt": "2026-11-18T20:40:00Z",
+      "catalogGeneratedAt": "2026-11-17T22:03:11Z"
+    }
+  ]
+}
+```
+
+| Field | Type | Meaning |
+|---|---|---|
+| `version` | int | Format version, `1`. |
+| `reports` | array | Oldest first (by `reportedAt`, then `trackId`). |
+| `trackId` | string | The reported track. |
+| `videoId` | string | The video it played. |
+| `startMs` | int | Where the track starts in the video (0 for a whole video). |
+| `endMs` | int, optional | Where it ends in the video; missing for a whole video. |
+| `positionMs` | int | How far into the track the tap came. |
+| `reportedAt` | string | ISO 8601 in UTC. |
+| `catalogGeneratedAt` | string, optional | The catalog the app played from; missing before the first import. |
