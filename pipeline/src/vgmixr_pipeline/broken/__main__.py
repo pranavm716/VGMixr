@@ -1,4 +1,4 @@
-"""Pulls the app's broken.json from the phone over adb into pipeline/out/broken.json.
+"""Pulls the app's broken.json and reports.json from the phone over adb into pipeline/out/.
 
 uv run python -m vgmixr_pipeline.broken [--adb PATH]
 
@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 from vgmixr_pipeline.adb import default_adb
-from vgmixr_pipeline.broken import FILE_NAME, PullError, pull_broken, summarize
+from vgmixr_pipeline.broken import FILE_NAME, PullError, pull_broken, pull_reports, summarize
 
 PIPELINE_DIR = Path(__file__).resolve().parents[3]
 OUT = PIPELINE_DIR / "out"
@@ -24,6 +24,7 @@ def main() -> int:
     args = parser.parse_args()
     try:
         broken = pull_broken(args.adb, OUT)
+        reports = pull_reports(args.adb, OUT)
     except PullError as e:
         print(e, file=sys.stderr)
         return 1
@@ -31,6 +32,10 @@ def main() -> int:
     families = {track["id"]: track["family"] for track in manifest["tracks"]}
     print(f"Wrote {OUT / FILE_NAME}")
     print("\n".join(summarize(broken, families)))
+    count = len(reports.reports)
+    print(f"{count} wrong-source report{'' if count == 1 else 's'}:")
+    for report in reports.reports:
+        print(f"  {report.track_id}: {report.video_id} at {report.position_ms // 1000} s")
     return 0
 
 

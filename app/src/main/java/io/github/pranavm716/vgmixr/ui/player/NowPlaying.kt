@@ -253,7 +253,13 @@ fun NowPlayingScreen(
         Column(Modifier.padding(horizontal = SIDE_MARGIN)) {
             SeekRow(viewModel)
             Spacer(Modifier.height(16.dp))
-            Controls(visible.isPlaying, visible.isLoading, visible.shuffle, viewModel)
+            Controls(
+                visible.isPlaying,
+                visible.isLoading,
+                visible.shuffle,
+                visible.reported,
+                viewModel
+            )
         }
         Spacer(Modifier.weight(BELOW_CONTROLS))
         Box(Modifier.fillMaxWidth().padding(horizontal = SIDE_MARGIN)) {
@@ -366,10 +372,11 @@ private fun Controls(
     isPlaying: Boolean,
     isLoading: Boolean,
     shuffle: Boolean,
+    reported: Boolean,
     viewModel: NowPlayingViewModel
 ) {
     // Spotify's row: each control centered a fixed distance from the middle, play/pause on it.
-    // Repeat is a placeholder for step 21's repeat/loop button and does nothing yet.
+    // The far right reports the playing stream as wrong (step 15e), lit like shuffle once reported.
     Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         ControlSlot(-OUTER_OFFSET) {
             IconButton(onClick = viewModel::onShuffle, Modifier.requiredSize(48.dp)) {
@@ -428,11 +435,22 @@ private fun Controls(
             }
         }
         ControlSlot(OUTER_OFFSET) {
-            Icon(
-                painterResource(R.drawable.ic_repeat),
-                contentDescription = null,
-                modifier = Modifier.requiredSize(REPEAT_ICON)
-            )
+            IconButton(onClick = viewModel::onReport, Modifier.requiredSize(48.dp)) {
+                Icon(
+                    painterResource(
+                        if (reported) R.drawable.ic_flag_filled else R.drawable.ic_flag
+                    ),
+                    contentDescription = stringResource(
+                        if (reported) R.string.report_remove else R.string.report_wrong_source
+                    ),
+                    tint = if (reported) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        LocalContentColor.current
+                    },
+                    modifier = Modifier.requiredSize(FLAG_ICON)
+                )
+            }
         }
     }
 }
@@ -455,7 +473,7 @@ private val SHUFFLE_ICON = 31.5.dp
 // Glyph 23.8 x 22 (Spotify's 21.5 x 23.8).
 private val SKIP_ICON = 44.dp
 
-private val REPEAT_ICON = 29.dp
+private val FLAG_ICON = 33.dp
 
 // The circle is Spotify's; its triangle 15.6 x 19.8 (Spotify's 17.2 x 19.5).
 private val PLAY_SIZE = 64.dp

@@ -14,6 +14,7 @@ import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
 import io.github.pranavm716.vgmixr.testing.FakeCatalogRepository
 import io.github.pranavm716.vgmixr.testing.FakePlaybackController
 import io.github.pranavm716.vgmixr.testing.FakePlaylistRepository
+import io.github.pranavm716.vgmixr.testing.FakeWrongSourceReports
 import io.github.pranavm716.vgmixr.testing.MainDispatcherRule
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
 import kotlinx.coroutines.test.runTest
@@ -438,5 +439,57 @@ class NowPlayingViewModelTest {
         ).uiState.test {
             assertEquals("Old", (awaitItem() as NowPlayingUiState.Visible).title)
         }
+    }
+
+    @Test
+    fun `report toggles a report for the playing track at its position`() = runTest {
+        val reports = FakeWrongSourceReports()
+        playback.state.value = playing(QueueContext.Family("rse"))
+        playback.progress.value = PlaybackProgress(positionMs = 42_000, durationMs = 90_000)
+        val viewModel =
+            NowPlayingViewModel(
+                FakeCatalogRepository(catalog),
+                playback,
+                playlists,
+                reports = reports
+            )
+
+        viewModel.uiState.test {
+            assertEquals(false, (awaitItem() as NowPlayingUiState.Visible).reported)
+            viewModel.progress.test {
+                awaitItem()
+                viewModel.onReport()
+            }
+            assertEquals(true, (awaitItem() as NowPlayingUiState.Visible).reported)
+        }
+        assertEquals(listOf("rse-a" to 42_000L), reports.toggles)
+    }
+
+    @Test
+    fun `reported follows the playing track`() = runTest {
+        val reports = FakeWrongSourceReports()
+        playback.state.value = playing(QueueContext.Family("rse"))
+        val viewModel =
+            NowPlayingViewModel(
+                FakeCatalogRepository(catalog),
+                playback,
+                playlists,
+                reports = reports
+            )
+        reports.toggle("rse-a", 0)
+
+        viewModel.uiState.test {
+            assertEquals(true, (awaitItem() as NowPlayingUiState.Visible).reported)
+            playback.state.value = playing(QueueContext.Remixes, trackId = "yt:AAAAAAAAAAA")
+            assertEquals(false, (awaitItem() as NowPlayingUiState.Visible).reported)
+        }
+    }
+
+    @Test
+    fun `report does nothing with nothing playing`() = runTest {
+        val reports = FakeWrongSourceReports()
+        NowPlayingViewModel(FakeCatalogRepository(catalog), playback, playlists, reports = reports)
+            .onReport()
+        assertEquals(emptyList<Pair<String, Long>>(), reports.toggles)
     }
 }

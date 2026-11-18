@@ -47,7 +47,12 @@ android {
     testOptions {
         unitTests.isIncludeAndroidResources = true
         // Tests that ask YouTube for real run only with -Pvgmixr.live.
-        unitTests.all { it.systemProperty("vgmixr.live", project.hasProperty("vgmixr.live")) }
+        unitTests.all {
+            it.systemProperty("vgmixr.live", project.hasProperty("vgmixr.live"))
+            // Robolectric's memory adds up over the suite in one JVM: the 512 MB default ran out
+            // (OutOfMemoryError, then a hang) once it passed ~140 classes.
+            it.maxHeapSize = "2g"
+        }
     }
     sourceSets {
         // Shared manifest fixtures, also loaded by the pipeline's tests.

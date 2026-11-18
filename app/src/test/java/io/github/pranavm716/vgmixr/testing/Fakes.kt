@@ -23,6 +23,8 @@ import io.github.pranavm716.vgmixr.domain.playback.TryAgainResult
 import io.github.pranavm716.vgmixr.domain.playlist.Playlist
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
+import io.github.pranavm716.vgmixr.domain.report.WrongSourceReport
+import io.github.pranavm716.vgmixr.domain.report.WrongSourceReports
 import io.github.pranavm716.vgmixr.domain.settings.Accent
 import io.github.pranavm716.vgmixr.domain.settings.AccentSetting
 import io.github.pranavm716.vgmixr.domain.settings.Background
@@ -405,5 +407,21 @@ class FakeRecentCutoff(
 
     override fun clearNow() {
         since.value = now
+    }
+}
+
+/** Reports in memory; [toggles] records each tap as (trackId, positionMs). */
+class FakeWrongSourceReports(initial: List<WrongSourceReport> = emptyList()) : WrongSourceReports {
+    override val reports = MutableStateFlow(initial)
+    val toggles = mutableListOf<Pair<String, Long>>()
+
+    override suspend fun toggle(trackId: String, positionMs: Long) {
+        toggles += trackId to positionMs
+        reports.value = if (reports.value.any { it.trackId == trackId }) {
+            reports.value.filterNot { it.trackId == trackId }
+        } else {
+            reports.value +
+                WrongSourceReport(trackId, "v", 0, null, positionMs, Instant.EPOCH, null)
+        }
     }
 }

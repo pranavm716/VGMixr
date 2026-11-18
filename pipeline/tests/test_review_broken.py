@@ -358,3 +358,57 @@ def test_a_report_finds_a_frozen_track_by_its_id_after_a_rename(tmp_path: Path) 
     (report,) = review.broken()["reports"]
 
     assert report["track"]["id"] == "rse-route-101"
+
+
+def report(track_id: str, video_id: str, **kw: Any) -> dict[str, Any]:
+    return {
+        "trackId": track_id,
+        "videoId": video_id,
+        "startMs": 0,
+        "positionMs": 83_000,
+        "reportedAt": "2026-10-22T09:00:00Z",
+        "catalogGeneratedAt": BUILT_AT,
+    } | kw
+
+
+def pull_reports(tmp_path: Path, *reports: dict[str, Any]) -> None:
+    text = json.dumps({"version": 1, "reports": list(reports)})
+    (tmp_path / "out" / "reports.json").write_text(text, encoding="utf-8")
+
+
+def test_a_wrong_source_report_shows_beside_the_broken_marks(
+    review: Review, tmp_path: Path
+) -> None:
+    pull_reports(tmp_path, report("rse-littleroot-town", vid(1)))
+
+    (wrong,) = review.broken()["reports"]
+
+    assert (wrong["videoId"], wrong["reason"]) == (vid(1), "wrong")
+    assert wrong["detail"] == "heard at 1:23"
+    assert wrong["markedAt"] == "2026-10-22T09:00:00Z"
+    assert wrong["track"]["id"] == "rse-littleroot-town"
+    assert wrong["status"] == "needs-fix"
+    assert wrong["usedBy"] == [wrong["track"]]
+    assert review.track("rse-littleroot-town")["reported"][0]["reason"] == "wrong"
+
+
+def test_a_wrong_source_report_is_fixed_once_its_track_drops_the_video(
+    review: Review, tmp_path: Path
+) -> None:
+    # Another track still using the video doesn't matter: only the reported track heard it wrong.
+    pull_reports(tmp_path, report("rse-littleroot-town", vid(1)))
+
+    review.set_streams("rse-littleroot-town", {"accept": [], "reject": [vid(1)]})
+
+    (wrong,) = review.broken()["reports"]
+    assert wrong["status"] == "fixed"
+    assert wrong["usedBy"] == []
+
+
+def test_a_wrong_source_report_and_a_mark_on_one_video_are_two_reports(
+    review: Review, tmp_path: Path
+) -> None:
+    pull(tmp_path, mark("rse-littleroot-town", vid(1)))
+    pull_reports(tmp_path, report("rse-littleroot-town", vid(1)))
+
+    assert sorted(r["reason"] for r in review.broken()["reports"]) == ["no-audio", "wrong"]

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "reports": [
+    {
+      "trackId": "rse-route-101",
+      "videoId": "WMj9b4vYTXU",
+      "startMs": 0,
+      "positionMs": 41200,
+      "reportedAt": "2026-11-18T09:15:02.250Z"
+    },
+    {
+      "trackId": "sm-battle-wild-pokemon",
+      "videoId": "Q3d1kTZmUQo",
+      "startMs": 754000,
+      "endMs": 871500,
+      "positionMs": 12000,
+      "reportedAt": "2026-11-18T20:40:00Z",
+      "catalogGeneratedAt": "2026-11-17T22:03:11Z"
+    }
+  ]
+}

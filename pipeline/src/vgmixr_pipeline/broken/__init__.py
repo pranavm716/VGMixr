@@ -19,6 +19,8 @@ from pydantic.alias_generators import to_camel
 PACKAGE = "io.github.pranavm716.vgmixr"
 REMOTE_PATH = f"/sdcard/Android/data/{PACKAGE}/files/broken.json"
 FILE_NAME = "broken.json"
+REPORTS_REMOTE_PATH = f"/sdcard/Android/data/{PACKAGE}/files/reports.json"
+REPORTS_FILE_NAME = "reports.json"
 
 Reason = Literal["unavailable", "no-audio"]
 
@@ -42,6 +44,26 @@ class BrokenFile(_Model):
     marks: list[BrokenMark]
 
 
+class WrongReport(_Model):
+    """The user heard the wrong audio from this video on this track (roadmap step 15e)."""
+
+    track_id: str
+    video_id: str
+    start_ms: int
+    end_ms: int | None = None
+    position_ms: int
+    reported_at: datetime
+    catalog_generated_at: datetime | None = None
+
+
+class ReportsFile(_Model):
+    version: Literal[1]
+    reports: list[WrongReport]
+
+
+NO_REPORTS = ReportsFile(version=1, reports=[])
+
+
 class PullError(Exception):
     """broken.json could not be pulled; the last pulled copy is kept."""
 
@@ -51,6 +73,10 @@ Runner = Callable[[list[str]], "subprocess.CompletedProcess[str]"]
 
 def parse_broken(text: str) -> BrokenFile:
     return BrokenFile.model_validate_json(text)
+
+
+def parse_reports(text: str) -> ReportsFile:
+    return ReportsFile.model_validate_json(text)
 
 
 @dataclass(frozen=True)
@@ -120,3 +146,37 @@ def summarize(broken: BrokenFile, track_families: dict[str, str]) -> list[str]:
         detail = ", ".join(f"{reason} {count}" for reason, count in sorted(reasons.items()))
         lines.append(f"  {family}: {sum(reasons.values())} ({detail})")
     return lines
+
+
+def read_pulled_reports(out_dir: Path) -> ReportsFile:
+    """The last pulled reports.json; none when nothing was pulled or the file is invalid."""
+    try:
+        return parse_reports((out_dir / REPORTS_FILE_NAME).read_text(encoding="utf-8"))
+    except (FileNotFoundError, ValidationError):
+        return NO_REPORTS
+
+
+def pull_reports(adb: Path, out_dir: Path, run: Runner = run_adb) -> ReportsFile:
+    """Pulls the phone's reports.json into [out_dir]. The app writes it only once something is
+    reported, so a missing file is no reports (and clears the last pull)."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    part = out_dir / f"{REPORTS_FILE_NAME}.part"
+    try:
+        result = run([str(adb), "pull", REPORTS_REMOTE_PATH, str(part)])
+    except FileNotFoundError as e:
+        raise PullError(f"adb not found at {adb}; pass its path with --adb") from e
+    if result.returncode != 0:
+        message = (result.stderr or result.stdout).strip()
+        if "No such file" in message or "does not exist" in message:
+            (out_dir / REPORTS_FILE_NAME).unlink(missing_ok=True)
+            return NO_REPORTS
+        raise PullError(f"adb pull failed: {message}")
+    try:
+        text = part.read_text(encoding="utf-8")
+        reports = parse_reports(text)
+    except ValidationError as e:
+        raise PullError(f"The phone's file is not a valid reports.json:\n{e}") from e
+    finally:
+        part.unlink(missing_ok=True)
+    (out_dir / REPORTS_FILE_NAME).write_text(text, encoding="utf-8")
+    return reports
