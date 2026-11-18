@@ -10,12 +10,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.github.pranavm716.vgmixr.data.db.ImportStateDao
 import io.github.pranavm716.vgmixr.data.diagnostics.BrokenMarksMirror
 import io.github.pranavm716.vgmixr.data.diagnostics.FileDiagnostics
+import io.github.pranavm716.vgmixr.data.diagnostics.FileWrongSourceReports
 import io.github.pranavm716.vgmixr.data.settings.PrefsShuffleSetting
 import io.github.pranavm716.vgmixr.data.stream.CachingStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.NewPipeStreamResolver
 import io.github.pranavm716.vgmixr.data.stream.RoomBrokenSources
+import io.github.pranavm716.vgmixr.domain.catalog.CatalogRepository
+import io.github.pranavm716.vgmixr.domain.catalog.CatalogSync
 import io.github.pranavm716.vgmixr.domain.history.PlayHistory
 import io.github.pranavm716.vgmixr.domain.history.RecentPlays
 import io.github.pranavm716.vgmixr.domain.playback.BrokenSources
@@ -23,6 +27,7 @@ import io.github.pranavm716.vgmixr.domain.playback.PlaybackController
 import io.github.pranavm716.vgmixr.domain.playback.PlaybackDiagnostics
 import io.github.pranavm716.vgmixr.domain.playback.ShuffleSetting
 import io.github.pranavm716.vgmixr.domain.playback.StreamResolver
+import io.github.pranavm716.vgmixr.domain.report.WrongSourceReports
 import io.github.pranavm716.vgmixr.playback.MediaControllerPlaybackController
 import io.github.pranavm716.vgmixr.playback.mediaCache
 import java.io.File
@@ -55,6 +60,31 @@ object PlaybackModule {
         @ApplicationScope scope: CoroutineScope,
         @IoDispatcher io: CoroutineDispatcher
     ) = BrokenMarksMirror(File(diagnosticsFolder(context), "broken.json"), sources, scope, io)
+
+    @Provides
+    @Singleton
+    fun provideFileWrongSourceReports(
+        @ApplicationContext context: Context,
+        catalog: CatalogRepository,
+        broken: BrokenSources,
+        sync: CatalogSync,
+        importState: ImportStateDao,
+        clock: Clock,
+        @ApplicationScope scope: CoroutineScope,
+        @IoDispatcher io: CoroutineDispatcher
+    ) = FileWrongSourceReports(
+        File(diagnosticsFolder(context), "reports.json"),
+        catalog,
+        broken,
+        sync,
+        { importState.get()?.generatedAt },
+        clock,
+        scope,
+        io
+    )
+
+    @Provides
+    fun provideWrongSourceReports(reports: FileWrongSourceReports): WrongSourceReports = reports
 
     /** The app's external files folder, which adb can read from a release build. */
     private fun diagnosticsFolder(context: Context): File =

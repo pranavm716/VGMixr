@@ -6,6 +6,7 @@ import androidx.media3.common.util.UnstableApi
 import dagger.hilt.android.HiltAndroidApp
 import io.github.pranavm716.vgmixr.data.catalog.DefaultCatalogSync
 import io.github.pranavm716.vgmixr.data.diagnostics.BrokenMarksMirror
+import io.github.pranavm716.vgmixr.data.diagnostics.FileWrongSourceReports
 import io.github.pranavm716.vgmixr.playback.OfflineStarter
 import io.github.pranavm716.vgmixr.ui.shortcuts.PlaylistShortcutPublisher
 import javax.inject.Inject
@@ -20,6 +21,9 @@ class VGMixrApplication : Application() {
     lateinit var brokenMarksMirror: BrokenMarksMirror
 
     @Inject
+    lateinit var wrongSourceReports: FileWrongSourceReports
+
+    @Inject
     lateinit var offlineStarter: OfflineStarter
 
     @Inject
@@ -29,6 +33,7 @@ class VGMixrApplication : Application() {
         super.onCreate()
         catalogSync.start()
         brokenMarksMirror.start()
+        wrongSourceReports.start()
         offlineStarter.start()
         playlistShortcuts.start()
     }
