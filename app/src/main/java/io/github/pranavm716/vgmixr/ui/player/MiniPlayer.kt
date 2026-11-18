@@ -273,21 +273,25 @@ private fun PlayPauseButton(isPlaying: Boolean, isLoading: Boolean, onClick: () 
     }
 }
 
-// The play/pause button's slot at the right edge, and the fade in front of it.
+// The play/pause button's slot at the right edge, and the fade inside it. The icon (24dp in a
+// 48dp button, 4dp from the edge) starts 40dp from the edge, so the fade ends just before it.
 private val ButtonWidth = 56.dp
-private val FadeWidth = 24.dp
+private val FadeWidth = 16.dp
 
-/** Fades the content out over [fade] just left of the [end] strip at the right edge. */
+/**
+ * Fades the content out over [fade] just inside the [end] strip at the right edge. Content at rest
+ * stops where the strip begins, so the fade only shows on what a swipe slides into the strip.
+ */
 private fun Modifier.fadeOutBefore(end: Dp, fade: Dp) = this
     .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
     .drawWithContent {
         drawContent()
-        val stop = size.width - end.toPx()
+        val start = size.width - end.toPx()
         drawRect(
             Brush.horizontalGradient(
                 listOf(Color.Black, Color.Transparent),
-                startX = stop - fade.toPx(),
-                endX = stop
+                startX = start,
+                endX = start + fade.toPx()
             ),
             blendMode = BlendMode.DstIn
         )
