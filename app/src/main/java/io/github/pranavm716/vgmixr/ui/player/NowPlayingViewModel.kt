@@ -13,6 +13,7 @@ import io.github.pranavm716.vgmixr.domain.playback.homeContext
 import io.github.pranavm716.vgmixr.domain.playback.mixPlaylistOf
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistRepository
 import io.github.pranavm716.vgmixr.domain.playlist.PlaylistSummary
+import io.github.pranavm716.vgmixr.domain.report.WrongSourceReports
 import io.github.pranavm716.vgmixr.domain.settings.HoldSettings
 import io.github.pranavm716.vgmixr.domain.usertrack.UserTrackId
 import io.github.pranavm716.vgmixr.ui.components.ChipUi
@@ -51,7 +52,9 @@ sealed interface NowPlayingUiState {
         val subtitle: String? = null,
         val opensRemixes: Boolean = false,
         val previous: NowPlayingArt? = null,
-        val next: NowPlayingArt? = null
+        val next: NowPlayingArt? = null,
+        /** The track has a wrong-source report (step 15e); the report button shows it on. */
+        val reported: Boolean = false
     ) : NowPlayingUiState
 }
 
@@ -90,7 +93,8 @@ class NowPlayingViewModel @Inject constructor(
     repository: CatalogRepository,
     private val playback: PlaybackController,
     private val playlists: PlaylistRepository,
-    private val hold: HoldSettings = HoldSettings.NONE
+    private val hold: HoldSettings = HoldSettings.NONE,
+    private val reports: WrongSourceReports = WrongSourceReports.NONE
 ) : ViewModel() {
     // The playing track's playlists, and the ones the Playlists tab's long press plays: where a
     // track from a Playlists mix opens.
@@ -105,11 +109,13 @@ class NowPlayingViewModel @Inject constructor(
         combine(
             repository.catalog,
             playback.state,
-            playlists.favorites,
+            combine(playlists.favorites, reports.reports) { favorites, reports ->
+                favorites to reports.mapTo(HashSet()) { it.trackId }
+            },
             playlists.playlists,
             mixPlaylists
-        ) { catalog, state, favorites, playlists, (containing, selected) ->
-            catalog.nowPlaying(state, favorites, playlists) {
+        ) { catalog, state, (favorites, reported), playlists, (containing, selected) ->
+            catalog.nowPlaying(state, favorites, reported, playlists) {
                 mixPlaylistOf(containing, selected, playlists)
             }
         }
@@ -147,6 +153,13 @@ class NowPlayingViewModel @Inject constructor(
 
     fun onSeek(positionMs: Long) = playback.seekTo(positionMs)
 
+    /** Reports the playing track's stream as wrong where it is now, or takes the report back. */
+    fun onReport() {
+        val trackId = playback.state.value.trackId ?: return
+        val positionMs = progress.value.positionMs
+        viewModelScope.launch { reports.toggle(trackId, positionMs) }
+    }
+
     /** Favorites the playing track, or unfavorites it if the heart shows it as one. */
     fun onToggleFavorite() {
         val trackId = playback.state.value.trackId ?: return
@@ -158,6 +171,7 @@ class NowPlayingViewModel @Inject constructor(
 private fun Catalog.nowPlaying(
     state: PlaybackState,
     favorites: Set<String>,
+    reported: Set<String>,
     playlists: List<PlaylistSummary>,
     mixPlaylist: () -> Long?
 ): NowPlayingUiState {
@@ -200,6 +214,7 @@ private fun Catalog.nowPlaying(
         isPlaying = state.isPlaying,
         isLoading = state.isLoading,
         isFavorite = track.id in favorites,
+        reported = track.id in reported,
         shuffle = state.shuffle,
         previous = art(state.queue.entries.getOrNull(state.queue.current - 1)?.trackId),
         next = art(state.queue.entries.getOrNull(state.queue.current + 1)?.trackId)

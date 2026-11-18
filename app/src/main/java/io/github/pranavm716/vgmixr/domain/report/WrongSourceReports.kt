@@ -6,6 +6,7 @@ import io.github.pranavm716.vgmixr.domain.model.Source
 import io.github.pranavm716.vgmixr.domain.playback.nextSource
 import java.time.Instant
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 /**
  * The user heard [trackId] play the wrong audio from [videoId] (its slice [startMs] to [endMs]),
@@ -28,6 +29,15 @@ interface WrongSourceReports {
 
     /** Reports the stream [trackId] plays, [positionMs] in; takes the report back if it has one. */
     suspend fun toggle(trackId: String, positionMs: Long)
+
+    companion object {
+        /** No reports, and taps do nothing: for screens and tests that don't care. */
+        val NONE: WrongSourceReports = object : WrongSourceReports {
+            override val reports: Flow<List<WrongSourceReport>> = flowOf(emptyList())
+
+            override suspend fun toggle(trackId: String, positionMs: Long) = Unit
+        }
+    }
 }
 
 /** The stream [track] plays: its first one not in [broken], as the player picks (`nextSource`). */
