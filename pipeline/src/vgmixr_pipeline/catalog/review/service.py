@@ -27,7 +27,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from vgmixr_pipeline.broken import BrokenMark, read_pulled
+from vgmixr_pipeline.broken import BrokenMark, WrongReport, read_pulled, read_pulled_reports
 from vgmixr_pipeline.broken.recheck import AppCheck, AppChecks, CheckFailed
 from vgmixr_pipeline.catalog import slug
 from vgmixr_pipeline.catalog.build import Draft, DraftTrack
@@ -559,8 +559,14 @@ class Review:
         marks = sorted(pulled.broken.marks if pulled.broken else [],
                        key=lambda m: m.marked_at, reverse=True)  # fmt: skip
         catalog_ids = self._catalog_ids()
+        wrong = sorted(read_pulled_reports(self._out_dir).reports,
+                       key=lambda r: r.reported_at, reverse=True)  # fmt: skip
         reports = sorted(
-            (self._report(m, catalog_ids) for m in marks), key=lambda r: r["status"] != "needs-fix"
+            [
+                *(self._report(m, catalog_ids) for m in marks),
+                *(self._wrong_report(r, catalog_ids) for r in wrong),
+            ],
+            key=lambda r: r["status"] != "needs-fix",
         )
         return {
             "pulled": {
@@ -654,6 +660,37 @@ class Review:
                 }
                 for s in sources
             ],  # fmt: skip
+        }
+
+    def _wrong_report(self, wrong: WrongReport, catalog_ids: dict[str, str]) -> dict[str, Any]:
+        """A wrong-source report as a Broken-tab report with reason "wrong". It concerns only
+        the reported track: fixed once that track no longer uses the video."""
+        mark = BrokenMark.model_construct(
+            track_id=wrong.track_id,
+            video_id=wrong.video_id,
+            reason="no-audio",  # replaced below
+            detail=None,
+            marked_at=wrong.reported_at,
+            catalog_generated_at=wrong.catalog_generated_at,
+        )
+        report = self._report(mark, catalog_ids)
+        track = report["track"]
+        uses = track is not None and wrong.video_id in self._stream_videos(
+            self._tracks[track["id"]]
+        )
+        seconds = wrong.position_ms // 1000
+        return report | {
+            "reason": "wrong",
+            "detail": f"heard at {seconds // 60}:{seconds % 60:02d}",
+            "status": "needs-fix" if uses else "fixed",
+            "usedBy": [track] if uses else [],
+        }
+
+    def _stream_videos(self, track: DraftTrack) -> set[str]:
+        return {
+            video_id
+            for s in [*track.sources, *self._matches[track.id].streams]
+            if (video_id := getattr(s, "videoId", None)) is not None
         }
 
     def _reported(self, track_id: str) -> list[dict[str, Any]]:

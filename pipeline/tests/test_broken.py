@@ -10,12 +10,16 @@ from pydantic import ValidationError
 
 from vgmixr_pipeline.broken import (
     REMOTE_PATH,
+    REPORTS_REMOTE_PATH,
     BrokenFile,
     Pulled,
     PullError,
     parse_broken,
+    parse_reports,
     pull_broken,
+    pull_reports,
     read_pulled,
+    read_pulled_reports,
     summarize,
 )
 
@@ -154,3 +158,40 @@ def test_an_invalid_pulled_file_says_why(tmp_path: Path) -> None:
     assert pulled.broken is None
     assert pulled.error is not None
     assert "version" in pulled.error
+
+
+REPORTS_FIXTURE = (FIXTURES_DIR / "reports.json").read_text(encoding="utf-8")
+
+
+def test_the_shared_reports_fixture_parses() -> None:
+    whole, slice_ = parse_reports(REPORTS_FIXTURE).reports
+
+    assert (whole.track_id, whole.video_id, whole.start_ms, whole.end_ms) == (
+        "rse-route-101",
+        "WMj9b4vYTXU",
+        0,
+        None,
+    )
+    assert whole.position_ms == 41200
+    assert whole.reported_at == datetime(2026, 11, 18, 9, 15, 2, 250000, tzinfo=UTC)
+    assert whole.catalog_generated_at is None
+    assert (slice_.start_ms, slice_.end_ms) == (754000, 871500)
+    assert slice_.catalog_generated_at == datetime(2026, 11, 17, 22, 3, 11, tzinfo=UTC)
+
+
+def test_reports_are_pulled_beside_broken_json(tmp_path: Path) -> None:
+    adb = FakeAdb(REPORTS_FIXTURE)
+
+    reports = pull_reports(ADB, tmp_path, adb)
+
+    assert len(reports.reports) == 2
+    assert adb.calls[0][2] == REPORTS_REMOTE_PATH
+    assert read_pulled_reports(tmp_path) == reports
+
+
+def test_no_reports_file_on_the_phone_is_no_reports(tmp_path: Path) -> None:
+    (tmp_path / "reports.json").write_text(REPORTS_FIXTURE, encoding="utf-8")
+    adb = FakeAdb(None, stderr="adb: error: remote object '...' does not exist")
+
+    assert pull_reports(ADB, tmp_path, adb).reports == []
+    assert read_pulled_reports(tmp_path).reports == []

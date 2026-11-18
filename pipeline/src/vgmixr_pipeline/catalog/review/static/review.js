@@ -363,6 +363,22 @@ function accept(candidate) {
   decide({ accept: [...accept, slice], reject: reject.filter((v) => v !== slice.videoId) });
 }
 
+// The fix for a wrong-source report: reject the reported videos, accept [candidate] first (the
+// app plays the first source), then check it the way the app sees it.
+async function replaceWith(candidate) {
+  const wrong = wrongVideos();
+  const { accept, reject } = ui.detail.decision;
+  const slice = sliceOf(candidate);
+  await decide({
+    accept: [slice, ...accept.filter((s) => !same(s, slice) && !wrong.includes(s.videoId))],
+    reject: [...new Set([...reject.filter((v) => v !== slice.videoId), ...wrong])],
+  });
+  if (canCheck()) {
+    await appCheck(slice.videoId);
+    renderDetail();
+  }
+}
+
 function reject(videoId) {
   const { accept, reject } = ui.detail.decision;
   decide({ accept: accept.filter((s) => s.videoId !== videoId), reject: [...new Set([...reject, videoId])] });
@@ -397,7 +413,8 @@ function card(candidate, index) {
     : auto ? '<span class="badge-auto">Auto</span>' : "";
   const range = candidate.startMs || candidate.endMs != null
     ? ` · ${stamp(candidate.startMs || 0)}–${candidate.endMs == null ? "end" : stamp(candidate.endMs)}` : "";
-  const reported = reportedVideo(candidate.videoId) ? '<span class="badge-reported" title="The app reported this video broken">reported</span>' : "";
+  const reported = reportedVideo(candidate.videoId) ? '<span class="badge-reported" title="The app reported this video broken or wrong">reported</span>' : "";
+  const wrong = wrongVideos().filter((v) => v !== candidate.videoId);
   return `
     <div class="card ${hand >= 0 ? "hand" : auto ? "auto" : ""}">
       <div class="player" data-index="${index}">
@@ -414,6 +431,7 @@ function card(candidate, index) {
       <div class="actions">
         <button class="primary" data-accept="${index}" ${hand >= 0 ? "disabled" : ""}>Accept</button>
         <button data-reject="${index}">Reject</button>
+        ${wrong.length ? `<button class="primary" data-replace="${index}" title="Reject the video reported wrong, play this one first, and check it the way the app sees it">Replace with this</button>` : ""}
         ${checkButton(candidate.videoId)}
         <a href="${watchUrl(candidate)}" target="_blank" rel="noreferrer">YouTube ↗</a>
       </div>
@@ -494,6 +512,7 @@ function bindDetail(shown) {
   };
   on("[data-accept]", (el) => accept(shown[el.dataset.accept]));
   on("[data-reject]", (el) => reject(shown[el.dataset.reject].videoId));
+  on("[data-replace]", (el) => replaceWith(shown[el.dataset.replace]));
   on("[data-keep]", (el) => accept(d.streams[el.dataset.keep]));
   on("[data-drop]", (el) => {
     const s = d.streams[el.dataset.drop];
@@ -913,7 +932,12 @@ function reportedVideo(videoId) {
   return ui.detail?.reported?.some((r) => r.videoId === videoId);
 }
 
-const reportKey = (r) => `${r.videoId}|${r.trackId}`;
+const reportKey = (r) => `${r.videoId}|${r.trackId}|${r.reason}`;
+
+// Videos the open track was reported to play wrong (the app's reports.json).
+function wrongVideos() {
+  return (ui.detail?.reported ?? []).filter((r) => r.reason === "wrong").map((r) => r.videoId);
+}
 
 async function loadBroken() {
   ui.broken = await api("broken");
